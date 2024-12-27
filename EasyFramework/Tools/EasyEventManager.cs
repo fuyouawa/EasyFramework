@@ -241,10 +241,14 @@ namespace EasyFramework
         {
             var t = new TypeTarget(target, targetType);
             bool has = false;
-            foreach (var handlers in _eventTypeToHandlers.Values)
+
+            lock (_eventTypeToHandlers)
             {
-                var suc = handlers.Remove(t);
-                if (!has) has = suc;
+                foreach (var handlers in _eventTypeToHandlers.Values)
+                {
+                    var suc = handlers.Remove(t);
+                    if (!has) has = suc;
+                }
             }
 
             if (includeBaseClass && targetType.BaseType != null)
@@ -259,22 +263,29 @@ namespace EasyFramework
         public IUnRegister RegisterHandler(object target, Type targetType, Type eventType, Delegate handler,
             EasyEventTriggerExtensionDelegate triggerExtension)
         {
-            if (!_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+            lock (_eventTypeToHandlers)
             {
-                handlers = new TargetToHandlers();
-                _eventTypeToHandlers[eventType] = handlers;
+                if (!_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                {
+                    handlers = new TargetToHandlers();
+                    _eventTypeToHandlers[eventType] = handlers;
+                }
+
+                handlers.AddHandler(new TypeTarget(target, targetType), handler, triggerExtension);
             }
 
-            handlers.AddHandler(new TypeTarget(target, targetType), handler, triggerExtension);
             return new CustomUnRegister(() => UnRegisterHandler(target, targetType, eventType, handler));
         }
 
 
         public bool UnRegisterHandler(object target, Type targetType, Type eventType, Delegate handler)
         {
-            if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+            lock (_eventTypeToHandlers)
             {
-                return handlers.RemoveHandler(new TypeTarget(target, targetType), handler);
+                if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                {
+                    return handlers.RemoveHandler(new TypeTarget(target, targetType), handler);
+                }
             }
 
             return false;
@@ -282,10 +293,13 @@ namespace EasyFramework
 
         public bool TriggerEvent(object target, Type targetType, object eventArg, Type eventType)
         {
-            if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+            lock (_eventTypeToHandlers)
             {
-                handlers.Invoke(new TypeTarget(target, targetType), eventArg);
-                return true;
+                if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                {
+                    handlers.Invoke(new TypeTarget(target, targetType), eventArg);
+                    return true;
+                }
             }
 
             return false;
