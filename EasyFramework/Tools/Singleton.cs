@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace AppUsageTimerPro
+namespace EasyFramework
 {
     internal class SingletonCreator
     {

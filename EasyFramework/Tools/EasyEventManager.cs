@@ -6,43 +6,134 @@ using System.Diagnostics;
 
 namespace EasyFramework
 {
+    /// <summary>
+    /// <para>标记为事件处理器</para>
+    /// <para>当使用EasyEventManager.Instance.RegisterSubscriber时会使用该特性</para>
+    /// </summary>
     public class EasyEventHandlerAttribute : Attribute
     {
 
     }
 
-    public class EasyEventManager
+    public class EasyEventManager : Singleton<EasyEventManager>
     {
-        private static readonly Dictionary<Type, Delegate> _handlers;
-    
-        static EasyEventManager()
+        /// <summary>
+        /// <para>事件处理器的触发行为扩展</para>
+        /// <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
+        /// </summary>
+        /// <param name="triggerInvoker">事件处理器的触发调用对象</param>
+        public delegate void TriggerExtensionDelegate(Action triggerInvoker);
+        
+        /// <summary>
+        /// RegisterSubscriber的配置
+        /// </summary>
+        public class RegisterSubscriberConfig
         {
-            _handlers = new Dictionary<Type, Delegate>();
+            /// <summary>
+            /// 忽略基类中的事件处理器（只注册自己类中标记了EasyEventHandler特性的处理器）
+            /// </summary>
+            public bool IgnoreBaseClass = true;
         }
 
-        private static Action<TEvent> GetHandler<TEvent>()
+        private class HandlerItem
         {
-            var eventType = typeof(TEvent);
-            if (!_handlers.ContainsKey(eventType))
+            public Delegate Handler;
+            public TriggerExtensionDelegate TriggerExtension;
+
+            public void Invoke(object arg)
             {
-                _handlers[eventType] = null;
+                if (TriggerExtension != null)
+                {
+                    TriggerExtension(() => Handler.DynamicInvoke(arg));
+                }
+                else
+                {
+                    Handler.DynamicInvoke(arg);
+                }
+            }
+        }
+
+        private class HandlerItemList : List<HandlerItem>
+        {
+            public void AddHandler(Delegate handler, TriggerExtensionDelegate triggerExtension)
+            {
+                if (this.FirstOrDefault(h => h.Handler == handler) != null)
+                {
+                    throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
+                }
+                Add(new HandlerItem(){Handler = handler, TriggerExtension = triggerExtension});
             }
 
-            return _handlers[eventType] as Action<TEvent>;
+            public bool RemoveHandler(Delegate handler)
+            {
+                int i = 0;
+                for (; i < Count; i++)
+                {
+                    if (this[i].Handler == handler)
+                    {
+                        break;
+                    }
+                }
+
+                if (i < Count)
+                {
+                    RemoveAt(i);
+                    return true;
+                }
+
+                return false;
+            }
+
+            public void Invoke(object arg)
+            {
+                foreach (var handler in this)
+                {
+                    handler.Invoke(arg);
+                }
+            }
         }
 
-        public static IUnRegister RegisterSubscriber<T>(T obj)
+        private readonly Dictionary<Type, HandlerItemList> _eventTypeToHandlers;
+    
+        EasyEventManager()
+        {
+            _eventTypeToHandlers = new Dictionary<Type, HandlerItemList>();
+        }
+
+        /// <summary>
+        /// 注册target中所有标记了EasyEventHandler特性的成员函数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public IUnRegister RegisterSubscriber<T>(T target, TriggerExtensionDelegate triggerExtension = null)
+        {
+            return RegisterSubscriber(target, new RegisterSubscriberConfig(), triggerExtension);
+        }
+
+        /// <summary>
+        /// 注册target中所有标记了EasyEventHandler特性的成员函数
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="config">配置</param>
+        /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public IUnRegister RegisterSubscriber<T>(T target, RegisterSubscriberConfig config, TriggerExtensionDelegate triggerExtension = null)
         {
             var type = typeof(T);
             var bf = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             var handlers = type.GetMethods(bf);
             // 排除基类
-            if (type.BaseType != null)
+            if (type.BaseType != null && config.IgnoreBaseClass)
             {
                 handlers = handlers.Except(type.BaseType.GetMethods(bf)).ToArray();
             }
 
-            handlers = handlers.Where(h => h.GetCustomAttribute<EasyEventHandlerAttribute>() != null).ToArray();
+            handlers = handlers.Where(h => h.HasCustomAttribute<EasyEventHandlerAttribute>()).ToArray();
 
             Action unregister = null;
             foreach (var h in handlers)
@@ -50,59 +141,95 @@ namespace EasyFramework
                 var p = h.GetParameters();
                 if (p.Length != 1)
                 {
-                    throw new ArgumentException($"事件处理器({h.GetSignature()})的参数数量必须是1!");
+                    throw new ArgumentException($"The number of arguments to the event handler({h.GetSignature()}) must be 1!");
                 }
 
                 var et = p[0].ParameterType;
-                var func = h.CreateDelegate(obj);
+                var func = h.CreateDelegate(target);
 
-                AddTypeListener(et, func);
-                unregister += () => RemoveTypeListener(et, func);
+                RegisterTypeEvent(et, func, triggerExtension);
+                unregister += () => UnRegisterTypeEvent(et, func);
             }
 
             return new CustomUnRegister(unregister);
         }
 
-        private static MethodInfo _addListener;
-        private static void AddTypeListener(Type eventType, Delegate handler)
+        // private MethodInfo _register;
+        private IUnRegister RegisterTypeEvent(Type eventType, Delegate handler, TriggerExtensionDelegate triggerExtension)
         {
-            if (_addListener == null)
+            // if (_register == null)
+            // {
+            //     _register = typeof(EasyEventManager).GetMethod(nameof(Register), BindingFlags.Public | BindingFlags.Instance);
+            // }
+            // Debug.Assert(_register != null);
+            //
+            // var m = _register.MakeGenericMethod(eventType);
+            // m.Invoke(this, new object[] { handler, triggerExtension });
+            if (!_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
             {
-                _addListener = typeof(EasyEventManager).GetMethod(nameof(AddListener), BindingFlags.NonPublic | BindingFlags.Static);
+                handlers = new HandlerItemList();
+                _eventTypeToHandlers[eventType] = handlers;
             }
-            Debug.Assert(_addListener != null);
-
-            var m = _addListener.MakeGenericMethod(eventType);
-            m.Invoke(null, new object[] { handler });
+            handlers.AddHandler(handler, triggerExtension);
+            return new CustomUnRegister(() => UnRegisterTypeEvent(eventType, handler));
         }
 
-        private static void AddListener<TEvent>(Action<TEvent> handler)
+        /// <summary>
+        /// 注册事件处理器
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="handler"></param>
+        /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        /// <returns></returns>
+        public IUnRegister Register<TEvent>(Action<TEvent> handler, TriggerExtensionDelegate triggerExtension = null)
         {
-            _handlers[typeof(TEvent)] = GetHandler<TEvent>() + handler;
+            return RegisterTypeEvent(typeof(TEvent), handler, triggerExtension);
         }
 
 
-        private static MethodInfo _removeListener;
-        private static void RemoveTypeListener(Type eventType, Delegate handler)
+        // private MethodInfo _unregister;
+        private bool UnRegisterTypeEvent(Type eventType, Delegate handler)
         {
-            if (_removeListener == null)
+            // if (_unregister == null)
+            // {
+            //     _unregister = typeof(EasyEventManager).GetMethod(nameof(UnRegister), BindingFlags.Public | BindingFlags.Instance);
+            // }
+            // Debug.Assert(_unregister != null);
+            //
+            // var m = _unregister.MakeGenericMethod(eventType);
+            // m.Invoke(this, new object[] { handler });
+
+            if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
             {
-                _removeListener = typeof(EasyEventManager).GetMethod(nameof(RemoveListener), BindingFlags.NonPublic | BindingFlags.Static);
+                return handlers.RemoveHandler(handler);
             }
-            Debug.Assert(_removeListener != null);
-
-            var m = _removeListener.MakeGenericMethod(eventType);
-            m.Invoke(null, new object[] { handler });
+            return false;
         }
 
-        private static void RemoveListener<TEvent>(Action<TEvent> handler)
+        /// <summary>
+        /// 取消注册事件处理器
+        /// </summary>
+        /// <typeparam name="TEvent"></typeparam>
+        /// <param name="handler"></param>
+        /// <returns></returns>
+        public bool UnRegister<TEvent>(Action<TEvent> handler)
         {
-            _handlers[typeof(TEvent)] = GetHandler<TEvent>() - handler;
+            return UnRegisterTypeEvent(typeof(TEvent), handler);
+        }
+
+        private bool TriggerTypeEvent(Type eventType, object arg)
+        {
+            if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+            {
+                handlers.Invoke(arg);
+                return true;
+            }
+            return false;
         }
     
-        public static void TriggerEvent<TEvent>(TEvent arg)
+        public bool Trigger<TEvent>(TEvent arg)
         {
-            GetHandler<TEvent>()?.Invoke(arg);
+            return TriggerTypeEvent(typeof(TEvent), arg);
         }
     }
 }
