@@ -91,12 +91,16 @@ namespace EasyFramework
         }
 
         /// <summary>
-        /// 触发事件
+        /// <para>触发事件</para>
+        /// <para>注意：在事件处理器中触发事件要谨慎，处理不当可能会死锁</para>
+        /// <para>如果出现死锁了，检查以下情况</para>
+        /// <para>1、是否事件处理器中再次触发处理的事件（包括整个触发栈）</para>
+        /// <para>2、待补充。。。。。。</para>
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="target"></param>
-        /// <param name="e"></param>
+        /// <param name="e">事件</param>
         /// <returns></returns>
         public static bool TriggerEasyEvent<T, TEvent>(this T target, TEvent e)
             where T : IEasyEventSubscriber
@@ -220,7 +224,7 @@ namespace EasyFramework
                         $"The number of arguments to the event handler({h.GetSignature()}) must be 2!");
                 }
 
-                var eventType = p[0].ParameterType;
+                var eventType = p[1].ParameterType;
                 var func = h.CreateDelegate(target);
 
                 RegisterHandler(target, targetType, eventType, func, triggerExtension);
@@ -263,14 +267,18 @@ namespace EasyFramework
         public IUnRegister RegisterHandler(object target, Type targetType, Type eventType, Delegate handler,
             EasyEventTriggerExtensionDelegate triggerExtension)
         {
+            TargetToHandlers handlers;
             lock (_eventTypeToHandlers)
             {
-                if (!_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                if (!_eventTypeToHandlers.TryGetValue(eventType, out handlers))
                 {
                     handlers = new TargetToHandlers();
                     _eventTypeToHandlers[eventType] = handlers;
                 }
+            }
 
+            lock (handlers)
+            {
                 handlers.AddHandler(new TypeTarget(target, targetType), handler, triggerExtension);
             }
 
@@ -280,29 +288,37 @@ namespace EasyFramework
 
         public bool UnRegisterHandler(object target, Type targetType, Type eventType, Delegate handler)
         {
+            TargetToHandlers handlers;
             lock (_eventTypeToHandlers)
             {
-                if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                if (!_eventTypeToHandlers.TryGetValue(eventType, out handlers))
                 {
-                    return handlers.RemoveHandler(new TypeTarget(target, targetType), handler);
+                    return false;
                 }
             }
 
-            return false;
+            lock (handlers)
+            {
+                return handlers.RemoveHandler(new TypeTarget(target, targetType), handler);
+            }
         }
 
         public bool TriggerEvent(object target, Type targetType, object eventArg, Type eventType)
         {
+            TargetToHandlers handlers;
             lock (_eventTypeToHandlers)
             {
-                if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
+                if (!_eventTypeToHandlers.TryGetValue(eventType, out handlers))
                 {
-                    handlers.Invoke(new TypeTarget(target, targetType), eventArg);
-                    return true;
+                    return false;
                 }
             }
 
-            return false;
+            lock (handlers)
+            {
+                handlers.Invoke(new TypeTarget(target, targetType), eventArg);
+            }
+            return true;
         }
     }
 }
