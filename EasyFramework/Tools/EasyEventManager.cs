@@ -22,17 +22,6 @@ namespace EasyFramework
     public delegate void EasyEventHandlerDelegate<in TEvent>(object sender, TEvent e);
 
     /// <summary>
-    /// RegisterSubscriber的配置
-    /// </summary>
-    public class RegisterEasyEventSubscriberConfig
-    {
-        /// <summary>
-        /// 注册所有基类中的事件处理器
-        /// </summary>
-        public bool IncludeBaseClass = false;
-    }
-
-    /// <summary>
     /// <para>标记为事件处理器</para>
     /// <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
     /// <para>当RegisterEasyEventSubscriber时会使用该特性</para>
@@ -41,41 +30,33 @@ namespace EasyFramework
     {
     }
 
+    /// <summary>
+    /// <para>事件订阅者</para>
+    /// <para>继承此接口后便可以使用this.xxx进行注册/取消注册/触发事件等</para>
+    /// </summary>
     public interface IEasyEventSubscriber
     {
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public static class EasyEventSubscriberExtension
     {
         /// <summary>
-        /// 注册target中所有标记了EasyEventHandler特性的成员函数
+        /// 注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
+        /// <param name="includeBaseClass">包含基类的事件处理器</param>
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         public static IUnRegister RegisterEasyEventSubscriber<T>(this T target,
-            EasyEventTriggerExtensionDelegate triggerExtension = null)
-            where T : IEasyEventSubscriber
+            bool includeBaseClass = false,
+            EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventSubscriber
         {
-            return EasyEventManager.Instance.RegisterSubscriber(target, triggerExtension);
-        }
-
-        /// <summary>
-        /// 注册target中所有标记了EasyEventHandler特性的成员函数
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="target"></param>
-        /// <param name="config">配置</param>
-        /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static IUnRegister RegisterEasyEventSubscriber<T>(this T target,
-            RegisterEasyEventSubscriberConfig config, EasyEventTriggerExtensionDelegate triggerExtension = null)
-            where T : IEasyEventSubscriber
-        {
-            return EasyEventManager.Instance.RegisterSubscriber(target, config, triggerExtension);
+            return EasyEventManager.Instance.RegisterSubscriber(target, typeof(T), includeBaseClass, triggerExtension);
         }
 
         /// <summary>
@@ -86,11 +67,12 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
-        public static IUnRegister RegisterEasyEventHandler<T, TEvent>(this T target, EasyEventHandlerDelegate<TEvent> handler,
+        public static IUnRegister RegisterEasyEventHandler<T, TEvent>(this T target,
+            EasyEventHandlerDelegate<TEvent> handler,
             EasyEventTriggerExtensionDelegate triggerExtension = null)
             where T : IEasyEventSubscriber
         {
-            return EasyEventManager.Instance.Register(target, handler, triggerExtension);
+            return EasyEventManager.Instance.RegisterHandler(target, typeof(T), typeof(TEvent), handler, triggerExtension);
         }
 
         /// <summary>
@@ -101,10 +83,11 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public static bool UnRegisterEasyEventHandler<T, TEvent>(this T target, EasyEventHandlerDelegate<TEvent> handler)
+        public static bool UnRegisterEasyEventHandler<T, TEvent>(this T target,
+            EasyEventHandlerDelegate<TEvent> handler)
             where T : IEasyEventSubscriber
         {
-            return EasyEventManager.Instance.UnRegister(target, handler);
+            return EasyEventManager.Instance.UnRegisterHandler(target, typeof(T), typeof(TEvent), handler);
         }
 
         /// <summary>
@@ -118,7 +101,7 @@ namespace EasyFramework
         public static bool TriggerEasyEvent<T, TEvent>(this T target, TEvent e)
             where T : IEasyEventSubscriber
         {
-            return EasyEventManager.Instance.Trigger(target, e);
+            return EasyEventManager.Instance.TriggerEvent(target, typeof(T), e, typeof(TEvent));
         }
     }
 
@@ -131,33 +114,6 @@ namespace EasyFramework
             _eventTypeToHandlers = new Dictionary<Type, TargetToHandlers>();
         }
 
-        public IUnRegister RegisterSubscriber<T>(T target, EasyEventTriggerExtensionDelegate triggerExtension = null)
-        {
-            return RegisterSubscriber(target, new RegisterEasyEventSubscriberConfig(), triggerExtension);
-        }
-
-        public IUnRegister RegisterSubscriber<T>(T target, RegisterEasyEventSubscriberConfig config,
-            EasyEventTriggerExtensionDelegate triggerExtension = null)
-        {
-            return RegisterTypeSubscriber(new TypeTarget(target, typeof(T)), config, triggerExtension);
-        }
-
-        public IUnRegister Register<T, TEvent>(T target, EasyEventHandlerDelegate<TEvent> handler,
-            EasyEventTriggerExtensionDelegate triggerExtension = null)
-        {
-            return RegisterTypeEvent(new TypeTarget(target, typeof(T)), typeof(TEvent), handler, triggerExtension);
-        }
-
-        public bool UnRegister<T, TEvent>(T target, EasyEventHandlerDelegate<TEvent> handler)
-        {
-            return UnRegisterTypeEvent(new TypeTarget(target, typeof(T)), typeof(TEvent), handler);
-        }
-
-        public bool Trigger<T, TEvent>(T sender, TEvent eventArg)
-        {
-            return TriggerTypeEvent(new TypeTarget(sender, typeof(T)), typeof(TEvent), eventArg);
-        }
-        
         private struct TypeTarget
         {
             public object Target;
@@ -177,13 +133,14 @@ namespace EasyFramework
 
             public void Invoke(TypeTarget sender, object eventArg)
             {
+                void Call() => Handler.DynamicInvoke(sender.Target, eventArg);
                 if (TriggerExtension != null)
                 {
-                    TriggerExtension(() => Handler.DynamicInvoke(sender.Target, eventArg));
+                    TriggerExtension(Call);
                 }
                 else
                 {
-                    Handler.DynamicInvoke(sender.Target, eventArg);
+                    Call();
                 }
             }
         }
@@ -242,23 +199,14 @@ namespace EasyFramework
             }
         }
 
-        private IUnRegister RegisterTypeSubscriber(TypeTarget target, RegisterEasyEventSubscriberConfig config,
-            EasyEventTriggerExtensionDelegate triggerExtension)
+        public IUnRegister RegisterSubscriber(object target, Type targetType, bool includeBaseClass = false, EasyEventTriggerExtensionDelegate triggerExtension = null)
         {
-            Action unregister = null;
-
-            if (config.IncludeBaseClass && target.Type.BaseType != null)
-            {
-                var ret = RegisterTypeSubscriber(new TypeTarget(target.Target, target.Type), config, triggerExtension);
-                unregister += () => ret.UnRegister();
-            }
-
-            var bf = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            var handlers = target.Type.GetMethods(bf);
+            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var handlers = targetType.GetMethods(flags);
             // 排除基类
-            if (target.Type.BaseType != null)
+            if (targetType.BaseType != null)
             {
-                handlers = handlers.Except(target.Type.BaseType.GetMethods(bf)).ToArray();
+                handlers = handlers.Except(targetType.BaseType.GetMethods(flags)).ToArray();
             }
 
             handlers = handlers.Where(h => h.HasCustomAttribute<EasyEventHandlerAttribute>()).ToArray();
@@ -272,17 +220,43 @@ namespace EasyFramework
                         $"The number of arguments to the event handler({h.GetSignature()}) must be 2!");
                 }
 
-                var et = p[0].ParameterType;
+                var eventType = p[0].ParameterType;
                 var func = h.CreateDelegate(target);
 
-                RegisterTypeEvent(target, et, func, triggerExtension);
-                unregister += () => UnRegisterTypeEvent(target, et, func);
+                RegisterHandler(target, targetType, eventType, func, triggerExtension);
+            }
+
+            Action unregister = () => UnRegisterSubscriber(target, targetType, includeBaseClass);
+
+            if (includeBaseClass && targetType.BaseType != null)
+            {
+                var ret = RegisterSubscriber(target, targetType.BaseType, true, triggerExtension);
+                unregister += () => ret.UnRegister();
             }
 
             return new CustomUnRegister(unregister);
         }
 
-        private IUnRegister RegisterTypeEvent(TypeTarget target, Type eventType, Delegate handler,
+        public bool UnRegisterSubscriber(object target, Type targetType, bool includeBaseClass = false)
+        {
+            var t = new TypeTarget(target, targetType);
+            bool has = false;
+            foreach (var handlers in _eventTypeToHandlers.Values)
+            {
+                var suc = handlers.Remove(t);
+                if (!has) has = suc;
+            }
+
+            if (includeBaseClass && targetType.BaseType != null)
+            {
+                var suc = UnRegisterSubscriber(target, targetType, true);
+                if (!has) has = suc;
+            }
+
+            return has;
+        }
+
+        public IUnRegister RegisterHandler(object target, Type targetType, Type eventType, Delegate handler,
             EasyEventTriggerExtensionDelegate triggerExtension)
         {
             if (!_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
@@ -291,26 +265,26 @@ namespace EasyFramework
                 _eventTypeToHandlers[eventType] = handlers;
             }
 
-            handlers.AddHandler(target, handler, triggerExtension);
-            return new CustomUnRegister(() => UnRegisterTypeEvent(target, eventType, handler));
+            handlers.AddHandler(new TypeTarget(target, targetType), handler, triggerExtension);
+            return new CustomUnRegister(() => UnRegisterHandler(target, targetType, eventType, handler));
         }
 
 
-        private bool UnRegisterTypeEvent(TypeTarget target, Type eventType, Delegate handler)
+        public bool UnRegisterHandler(object target, Type targetType, Type eventType, Delegate handler)
         {
             if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
             {
-                return handlers.RemoveHandler(target, handler);
+                return handlers.RemoveHandler(new TypeTarget(target, targetType), handler);
             }
 
             return false;
         }
 
-        private bool TriggerTypeEvent(TypeTarget target, Type eventType, object eventArg)
+        public bool TriggerEvent(object target, Type targetType, object eventArg, Type eventType)
         {
             if (_eventTypeToHandlers.TryGetValue(eventType, out var handlers))
             {
-                handlers.Invoke(target, eventArg);
+                handlers.Invoke(new TypeTarget(target, targetType), eventArg);
                 return true;
             }
 
