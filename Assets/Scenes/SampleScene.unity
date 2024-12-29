@@ -387,7 +387,7 @@ MonoBehaviour:
       Data: 1
     - Name: 
       Entry: 7
-      Data: 1|EasyGameFramework.EF_AuxiliaryRunFrame, Assembly-CSharp-firstpass
+      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
     - Name: Label
       Entry: 6
       Data: 
@@ -409,9 +409,39 @@ MonoBehaviour:
     - Name: IntervalBetweenRepeats
       Entry: 4
       Data: 0
-    - Name: Frame
-      Entry: 4
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
       Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 

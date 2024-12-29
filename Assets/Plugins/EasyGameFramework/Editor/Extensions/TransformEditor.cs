@@ -1,8 +1,7 @@
-using EasyGameFramework.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace UniTool.Editor.Extension
+namespace EasyGameFramework.Editor
 {
     [CustomEditor(typeof(Transform), true)]
     [CanEditMultipleObjects]
@@ -296,7 +295,7 @@ namespace UniTool.Editor.Extension
     //             if (_initialized) return;
     //             _initialized = true;
     //
-    //             _listDrawer = new EasyReorderableList(new List<Component>(Components), UniReorderableListThemes.SquareLike);
+    //             _listDrawer = new EasyReorderableList(new List<Component>(Components), EasyReorderableListThemes.SquareLike);
     //             _foldout = true;
     //
     //             _listDrawer.OnAddDropdownCallback += buttonRect =>

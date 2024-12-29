@@ -14,7 +14,7 @@ namespace EasyGameFramework.Editor
     {
         private static AssetReferenceSearcherWindow _instance;
 
-        [MenuItem("Tools/UniTool/资源引用查找器")]
+        [MenuItem("Tools/EasyGameFramework/资源引用查找器")]
         public static void ShowWindow()
         {
             _instance = GetWindow<AssetReferenceSearcherWindow>("资源引用查找器");

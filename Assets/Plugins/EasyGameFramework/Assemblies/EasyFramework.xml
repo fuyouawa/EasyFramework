@@ -4,5 +4,92 @@
         <name>EasyFramework</name>
     </assembly>
     <members>
+        <member name="T:EasyFramework.EasyEventTriggerExtensionDelegate">
+            <summary>
+            <para>事件处理器的触发行为扩展</para>
+            <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
+            </summary>
+            <param name="triggerInvoker">事件处理器的触发调用对象</param>
+        </member>
+        <member name="T:EasyFramework.EasyEventHandlerDelegate`1">
+            <summary>
+            事件处理器
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <param name="sender">发送者</param>
+            <param name="e">事件参数</param>
+        </member>
+        <member name="T:EasyFramework.EasyEventHandlerAttribute">
+            <summary>
+            <para>标记为事件处理器</para>
+            <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
+            <para>当RegisterEasyEventSubscriber时会使用该特性</para>
+            </summary>
+        </member>
+        <member name="T:EasyFramework.IEasyEventDispatcher">
+            <summary>
+            <para>事件发派者</para>
+            <para>继承此接口后便可以使用this.xxx进行注册/取消注册/触发事件等</para>
+            </summary>
+        </member>
+        <member name="T:EasyFramework.EasyEventSubscriberExtension">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:EasyFramework.EasyEventSubscriberExtension.RegisterEasyEventSubscriber``1(``0,System.Boolean,EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="includeBaseClass">包含基类的事件处理器</param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+        </member>
+        <member name="M:EasyFramework.EasyEventSubscriberExtension.UnRegisterEasyEventSubscriber``1(``0,System.Boolean)">
+            <summary>
+            取消注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="includeBaseClass">包含基类的事件处理器</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.EasyEventSubscriberExtension.RegisterEasyEventHandler``2(``0,EasyFramework.EasyEventHandlerDelegate{``1},EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            注册事件处理器
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="handler"></param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        </member>
+        <member name="M:EasyFramework.EasyEventSubscriberExtension.UnRegisterEasyEventHandler``2(``0,EasyFramework.EasyEventHandlerDelegate{``1})">
+            <summary>
+            取消注册事件处理器
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="handler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.EasyEventSubscriberExtension.TriggerEasyEvent``2(``0,``1)">
+            <summary>
+            <para>触发事件</para>
+            <para>注意：在事件处理器中触发事件要谨慎，处理不当可能会死锁</para>
+            <para>如果出现死锁了，检查以下情况</para>
+            <para>1、是否事件处理器中再次触发处理的事件（包括整个触发栈）</para>
+            <para>2、待补充。。。。。。</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="TEvent"></typeparam>
+            <param name="target"></param>
+            <param name="e">事件</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -10,7 +10,7 @@ namespace EasyGameFramework.Editor
     //git@github.com:nukadelic/UnityEditorIcons.git
     internal class EditorIconsWindow : EditorWindow
     {
-        [MenuItem("Tools/UniTool/Editor Icons", priority = -1001)]
+        [MenuItem("Tools/EasyGameFramework/Editor Icons", priority = -1001)]
         public static void EditorIconsOpen()
         {
 #if UNITY_2018

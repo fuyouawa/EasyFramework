@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyGameFramework.Editor
 {
-    public enum UniReorderableListThemes
+    public enum EasyReorderableListThemes
     {
         UnityDefault,
         SquareLike
@@ -14,7 +14,7 @@ namespace EasyGameFramework.Editor
     {
         public bool DisplayExpandButton;
         public bool DisplayCollapseButton;
-        public UniReorderableListThemes Theme;
+        public EasyReorderableListThemes Theme;
 
         public delegate void OnExpandCallbackDelegate();
         public delegate void OnCollapseCallbackDelegate();
@@ -24,7 +24,7 @@ namespace EasyGameFramework.Editor
         public event OnCollapseCallbackDelegate OnCollapseCallback;
 
         public EasyReorderableList(IList elements,
-            UniReorderableListThemes theme = UniReorderableListThemes.UnityDefault,
+            EasyReorderableListThemes theme = EasyReorderableListThemes.UnityDefault,
             bool draggable = true,
             bool displayHeader = true,
             bool displayAddButton = true,
@@ -41,7 +41,7 @@ namespace EasyGameFramework.Editor
 
         public EasyReorderableList(SerializedObject serializedObject,
             SerializedProperty elements,
-            UniReorderableListThemes theme = UniReorderableListThemes.UnityDefault,
+            EasyReorderableListThemes theme = EasyReorderableListThemes.UnityDefault,
             bool draggable = true,
             bool displayHeader = true,
             bool displayAddButton = true,
@@ -66,7 +66,7 @@ namespace EasyGameFramework.Editor
 
         private void Init()
         {
-            if (Theme == UniReorderableListThemes.SquareLike)
+            if (Theme == EasyReorderableListThemes.SquareLike)
             {
                 DisplayFooter = false;
             }
@@ -79,7 +79,7 @@ namespace EasyGameFramework.Editor
                     x = rect.xMax - BlockWidth,
                     width = BlockWidth
                 };
-                if (Theme == UniReorderableListThemes.SquareLike)
+                if (Theme == EasyReorderableListThemes.SquareLike)
                 {
                     using (new EditorGUI.DisabledScope(!CanAdd()))
                     {
@@ -111,7 +111,7 @@ namespace EasyGameFramework.Editor
                 }
             };
 
-            if (Theme == UniReorderableListThemes.SquareLike)
+            if (Theme == EasyReorderableListThemes.SquareLike)
             {
                 DrawElementBackgroundCallback += (rect, index, active, focused) =>
                 {

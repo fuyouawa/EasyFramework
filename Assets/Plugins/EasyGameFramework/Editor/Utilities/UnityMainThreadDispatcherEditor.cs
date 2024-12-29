@@ -5,7 +5,7 @@ namespace EasyGameFramework.Editor
 {
     public static class UnityMainThreadDispatcherEditor
     {
-        [MenuItem("GameObject/UniTool/Manual initialize UnityMainThreadDispatcher", false, 0)]
+        [MenuItem("GameObject/EasyGameFramework/Initialize UnityMainThreadDispatcher", false, 0)]
         private static void InitUnityInvoker(MenuCommand menuCommand)
         {
             if (Object.FindAnyObjectByType<UnityMainThreadDispatcher>() == null)
