@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using System;
-using System.Diagnostics;
 
 namespace EasyFramework
 {
@@ -26,15 +25,17 @@ namespace EasyFramework
     /// <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
     /// <para>当RegisterEasyEventSubscriber时会使用该特性</para>
     /// </summary>
+    [MeansImplicitUse(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class EasyEventHandlerAttribute : Attribute
     {
     }
 
     /// <summary>
-    /// <para>事件订阅者</para>
+    /// <para>事件发派者</para>
     /// <para>继承此接口后便可以使用this.xxx进行注册/取消注册/触发事件等</para>
     /// </summary>
-    public interface IEasyEventSubscriber
+    public interface IEasyEventDispatcher
     {
     }
 
@@ -54,9 +55,22 @@ namespace EasyFramework
         /// <exception cref="ArgumentException"></exception>
         public static IUnRegister RegisterEasyEventSubscriber<T>(this T target,
             bool includeBaseClass = false,
-            EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventSubscriber
+            EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventDispatcher
         {
             return EasyEventManager.Instance.RegisterSubscriber(target, typeof(T), includeBaseClass, triggerExtension);
+        }
+
+        /// <summary>
+        /// 取消注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="includeBaseClass">包含基类的事件处理器</param>
+        /// <returns></returns>
+        public static bool UnRegisterEasyEventSubscriber<T>(this T target,
+            bool includeBaseClass = false)
+        {
+            return EasyEventManager.Instance.UnRegisterSubscriber(target, typeof(T), includeBaseClass);
         }
 
         /// <summary>
@@ -70,7 +84,7 @@ namespace EasyFramework
         public static IUnRegister RegisterEasyEventHandler<T, TEvent>(this T target,
             EasyEventHandlerDelegate<TEvent> handler,
             EasyEventTriggerExtensionDelegate triggerExtension = null)
-            where T : IEasyEventSubscriber
+            where T : IEasyEventDispatcher
         {
             return EasyEventManager.Instance.RegisterHandler(target, typeof(T), typeof(TEvent), handler, triggerExtension);
         }
@@ -85,7 +99,7 @@ namespace EasyFramework
         /// <returns></returns>
         public static bool UnRegisterEasyEventHandler<T, TEvent>(this T target,
             EasyEventHandlerDelegate<TEvent> handler)
-            where T : IEasyEventSubscriber
+            where T : IEasyEventDispatcher
         {
             return EasyEventManager.Instance.UnRegisterHandler(target, typeof(T), typeof(TEvent), handler);
         }
@@ -103,7 +117,7 @@ namespace EasyFramework
         /// <param name="e">事件</param>
         /// <returns></returns>
         public static bool TriggerEasyEvent<T, TEvent>(this T target, TEvent e)
-            where T : IEasyEventSubscriber
+            where T : IEasyEventDispatcher
         {
             return EasyEventManager.Instance.TriggerEvent(target, typeof(T), e, typeof(TEvent));
         }
