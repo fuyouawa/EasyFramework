@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using EasyFramework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,38 +8,6 @@ namespace EasyGameFramework
 {
     public static class JsonExtension
     {
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void InitializeStatics()
-        {
-            Initialize();
-        }
-
-        static JsonExtension()
-        {
-            Initialize();
-        }
-
-        private static bool _initialized = false;
-        static void Initialize()
-        {
-            if (_initialized)
-                return;
-            _initialized = true;
-
-            var settings = new JsonSerializerSettings();
-            settings.Converters.AddRange(new JsonConverter[]
-            {
-                new ColorConverter(),
-                new RectConverter(),
-                new Vector2Converter(),
-                new Vector2IntConverter(),
-                new KeyframeConverter(),
-                new AnimationCurveConverter()
-            });
-
-            JsonConvert.DefaultSettings += () => settings;
-        }
-
         private static JTokenType GetJTokenType(Type type)
         {
             if (type.IsStringType())
