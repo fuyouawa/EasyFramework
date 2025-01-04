@@ -11,6 +11,7 @@ namespace EasyGameFramework.Editor
                 Property.State.Expanded)
             {
                 OnTitleBarGUI = OnTitleBarGUI,
+                OnCoveredTitleBarGUI = OnCoveredTitleBarGUI,
                 OnContentGUI = OnContentGUI
             };
 
@@ -26,8 +27,12 @@ namespace EasyGameFramework.Editor
         {
             return string.Empty;
         }
+        
+        protected virtual void OnCoveredTitleBarGUI(Rect headerRect)
+        {
+        }
 
-        protected virtual void OnTitleBarGUI(Rect rect)
+        protected virtual void OnTitleBarGUI(Rect headerRect)
         {
         }
 

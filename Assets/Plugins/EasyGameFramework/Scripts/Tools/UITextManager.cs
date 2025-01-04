@@ -14,7 +14,7 @@ namespace Pokemon.UI
 #if UNITY_EDITOR
     [ExecuteAlways]
 #endif
-    public class UITextManager : MonoBehaviour
+    public class UiTextManager : MonoBehaviour
     {
         [InfoBoxCN("不要重置该组件(组件菜单栏的reset), 可能会导致引用的预设数据丢失!", InfoMessageType.Warning)]
         [ValueDropdown("GetFontAssetPresetDropdown")]

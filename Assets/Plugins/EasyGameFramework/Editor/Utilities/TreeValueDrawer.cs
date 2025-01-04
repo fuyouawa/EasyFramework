@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyGameFramework.Editor
@@ -12,6 +13,9 @@ namespace EasyGameFramework.Editor
         {
             return label;
         }
+
+        protected virtual bool ChildrenHasBox => false;
+        protected virtual float Indent => 10;
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
@@ -27,10 +31,14 @@ namespace EasyGameFramework.Editor
                     OnNodeExpandStateChanged,
                     Property.State.Expanded)
                 {
+                    Indent = Indent,
+                    ChildrenHasBox = ChildrenHasBox,
+                    OnNodeTitleBarGUI = OnNodeTitleBarGUI,
+                    OnNodeConveredTitleBarGUI = OnNodeCoveredTitleBarGUI,
+                    NodeHeaderRectGetter = GetNodeHeaderRect,
                     OnTitleBarGUI = OnTitleBarGUI,
-                    OnChildrenTitleBarGui = OnChildrenTitleBarGUI,
-                    OnBeforeChildrenDraw = OnBeforeChildrenDraw,
-                    OnAfterChildrenDraw = OnAfterChildrenDraw
+                    OnBeforeChildrenContentGUI = OnBeforeChildrenContentGUI,
+                    OnAfterChildrenContentGUI = OnAfterChildrenContentGUI
                 }
             );
         }
@@ -40,19 +48,28 @@ namespace EasyGameFramework.Editor
         public abstract bool GetNodeExpandState(TElement node);
         public abstract void OnNodeExpandStateChanged(TElement node, bool expand);
 
+        protected virtual Rect GetNodeHeaderRect(TElement node, int hierarchy)
+        {
+            return EditorGUILayout.GetControlRect(false);
+        }
+
         protected virtual void OnTitleBarGUI(Rect headerRect)
         {
         }
-
-        protected virtual void OnChildrenTitleBarGUI(TElement node, float indent, Rect headerRect)
+        
+        protected virtual void OnNodeCoveredTitleBarGUI(TElement node, int hierarchy, Rect headerRect)
         {
         }
 
-        protected virtual void OnBeforeChildrenDraw(TElement node, float indent)
+        protected virtual void OnNodeTitleBarGUI(TElement node, int hierarchy, Rect headerRect)
         {
         }
 
-        protected virtual void OnAfterChildrenDraw(TElement node, float indent, Rect headerRect)
+        protected virtual void OnBeforeChildrenContentGUI(TElement node, int hierarchy, Rect headerRect)
+        {
+        }
+
+        protected virtual void OnAfterChildrenContentGUI(TElement node, int hierarchy, Rect headerRect)
         {
         }
     }

@@ -10,6 +10,8 @@ namespace EasyGameFramework
         {
             typeof(EditorUtility).InvokeMethod("ForceRebuildInspectors", null);
         }
+
+        public static float MaxContentWidth => EditorGUIUtility.labelWidth + EditorGUIUtility.fieldWidth + 5.0f;
     }
 }
 

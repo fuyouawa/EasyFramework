@@ -37,14 +37,14 @@ namespace EasyGameFramework.Editor
 
         public override void OnInspectorGUI()
         {
-            var mgr = _textMeshProUGUI.GetComponent<UITextManager>();
+            var mgr = _textMeshProUGUI.GetComponent<UiTextManager>();
             if (mgr == null)
             {
                 SirenixEditorGUI.MessageBox("该UI文本组件没有被UITextManager管理, 您可以点击下方按钮自动添加", MessageType.Warning,
                     EasyGUIStyles.InfoBoxCN, true);
                 if (GUILayout.Button("添加UITextManager"))
                 {
-                    mgr = _textMeshProUGUI.gameObject.AddComponent<UITextManager>();
+                    mgr = _textMeshProUGUI.gameObject.AddComponent<UiTextManager>();
                     mgr.FontAssetPresetIndex = UITextPresetsManager.Instance.DefaultFontAssetPresetIndex;
                 }
             }

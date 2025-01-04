@@ -9,15 +9,13 @@ namespace EasyGameFramework.Editor
     {
         private static readonly float IconWidth = EditorGUIUtility.singleLineHeight;
 
-        protected override void OnTitleBarGUI(Rect rect)
+        protected override void OnCoveredTitleBarGUI(Rect headerRect)
         {
-            base.OnTitleBarGUI(rect);
-
             var value = ValueEntry.SmartValue;
 
-            var buttonRect = new Rect(rect)
+            var buttonRect = new Rect(headerRect)
             {
-                x = rect.x + 17,
+                x = headerRect.x + 17,
                 width = IconWidth,
                 height = IconWidth
             };

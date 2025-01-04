@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using System.Collections;
 using System.Linq;
+using EasyFramework;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -97,42 +98,43 @@ namespace EasyGameFramework.Editor
         
         public class ResultTreeNode
         {
-            public bool Expand;
-            public string Name;
-            public ResultTreeNode Parent;
-            public List<ResultTreeNode> Children = new();
+            public bool Expand { get; set; }
+            public string Name { get; }
+            public string FullName { get; }
+            public Transform Target { get; }
+            public ResultTreeNode Parent { get; }
+            public bool IsSearched { get; }
+            public List<ResultTreeNode> Children { get; } = new();
+
+            public bool IsScene => Parent == null;
 
             public ResultTreeNode(string name, ResultTreeNode parent = null)
             {
                 Name = name;
                 Expand = false;
                 Parent = parent;
-            }
-
-            private GameObject _gameObject;
-
-            public GameObject GameObjectInScene()
-            {
-                if (_gameObject == null)
+                if (parent != null)
                 {
-                    var path = GetAbsPath();
-                    _gameObject = GameObjectUtility.FindByAbsolutePath(path);
+                    if (parent.IsScene)
+                    {
+                        FullName = name;
+                        var f = GameObject.Find('/' + name)!;
+                        Target = f.transform!;
+                    }
+                    else
+                    {
+                        FullName = parent.FullName + '/' + name;
+                        foreach (Transform child in parent.Target)
+                        {
+                            if (child.gameObject.name == name)
+                            {
+                                Target = child;
+                            }
+                        }
+                    }
+
+                    IsSearched = Target!.GetComponent(Instance.TypeToSearch) != null;
                 }
-
-                return _gameObject;
-            }
-
-            public string GetAbsPath()
-            {
-                string path = Name;
-                var p = Parent;
-                while (p != null)
-                {
-                    path = p.Name + "/" + path;
-                    p = p.Parent;
-                }
-
-                return path;
             }
         }
 
@@ -144,7 +146,7 @@ namespace EasyGameFramework.Editor
         {
             public override string GetNodeLabel(ResultTreeNode node)
             {
-                return node.Name;
+                return node.IsSearched ? string.Empty : node.Name;
             }
 
             public override IList<ResultTreeNode> GetNodeChildren(ResultTreeNode node)
@@ -162,30 +164,18 @@ namespace EasyGameFramework.Editor
                 node.Expand = expand;
             }
 
-            protected override void OnBeforeChildrenDraw(ResultTreeNode node, float indent)
+            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, int hierarchy, Rect headerRect)
             {
-                if (node.Children.Count == 0)
+                if (node.IsSearched)
                 {
-                    var rect = EditorGUILayout.GetControlRect();
-                    rect.x += indent;
-                    rect.width -= indent;
-
+                    var off = Indent + 4;
+                    headerRect.x += off;
+                    headerRect.width -= off;
                     if (Instance.Mode == Modes.InScene)
                     {
-                        var go = node.GameObjectInScene();
-                        if (go != null)
+                        using (new EditorGUI.DisabledScope(true))
                         {
-                            using (new EditorGUI.DisabledScope(true))
-                            {
-                                EditorGUI.ObjectField(rect, go, typeof(GameObject), true);
-                            }
-                        }
-                        else
-                        {
-                            GUIStyle style = new GUIStyle(EditorStyles.boldLabel);
-                            style.normal.textColor =
-                                style.onNormal.textColor = new Color32(209, 137, 24, 255);
-                            EditorGUI.LabelField(rect, "Missing GameObject!", style);
+                            EditorGUI.ObjectField(headerRect, node.Target, node.Target.GetType(), true);
                         }
                     }
                 }

@@ -38,11 +38,12 @@ namespace EasyGameFramework.Editor
                     Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
                     _instance = GetWindow<UiTextManagerWindow>("UiTextManager Window");
                 }
+
                 Debug.Assert(_instance != null);
                 return _instance;
             }
         }
-        
+
         [MenuItem("Tools/EasyGameFramework/UiTextManager Window")]
         public static void ShowWindow()
         {
@@ -55,6 +56,7 @@ namespace EasyGameFramework.Editor
                     window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
                 }
             }
+
             _instance = window;
         }
 
@@ -88,7 +90,7 @@ namespace EasyGameFramework.Editor
                     if (obj != null && obj.GetComponentInChildren<TextMeshProUGUI>() != null)
                     {
                         var item = new PrefabAssetItem(path);
-                        
+
                         item.Analyse();
                         if (AssetItemFilter(item))
                         {
@@ -101,10 +103,12 @@ namespace EasyGameFramework.Editor
                             {
                                 icon = InternalEditorUtility.GetIconForFile(path);
                             }
-                            
-                            var p = path.Substring(assetsPath.Length, path.Length - assetsPath.Length - ".prefab".Length);
+
+                            var p = path.Substring(assetsPath.Length,
+                                path.Length - assetsPath.Length - ".prefab".Length);
                             tree.Add($"{prefix}/{p}", item, icon);
                         }
+
                         item.ClearCache();
                     }
                 }
@@ -148,9 +152,9 @@ namespace EasyGameFramework.Editor
                 return false;
             if (_settings.ViewModes == ViewModes.All)
                 return true;
-            
+
             var warn = item.HasWarn();
-            
+
             if (warn && _settings.ViewModes.HasFlag(ViewModes.Warn))
             {
                 return true;
@@ -163,13 +167,13 @@ namespace EasyGameFramework.Editor
 
             return false;
         }
-        
+
 
         protected override void OnEnable()
         {
             base.OnEnable();
             EditorApplication.update += EditorUpdate;
-            
+
             Load();
         }
 
@@ -190,7 +194,7 @@ namespace EasyGameFramework.Editor
                 _prevAutoSaveTime = EditorApplication.timeSinceStartup;
             }
         }
-        
+
         public void Save()
         {
             var json = EasyJsonConvert.SerializeObject(_settings, Formatting.Indented);
@@ -215,7 +219,7 @@ namespace EasyGameFramework.Editor
             {
                 _settings = val;
             }
-            
+
             if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
                 return;
             json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
@@ -228,7 +232,7 @@ namespace EasyGameFramework.Editor
         }
 
         #region Settings
-        
+
         [Flags]
         public enum ViewModes
         {
@@ -248,7 +252,7 @@ namespace EasyGameFramework.Editor
             [TitleGroupCN("配置")]
             [LabelText("管理位置")]
             public ManagerPositions ManagerPosition = ManagerPositions.InProject;
-        
+
             [TitleGroupCN("配置")]
             [FolderPath(ParentFolder = "Assets")]
             [ShowIf("ManagerPosition", ManagerPositions.InProject)]
@@ -256,12 +260,13 @@ namespace EasyGameFramework.Editor
             public string AssetsManagerPath = "Resources";
 
             [EnumToggleButtons]
-            [TitleGroup("配置/显示模式", boldTitle:false)]
+            [TitleGroup("配置/显示模式", boldTitle: false)]
             [HideLabel]
             public ViewModes ViewModes = ViewModes.All;
-        
+
             [TitleGroupCN("配置")]
-            [InfoBoxCN("注意：资产视图中的预制体不会实时更新，可能会出现类似错误都解决了但是图标依然是错误，或者预制体删除了但依然在显示，需要再次“重新加载资源视图”", InfoMessageType.Warning)]
+            [InfoBoxCN("注意：资产视图中的预制体不会实时更新，可能会出现类似错误都解决了但是图标依然是错误，或者预制体删除了但依然在显示，需要再次“重新加载资源视图”",
+                InfoMessageType.Warning)]
             [InfoBoxCN("任何资产配置的更改, 都需要点击“重新加载资源视图”才会实际应用")]
             [Button("重新加载资源视图")]
             [UsedImplicitly]
@@ -288,7 +293,7 @@ namespace EasyGameFramework.Editor
                 Instance.Save();
                 AssetDatabase.Refresh();
             }
-        
+
             [TitleGroup("数据存储")]
             [Button("加载编辑器设置")]
             [UsedImplicitly]
@@ -309,7 +314,7 @@ namespace EasyGameFramework.Editor
             [LabelText("资产路径")]
             [PropertyOrder(0)]
             public string AssetPath;
-            
+
             [Button("打开预制体", Icon = SdfIconType.Folder2Open)]
             [PropertyOrder(1)]
             public void OpenPrefab()
@@ -322,7 +327,7 @@ namespace EasyGameFramework.Editor
             [LabelText("条件1")]
             [PropertyOrder(2)]
             public bool Condition1 = true;
-            
+
             [FoldoutGroup("自动分析")]
             [InfoBoxCN("如果UITextManager的\"字体资产预设\"依然null，根据UI文本组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值")]
             [LabelText("条件2")]
@@ -353,13 +358,13 @@ namespace EasyGameFramework.Editor
                     OpenPrefab();
                     foreach (var node in Tree)
                     {
-                        var mgr = node.Target.GetComponent<UITextManager>();
+                        var mgr = node.Target.GetComponent<UiTextManager>();
                         if (mgr == null)
                         {
                             // 如果没有UITextManager组件会自动添加
                             if (Condition1)
                             {
-                                mgr = node.Target.gameObject.AddComponent<UITextManager>();
+                                mgr = node.Target.gameObject.AddComponent<UiTextManager>();
                             }
                             else
                             {
@@ -389,7 +394,7 @@ namespace EasyGameFramework.Editor
 
                         if (Condition4)
                         {
-                            var mgrs = node.Target.GetComponents<UITextManager>();
+                            var mgrs = node.Target.GetComponents<UiTextManager>();
                             if (mgrs.Length > 1)
                             {
                                 foreach (var m in mgrs.Skip(1))
@@ -398,7 +403,7 @@ namespace EasyGameFramework.Editor
                                 }
                             }
 
-                            Debug.Assert(node.Target.GetComponents<UITextManager>().Length <= 1);
+                            Debug.Assert(node.Target.GetComponents<UiTextManager>().Length <= 1);
                         }
                     }
                 }
@@ -408,9 +413,9 @@ namespace EasyGameFramework.Editor
             [TitleGroupCN("UI文本组件实例视图")]
             [HideLabel]
             [PropertyOrder(7)]
-            [TitleGroup("UI文本组件实例视图/显示模式", boldTitle:false)]
+            [TitleGroup("UI文本组件实例视图/显示模式", boldTitle: false)]
             public ItemsViewModes ViewMode = ItemsViewModes.All;
-            
+
             [TitleGroupCN("UI文本组件实例视图")]
             [LabelText("实例列表")]
             [PropertyOrder(8)]
@@ -467,10 +472,10 @@ namespace EasyGameFramework.Editor
                             node2 = new PrefabTreeNode(s, AssetPath, node);
                             node.Children.Add(node2);
                         }
+
                         node = node2;
                     }
                 }
-
             }
 
             private bool PrefabFilter(GameObject prefab)
@@ -534,6 +539,7 @@ namespace EasyGameFramework.Editor
                 }
             }
         }
+
         public static bool PrefabHasWarn(GameObject obj)
         {
             return PrefabHasNotManager(obj) || PrefabHasRepeatedManager(obj);
@@ -541,24 +547,23 @@ namespace EasyGameFramework.Editor
 
         public static bool PrefabHasNotManager(GameObject obj)
         {
-            return obj.GetComponent<UITextManager>() == null;
+            return obj.GetComponent<UiTextManager>() == null;
         }
 
         public static bool PrefabHasRepeatedManager(GameObject obj)
         {
-            return obj.GetComponents<UITextManager>().Length > 1;
+            return obj.GetComponents<UiTextManager>().Length > 1;
         }
-
 
         #endregion
 
         #region PrefabAssetNode
-        
+
         [Serializable]
         public class PrefabTreeNode
         {
             public string Name { get; }
-            
+
             public string AssetPath { get; }
             public string FullName { get; }
 
@@ -569,7 +574,7 @@ namespace EasyGameFramework.Editor
             public Transform Target { get; }
             public List<PrefabTreeNode> Children { get; } = new();
             public bool Expand { get; set; }
-            
+
             public PrefabTreeNode(string name, PrefabTreeNode parent = null)
                 : this(name, string.Empty, parent)
             {
@@ -599,6 +604,7 @@ namespace EasyGameFramework.Editor
                         }
                     }
                 }
+
                 Debug.Assert(Target != null);
                 TextGUI = Target!.GetComponent<TextMeshProUGUI>();
             }
@@ -614,31 +620,13 @@ namespace EasyGameFramework.Editor
                 return AssetDatabase.LoadAssetAtPath<GameObject>(AssetPath);
             }
 
-            [InfoBoxCN("@TextManagerInfo", VisibleIf = "@!HasNotManager()")]
-            [InfoBoxCN("该UI文本组件没有被UITextManager管理", InfoMessageType.Warning, VisibleIf = "HasNotManager")]
-            [InfoBoxCN("该UI文本组件有多个重复的UITextManager", InfoMessageType.Warning, VisibleIf = "HasRepeatedManager")]
-            [Button("在Hierarchy中选中该物体")]
-            [UsedImplicitly]
-            private void Select()
+            public void Select()
             {
                 var ps = PrefabStageUtility.OpenPrefab(AssetPath);
                 var target = ps.prefabContentsRoot.transform.Find(FullName);
                 Debug.Assert(target != null);
                 Selection.activeObject = target;
                 EditorGUIUtility.PingObject(target);
-            }
-
-            public string TextManagerInfo
-            {
-                get
-                {
-                    var mgr = Target.GetComponent<UITextManager>();
-                    var n1 = mgr.FontAssetPreset?.Label;
-                    var n2 = mgr.TextPropertiesPreset?.Label;
-                    return $"该UI文本组件使用的预设为\n" +
-                           $"字体资产预设:{n1.DefaultIfNullOrEmpty("无")}\n" +
-                           $"Text属性预设:{n2.DefaultIfNullOrEmpty("无")}";
-                }
             }
 
             public bool HasNotManager() => PrefabHasNotManager(Prefab);
@@ -648,7 +636,6 @@ namespace EasyGameFramework.Editor
         [Serializable]
         public class PrefabTree : List<PrefabTreeNode>
         {
-            
         }
 
         public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNode>
@@ -673,7 +660,9 @@ namespace EasyGameFramework.Editor
                 node.Expand = expand;
             }
 
-            protected override void OnChildrenTitleBarGUI(PrefabTreeNode node, float indent, Rect headerRect)
+            protected override bool ChildrenHasBox => true;
+
+            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, int hierarchy, Rect headerRect)
             {
                 var p = headerRect.position;
                 p.x += 14;
@@ -690,56 +679,20 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            protected override void OnBeforeChildrenDraw(PrefabTreeNode node, float indent)
+            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, int hierarchy, Rect headerRect)
             {
                 if (node.Children.IsNullOrEmpty())
                 {
                     var rect = EditorGUILayout.GetControlRect();
-                    rect.x += indent;
-                    rect.width -= indent;
+                    rect.x += hierarchy * Indent;
+                    rect.width -= hierarchy * Indent;
 
                     rect.x += 5;
                     rect.width -= 5;
-                    
+
                     DrawIcon(node, rect.position);
                     EditorGUI.LabelField(rect, GetNodeLabel(node));
                 }
-                // var label2 = GUIHelper.TempContent("      " + node.FullName);
-                //
-                // var iconWidth = EditorGUIUtility.singleLineHeight;
-                // var iconInterval = 3f;
-                //
-                // var buttonRect = new Rect(headerRect)
-                // {
-                //     x = headerRect.x + 17,
-                //     width = iconWidth,
-                //     height = iconWidth
-                // };
-                //
-                // var iconRect = new Rect(headerRect)
-                // {
-                //     x = headerRect.xMax - iconWidth,
-                //     width = iconWidth,
-                //     height = iconWidth
-                // };
-                //
-                // if (node.PrefabHasWarn())
-                // {
-                //     GUI.DrawTexture(iconRect, EditorIcons.UnityWarningIcon);
-                //     iconRect.x -= iconWidth + iconInterval;
-                // }
-                //
-                // if (!node.Target.gameObject.activeSelf)
-                // {
-                //     SdfIcons.DrawIcon(iconRect, SdfIconType.Lightbulb);
-                // }
-                // else if (!node.Target.gameObject.activeInHierarchy)
-                // {
-                //     SdfIcons.DrawIcon(iconRect, SdfIconType.LightbulbOff);
-                // }
-                //
-                // node.Checked = EditorGUI.Toggle(buttonRect, node.Checked);
-                // EditorGUI.LabelField();
             }
         }
 
