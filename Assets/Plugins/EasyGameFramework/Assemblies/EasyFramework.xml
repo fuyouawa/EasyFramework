@@ -4,30 +4,6 @@
         <name>EasyFramework</name>
     </assembly>
     <members>
-        <member name="M:EasyFramework.ListExtension.IsNullOrEmpty``1(System.Collections.Generic.IList{``0})">
-            <summary>
-            
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="val"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.ListExtension.IsNotNullOrEmpty``1(System.Collections.Generic.IList{``0})">
-            <summary>
-            
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="val"></param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.ListExtension.AddRange``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="val"></param>
-            <param name="enumerable"></param>
-        </member>
         <member name="T:EasyFramework.CanBeNullAttribute">
             <summary>
             Indicates that the value of the marked element could be <c>null</c> sometimes,

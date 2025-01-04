@@ -5,6 +5,7 @@ using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using EasyFramework;
+using JetBrains.Annotations;
 
 namespace EasyGameFramework
 {
@@ -319,6 +320,7 @@ namespace EasyGameFramework
                 .ToArray();
         }
 
+        [UsedImplicitly]
         private void OnAddFeedback()
         {
             void OnConfirm(Type t)
@@ -332,7 +334,7 @@ namespace EasyGameFramework
                 FeedbackList.Add(inst);
             }
 
-            var config = new PopupSelectorConfig<Type>(s_allFeedbackTypes, OnConfirm)
+            var config = new EasyEditorGUI.PopupSelectorConfig<Type>(s_allFeedbackTypes, OnConfirm)
             {
                 MenuItemNameGetter = t => t.GetCustomAttribute<AddEasyFeedbackMenuAttribute>().Path
             };

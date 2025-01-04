@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EasyGameFramework.Editor
 {
-    public class AbstractEasyFeedbackDrawer : FoldableObjectDrawer<AbstractEasyFeedback>
+    public class AbstractEasyFeedbackDrawer : FoldoutValueDrawer<AbstractEasyFeedback>
     {
         private static readonly float IconWidth = EditorGUIUtility.singleLineHeight;
 

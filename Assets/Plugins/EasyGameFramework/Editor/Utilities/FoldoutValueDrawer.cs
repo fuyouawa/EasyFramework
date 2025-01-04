@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace EasyGameFramework.Editor
 {
-    public abstract class FoldableObjectDrawer<T> : OdinValueDrawer<T>
+    public abstract class FoldoutValueDrawer<T> : OdinValueDrawer<T>
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            var config = new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), GetLabel(label),
+            var config = new EasyEditorGUI.FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), GetLabel(label),
                 Property.State.Expanded)
             {
                 OnTitleBarGUI = OnTitleBarGUI,

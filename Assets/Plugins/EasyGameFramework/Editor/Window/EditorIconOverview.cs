@@ -4,21 +4,18 @@ using System;
 using UnityEditor;
 using System.Linq;
 using System.IO;
+using JetBrains.Annotations;
 
 namespace EasyGameFramework.Editor
 {
     //git@github.com:nukadelic/UnityEditorIcons.git
-    internal class EditorIconsWindow : EditorWindow
+    internal class EditorIconOverview : EditorWindow
     {
-        [MenuItem("Tools/EasyGameFramework/Editor Icons", priority = -1001)]
-        public static void EditorIconsOpen()
+        [MenuItem("Tools/EasyGameFramework/Editor Icon Overview", priority = -1001)]
+        [UsedImplicitly]
+        public static void ShowWindow()
         {
-#if UNITY_2018
-            var w = GetWindow<EditorIcons>("Editor Icons");
-#else
-            var w = CreateWindow<EditorIconsWindow>("Editor Icons");
-#endif
-            w.ShowUtility();
+            var w = GetWindow<EditorIconOverview>("Editor Icon Overview");
             w.minSize = new Vector2(320, 450);
         }
 
