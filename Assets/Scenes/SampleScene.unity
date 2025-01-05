@@ -195,6 +195,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &387806171
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 387806172}
+  m_Layer: 0
+  m_Name: GameObject (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &387806172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387806171}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1640216910}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &472785369
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +285,67 @@ MonoBehaviour:
         Assembly-CSharp-firstpass]], mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
       Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -268,6 +359,38 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+--- !u!1 &496268285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 496268286}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &496268286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 496268285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 879624655}
+  m_Father: {fileID: 1937517888}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -609,7 +732,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1874861992}
+  m_Father: {fileID: 496268286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &879624656
 MonoBehaviour:
@@ -792,6 +915,38 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &990830402
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 990830403}
+  m_Layer: 0
+  m_Name: GameObject (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &990830403
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990830402}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1640216910}
+  m_Father: {fileID: 1903165441}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1151300943
 GameObject:
@@ -1041,6 +1196,140 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1640216909
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1640216910}
+  - component: {fileID: 1640216911}
+  m_Layer: 0
+  m_Name: GameObject (9)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1640216910
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640216909}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 387806172}
+  m_Father: {fileID: 990830403}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1640216911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640216909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce19b0dafeb3d714e9a09cffcb18a239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: FeedbackList
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
+        Assembly-CSharp-firstpass]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  InitializationMode: 0
+  AutoInitialization: 1
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 0
+  CanMultiPlay: 0
 --- !u!1 &1874861990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,7 +1403,6 @@ Transform:
   m_Children:
   - {fileID: 472785370}
   - {fileID: 1937517888}
-  - {fileID: 879624655}
   - {fileID: 2116186563}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1162,7 +1450,67 @@ MonoBehaviour:
         Assembly-CSharp-firstpass]], mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
       Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -1188,7 +1536,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 990830403}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1937517887
@@ -1220,7 +1569,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 496268286}
   m_Father: {fileID: 1874861992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1937517889

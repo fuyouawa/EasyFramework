@@ -36,7 +36,7 @@ namespace EasyGameFramework.Editor
         {
         }
 
-        protected virtual void OnContentGUI()
+        protected virtual void OnContentGUI(Rect headerRect)
         {
             foreach (var child in ValueEntry.Property.Children)
             {

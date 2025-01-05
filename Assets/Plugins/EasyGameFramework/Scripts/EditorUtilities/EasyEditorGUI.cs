@@ -62,9 +62,11 @@ namespace EasyGameFramework
         #region Delegates Define
 
         public delegate void OnCoveredTitleBarGUIDelegate(Rect headerRect);
+
         public delegate void OnTitleBarGUIDelegate(Rect headerRect);
-        public delegate Rect HeaderRectGetterDelegate();
-        public delegate void OnContentGUIDelegate();
+
+        public delegate void OnContentGUIDelegate(Rect headerRect);
+
         public delegate void OnBeforeFoldoutGUIDelegate(Rect headerRect);
 
         #endregion
@@ -294,7 +296,6 @@ namespace EasyGameFramework
             public bool Expand;
             public bool Expandable = true;
             public OnBeforeFoldoutGUIDelegate OnBeforeFoldoutGUI;
-            public HeaderRectGetterDelegate HeaderRectGetter;
             public GUIContent RightLabel = GUIContent.none;
             public bool HasBox = true;
 
@@ -316,7 +317,6 @@ namespace EasyGameFramework
             public GUIContent Label;
             public bool Expand;
             public bool Expandable = true;
-            public HeaderRectGetterDelegate HeaderRectGetter;
             public GUIContent RightLabel = GUIContent.none;
             public bool HasBox = true;
 
@@ -344,6 +344,7 @@ namespace EasyGameFramework
             EndFoldoutHeader();
             return e;
         }
+
         public static bool FoldoutHeader(FoldoutHeaderConfig config, out Rect headerRect)
         {
             var e = BeginFoldoutHeader(config, out headerRect);
@@ -362,12 +363,11 @@ namespace EasyGameFramework
             {
                 SirenixEditorGUI.BeginBox();
             }
-            
+
             config.Expand = BeginFoldoutHeader(new FoldoutHeaderConfig(config.Label, config.Expand)
             {
                 Expandable = config.Expandable,
                 HasBox = config.HasBox,
-                HeaderRectGetter = config.HeaderRectGetter,
                 RightLabel = config.RightLabel,
                 OnBeforeFoldoutGUI = rect => config.OnCoveredTitleBarGUI?.Invoke(rect)
             }, out var headerRect);
@@ -375,12 +375,19 @@ namespace EasyGameFramework
             config.OnTitleBarGUI?.Invoke(headerRect);
             EndFoldoutHeader();
 
-            if (SirenixEditorGUI.BeginFadeGroup(config.Key, config.Expand))
+            if (config.Expandable)
             {
-                config.OnContentGUI?.Invoke();
-            }
+                if (SirenixEditorGUI.BeginFadeGroup(config.Key, config.Expand))
+                {
+                    config.OnContentGUI?.Invoke(headerRect);
+                }
 
-            SirenixEditorGUI.EndFadeGroup();
+                SirenixEditorGUI.EndFadeGroup();
+            }
+            else
+            {
+                config.OnContentGUI?.Invoke(headerRect);
+            }
 
             if (config.HasBox)
             {
@@ -402,15 +409,8 @@ namespace EasyGameFramework
             {
                 SirenixEditorGUI.BeginBoxHeader();
             }
-
-            if (config.HeaderRectGetter != null)
-            {
-                headerRect = config.HeaderRectGetter();
-            }
-            else
-            {
-                headerRect = EditorGUILayout.GetControlRect(false);
-            }
+            
+            headerRect = EditorGUILayout.GetControlRect(false);
 
             if (config.RightLabel != null && config.RightLabel != GUIContent.none)
             {
@@ -426,7 +426,7 @@ namespace EasyGameFramework
             else
             {
                 var rect = headerRect;
-                rect.x += 13;
+                // rect.x += 13;
                 EditorGUI.LabelField(rect, config.Label);
             }
 
@@ -607,36 +607,40 @@ namespace EasyGameFramework
 
         #region TreeGroup
 
+        public class TreeNodeState
+        {
+            public delegate void OnExpandChangedDelegate(bool expand);
+
+            public bool Expand = false;
+            public bool HasBox = false;
+            public bool? Expandable;
+
+            public OnExpandChangedDelegate OnExpandChanged;
+        }
+
         public class TreeGroupConfig<TElement>
         {
             public delegate string NodeLabelGetterDelegate(TElement node);
 
             public delegate IList<TElement> NodeChildrenGetterDelegate(TElement node);
 
-            public delegate bool NodeExpandStateGetterDelegate(TElement node);
+            public delegate TreeNodeState NodeStateGetterDelegate(TElement node);
 
-            public delegate void OnNodeExpandStateChangedDelegate(TElement node, bool expand);
-            
-            public delegate void OnNodeTitleBarGUIDelegate(TElement node, int hierarchy, Rect headerRect);
-            public delegate void OnNodeConveredTitleBarGUIDelegate(TElement node, int hierarchy, Rect headerRect);
+            public delegate void OnNodeTitleBarGUIDelegate(TElement node, Rect headerRect);
 
-            public delegate void OnBeforeChildrenContentGUIDelegate(TElement node, int hierarchy, Rect headerRect);
+            public delegate void OnNodeConveredTitleBarGUIDelegate(TElement node, Rect headerRect);
 
-            public delegate void OnAfterChildrenContentGUIDelegate(TElement node, int hierarchy, Rect headerRect);
+            public delegate void OnBeforeChildrenContentGUIDelegate(TElement node, Rect headerRect);
 
-            public delegate Rect NodeHeaderRectGetterDelegate(TElement node, int hierarchy);
+            public delegate void OnAfterChildrenContentGUIDelegate(TElement node, Rect headerRect);
 
             public object Key;
             public GUIContent Label;
             public bool Expand;
-            public float Indent = 10;
 
-            public bool ChildrenHasBox = false;
             public NodeLabelGetterDelegate NodeLabelGetter;
             public NodeChildrenGetterDelegate NodeChildrenGetter;
-            public NodeExpandStateGetterDelegate NodeExpandStateGetter;
-            public OnNodeExpandStateChangedDelegate OnNodeExpandStateChanged;
-            public NodeHeaderRectGetterDelegate NodeHeaderRectGetter;
+            public NodeStateGetterDelegate NodeStateGetter;
 
             public OnTitleBarGUIDelegate OnTitleBarGUI;
             public OnNodeTitleBarGUIDelegate OnNodeTitleBarGUI;
@@ -648,72 +652,64 @@ namespace EasyGameFramework
             public TreeGroupConfig(object key, string label,
                 NodeLabelGetterDelegate nodeLabelGetter,
                 NodeChildrenGetterDelegate nodeChildrenGetter,
-                NodeExpandStateGetterDelegate nodeExpandStateGetter,
-                OnNodeExpandStateChangedDelegate onNodeExpandStateChanged,
+                NodeStateGetterDelegate nodeStateGetter,
                 bool expand = true) : this(key, new GUIContent(label), nodeLabelGetter, nodeChildrenGetter,
-                nodeExpandStateGetter, onNodeExpandStateChanged, expand)
+                nodeStateGetter, expand)
             {
             }
 
             public TreeGroupConfig(object key, GUIContent label,
                 NodeLabelGetterDelegate nodeLabelGetter,
                 NodeChildrenGetterDelegate nodeChildrenGetter,
-                NodeExpandStateGetterDelegate nodeExpandStateGetter,
-                OnNodeExpandStateChangedDelegate onNodeExpandStateChanged,
+                NodeStateGetterDelegate nodeStateGetter,
                 bool expand = true)
             {
                 Key = key;
                 NodeLabelGetter = nodeLabelGetter;
                 NodeChildrenGetter = nodeChildrenGetter;
-                NodeExpandStateGetter = nodeExpandStateGetter;
-                OnNodeExpandStateChanged = onNodeExpandStateChanged;
+                NodeStateGetter = nodeStateGetter;
                 Label = label;
                 Expand = expand;
             }
         }
 
-        private static void DrawTreeNode<TElement>(TElement node, int hierarchy, TreeGroupConfig<TElement> config)
+        private static void DrawTreeNode<TElement>(TElement node, TreeGroupConfig<TElement> config)
         {
-            var off = hierarchy * config.Indent;
-
             var children = config.NodeChildrenGetter(node);
 
-            var rect = config.NodeHeaderRectGetter?.Invoke(node, hierarchy) ?? EditorGUILayout.GetControlRect(false);
-            rect.x += off;
-            rect.width -= off;
-
-            var expand = config.NodeExpandStateGetter(node);
+            var state = config.NodeStateGetter(node);
             var label = config.NodeLabelGetter(node);
-            var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, expand)
+            var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand)
             {
-                HasBox = config.ChildrenHasBox,
-                HeaderRectGetter = () => rect,
-                Expandable = children.IsNotNullOrEmpty(),
-                OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, hierarchy, headerRect),
-                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, hierarchy, headerRect),
-                OnContentGUI = () =>
+                HasBox = state.HasBox,
+                Expandable = state.Expandable ?? children.IsNotNullOrEmpty(),
+                OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, headerRect),
+                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect),
+                OnContentGUI = headerRect =>
                 {
-                    config.OnBeforeChildrenContentGUI?.Invoke(node, hierarchy, rect);
+                    config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect);
                     if (children.IsNotNullOrEmpty())
                     {
-                        DrawTreeNodes(children, hierarchy + 1, config);
+                        DrawTreeNodes(children, config);
                     }
 
-                    config.OnAfterChildrenContentGUI?.Invoke(node, hierarchy, rect);
+                    config.OnAfterChildrenContentGUI?.Invoke(node, headerRect);
                 }
             });
-            if (expand2 != expand)
+            if (expand2 != state.Expand)
             {
-                config.OnNodeExpandStateChanged(node, expand2);
+                state.Expand = expand2;
+                state.OnExpandChanged?.Invoke(expand2);
             }
         }
 
         private static void ExpandTreeNode<TElement>(TElement node, bool expand, TreeGroupConfig<TElement> config)
         {
-            var expand2 = config.NodeExpandStateGetter(node);
-            if (expand2 != expand)
+            var state = config.NodeStateGetter(node);
+            if (state.Expand != expand)
             {
-                config.OnNodeExpandStateChanged(node, expand);
+                state.Expand = expand;
+                state.OnExpandChanged?.Invoke(expand);
             }
 
             ExpandTreeNodes(config.NodeChildrenGetter(node), expand, config);
@@ -730,14 +726,13 @@ namespace EasyGameFramework
             }
         }
 
-        private static void DrawTreeNodes<TElement>(IList<TElement> nodes, int hierarchy,
-            TreeGroupConfig<TElement> config)
+        private static void DrawTreeNodes<TElement>(IList<TElement> nodes, TreeGroupConfig<TElement> config)
         {
             if (nodes == null)
                 return;
             foreach (var node in nodes)
             {
-                DrawTreeNode(node, hierarchy, config);
+                DrawTreeNode(node, config);
             }
         }
 
@@ -750,7 +745,7 @@ namespace EasyGameFramework
                 OnMinimize = () => ExpandTreeNodes(nodes, false, config),
                 ShowFoldout = nodes != null,
                 OnTitleBarGUI = rect => config.OnTitleBarGUI?.Invoke(rect),
-                OnContentGUI = () => DrawTreeNodes(nodes, 0, config)
+                OnContentGUI = () => DrawTreeNodes(nodes, config)
             });
         }
 

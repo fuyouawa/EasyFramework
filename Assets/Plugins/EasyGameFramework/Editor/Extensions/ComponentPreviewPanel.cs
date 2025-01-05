@@ -76,7 +76,7 @@ namespace EasyGameFramework.Editor
                         InternalEditorUtility.SetIsInspectorExpanded(c, true);
                     }
 
-                    EasyEditorUtility.ForceRebuildInspectors();
+                    EasyEditorHelper.ForceRebuildInspectors();
                 };
 
                 _listDrawer.OnCollapseCallback += () =>
@@ -86,7 +86,7 @@ namespace EasyGameFramework.Editor
                         InternalEditorUtility.SetIsInspectorExpanded(c, false);
                     }
 
-                    EasyEditorUtility.ForceRebuildInspectors();
+                    EasyEditorHelper.ForceRebuildInspectors();
                 };
 
                 _listDrawer.DrawHeaderCallback += rect =>
@@ -327,7 +327,7 @@ namespace EasyGameFramework.Editor
                     foreach (var c in targetComponents)
                         InternalEditorUtility.SetIsInspectorExpanded(c, value);
 
-                    EasyEditorUtility.ForceRebuildInspectors();
+                    EasyEditorHelper.ForceRebuildInspectors();
                 }
             }
 

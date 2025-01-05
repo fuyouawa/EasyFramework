@@ -15,7 +15,6 @@ namespace EasyGameFramework.Editor
         }
 
         protected virtual bool ChildrenHasBox => false;
-        protected virtual float Indent => 10;
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
@@ -27,15 +26,11 @@ namespace EasyGameFramework.Editor
                     GetLabel(label),
                     GetNodeLabel,
                     GetNodeChildren,
-                    GetNodeExpandState,
-                    OnNodeExpandStateChanged,
+                    GetNodeState,
                     Property.State.Expanded)
                 {
-                    Indent = Indent,
-                    ChildrenHasBox = ChildrenHasBox,
                     OnNodeTitleBarGUI = OnNodeTitleBarGUI,
                     OnNodeConveredTitleBarGUI = OnNodeCoveredTitleBarGUI,
-                    NodeHeaderRectGetter = GetNodeHeaderRect,
                     OnTitleBarGUI = OnTitleBarGUI,
                     OnBeforeChildrenContentGUI = OnBeforeChildrenContentGUI,
                     OnAfterChildrenContentGUI = OnAfterChildrenContentGUI
@@ -45,31 +40,25 @@ namespace EasyGameFramework.Editor
 
         public abstract string GetNodeLabel(TElement node);
         public abstract IList<TElement> GetNodeChildren(TElement node);
-        public abstract bool GetNodeExpandState(TElement node);
-        public abstract void OnNodeExpandStateChanged(TElement node, bool expand);
-
-        protected virtual Rect GetNodeHeaderRect(TElement node, int hierarchy)
-        {
-            return EditorGUILayout.GetControlRect(false);
-        }
+        public abstract EasyEditorGUI.TreeNodeState GetNodeState(TElement node);
 
         protected virtual void OnTitleBarGUI(Rect headerRect)
         {
         }
         
-        protected virtual void OnNodeCoveredTitleBarGUI(TElement node, int hierarchy, Rect headerRect)
+        protected virtual void OnNodeCoveredTitleBarGUI(TElement node, Rect headerRect)
         {
         }
 
-        protected virtual void OnNodeTitleBarGUI(TElement node, int hierarchy, Rect headerRect)
+        protected virtual void OnNodeTitleBarGUI(TElement node, Rect headerRect)
         {
         }
 
-        protected virtual void OnBeforeChildrenContentGUI(TElement node, int hierarchy, Rect headerRect)
+        protected virtual void OnBeforeChildrenContentGUI(TElement node, Rect headerRect)
         {
         }
 
-        protected virtual void OnAfterChildrenContentGUI(TElement node, int hierarchy, Rect headerRect)
+        protected virtual void OnAfterChildrenContentGUI(TElement node, Rect headerRect)
         {
         }
     }

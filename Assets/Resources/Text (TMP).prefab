@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 5389826584772733846}
   - component: {fileID: 270419373989354585}
   - component: {fileID: 5328703129791697072}
+  - component: {fileID: 3085270576319132712}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -276,6 +277,107 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3085270576319132712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895268627358715033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce19b0dafeb3d714e9a09cffcb18a239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: FeedbackList
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
+        Assembly-CSharp-firstpass]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  InitializationMode: 0
+  AutoInitialization: 1
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 0
+  CanMultiPlay: 0
 --- !u!1 &2214842931601452036
 GameObject:
   m_ObjectHideFlags: 0

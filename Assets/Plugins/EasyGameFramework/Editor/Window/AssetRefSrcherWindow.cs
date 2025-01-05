@@ -98,7 +98,7 @@ namespace EasyGameFramework.Editor
         
         public class ResultTreeNode
         {
-            public bool Expand { get; set; }
+            public EasyEditorGUI.TreeNodeState State { get; } = new();
             public string Name { get; }
             public string FullName { get; }
             public Transform Target { get; }
@@ -111,7 +111,6 @@ namespace EasyGameFramework.Editor
             public ResultTreeNode(string name, ResultTreeNode parent = null)
             {
                 Name = name;
-                Expand = false;
                 Parent = parent;
                 if (parent != null)
                 {
@@ -154,23 +153,22 @@ namespace EasyGameFramework.Editor
                 return node.Children;
             }
 
-            public override bool GetNodeExpandState(ResultTreeNode node)
+            public override EasyEditorGUI.TreeNodeState GetNodeState(ResultTreeNode node)
             {
-                return node.Expand;
+                node.State.HasBox = node.Children.IsNotNullOrEmpty();
+                return node.State;
             }
 
-            public override void OnNodeExpandStateChanged(ResultTreeNode node, bool expand)
-            {
-                node.Expand = expand;
-            }
-
-            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, int hierarchy, Rect headerRect)
+            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, Rect headerRect)
             {
                 if (node.IsSearched)
                 {
-                    var off = Indent + 4;
-                    headerRect.x += off;
-                    headerRect.width -= off;
+                    if (node.Children.IsNotNullOrEmpty())
+                    {
+                        var indent = 14;
+                        headerRect.x += indent;
+                        headerRect.width -= indent;
+                    }
                     if (Instance.Mode == Modes.InScene)
                     {
                         using (new EditorGUI.DisabledScope(true))

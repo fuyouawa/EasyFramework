@@ -573,7 +573,7 @@ namespace EasyGameFramework.Editor
             public PrefabTreeNode Parent { get; }
             public Transform Target { get; }
             public List<PrefabTreeNode> Children { get; } = new();
-            public bool Expand { get; set; }
+            public EasyEditorGUI.TreeNodeState State { get; } = new();
 
             public PrefabTreeNode(string name, PrefabTreeNode parent = null)
                 : this(name, string.Empty, parent)
@@ -650,22 +650,21 @@ namespace EasyGameFramework.Editor
                 return node.Children;
             }
 
-            public override bool GetNodeExpandState(PrefabTreeNode node)
+            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNode node)
             {
-                return node.Expand;
-            }
-
-            public override void OnNodeExpandStateChanged(PrefabTreeNode node, bool expand)
-            {
-                node.Expand = expand;
+                node.State.HasBox = true;
+                return node.State;
             }
 
             protected override bool ChildrenHasBox => true;
 
-            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, int hierarchy, Rect headerRect)
+            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect)
             {
                 var p = headerRect.position;
-                p.x += 14;
+                if (node.Children.IsNotNullOrEmpty())
+                {
+                    p.x += 14;
+                }
                 DrawIcon(node, p);
             }
 
@@ -679,19 +678,15 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, int hierarchy, Rect headerRect)
+            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect)
             {
-                if (node.Children.IsNullOrEmpty())
+                if (node.TextGUI != null)
                 {
-                    var rect = EditorGUILayout.GetControlRect();
-                    rect.x += hierarchy * Indent;
-                    rect.width -= hierarchy * Indent;
-
-                    rect.x += 5;
-                    rect.width -= 5;
-
-                    DrawIcon(node, rect.position);
-                    EditorGUI.LabelField(rect, GetNodeLabel(node));
+                    var mgr = node.Target.GetComponent<UiTextManager>();
+                    if (mgr == null)
+                    {
+                        SirenixEditorGUI.MessageBox("未被UiTextManager管理", MessageType.Warning, EasyGUIStyles.InfoBoxCN, true);
+                    }
                 }
             }
         }
