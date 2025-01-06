@@ -16,6 +16,8 @@ using Pokemon.UI;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using Sirenix.Serialization;
+using UnityEngine.SceneManagement;
+using static UnityEngine.GraphicsBuffer;
 
 namespace EasyGameFramework.Editor
 {
@@ -61,23 +63,91 @@ namespace EasyGameFramework.Editor
         }
 
         private Settings _settings = new();
-        private PrefabAssetItem _prevSelectionItem;
+        private PrefabItemBase _prevSelectionItem;
 
         public void Rebuild()
         {
             ForceMenuTreeRebuild();
         }
 
+        private static readonly string Group = "资产视图";
+
         protected override OdinMenuTree BuildMenuTree()
         {
-            var assetsPath = $"Assets/{_settings.AssetsManagerPath}/";
-            var prefix = "资产视图";
-            var tree = new OdinMenuTree()
+            var tree = new OdinMenuTree
             {
                 { "设置", _settings, SdfIconType.GearFill },
-                { prefix, null }
+                { Group, null }
             };
+
+            if (_settings.ManagerPosition == ManagerPositions.InProject)
+            {
+                LoadInProject(tree);
+            }
+            else
+            {
+                LoadInScene(tree);
+            }
+
             tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
+
+            tree.Selection.SupportsMultiSelect = false;
+            tree.Selection.SelectionChanged += type =>
+            {
+                if (type == SelectionChangedType.ItemAdded)
+                {
+                    if (tree.Selection.SelectedValue is PrefabItemBase item)
+                    {
+                        _prevSelectionItem?.ClearCache();
+                        _prevSelectionItem = item;
+                        item.Analyse();
+                        if (_settings.AutoOpenSelectionPrefab)
+                        {
+                            item.OpenPrefab();
+                        }
+                    }
+                }
+            };
+            return tree;
+        }
+
+        private void LoadInScene(OdinMenuTree tree)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.IsValid() && scene.isLoaded)
+                {
+                    var sceneName = $"{scene.name}.scene";
+                    tree.Add($"{Group}/{sceneName}", null, EditorIcons.UnityLogo);
+
+                    foreach (var o in scene.GetRootGameObjects())
+                    {
+                        if (o.GetComponentsInChildren<TextMeshProUGUI>(true).IsNotNullOrEmpty())
+                        {
+                            var item = new PrefabSceneItem(o, $"{sceneName}/{o.name}");
+
+                            item.Analyse();
+                            if (AssetItemFilter(item))
+                            {
+                                var icon = item.HasIncorrect()
+                                    ? EditorIcons.UnityWarningIcon
+                                    : EditorIcons.UnityGameObjectIcon;
+
+                                tree.Add($"{Group}/{sceneName}/{o.name}", item, icon);
+                            }
+
+                            item.ClearCache();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void LoadInProject(OdinMenuTree tree)
+        {
+            var assetsPath = $"Assets/{_settings.AssetsManagerPath}/";
 
             if (_settings.AssetsManagerPath.IsNotNullOrEmpty())
             {
@@ -94,26 +164,20 @@ namespace EasyGameFramework.Editor
                         item.Analyse();
                         if (AssetItemFilter(item))
                         {
-                            Texture2D icon;
-                            if (item.HasWarn())
-                            {
-                                icon = EditorIcons.UnityWarningIcon;
-                            }
-                            else
-                            {
-                                icon = InternalEditorUtility.GetIconForFile(path);
-                            }
+                            var icon = item.HasIncorrect()
+                                ? EditorIcons.UnityWarningIcon
+                                : InternalEditorUtility.GetIconForFile(path);
 
                             var p = path.Substring(assetsPath.Length,
                                 path.Length - assetsPath.Length - ".prefab".Length);
-                            tree.Add($"{prefix}/{p}", item, icon);
+                            tree.Add($"{Group}/{p}", item, icon);
                         }
 
                         item.ClearCache();
                     }
                 }
 
-                var items = tree.MenuItems.First(i => i.Name == prefix).GetChildMenuItemsRecursive(false);
+                var items = tree.MenuItems.First(i => i.Name == Group).GetChildMenuItemsRecursive(false);
                 foreach (var item in items)
                 {
                     if (item.Value == null)
@@ -122,29 +186,10 @@ namespace EasyGameFramework.Editor
                     }
                 }
             }
-
-            tree.Selection.SupportsMultiSelect = false;
-            tree.Selection.SelectionChanged += type =>
-            {
-                if (type == SelectionChangedType.ItemAdded)
-                {
-                    if (tree.Selection.SelectedValue is PrefabAssetItem item)
-                    {
-                        _prevSelectionItem?.ClearCache();
-                        _prevSelectionItem = item;
-                        item.Analyse();
-                        if (_settings.AutoOpenSelectionPrefab)
-                        {
-                            item.OpenPrefab();
-                        }
-                    }
-                }
-            };
-            return tree;
         }
 
 
-        private bool AssetItemFilter(PrefabAssetItem item)
+        private bool AssetItemFilter(PrefabItemBase item)
         {
             if (_settings == null)
                 return true;
@@ -153,9 +198,9 @@ namespace EasyGameFramework.Editor
             if (_settings.ViewModes == ViewModes.All)
                 return true;
 
-            var warn = item.HasWarn();
+            var warn = item.HasIncorrect();
 
-            if (warn && _settings.ViewModes.HasFlag(ViewModes.Warn))
+            if (warn && _settings.ViewModes.HasFlag(ViewModes.Incorrect))
             {
                 return true;
             }
@@ -237,8 +282,8 @@ namespace EasyGameFramework.Editor
         public enum ViewModes
         {
             Correct = 1,
-            Warn = 1 << 2,
-            All = Correct | Warn,
+            Incorrect = 1 << 2,
+            All = Correct | Incorrect,
         }
 
         public enum ManagerPositions
@@ -305,48 +350,25 @@ namespace EasyGameFramework.Editor
 
         #endregion
 
-        #region PrefabAssetItem
+        #region PrefabItem
 
         [Serializable]
-        public class PrefabAssetItem
+        public abstract class PrefabItemBase
         {
             [ReadOnly]
-            [LabelText("资产路径")]
+            [LabelText("路径")]
             [PropertyOrder(0)]
-            public string AssetPath;
+            public string PrefabPath;
 
             [Button("打开预制体", Icon = SdfIconType.Folder2Open)]
             [PropertyOrder(1)]
-            public void OpenPrefab()
-            {
-                PrefabStageUtility.OpenPrefab(AssetPath);
-            }
+            public abstract void OpenPrefab();
 
             [FoldoutGroup("自动分析")]
-            [InfoBoxCN("如果没有UITextManager组件会自动添加")]
-            [LabelText("条件1")]
-            [PropertyOrder(2)]
-            public bool Condition1 = true;
-
-            [FoldoutGroup("自动分析")]
-            [InfoBoxCN("如果UITextManager的\"字体资产预设\"依然null，根据UI文本组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值")]
-            [LabelText("条件2")]
-            [PropertyOrder(3)]
-            public bool Condition2 = true;
-
-            [FoldoutGroup("自动分析")]
-            [InfoBoxCN("如果UITextManager的\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"")]
-            [LabelText("条件3")]
-            [PropertyOrder(4)]
-            public bool Condition3 = true;
-
-            [FoldoutGroup("自动分析")]
-            [InfoBoxCN("如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
-            [LabelText("条件4")]
-            [PropertyOrder(5)]
-            public bool Condition4 = true;
-
-            [FoldoutGroup("自动分析")]
+            [InfoBoxCN("1、如果没有UITextManager组件会自动添加")]
+            [InfoBoxCN("2、如果UITextManager的\"字体资产预设\"依然null，根据UI文本组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值")]
+            [InfoBoxCN("3、如果UITextManager的\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"")]
+            [InfoBoxCN("4、如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
             [Button("自动分析处理", Icon = SdfIconType.Tools)]
             [UsedImplicitly]
             [PropertyOrder(6)]
@@ -358,53 +380,7 @@ namespace EasyGameFramework.Editor
                     OpenPrefab();
                     foreach (var node in Tree)
                     {
-                        var mgr = node.Target.GetComponent<UiTextManager>();
-                        if (mgr == null)
-                        {
-                            // 如果没有UITextManager组件会自动添加
-                            if (Condition1)
-                            {
-                                mgr = node.Target.gameObject.AddComponent<UiTextManager>();
-                            }
-                            else
-                            {
-                                continue;
-                            }
-                        }
-
-                        var text = node.Target.GetComponent<TextMeshProUGUI>();
-                        // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
-                        if (Condition2 && mgr.FontAssetPreset == null)
-                        {
-                            for (int i = 0; i < UITextPresetsManager.Instance.FontAssetPresets.Count; i++)
-                            {
-                                var preset = UITextPresetsManager.Instance.FontAssetPresets[i];
-                                if (preset.FontAsset == text.font && preset.Material == text.fontSharedMaterial)
-                                {
-                                    mgr.FontAssetPresetIndex = i;
-                                }
-                            }
-                        }
-
-                        // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
-                        if (Condition3 && mgr.FontAssetPreset == null)
-                        {
-                            mgr.FontAssetPresetIndex = UITextPresetsManager.Instance.DefaultFontAssetPresetIndex;
-                        }
-
-                        if (Condition4)
-                        {
-                            var mgrs = node.Target.GetComponents<UiTextManager>();
-                            if (mgrs.Length > 1)
-                            {
-                                foreach (var m in mgrs.Skip(1))
-                                {
-                                    GameObject.DestroyImmediate(m);
-                                }
-                            }
-
-                            Debug.Assert(node.Target.GetComponents<UiTextManager>().Length <= 1);
-                        }
+                        node.AutoHandle();
                     }
                 }
             }
@@ -423,20 +399,20 @@ namespace EasyGameFramework.Editor
             public PrefabTree Tree = new();
 
 
-            public GameObject Asset => AssetDatabase.LoadAssetAtPath<GameObject>(AssetPath);
+            public abstract GameObject GetPrefab();
 
-            public PrefabAssetItem(string assetPath)
+            protected PrefabItemBase(string prefabPath)
             {
-                AssetPath = assetPath;
+                PrefabPath = prefabPath;
             }
 
             [Flags]
             public enum ItemsViewModes
             {
                 Correct = 1,
-                Warn = 1 << 1,
+                Incorrect = 1 << 1,
                 Disable = 1 << 2,
-                All = Correct | Warn | Disable,
+                All = Correct | Incorrect | Disable,
             }
 
             private List<string> _prefabPaths = new();
@@ -444,12 +420,13 @@ namespace EasyGameFramework.Editor
             public void Analyse()
             {
                 ClearCache();
-                foreach (var text in Asset.GetComponentsInChildren<TextMeshProUGUI>(true))
+                var prefab = GetPrefab();
+                foreach (var text in prefab.GetComponentsInChildren<TextMeshProUGUI>(true))
                 {
                     if (!PrefabFilter(text.gameObject))
                         continue;
 
-                    var path = text.gameObject.transform.GetRelativePath(Asset.transform, true);
+                    var path = text.gameObject.transform.GetRelativePath(prefab.transform, true);
                     if (path[0] == '/')
                         path = path[1..];
 
@@ -459,7 +436,7 @@ namespace EasyGameFramework.Editor
                     var node = Tree.Find(n => n.Name == s0);
                     if (node == null)
                     {
-                        node = new PrefabTreeNode(s0, AssetPath);
+                        node = GetPrefabTreeNode(prefab, s0, null);
                         Tree.Add(node);
                     }
 
@@ -469,7 +446,7 @@ namespace EasyGameFramework.Editor
                         var node2 = node.Children.Find(n => n.Name == s);
                         if (node2 == null)
                         {
-                            node2 = new PrefabTreeNode(s, AssetPath, node);
+                            node2 = GetPrefabTreeNode(prefab, s, node);
                             node.Children.Add(node2);
                         }
 
@@ -478,6 +455,27 @@ namespace EasyGameFramework.Editor
                 }
             }
 
+            private PrefabTreeNodeBase GetPrefabTreeNode(GameObject prefab, string name, PrefabTreeNodeBase parent)
+            {
+                if (parent == null)
+                {
+                    return AllocTreeNode(prefab, prefab.transform, null);
+                }
+
+                foreach (Transform child in parent.Target)
+                {
+                    if (child.gameObject.name == name)
+                    {
+                        return AllocTreeNode(prefab, child, parent);
+                    }
+                }
+
+                throw new Exception($"找不到{parent.FullName}/{name}，尝试“重新加载资源视图”");
+            }
+
+            protected abstract PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+                PrefabTreeNodeBase parent);
+
             private bool PrefabFilter(GameObject prefab)
             {
                 if (ViewMode == 0)
@@ -485,9 +483,9 @@ namespace EasyGameFramework.Editor
                 if (ViewMode == ItemsViewModes.All)
                     return true;
 
-                var warn = PrefabHasWarn(prefab);
+                var warn = PrefabHasIncorrect(prefab);
 
-                if (warn && ViewMode.HasFlag(ItemsViewModes.Warn))
+                if (warn && ViewMode.HasFlag(ItemsViewModes.Incorrect))
                 {
                     return true;
                 }
@@ -511,11 +509,11 @@ namespace EasyGameFramework.Editor
                 _prefabPaths.Clear();
             }
 
-            public bool HasWarn()
+            public bool HasIncorrect()
             {
                 foreach (var node in Tree)
                 {
-                    if (PrefabHasWarn(node.Prefab))
+                    if (PrefabHasIncorrect(node.Prefab))
                     {
                         return true;
                     }
@@ -540,19 +538,73 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        public static bool PrefabHasWarn(GameObject obj)
+        public class PrefabAssetItem : PrefabItemBase
         {
-            return PrefabHasNotManager(obj) || PrefabHasRepeatedManager(obj);
+            private GameObject _prefab;
+
+            public PrefabAssetItem(string prefabPath) : base(prefabPath)
+            {
+            }
+
+            public override void OpenPrefab()
+            {
+                PrefabStageUtility.OpenPrefab(PrefabPath);
+            }
+
+            public override GameObject GetPrefab()
+            {
+                if (_prefab == null)
+                {
+                    _prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+                }
+
+                return _prefab;
+            }
+
+            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+                PrefabTreeNodeBase parent)
+            {
+                return new PrefabAssetTreeNode(PrefabPath, prefab, target, parent);
+            }
         }
 
-        public static bool PrefabHasNotManager(GameObject obj)
+        public class PrefabSceneItem : PrefabItemBase
         {
-            return obj.GetComponent<UiTextManager>() == null;
+            private GameObject _root;
+
+            public PrefabSceneItem(GameObject root, string prefabPath) : base(prefabPath)
+            {
+                _root = root;
+            }
+
+            public override void OpenPrefab()
+            {
+                Selection.activeObject = _root;
+                EditorGUIUtility.PingObject(_root);
+            }
+
+            public override GameObject GetPrefab()
+            {
+                return _root;
+            }
+
+            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+                PrefabTreeNodeBase parent)
+            {
+                return new PrefabSceneTreeNode(prefab, target, parent);
+            }
         }
 
-        public static bool PrefabHasRepeatedManager(GameObject obj)
+        public static bool PrefabHasIncorrect(GameObject obj)
         {
-            return obj.GetComponents<UiTextManager>().Length > 1;
+            var mgrs = obj.GetComponents<UiTextManager>();
+            if (mgrs.IsNullOrEmpty() || mgrs.Length > 1)
+                return true;
+            var mgr = mgrs[0];
+            if (mgr.FontAssetPreset == null || mgr.TextPropertiesPreset == null)
+                return true;
+
+            return false;
         }
 
         #endregion
@@ -560,44 +612,45 @@ namespace EasyGameFramework.Editor
         #region PrefabAssetNode
 
         [Serializable]
-        public class PrefabTreeNode
+        public abstract class PrefabTreeNodeBase
         {
-            public string Name { get; }
+            public string Name => Target.gameObject.name;
 
-            public string AssetPath { get; }
             public string FullName { get; }
+            public string Path { get; }
 
             public GameObject Prefab { get; }
 
-            public TextMeshProUGUI TextGUI { get; }
-            public PrefabTreeNode Parent { get; }
+            public TextMeshProUGUI TextGUI { get; private set; }
+            public PrefabTreeNodeBase Parent { get; }
             public Transform Target { get; }
-            public List<PrefabTreeNode> Children { get; } = new();
+            public List<PrefabTreeNodeBase> Children { get; } = new();
             public EasyEditorGUI.TreeNodeState State { get; } = new();
 
-            public PrefabTreeNode(string name, PrefabTreeNode parent = null)
-                : this(name, string.Empty, parent)
+            public PrefabTreeNodeBase(GameObject prefab, Transform target, PrefabTreeNodeBase parent = null)
             {
-            }
-
-            public PrefabTreeNode(string name, string assetPath, PrefabTreeNode parent = null)
-            {
-                Name = name;
-                AssetPath = assetPath;
                 Parent = parent;
+                Prefab = prefab;
+                Target = target;
                 if (parent == null)
                 {
-                    Prefab = FindPrefab();
-                    Target = Prefab.transform;
-                    FullName = name;
+                    FullName = Name;
+                    Path = string.Empty;
                 }
                 else
                 {
-                    Prefab = parent.Prefab;
-                    FullName = parent.FullName + '/' + name;
+                    FullName = parent.FullName + '/' + Name;
+                    if (parent.Path.IsNotNullOrEmpty())
+                    {
+                        Path = parent.Path + '/' + Name;
+                    }
+                    else
+                    {
+                        Path = Name;
+                    }
                     foreach (Transform child in parent.Target)
                     {
-                        if (child.gameObject.name == name)
+                        if (child.gameObject.name == Name)
                         {
                             Target = child;
                             break;
@@ -605,69 +658,116 @@ namespace EasyGameFramework.Editor
                     }
                 }
 
-                Debug.Assert(Target != null);
-                TextGUI = Target!.GetComponent<TextMeshProUGUI>();
+                TextGUI = Target.GetComponent<TextMeshProUGUI>();
             }
 
-            private GameObject FindPrefab()
+            public void AutoHandle()
             {
-                var ps = PrefabStageUtility.GetCurrentPrefabStage();
-                if (ps != null && ps.assetPath == AssetPath)
+                var mgr = Target.GetOrAddComponent<UiTextManager>();
+                TextGUI = Target.GetComponent<TextMeshProUGUI>();
+                // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
+                if (mgr.FontAssetPreset == null)
                 {
-                    return ps.prefabContentsRoot;
+                    for (int i = 0; i < UITextPresetsManager.Instance.FontAssetPresets.Count; i++)
+                    {
+                        var preset = UITextPresetsManager.Instance.FontAssetPresets[i];
+                        if (preset.FontAsset == TextGUI.font && preset.Material == TextGUI.fontSharedMaterial)
+                        {
+                            mgr.FontAssetPresetIndex = i;
+                        }
+                    }
                 }
 
-                return AssetDatabase.LoadAssetAtPath<GameObject>(AssetPath);
+                // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
+                if (mgr.FontAssetPreset == null)
+                {
+                    mgr.FontAssetPresetIndex = UITextPresetsManager.Instance.DefaultFontAssetPresetIndex;
+                }
+
+                var mgrs = Target.GetComponents<UiTextManager>();
+                if (mgrs.Length > 1)
+                {
+                    foreach (var m in mgrs.Skip(1))
+                    {
+                        GameObject.DestroyImmediate(m);
+                    }
+                }
+
+                Debug.Assert(Target.GetComponents<UiTextManager>().Length <= 1);
             }
 
-            public void Select()
+            public abstract void Select();
+        }
+
+        public class PrefabAssetTreeNode : PrefabTreeNodeBase
+        {
+            private string _assetPath;
+
+            public PrefabAssetTreeNode(string assetPath, GameObject prefab, Transform target,
+                PrefabTreeNodeBase parent = null) : base(prefab, target, parent)
             {
-                var ps = PrefabStageUtility.OpenPrefab(AssetPath);
-                var target = ps.prefabContentsRoot.transform.Find(FullName);
+                _assetPath = assetPath;
+            }
+
+            public override void Select()
+            {
+                var ps = PrefabStageUtility.OpenPrefab(_assetPath);
+                var target = Parent == null
+                    ? ps.prefabContentsRoot.transform
+                    : ps.prefabContentsRoot.transform.Find(Path);
                 Debug.Assert(target != null);
                 Selection.activeObject = target;
                 EditorGUIUtility.PingObject(target);
             }
+        }
 
-            public bool HasNotManager() => PrefabHasNotManager(Prefab);
-            public bool HasRepeatedManager() => PrefabHasRepeatedManager(Prefab);
+        public class PrefabSceneTreeNode : PrefabTreeNodeBase
+        {
+            public PrefabSceneTreeNode(GameObject prefab, Transform target, PrefabTreeNodeBase parent = null) : base(
+                prefab, target, parent)
+            {
+            }
+
+            public override void Select()
+            {
+                Selection.activeObject = Target;
+                EditorGUIUtility.PingObject(Target);
+            }
         }
 
         [Serializable]
-        public class PrefabTree : List<PrefabTreeNode>
+        public class PrefabTree : List<PrefabTreeNodeBase>
         {
         }
 
-        public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNode>
+        public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNodeBase>
         {
-            public override string GetNodeLabel(PrefabTreeNode node)
+            public override string GetNodeLabel(PrefabTreeNodeBase node)
             {
                 return "       " + node.Name;
             }
 
-            public override IList<PrefabTreeNode> GetNodeChildren(PrefabTreeNode node)
+            public override IList<PrefabTreeNodeBase> GetNodeChildren(PrefabTreeNodeBase node)
             {
                 return node.Children;
             }
 
-            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNode node)
+            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNodeBase node)
             {
+                node.State.Expandable = true;
                 return node.State;
             }
 
-            protected override bool ChildrenHasBox => true;
-
-            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
+            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNodeBase node, Rect headerRect,
+                EasyEditorGUI.TreeNodeInfo info)
             {
                 var p = headerRect.position;
-                if (!info.IsLastNode)
-                {
-                    p.x += 14;
-                }
+                p.x += 14;
+
                 DrawIcon(node, p);
             }
 
-            private void DrawIcon(PrefabTreeNode node, Vector2 position)
+            private void DrawIcon(PrefabTreeNodeBase node, Vector2 position)
             {
                 if (node.TextGUI != null)
                 {
@@ -677,14 +777,67 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
+            protected override void OnBeforeChildrenContentGUI(PrefabTreeNodeBase node, Rect headerRect,
+                EasyEditorGUI.TreeNodeInfo info)
             {
+                bool hasIncorrect = false;
                 if (node.TextGUI != null)
                 {
-                    var mgr = node.Target.GetComponent<UiTextManager>();
-                    if (mgr == null)
+                    var mgrs = node.Target.GetComponents<UiTextManager>();
+                    if (mgrs.IsNullOrEmpty())
                     {
-                        SirenixEditorGUI.MessageBox("未被UiTextManager管理", MessageType.Warning, EasyGUIStyles.InfoBoxCN, true);
+                        EasyEditorGUI.MessageBox("未被UiTextManager管理", MessageType.Warning);
+                        hasIncorrect = true;
+                    }
+                    else
+                    {
+                        if (mgrs.Length > 1)
+                        {
+                            EasyEditorGUI.MessageBox("被多个UiTextManager管理，这是无效的", MessageType.Warning);
+                            hasIncorrect = true;
+                        }
+                        else
+                        {
+                            var mgr = mgrs[0];
+                            if (mgr.FontAssetPreset == null)
+                            {
+                                EasyEditorGUI.MessageBox("字体资产预设为null！", MessageType.Warning);
+                                hasIncorrect = true;
+                            }
+                            else
+                            {
+                                EasyEditorGUI.MessageBox($"字体资产预设为：{mgr.FontAssetPreset.LabelToShow}",
+                                    MessageType.Info);
+                            }
+
+                            if (mgr.TextPropertiesPreset == null)
+                            {
+                                EasyEditorGUI.MessageBox("文本属性预设为null！", MessageType.Warning);
+                                hasIncorrect = true;
+                            }
+                            else
+                            {
+                                EasyEditorGUI.MessageBox($"文本属性预设为：{mgr.TextPropertiesPreset.LabelToShow}",
+                                    MessageType.Info);
+                            }
+                        }
+                    }
+
+                    var btnRect = EasyEditorGUI.GetIndentControlRect(false);
+                    if (SirenixEditorGUI.SDFIconButton(btnRect, new GUIContent("选中该物体"), Color.yellow.SetA(0.5f),
+                            Color.white, SdfIconType.HandIndexThumbFill))
+                    {
+                        node.Select();
+                    }
+
+                    if (hasIncorrect)
+                    {
+                        btnRect = EasyEditorGUI.GetIndentControlRect(false);
+                        if (SirenixEditorGUI.SDFIconButton(btnRect, new GUIContent("自动处理"), Color.cyan.SetA(0.5f),
+                                Color.white, SdfIconType.Tools))
+                        {
+                            node.AutoHandle();
+                        }
                     }
                 }
             }

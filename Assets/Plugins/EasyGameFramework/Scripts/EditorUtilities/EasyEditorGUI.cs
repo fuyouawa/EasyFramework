@@ -99,6 +99,35 @@ namespace EasyGameFramework
             return false;
         }
 
+        public static Rect GetIndentControlRect(params GUILayoutOption[] options)
+        {
+            return GetIndentControlRect(true, 18, options);
+        }
+
+        public static Rect GetIndentControlRect(
+            bool hasLabel,
+            params GUILayoutOption[] options)
+        {
+            return GetIndentControlRect(hasLabel, 18, options);
+        }
+
+        public static Rect GetIndentControlRect(
+            bool hasLabel,
+            float height,
+            params GUILayoutOption[] options)
+        {
+            return GetIndentControlRect(hasLabel, height, EditorStyles.layerMaskField, options);
+        }
+
+        public static Rect GetIndentControlRect(
+            bool hasLabel,
+            float height,
+            GUIStyle style,
+            params GUILayoutOption[] options)
+        {
+            return EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(hasLabel, height, style, options));
+        }
+
         #endregion
 
         #region Title
@@ -295,7 +324,8 @@ namespace EasyGameFramework
             public GUIContent Label;
             public bool Expand;
             public bool Expandable = true;
-            public OnBeforeFoldoutGUIDelegate OnBeforeFoldoutGUI;
+            public Color? BoxColor;
+            public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
             public GUIContent RightLabel = GUIContent.none;
 
             public FoldoutHeaderConfig(string label, bool expand = true)
@@ -311,16 +341,10 @@ namespace EasyGameFramework
             }
         }
 
-        public class FoldoutGroupConfig
+        public class FoldoutGroupConfig : FoldoutHeaderConfig
         {
-            public GUIContent Label;
-            public bool Expand;
-            public bool Expandable = true;
-            public GUIContent RightLabel = GUIContent.none;
-
             public object Key;
             public OnTitleBarGUIDelegate OnTitleBarGUI;
-            public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
             public OnContentGUIDelegate OnContentGUI;
 
             public FoldoutGroupConfig(object key, string label, bool expand = true)
@@ -329,10 +353,9 @@ namespace EasyGameFramework
             }
 
             public FoldoutGroupConfig(object key, GUIContent label, bool expand = true)
+                : base(label, expand)
             {
                 Key = key;
-                Label = label;
-                Expand = expand;
             }
         }
 
@@ -350,22 +373,17 @@ namespace EasyGameFramework
             return e;
         }
 
-        struct FoldoutHeaderContext
-        {
-            public bool HasBox;
-        }
-
         public static bool FoldoutGroup(FoldoutGroupConfig config)
         {
-            SirenixEditorGUI.BeginBox();
-
-            config.Expand = BeginFoldoutHeader(new FoldoutHeaderConfig(config.Label, config.Expand)
+            var color = GUI.color;
+            if (config.BoxColor != null)
             {
-                Expandable = config.Expandable,
-                RightLabel = config.RightLabel,
-                OnBeforeFoldoutGUI = rect => config.OnCoveredTitleBarGUI?.Invoke(rect)
-            }, out var headerRect);
+                GUI.color = (Color)config.BoxColor;
+            }
+            SirenixEditorGUI.BeginBox();
+            GUI.color = color;
 
+            config.Expand = BeginFoldoutHeader(config, out var headerRect);
             config.OnTitleBarGUI?.Invoke(headerRect);
             EndFoldoutHeader();
 
@@ -395,7 +413,13 @@ namespace EasyGameFramework
 
         public static bool BeginFoldoutHeader(FoldoutHeaderConfig config, out Rect headerRect)
         {
+            // var color = GUI.color;
+            // if (config.BoxColor != null)
+            // {
+            //     GUI.color = (Color)config.BoxColor;
+            // }
             SirenixEditorGUI.BeginBoxHeader();
+            // GUI.color = color;
             
             headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
@@ -405,7 +429,7 @@ namespace EasyGameFramework
                 EditorGUI.PrefixLabel(headerRect.AlignRight(s.x), config.RightLabel);
             }
 
-            config.OnBeforeFoldoutGUI?.Invoke(headerRect);
+            config.OnCoveredTitleBarGUI?.Invoke(headerRect);
             if (config.Expandable)
             {
                 config.Expand = SirenixEditorGUI.Foldout(headerRect, config.Expand, config.Label);
@@ -596,6 +620,7 @@ namespace EasyGameFramework
 
             public bool Expand = false;
             public bool? Expandable;
+            public Color? BoxColor;
 
             public OnExpandChangedDelegate OnExpandChanged;
         }
@@ -661,7 +686,7 @@ namespace EasyGameFramework
             }
         }
 
-        private static void DrawTreeNode<TElement>(TElement node, TreeGroupConfig<TElement> config)
+        private static void DrawTreeNode<TElement>(TElement node, int level, TreeGroupConfig<TElement> config)
         {
             var children = config.NodeChildrenGetter(node);
 
@@ -674,21 +699,27 @@ namespace EasyGameFramework
                 State = state
             };
 
+            var boxColor = state.BoxColor;
+            if (boxColor == null)
+            {
+                if (level % 2 != 0)
+                {
+                    boxColor = Color.black;
+                }
+            }
             var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand)
             {
+                BoxColor = boxColor,
                 Expandable = state.Expandable ?? children.IsNotNullOrEmpty(),
                 OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, headerRect, info),
                 OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect, info),
                 OnContentGUI = headerRect =>
                 {
-                    if (!info.IsLastNode)
-                    {
-                        EditorGUI.indentLevel++;
-                    }
                     config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect, info);
                     if (!info.IsLastNode)
                     {
-                        DrawTreeNodes(children, config);
+                        EditorGUI.indentLevel++;
+                        DrawTreeNodes(children, level + 1, config);
                     }
 
                     config.OnAfterChildrenContentGUI?.Invoke(node, headerRect, info);
@@ -724,13 +755,13 @@ namespace EasyGameFramework
             }
         }
 
-        private static void DrawTreeNodes<TElement>(IList<TElement> nodes, TreeGroupConfig<TElement> config)
+        private static void DrawTreeNodes<TElement>(IList<TElement> nodes, int level, TreeGroupConfig<TElement> config)
         {
             if (nodes == null)
                 return;
             foreach (var node in nodes)
             {
-                DrawTreeNode(node, config);
+                DrawTreeNode(node, level, config);
             }
         }
 
@@ -743,8 +774,29 @@ namespace EasyGameFramework
                 OnMinimize = () => ExpandTreeNodes(nodes, false, config),
                 ShowFoldout = nodes != null,
                 OnTitleBarGUI = rect => config.OnTitleBarGUI?.Invoke(rect),
-                OnContentGUI = () => DrawTreeNodes(nodes, config)
+                OnContentGUI = () => DrawTreeNodes(nodes, 0, config)
             });
+        }
+
+        #endregion
+
+        #region MessageBox
+
+        /// <summary>Draws a message box.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="wide">If set to <c>true</c> the message box will be wide.</param>
+        public static void MessageBox(string message, bool wide = true)
+        {
+            SirenixEditorGUI.MessageBox(message, MessageType.None, EasyGUIStyles.InfoBoxCN, wide);
+        }
+
+        /// <summary>Draws a message box.</summary>
+        /// <param name="message">The message.</param>
+        /// <param name="messageType">Type of the message.</param>
+        /// <param name="wide">If set to <c>true</c> the message box will be wide.</param>
+        public static void MessageBox(string message, MessageType messageType, bool wide = true)
+        {
+            SirenixEditorGUI.MessageBox(message, messageType, EasyGUIStyles.InfoBoxCN, wide);
         }
 
         #endregion

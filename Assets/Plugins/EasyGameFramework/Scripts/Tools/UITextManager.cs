@@ -22,7 +22,7 @@ namespace Pokemon.UI
         public int FontAssetPresetIndex = -1;
 
         [ValueDropdown("GetUITextPropertiesPresetDropdown")]
-        [LabelText("Text属性预设")]
+        [LabelText("文本属性预设")]
         public int TextPropertiesPresetIndex = -1;
 
         public UITextPropertiesPreset TextPropertiesPreset

@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using EasyFramework;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
 
 namespace EasyGameFramework
@@ -11,8 +10,6 @@ namespace EasyGameFramework
         {
             typeof(EditorUtility).InvokeMethod("ForceRebuildInspectors", null);
         }
-
-        public static float Indent => GUIHelper.CurrentIndentAmount;
     }
 }
 

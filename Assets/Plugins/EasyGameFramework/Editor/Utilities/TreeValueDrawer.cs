@@ -14,8 +14,6 @@ namespace EasyGameFramework.Editor
             return label;
         }
 
-        protected virtual bool ChildrenHasBox => false;
-
         protected override void DrawPropertyLayout(GUIContent label)
         {
             var val = (IList<TElement>)ValueEntry.SmartValue;

@@ -62,8 +62,6 @@ namespace EasyGameFramework.Editor
         [UsedImplicitly]
         private void FindReference()
         {
-            _results.Clear();
-
             var t = TypeToSearch;
             _showError = t == null;
             if (t != null)
@@ -77,21 +75,48 @@ namespace EasyGameFramework.Editor
                         {
                             foreach (var o in scene.GetRootGameObjects())
                             {
-                                _results.AddRange(o.GetComponentsInChildren(t));
+                                foreach (var comp in o.GetComponentsInChildren(t, true))
+                                {
+                                    AddResultTreeNode(comp);
+                                }
                             }
                         }
                     }
                 }
+            }
+        }
 
-                GenerateResultTree();
+        private void AddResultTreeNode(Component comp)
+        {
+            var path = comp.transform.GetAbsolutePath();
+            path = path[1..];
+
+            var split = path.Split('/');
+
+            var s0 = split[0];
+            var node = Tree.Find(n => n.Name == s0);
+            if (node == null)
+            {
+                node = new ResultTreeNode($"{s0}");
+                Tree.Add(node);
+            }
+
+            for (int j = 1; j < split.Length; j++)
+            {
+                var s = split[j];
+                var node2 = node.Children.Find(n => n.Name == s);
+                if (node2 == null)
+                {
+                    node2 = new ResultTreeNode(s, node);
+                    node.Children.Add(node2);
+                }
+                node = node2;
             }
         }
         
         [PropertyOrder(3)]
         [LabelText("结果视图")]
         public ResultTree Tree = new ResultTree();
-        
-        private List<Component> _results = new List<Component>();
         private bool _showError;
 
         #region ResultTree
@@ -212,38 +237,6 @@ namespace EasyGameFramework.Editor
                 }
 
                 return _allComponentDropdownTypes;
-            }
-        }
-
-        public void GenerateResultTree()
-        {
-            Tree.Clear();
-            foreach (var result in _results)
-            {
-                var path = result.transform.GetAbsolutePath();
-                path = path[1..];
-
-                var split = path.Split('/');
-
-                var s0 = split[0];
-                var node = Tree.Find(n => n.Name == s0);
-                if (node == null)
-                {
-                    node = new ResultTreeNode(s0);
-                    Tree.Add(node);
-                }
-
-                for (int i = 1; i < split.Length; i++)
-                {
-                    var s = split[i];
-                    var node2 = node.Children.Find(n => n.Name == s);
-                    if (node2 == null)
-                    {
-                        node2 = new ResultTreeNode(s, node);
-                        node.Children.Add(node2);
-                    }
-                    node = node2;
-                }
             }
         }
 
