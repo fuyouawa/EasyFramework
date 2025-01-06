@@ -155,15 +155,14 @@ namespace EasyGameFramework.Editor
 
             public override EasyEditorGUI.TreeNodeState GetNodeState(ResultTreeNode node)
             {
-                node.State.HasBox = node.Children.IsNotNullOrEmpty();
                 return node.State;
             }
 
-            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, Rect headerRect)
+            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
             {
                 if (node.IsSearched)
                 {
-                    if (node.Children.IsNotNullOrEmpty())
+                    if (!info.IsLastNode)
                     {
                         var indent = 14;
                         headerRect.x += indent;

@@ -652,16 +652,15 @@ namespace EasyGameFramework.Editor
 
             public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNode node)
             {
-                node.State.HasBox = true;
                 return node.State;
             }
 
             protected override bool ChildrenHasBox => true;
 
-            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect)
+            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
             {
                 var p = headerRect.position;
-                if (node.Children.IsNotNullOrEmpty())
+                if (!info.IsLastNode)
                 {
                     p.x += 14;
                 }
@@ -678,7 +677,7 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect)
+            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
             {
                 if (node.TextGUI != null)
                 {

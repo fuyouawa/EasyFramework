@@ -46,19 +46,19 @@ namespace EasyGameFramework.Editor
         {
         }
         
-        protected virtual void OnNodeCoveredTitleBarGUI(TElement node, Rect headerRect)
+        protected virtual void OnNodeCoveredTitleBarGUI(TElement node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
         {
         }
 
-        protected virtual void OnNodeTitleBarGUI(TElement node, Rect headerRect)
+        protected virtual void OnNodeTitleBarGUI(TElement node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
         {
         }
 
-        protected virtual void OnBeforeChildrenContentGUI(TElement node, Rect headerRect)
+        protected virtual void OnBeforeChildrenContentGUI(TElement node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
         {
         }
 
-        protected virtual void OnAfterChildrenContentGUI(TElement node, Rect headerRect)
+        protected virtual void OnAfterChildrenContentGUI(TElement node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
         {
         }
     }

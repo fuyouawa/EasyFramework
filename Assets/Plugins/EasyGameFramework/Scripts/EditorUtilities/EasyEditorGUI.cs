@@ -297,7 +297,6 @@ namespace EasyGameFramework
             public bool Expandable = true;
             public OnBeforeFoldoutGUIDelegate OnBeforeFoldoutGUI;
             public GUIContent RightLabel = GUIContent.none;
-            public bool HasBox = true;
 
             public FoldoutHeaderConfig(string label, bool expand = true)
             {
@@ -318,7 +317,6 @@ namespace EasyGameFramework
             public bool Expand;
             public bool Expandable = true;
             public GUIContent RightLabel = GUIContent.none;
-            public bool HasBox = true;
 
             public object Key;
             public OnTitleBarGUIDelegate OnTitleBarGUI;
@@ -359,15 +357,11 @@ namespace EasyGameFramework
 
         public static bool FoldoutGroup(FoldoutGroupConfig config)
         {
-            if (config.HasBox)
-            {
-                SirenixEditorGUI.BeginBox();
-            }
+            SirenixEditorGUI.BeginBox();
 
             config.Expand = BeginFoldoutHeader(new FoldoutHeaderConfig(config.Label, config.Expand)
             {
                 Expandable = config.Expandable,
-                HasBox = config.HasBox,
                 RightLabel = config.RightLabel,
                 OnBeforeFoldoutGUI = rect => config.OnCoveredTitleBarGUI?.Invoke(rect)
             }, out var headerRect);
@@ -388,11 +382,8 @@ namespace EasyGameFramework
             {
                 config.OnContentGUI?.Invoke(headerRect);
             }
-
-            if (config.HasBox)
-            {
-                SirenixEditorGUI.EndBox();
-            }
+            
+            SirenixEditorGUI.EndBox();
 
             return config.Expand;
         }
@@ -404,13 +395,9 @@ namespace EasyGameFramework
 
         public static bool BeginFoldoutHeader(FoldoutHeaderConfig config, out Rect headerRect)
         {
-            PushContext(new FoldoutHeaderContext() { HasBox = config.HasBox });
-            if (config.HasBox)
-            {
-                SirenixEditorGUI.BeginBoxHeader();
-            }
+            SirenixEditorGUI.BeginBoxHeader();
             
-            headerRect = EditorGUILayout.GetControlRect(false);
+            headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
             if (config.RightLabel != null && config.RightLabel != GUIContent.none)
             {
@@ -435,11 +422,7 @@ namespace EasyGameFramework
 
         public static void EndFoldoutHeader()
         {
-            var ctx = PopContext<FoldoutHeaderContext>();
-            if (ctx.HasBox)
-            {
-                SirenixEditorGUI.EndBoxHeader();
-            }
+            SirenixEditorGUI.EndBoxHeader();
         }
 
         #endregion
@@ -612,10 +595,15 @@ namespace EasyGameFramework
             public delegate void OnExpandChangedDelegate(bool expand);
 
             public bool Expand = false;
-            public bool HasBox = false;
             public bool? Expandable;
 
             public OnExpandChangedDelegate OnExpandChanged;
+        }
+
+        public struct TreeNodeInfo
+        {
+            public bool IsLastNode;
+            public TreeNodeState State;
         }
 
         public class TreeGroupConfig<TElement>
@@ -626,13 +614,13 @@ namespace EasyGameFramework
 
             public delegate TreeNodeState NodeStateGetterDelegate(TElement node);
 
-            public delegate void OnNodeTitleBarGUIDelegate(TElement node, Rect headerRect);
+            public delegate void OnNodeTitleBarGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
 
-            public delegate void OnNodeConveredTitleBarGUIDelegate(TElement node, Rect headerRect);
+            public delegate void OnNodeConveredTitleBarGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
 
-            public delegate void OnBeforeChildrenContentGUIDelegate(TElement node, Rect headerRect);
+            public delegate void OnBeforeChildrenContentGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
 
-            public delegate void OnAfterChildrenContentGUIDelegate(TElement node, Rect headerRect);
+            public delegate void OnAfterChildrenContentGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
 
             public object Key;
             public GUIContent Label;
@@ -679,21 +667,31 @@ namespace EasyGameFramework
 
             var state = config.NodeStateGetter(node);
             var label = config.NodeLabelGetter(node);
+
+            var info = new TreeNodeInfo()
+            {
+                IsLastNode = children.IsNullOrEmpty(),
+                State = state
+            };
+
             var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand)
             {
-                HasBox = state.HasBox,
                 Expandable = state.Expandable ?? children.IsNotNullOrEmpty(),
-                OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, headerRect),
-                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect),
+                OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, headerRect, info),
+                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect, info),
                 OnContentGUI = headerRect =>
                 {
-                    config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect);
-                    if (children.IsNotNullOrEmpty())
+                    if (!info.IsLastNode)
+                    {
+                        EditorGUI.indentLevel++;
+                    }
+                    config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect, info);
+                    if (!info.IsLastNode)
                     {
                         DrawTreeNodes(children, config);
                     }
 
-                    config.OnAfterChildrenContentGUI?.Invoke(node, headerRect);
+                    config.OnAfterChildrenContentGUI?.Invoke(node, headerRect, info);
                 }
             });
             if (expand2 != state.Expand)
