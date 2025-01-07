@@ -287,6 +287,8 @@ namespace EasyGameFramework
         public static GUIContent Remove => EditorGUIUtility.IconContent("CrossIcon");
         public static GUIContent Edit => EditorGUIUtility.IconContent("d_Grid.PaintTool@2x");
         public static GUIContent Warn => EditorGUIUtility.IconContent("d_console.warnicon");
+
+        public static Texture2D UnityPrefabIcon => EditorGUIUtility.FindTexture("Prefab Icon");
     }
 }
 

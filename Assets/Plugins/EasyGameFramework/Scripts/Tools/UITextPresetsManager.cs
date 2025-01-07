@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using EasyGameFramework;
 using EasyFramework;
+using JetBrains.Annotations;
 using Sirenix.Serialization;
 using UnityEngine;
 
@@ -75,47 +76,48 @@ namespace EasyGameFramework
         [LabelText("默认字体资产预设")]
         [ValueDropdown("FontAssetPresetDropdown")]
         [SerializeField]
-        private int? _defaultFontAssetPresetIndex = null;
+        private int _defaultFontAssetPresetIndex = -1;
 
         [LabelText("默认文本属性预设")]
         [ValueDropdown("TextPropertiesPresetDropdown")]
         [SerializeField]
-        private int? _defaultTextPropertiesPresetIndex = null;
+        private int _defaultTextPropertiesPresetIndex = -1;
 
         public FontAssetPreset GetDefaultFontAssetPreset()
         {
-            return _defaultFontAssetPresetIndex == null ? null : FontAssetPresets[(int)_defaultFontAssetPresetIndex];
+            return _defaultFontAssetPresetIndex == -1 ? null : FontAssetPresets[(int)_defaultFontAssetPresetIndex];
         }
 
         public TextPropertiesPreset GetDefaultTextPropertiesPreset()
         {
-            return _defaultTextPropertiesPresetIndex == null ? null : TextPropertiesPresets[(int)_defaultTextPropertiesPresetIndex];
+            return _defaultTextPropertiesPresetIndex == -1 ? null : TextPropertiesPresets[(int)_defaultTextPropertiesPresetIndex];
         }
 
 #if UNITY_EDITOR
-        private ValueDropdownList<int?> _fontAssetPresetDropdown;
-        private ValueDropdownList<int?> _textPropertiesPresetDropdown;
+        private ValueDropdownList<int> _fontAssetPresetDropdown;
+        private ValueDropdownList<int> _textPropertiesPresetDropdown;
 
-        public ValueDropdownList<int?> FontAssetPresetDropdown
+        public ValueDropdownList<int> FontAssetPresetDropdown
         {
             get
             {
                 //TODO FontAssetPresetDropdown性能优化
-                _fontAssetPresetDropdown = new ValueDropdownList<int?> { { "None", null } };
-                _fontAssetPresetDropdown.AddRange(FontAssetPresets.Select((p, i) => new ValueDropdownItem<int?>(p.LabelToShow, i)));
+                _fontAssetPresetDropdown = new ValueDropdownList<int> { { "None", -1 } };
+                _fontAssetPresetDropdown.AddRange(FontAssetPresets.Select((p, i) => new ValueDropdownItem<int>(p.LabelToShow, i)));
                 return _fontAssetPresetDropdown;
             }
         }
-        public ValueDropdownList<int?> TextPropertiesPresetDropdown
+        public ValueDropdownList<int> TextPropertiesPresetDropdown
         {
             get
             {
-                _textPropertiesPresetDropdown = new ValueDropdownList<int?> { { "None", null } };
-                _textPropertiesPresetDropdown.AddRange(TextPropertiesPresets.Select((p, i) => new ValueDropdownItem<int?>(p.LabelToShow, i)));
+                _textPropertiesPresetDropdown = new ValueDropdownList<int> { { "None", -1 } };
+                _textPropertiesPresetDropdown.AddRange(TextPropertiesPresets.Select((p, i) => new ValueDropdownItem<int>(p.LabelToShow, i)));
                 return _textPropertiesPresetDropdown;
             }
         }
 
+        [UsedImplicitly]
         private TextPropertiesPreset OnAddTextPropertiesPreset()
         {
             var preset = new TextPropertiesPreset

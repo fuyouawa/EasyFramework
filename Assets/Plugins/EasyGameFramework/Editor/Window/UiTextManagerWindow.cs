@@ -8,7 +8,6 @@ using Sirenix.Utilities.Editor;
 using TMPro;
 using EasyFramework;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 using JetBrains.Annotations;
 using UnityEditor.SceneManagement;
@@ -21,260 +20,13 @@ namespace EasyGameFramework.Editor
 {
     public class UiTextManagerWindow : OdinMenuEditorWindow
     {
+        #region Editor
+
         public class WindowTemp
         {
             public Rect WindowPosition;
             public float MenuWidth;
         }
-
-        private static UiTextManagerWindow _instance;
-
-        public static UiTextManagerWindow Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
-                    _instance = GetWindow<UiTextManagerWindow>("UiTextManager Window");
-                }
-
-                Debug.Assert(_instance != null);
-                return _instance;
-            }
-        }
-
-        [MenuItem("Tools/EasyGameFramework/UiTextManager Window")]
-        public static void ShowWindow()
-        {
-            var isNew = HasOpenInstances<UiTextManagerWindow>();
-            var window = GetWindow<UiTextManagerWindow>("UiTextManager Window");
-            if (!isNew)
-            {
-                if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
-                {
-                    window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
-                }
-            }
-
-            _instance = window;
-        }
-
-        private Settings _settings = new();
-        private PrefabItemBase _prevSelectionItem;
-
-        public void Rebuild()
-        {
-            ForceMenuTreeRebuild();
-        }
-
-        private static readonly string Group = "资产视图";
-
-        protected override OdinMenuTree BuildMenuTree()
-        {
-            var tree = new OdinMenuTree
-            {
-                { "设置", _settings, SdfIconType.GearFill },
-                { Group, null }
-            };
-
-            if (_settings.ManagerPosition == ManagerPositions.InProject)
-            {
-                LoadInProject(tree);
-            }
-            else
-            {
-                LoadInScene(tree);
-            }
-
-            tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
-
-            tree.Selection.SupportsMultiSelect = false;
-            tree.Selection.SelectionChanged += type =>
-            {
-                if (type == SelectionChangedType.ItemAdded)
-                {
-                    if (tree.Selection.SelectedValue is PrefabItemBase item)
-                    {
-                        _prevSelectionItem?.ClearCache();
-                        _prevSelectionItem = item;
-                        item.Analyse();
-                        if (_settings.AutoOpenSelectionPrefab)
-                        {
-                            item.OpenPrefab();
-                        }
-                    }
-                }
-            };
-            return tree;
-        }
-
-        private void LoadInScene(OdinMenuTree tree)
-        {
-            for (int i = 0; i < SceneManager.sceneCount; i++)
-            {
-                var scene = SceneManager.GetSceneAt(i);
-                if (scene.IsValid() && scene.isLoaded)
-                {
-                    var sceneName = $"{scene.name}.scene";
-                    tree.Add($"{Group}/{sceneName}", null, EditorIcons.UnityLogo);
-
-                    foreach (var o in scene.GetRootGameObjects())
-                    {
-                        if (o.GetComponentsInChildren<TextMeshProUGUI>(true).IsNotNullOrEmpty())
-                        {
-                            var item = new PrefabSceneItem(o, $"{sceneName}/{o.name}");
-
-                            item.Analyse();
-                            if (AssetItemFilter(item))
-                            {
-                                var icon = item.HasIncorrect()
-                                    ? EditorIcons.UnityWarningIcon
-                                    : EditorIcons.UnityGameObjectIcon;
-
-                                tree.Add($"{Group}/{sceneName}/{o.name}", item, icon);
-                            }
-
-                            item.ClearCache();
-                        }
-                    }
-                }
-            }
-        }
-
-
-        private void LoadInProject(OdinMenuTree tree)
-        {
-            var assetsPath = $"Assets/{_settings.AssetsManagerPath}/";
-
-            if (_settings.AssetsManagerPath.IsNotNullOrEmpty())
-            {
-                var allPrefabs = AssetDatabase.GetAllAssetPaths()
-                    .Where(p => p.StartsWith(assetsPath) &&
-                                p.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase));
-                foreach (var path in allPrefabs)
-                {
-                    var obj = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                    if (obj != null && obj.GetComponentInChildren<TextMeshProUGUI>() != null)
-                    {
-                        var item = new PrefabAssetItem(path);
-
-                        item.Analyse();
-                        if (AssetItemFilter(item))
-                        {
-                            var icon = item.HasIncorrect()
-                                ? EditorIcons.UnityWarningIcon
-                                : InternalEditorUtility.GetIconForFile(path);
-
-                            var p = path.Substring(assetsPath.Length,
-                                path.Length - assetsPath.Length - ".prefab".Length);
-                            tree.Add($"{Group}/{p}", item, icon);
-                        }
-
-                        item.ClearCache();
-                    }
-                }
-
-                var items = tree.MenuItems.First(i => i.Name == Group).GetChildMenuItemsRecursive(false);
-                foreach (var item in items)
-                {
-                    if (item.Value == null)
-                    {
-                        item.Icon = EditorIcons.UnityFolderIcon;
-                    }
-                }
-            }
-        }
-
-
-        private bool AssetItemFilter(PrefabItemBase item)
-        {
-            if (_settings == null)
-                return true;
-            if (_settings.ViewModes == 0)
-                return false;
-            if (_settings.ViewModes == ViewModes.All)
-                return true;
-
-            var warn = item.HasIncorrect();
-
-            if (warn && _settings.ViewModes.HasFlag(ViewModes.Incorrect))
-            {
-                return true;
-            }
-
-            if (!warn && _settings.ViewModes.HasFlag(ViewModes.Correct))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            EditorApplication.update += EditorUpdate;
-
-            Load();
-        }
-
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            EditorApplication.update -= EditorUpdate;
-            Save();
-        }
-
-        private double _prevAutoSaveTime;
-
-        private void EditorUpdate()
-        {
-            if (EditorApplication.timeSinceStartup - _prevAutoSaveTime >= _settings.AutoSaveInterval)
-            {
-                Save();
-                _prevAutoSaveTime = EditorApplication.timeSinceStartup;
-            }
-        }
-
-        public void Save()
-        {
-            var json = EasyJsonConvert.SerializeObject(_settings, Formatting.Indented);
-            File.WriteAllText(EditorAssetsPath.UiTextManagerSettingsPath, json);
-
-            var temp = new WindowTemp
-            {
-                WindowPosition = position,
-                MenuWidth = MenuWidth
-            };
-            json = EasyJsonConvert.SerializeObject(temp, Formatting.Indented);
-            File.WriteAllText(EditorAssetsPath.UiTextManagerWindowTempPath, json);
-        }
-
-        public void Load()
-        {
-            if (!File.Exists(EditorAssetsPath.UiTextManagerSettingsPath))
-                return;
-            var json = File.ReadAllText(EditorAssetsPath.UiTextManagerSettingsPath);
-            var val = EasyJsonConvert.DeserializeObject<Settings>(json);
-            if (val != null)
-            {
-                _settings = val;
-            }
-
-            if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
-                return;
-            json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
-            var temp = EasyJsonConvert.DeserializeObject<WindowTemp>(json);
-            if (temp != null)
-            {
-                position = temp.WindowPosition;
-                MenuWidth = temp.MenuWidth;
-            }
-        }
-
-        #region Settings
 
         [Flags]
         public enum ViewModes
@@ -333,7 +85,7 @@ namespace EasyGameFramework.Editor
             [UsedImplicitly]
             private void Save()
             {
-                Instance.Save();
+                Instance.SaveEditor();
                 AssetDatabase.Refresh();
             }
 
@@ -342,8 +94,265 @@ namespace EasyGameFramework.Editor
             [UsedImplicitly]
             private void Load()
             {
-                Instance.Load();
+                Instance.LoadEditor();
             }
+        }
+
+        private static UiTextManagerWindow _instance;
+
+        public static UiTextManagerWindow Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
+                    _instance = GetWindow<UiTextManagerWindow>("UiTextManager Window");
+                }
+
+                Debug.Assert(_instance != null);
+                return _instance;
+            }
+        }
+
+        [MenuItem("Tools/EasyGameFramework/UiTextManager Window")]
+        public static void ShowWindow()
+        {
+            var isNew = HasOpenInstances<UiTextManagerWindow>();
+            var window = GetWindow<UiTextManagerWindow>("UiTextManager Window");
+            if (!isNew)
+            {
+                if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
+                {
+                    window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
+                }
+            }
+
+            _instance = window;
+        }
+
+        private Settings _settings = new();
+        private PrefabItemBase _prevSelectionItem;
+
+        public void Rebuild()
+        {
+            ForceMenuTreeRebuild();
+        }
+
+        private static readonly string Group = "资产视图";
+
+        protected override OdinMenuTree BuildMenuTree()
+        {
+            var tree = new OdinMenuTree
+            {
+                { "设置", _settings, SdfIconType.GearFill },
+                { Group, null }
+            };
+
+            if (_settings.ManagerPosition == ManagerPositions.InProject)
+            {
+                LoadPrefabsInProject(tree);
+            }
+            else
+            {
+                LoadPrefabsInScene(tree);
+            }
+
+            tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
+
+            tree.Selection.SupportsMultiSelect = false;
+            tree.Selection.SelectionChanged += type =>
+            {
+                if (type == SelectionChangedType.ItemAdded)
+                {
+                    if (tree.Selection.SelectedValue is PrefabItemBase item)
+                    {
+                        _prevSelectionItem?.ClearCache();
+                        _prevSelectionItem = item;
+                        item.Analyse();
+                        if (_settings.AutoOpenSelectionPrefab)
+                        {
+                            item.OpenPrefab();
+                        }
+                    }
+                }
+            };
+            return tree;
+        }
+
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            EditorApplication.update += EditorUpdate;
+
+            LoadEditor();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            EditorApplication.update -= EditorUpdate;
+            SaveEditor();
+        }
+
+        private double _prevAutoSaveTime;
+
+        private void EditorUpdate()
+        {
+            if (EditorApplication.timeSinceStartup - _prevAutoSaveTime >= _settings.AutoSaveInterval)
+            {
+                SaveEditor();
+                _prevAutoSaveTime = EditorApplication.timeSinceStartup;
+            }
+        }
+
+        public void SaveEditor()
+        {
+            var json = EasyJsonConvert.SerializeObject(_settings, Formatting.Indented);
+            File.WriteAllText(EditorAssetsPath.UiTextManagerSettingsPath, json);
+
+            var temp = new WindowTemp
+            {
+                WindowPosition = position,
+                MenuWidth = MenuWidth
+            };
+            json = EasyJsonConvert.SerializeObject(temp, Formatting.Indented);
+            File.WriteAllText(EditorAssetsPath.UiTextManagerWindowTempPath, json);
+        }
+
+        public void LoadEditor()
+        {
+            if (!File.Exists(EditorAssetsPath.UiTextManagerSettingsPath))
+                return;
+            var json = File.ReadAllText(EditorAssetsPath.UiTextManagerSettingsPath);
+            var val = EasyJsonConvert.DeserializeObject<Settings>(json);
+            if (val != null)
+            {
+                _settings = val;
+            }
+
+            if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
+                return;
+            json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
+            var temp = EasyJsonConvert.DeserializeObject<WindowTemp>(json);
+            if (temp != null)
+            {
+                position = temp.WindowPosition;
+                MenuWidth = temp.MenuWidth;
+            }
+        }
+
+        #endregion
+
+        #region LoadPrefabs
+
+        private void LoadPrefabsInScene(OdinMenuTree tree)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (scene.IsValid() && scene.isLoaded)
+                {
+                    var sceneName = $"{scene.name}.scene";
+                    tree.Add($"{Group}/{sceneName}", null, EditorIcons.UnityLogo);
+
+                    foreach (var o in scene.GetRootGameObjects())
+                    {
+                        if (o.GetComponentsInChildren<TextMeshProUGUI>(true).IsNotNullOrEmpty())
+                        {
+                            var item = new PrefabSceneItem(o, $"{sceneName}/{o.name}");
+
+                            item.Analyse();
+                            if (AssetItemFilter(item))
+                            {
+                                var icon = item.HasIncorrect()
+                                    ? EditorIcons.UnityWarningIcon
+                                    : EasyEditorIcons.UnityPrefabIcon;
+
+                                var menuItems = tree.Add($"{Group}/{sceneName}/{o.name}", item, icon).ToArray();
+                                Debug.Assert(menuItems.Length == 1);
+                            }
+
+                            item.ClearCache();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        private void LoadPrefabsInProject(OdinMenuTree tree)
+        {
+            var assetsPath = $"Assets/{_settings.AssetsManagerPath}/";
+
+            if (_settings.AssetsManagerPath.IsNotNullOrEmpty())
+            {
+                var allPrefabs = AssetDatabase.GetAllAssetPaths()
+                    .Where(p => p.StartsWith(assetsPath) &&
+                                p.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase));
+                foreach (var path in allPrefabs)
+                {
+                    var obj = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                    if (obj != null && obj.GetComponentInChildren<TextMeshProUGUI>() != null)
+                    {
+                        var item = new PrefabAssetItem(path);
+
+                        item.Analyse();
+                        if (AssetItemFilter(item))
+                        {
+                            var icon = item.HasIncorrect()
+                                ? EditorIcons.UnityWarningIcon
+                                : EasyEditorIcons.UnityPrefabIcon;
+                            var p = path.Substring(assetsPath.Length,
+                                path.Length - assetsPath.Length - ".prefab".Length);
+                            var menuItems = tree.Add($"{Group}/{p}", item, icon).ToArray();
+                            foreach (var menuItem in menuItems)
+                            {
+                                menuItem.Icon = menuItem.Name != obj.name
+                                    ? EditorIcons.UnityFolderIcon
+                                    : icon;
+                            }
+                        }
+
+                        item.ClearCache();
+                    }
+                }
+
+                var items = tree.MenuItems.First(i => i.Name == Group).GetChildMenuItemsRecursive(false);
+                foreach (var item in items)
+                {
+                    if (item.Value == null)
+                    {
+                        item.Icon = EditorIcons.UnityFolderIcon;
+                    }
+                }
+            }
+        }
+
+
+        private bool AssetItemFilter(PrefabItemBase item)
+        {
+            if (_settings == null)
+                return true;
+            if (_settings.ViewModes == 0)
+                return false;
+            if (_settings.ViewModes == ViewModes.All)
+                return true;
+
+            var warn = item.HasIncorrect();
+
+            if (warn && _settings.ViewModes.HasFlag(ViewModes.Incorrect))
+            {
+                return true;
+            }
+
+            if (!warn && _settings.ViewModes.HasFlag(ViewModes.Correct))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         #endregion
@@ -380,6 +389,7 @@ namespace EasyGameFramework.Editor
                     AutoHandleIncorrectRecursion();
                 }
             }
+
             public void AutoHandleIncorrectRecursion()
             {
                 foreach (var node in Tree)
@@ -388,11 +398,12 @@ namespace EasyGameFramework.Editor
                     {
                         AutoHandleNodeIncorrect(node);
                     }
+
                     AutoHandleIncorrectRecursion(node.Children);
                 }
             }
 
-            public void AutoHandleIncorrectRecursion(List<PrefabTreeNodeBase> children)
+            public void AutoHandleIncorrectRecursion(List<PrefabTreeNode> children)
             {
                 foreach (var child in children)
                 {
@@ -400,11 +411,12 @@ namespace EasyGameFramework.Editor
                     {
                         AutoHandleNodeIncorrect(child);
                     }
+
                     AutoHandleIncorrectRecursion(child.Children);
                 }
             }
 
-            public void AutoHandleNodeIncorrect(PrefabTreeNodeBase node)
+            public void AutoHandleNodeIncorrect(PrefabTreeNode node)
             {
                 Debug.Assert(node.IsTextNode());
 
@@ -443,7 +455,8 @@ namespace EasyGameFramework.Editor
                 {
                     foreach (var preset in UiTextPresetsManager.Instance.TextPropertiesPresets)
                     {
-                        if (preset.FontColor == node.TextGUI.color && preset.FontSize.Approximately(node.TextGUI.fontSize))
+                        if (preset.FontColor == node.TextGUI.color &&
+                            preset.FontSize.Approximately(node.TextGUI.fontSize))
                         {
                             mgr.SetTextPropertiesPreset(preset);
                         }
@@ -529,7 +542,7 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            private void UpdatePrefabRecursion(GameObject prefab, List<PrefabTreeNodeBase> children)
+            private void UpdatePrefabRecursion(GameObject prefab, List<PrefabTreeNode> children)
             {
                 if (children.IsNullOrEmpty())
                     return;
@@ -550,7 +563,7 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            private PrefabTreeNodeBase GetPrefabTreeNode(GameObject prefab, string name, PrefabTreeNodeBase parent)
+            private PrefabTreeNode GetPrefabTreeNode(GameObject prefab, string name, PrefabTreeNode parent)
             {
                 if (parent == null)
                 {
@@ -568,8 +581,8 @@ namespace EasyGameFramework.Editor
                 throw new Exception($"找不到{parent.FullName}/{name}，尝试“重新加载资源视图”");
             }
 
-            protected abstract PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
-                PrefabTreeNodeBase parent);
+            protected abstract PrefabTreeNode AllocTreeNode(GameObject prefab, GameObject target,
+                PrefabTreeNode parent);
 
             private bool PrefabFilter(GameObject prefab)
             {
@@ -661,8 +674,8 @@ namespace EasyGameFramework.Editor
                 return _prefab;
             }
 
-            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
-                PrefabTreeNodeBase parent)
+            protected override PrefabTreeNode AllocTreeNode(GameObject prefab, GameObject target,
+                PrefabTreeNode parent)
             {
                 var ps = PrefabStageUtility.GetCurrentPrefabStage();
                 if (ps.assetPath == PrefabPath)
@@ -670,7 +683,7 @@ namespace EasyGameFramework.Editor
                     prefab = ps.prefabContentsRoot;
                 }
 
-                return new PrefabTreeNodeBase(this, prefab, target.name, parent);
+                return new PrefabTreeNode(this, prefab, target.name, parent);
             }
         }
 
@@ -694,10 +707,10 @@ namespace EasyGameFramework.Editor
                 return _root;
             }
 
-            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
-                PrefabTreeNodeBase parent)
+            protected override PrefabTreeNode AllocTreeNode(GameObject prefab, GameObject target,
+                PrefabTreeNode parent)
             {
-                return new PrefabTreeNodeBase(this, prefab, target.name, parent);
+                return new PrefabTreeNode(this, prefab, target.name, parent);
             }
         }
 
@@ -715,10 +728,10 @@ namespace EasyGameFramework.Editor
 
         #endregion
 
-        #region PrefabAssetNode
+        #region PrefabTreeNode
 
         [Serializable]
-        public class PrefabTreeNodeBase
+        public class PrefabTreeNode
         {
             public string FullName { get; private set; }
             public string Path { get; private set; }
@@ -727,12 +740,13 @@ namespace EasyGameFramework.Editor
             public GameObject Prefab { get; private set; }
 
             public TextMeshProUGUI TextGUI { get; private set; }
-            public PrefabTreeNodeBase Parent { get; private set; }
+            public PrefabTreeNode Parent { get; private set; }
             public GameObject Target { get; private set; }
-            public List<PrefabTreeNodeBase> Children { get; } = new();
+            public List<PrefabTreeNode> Children { get; } = new();
             public EasyEditorGUI.TreeNodeState State { get; } = new();
 
-            public PrefabTreeNodeBase(PrefabItemBase owner, GameObject prefab, string targetName, PrefabTreeNodeBase parent = null)
+            public PrefabTreeNode(PrefabItemBase owner, GameObject prefab, string targetName,
+                PrefabTreeNode parent = null)
             {
                 Owner = owner;
                 Parent = parent;
@@ -777,7 +791,7 @@ namespace EasyGameFramework.Editor
 
                 TextGUI = Target.GetComponent<TextMeshProUGUI>();
             }
-            
+
             public bool IsTextNode()
             {
                 return TextGUI != null;
@@ -795,6 +809,7 @@ namespace EasyGameFramework.Editor
                 {
                     return false;
                 }
+
                 if (HasIncorrect())
                     return true;
                 foreach (var child in Children)
@@ -814,29 +829,29 @@ namespace EasyGameFramework.Editor
         }
 
         [Serializable]
-        public class PrefabTree : List<PrefabTreeNodeBase>
+        public class PrefabTree : List<PrefabTreeNode>
         {
         }
 
-        public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNodeBase>
+        public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNode>
         {
-            public override string GetNodeLabel(PrefabTreeNodeBase node)
+            public override string GetNodeLabel(PrefabTreeNode node)
             {
                 return "       " + node.Target.name;
             }
 
-            public override IList<PrefabTreeNodeBase> GetNodeChildren(PrefabTreeNodeBase node)
+            public override IList<PrefabTreeNode> GetNodeChildren(PrefabTreeNode node)
             {
                 return node.Children;
             }
 
-            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNodeBase node)
+            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNode node)
             {
                 node.State.Expandable = true;
                 return node.State;
             }
 
-            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNodeBase node, Rect headerRect,
+            protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect,
                 EasyEditorGUI.TreeNodeInfo info)
             {
                 var iconWidth = EditorGUIUtility.singleLineHeight;
@@ -855,7 +870,7 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            protected override void OnBeforeChildrenContentGUI(PrefabTreeNodeBase node, Rect headerRect,
+            protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect,
                 EasyEditorGUI.TreeNodeInfo info)
             {
                 bool hasIncorrect = false;

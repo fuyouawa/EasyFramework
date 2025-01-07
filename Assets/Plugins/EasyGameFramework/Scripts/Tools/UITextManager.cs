@@ -9,12 +9,12 @@ namespace EasyGameFramework
         [ValueDropdown("FontAssetPresetDropdown")]
         [LabelText("字体资产预设")]
         [SerializeField]
-        private int? _fontAssetPresetIndex;
+        private int _fontAssetPresetIndex = -1;
 
         [ValueDropdown("TextPropertiesPresetDropdown")]
         [LabelText("文本属性预设")]
         [SerializeField]
-        private int? _textPropertiesPresetIndex;
+        private int _textPropertiesPresetIndex = -1;
 
         private TextMeshProUGUI _text;
 
@@ -25,7 +25,7 @@ namespace EasyGameFramework
 
         public FontAssetPreset GetFontAssetPreset()
         {
-            return  _fontAssetPresetIndex == null
+            return  _fontAssetPresetIndex == -1
                 ? null
                 : UiTextPresetsManager.Instance.FontAssetPresets[(int)_fontAssetPresetIndex];
         }
@@ -38,7 +38,7 @@ namespace EasyGameFramework
 
         public TextPropertiesPreset GetTextPropertiesPreset()
         {
-            return  _textPropertiesPresetIndex == null
+            return  _textPropertiesPresetIndex == -1
                 ? null
                 : UiTextPresetsManager.Instance.TextPropertiesPresets[(int)_textPropertiesPresetIndex];
         }
@@ -87,10 +87,10 @@ namespace EasyGameFramework
         }
 
 #if UNITY_EDITOR
-        private ValueDropdownList<int?> FontAssetPresetDropdown =>
+        private ValueDropdownList<int> FontAssetPresetDropdown =>
             UiTextPresetsManager.Instance.FontAssetPresetDropdown;
 
-        private ValueDropdownList<int?> TextPropertiesPresetDropdown =>
+        private ValueDropdownList<int> TextPropertiesPresetDropdown =>
             UiTextPresetsManager.Instance.TextPropertiesPresetDropdown;
 #endif
     }
