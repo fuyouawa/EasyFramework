@@ -6,9 +6,10 @@ using Sirenix.OdinInspector;
 using TMPro;
 using EasyGameFramework;
 using EasyFramework;
+using Sirenix.Serialization;
 using UnityEngine;
 
-namespace Pokemon.UI
+namespace EasyGameFramework
 {
     [Serializable]
     public class FontAssetPreset
@@ -28,7 +29,7 @@ namespace Pokemon.UI
     }
 
     [Serializable]
-    public class UITextPropertiesPreset
+    public class TextPropertiesPreset
     {
         [LabelText("标签")]
         public string Label;
@@ -46,32 +47,83 @@ namespace Pokemon.UI
 
     [ScriptableObjectSingletonAssetPath("Assets/Resources/Fonts")]
     [ShowOdinSerializedPropertiesInInspector]
-    public class UITextPresetsManager : ScriptableObjectSingleton<UITextPresetsManager>
+    public class UiTextPresetsManager : ScriptableObjectSingleton<UiTextPresetsManager>, ISerializationCallbackReceiver
     {
-        [LabelText("实时预览")]
-        public bool RealtimePreview;
+        [SerializeField, HideInInspector]
+        private SerializationData _serializationData;
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            UnitySerializationUtility.DeserializeUnityObject(this, ref this._serializationData);
+        }
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            UnitySerializationUtility.SerializeUnityObject(this, ref this._serializationData);
+        }
 
         [TitleCN("字体资产")]
         [ListDrawerSettings(ListElementLabelName = "LabelToShow", DraggableItems = false)]
         [LabelText("字体资产预设表")]
         public List<FontAssetPreset> FontAssetPresets = new();
 
+        [TitleCN("文本属性")]
+        [ListDrawerSettings(ListElementLabelName = "LabelToShow", DraggableItems = false, CustomAddFunction = "OnAddTextPropertiesPreset")]
+        [LabelText("文本属性预设表")]
+        public List<TextPropertiesPreset> TextPropertiesPresets = new();
+        
         [LabelText("默认字体资产预设")]
-        [ValueDropdown("GetFontAssetPresetDropdown")]
-        public int DefaultFontAssetPresetIndex;
+        [ValueDropdown("FontAssetPresetDropdown")]
+        [SerializeField]
+        private int? _defaultFontAssetPresetIndex = null;
 
-        [TitleCN("Text属性")]
-        [ListDrawerSettings(ListElementLabelName = "LabelToShow", DraggableItems = false)]
-        [LabelText("Text属性预设表")]
-        public List<UITextPropertiesPreset> UITextPropertiesPresets = new();
+        [LabelText("默认文本属性预设")]
+        [ValueDropdown("TextPropertiesPresetDropdown")]
+        [SerializeField]
+        private int? _defaultTextPropertiesPresetIndex = null;
 
+        public FontAssetPreset GetDefaultFontAssetPreset()
+        {
+            return _defaultFontAssetPresetIndex == null ? null : FontAssetPresets[(int)_defaultFontAssetPresetIndex];
+        }
+
+        public TextPropertiesPreset GetDefaultTextPropertiesPreset()
+        {
+            return _defaultTextPropertiesPresetIndex == null ? null : TextPropertiesPresets[(int)_defaultTextPropertiesPresetIndex];
+        }
 
 #if UNITY_EDITOR
-        public IEnumerable GetFontAssetPresetDropdown()
+        private ValueDropdownList<int?> _fontAssetPresetDropdown;
+        private ValueDropdownList<int?> _textPropertiesPresetDropdown;
+
+        public ValueDropdownList<int?> FontAssetPresetDropdown
         {
-            var total = new ValueDropdownList<int>();
-            total.AddRange(FontAssetPresets.Select((c, i) => new ValueDropdownItem<int>(c.Label, i)));
-            return total;
+            get
+            {
+                //TODO FontAssetPresetDropdown性能优化
+                _fontAssetPresetDropdown = new ValueDropdownList<int?> { { "None", null } };
+                _fontAssetPresetDropdown.AddRange(FontAssetPresets.Select((p, i) => new ValueDropdownItem<int?>(p.LabelToShow, i)));
+                return _fontAssetPresetDropdown;
+            }
+        }
+        public ValueDropdownList<int?> TextPropertiesPresetDropdown
+        {
+            get
+            {
+                _textPropertiesPresetDropdown = new ValueDropdownList<int?> { { "None", null } };
+                _textPropertiesPresetDropdown.AddRange(TextPropertiesPresets.Select((p, i) => new ValueDropdownItem<int?>(p.LabelToShow, i)));
+                return _textPropertiesPresetDropdown;
+            }
+        }
+
+        private TextPropertiesPreset OnAddTextPropertiesPreset()
+        {
+            var preset = new TextPropertiesPreset
+            {
+                FontSize = 50,
+                FontColor = Color.white
+            };
+            return preset;
         }
 #endif
     }

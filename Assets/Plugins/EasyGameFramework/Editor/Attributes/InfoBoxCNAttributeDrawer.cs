@@ -80,7 +80,7 @@ namespace EasyGameFramework.Editor
                 GUIHelper.PushGUIEnabled(enabled: true);
             }
 
-            if (UnityEngine.Event.current.type == EventType.Layout)
+            if (Event.current.type == EventType.Layout)
             {
                 _drawMessageBox = _visibleIfResolver.GetValue();
             }
@@ -88,7 +88,7 @@ namespace EasyGameFramework.Editor
             if (_drawMessageBox)
             {
                 string value = _messageResolver.GetValue();
-                SirenixEditorGUI.MessageBox(value, _messageType, EasyGUIStyles.InfoBoxCN, true);
+                EasyEditorGUI.MessageBox(value, _messageType);
             }
 
             if (base.Attribute.GUIAlwaysEnabled)

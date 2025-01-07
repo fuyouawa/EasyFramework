@@ -1,148 +1,97 @@
-using System.Collections;
-using System.Linq;
 using Sirenix.OdinInspector;
 using TMPro;
-using EasyGameFramework;
-using EasyFramework;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
-namespace Pokemon.UI
+namespace EasyGameFramework
 {
-#if UNITY_EDITOR
-    [ExecuteAlways]
-#endif
-    public class UiTextManager : MonoBehaviour
+    public class UiTextManager : SerializedMonoBehaviour
     {
-        [InfoBoxCN("不要重置该组件(组件菜单栏的reset), 可能会导致引用的预设数据丢失!", InfoMessageType.Warning)]
-        [ValueDropdown("GetFontAssetPresetDropdown")]
+        [ValueDropdown("FontAssetPresetDropdown")]
         [LabelText("字体资产预设")]
-        public int FontAssetPresetIndex = -1;
+        [SerializeField]
+        private int? _fontAssetPresetIndex;
 
-        [ValueDropdown("GetUITextPropertiesPresetDropdown")]
+        [ValueDropdown("TextPropertiesPresetDropdown")]
         [LabelText("文本属性预设")]
-        public int TextPropertiesPresetIndex = -1;
-
-        public UITextPropertiesPreset TextPropertiesPreset
-        {
-            get
-            {
-                if (IsValidTextPropertiesPresetIndex)
-                {
-                    return UITextPresetsManager.Instance.UITextPropertiesPresets[TextPropertiesPresetIndex];
-                }
-
-                return null;
-            }
-        }
-
-        public FontAssetPreset FontAssetPreset
-        {
-            get
-            {
-                if (IsValidFontAssetPresetIndex)
-                {
-                    return UITextPresetsManager.Instance.FontAssetPresets[FontAssetPresetIndex];
-                }
-
-                return null;
-            }
-        }
+        [SerializeField]
+        private int? _textPropertiesPresetIndex;
 
         private TextMeshProUGUI _text;
-
-        private bool IsValidFontAssetPresetIndex =>
-            FontAssetPresetIndex >= 0 && UITextPresetsManager.Instance.FontAssetPresets.Count > FontAssetPresetIndex;
-
-        private bool IsValidTextPropertiesPresetIndex =>
-            TextPropertiesPresetIndex >= 0 && UITextPresetsManager.Instance.UITextPropertiesPresets.Count >
-            TextPropertiesPresetIndex;
 
         private void Awake()
         {
             ApplyPresets();
         }
 
-        private void ApplyPresets()
+        public FontAssetPreset GetFontAssetPreset()
         {
-            if (_text == null)
+            return  _fontAssetPresetIndex == null
+                ? null
+                : UiTextPresetsManager.Instance.FontAssetPresets[(int)_fontAssetPresetIndex];
+        }
+
+        public void SetFontAssetPreset(FontAssetPreset preset)
+        {
+            _fontAssetPresetIndex = UiTextPresetsManager.Instance.FontAssetPresets.IndexOf(preset);
+            Changed();
+        }
+
+        public TextPropertiesPreset GetTextPropertiesPreset()
+        {
+            return  _textPropertiesPresetIndex == null
+                ? null
+                : UiTextPresetsManager.Instance.TextPropertiesPresets[(int)_textPropertiesPresetIndex];
+        }
+
+        public void SetTextPropertiesPreset(TextPropertiesPreset preset)
+        {
+            _textPropertiesPresetIndex = UiTextPresetsManager.Instance.TextPropertiesPresets.IndexOf(preset);
+            Changed();
+        }
+
+        public void ApplyPresets()
+        {
+            _text = GetComponent<TextMeshProUGUI>();
+
+            var fontAssetPreset = GetFontAssetPreset();
+            if (fontAssetPreset != null)
             {
-                _text = GetComponent<TextMeshProUGUI>();
-                Debug.Assert(_text != null);
+                if (_text.font != fontAssetPreset.FontAsset
+                    || _text.fontSharedMaterial != fontAssetPreset.Material)
+                {
+                    Changed();
+                }
+                _text.font = fontAssetPreset.FontAsset;
+                _text.fontSharedMaterial = fontAssetPreset.Material;
+
             }
 
-            if (FontAssetPreset != null)
+            var textPropertiesPreset = GetTextPropertiesPreset();
+            if (textPropertiesPreset != null)
             {
-                _text.font = FontAssetPreset.FontAsset;
-                _text.fontSharedMaterial = FontAssetPreset.Material;
+                if (!_text.fontSize.Approximately(textPropertiesPreset.FontSize)
+                    || _text.color != textPropertiesPreset.FontColor)
+                {
+                    Changed();
+                }
+                _text.fontSize = textPropertiesPreset.FontSize;
+                _text.color = textPropertiesPreset.FontColor;
             }
+        }
 
-            if (TextPropertiesPreset != null)
-            {
-                _text.fontSize = TextPropertiesPreset.FontSize;
-                _text.color = TextPropertiesPreset.FontColor;
-            }
+        private void Changed()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 
 #if UNITY_EDITOR
-        [TitleGroupCN("预设引用")]
-        [SerializeField]
-        //TODO ShowIf使用nameof优化
-        [ShowIf(nameof(IsValidFontAssetPresetIndex))]
-        [LabelText("字体资产预设-引用")]
-        private FontAssetPreset _fontAssetPresetToShow;
+        private ValueDropdownList<int?> FontAssetPresetDropdown =>
+            UiTextPresetsManager.Instance.FontAssetPresetDropdown;
 
-        [TitleGroupCN("预设引用")]
-        [SerializeField]
-        [ShowIf(nameof(IsValidTextPropertiesPresetIndex))]
-        [LabelText("Text属性预设-引用")]
-        private UITextPropertiesPreset _textPropertiesPresetToShow;
-
-        private IEnumerable GetFontAssetPresetDropdown()
-        {
-            var total = new ValueDropdownList<int>
-            {
-                { "None", -1 },
-                { "-默认-", UITextPresetsManager.Instance.DefaultFontAssetPresetIndex }
-            };
-            total.AddRange(UITextPresetsManager.Instance.FontAssetPresets
-                .Select((c, i) => new ValueDropdownItem<int>(c.Label, i)));
-            return total;
-        }
-
-        private IEnumerable GetUITextPropertiesPresetDropdown()
-        {
-            var total = new ValueDropdownList<int> { { "None", -1 } };
-            total.AddRange(UITextPresetsManager.Instance.UITextPropertiesPresets
-                .Select((c, i) => new ValueDropdownItem<int>(c.Label, i)));
-            return total;
-        }
-
-        private void Update()
-        {
-            if (UITextPresetsManager.Instance.RealtimePreview)
-            {
-                ApplyPresets();
-            }
-        }
-
-        [Button("切换到预设管理器")]
-        private void SelectManager()
-        {
-            Selection.activeObject = UITextPresetsManager.Instance;
-            EditorGUIUtility.PingObject(UITextPresetsManager.Instance);
-        }
-
-        [OnInspectorGUI]
-        private void OnInspectorGUI()
-        {
-            _fontAssetPresetToShow = FontAssetPreset;
-            _textPropertiesPresetToShow = TextPropertiesPreset;
-        }
-
-        void Reset() {}
+        private ValueDropdownList<int?> TextPropertiesPresetDropdown =>
+            UiTextPresetsManager.Instance.TextPropertiesPresetDropdown;
 #endif
     }
 }

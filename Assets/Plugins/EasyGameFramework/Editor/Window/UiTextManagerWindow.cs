@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -12,12 +11,11 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using JetBrains.Annotations;
-using Pokemon.UI;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
 using Sirenix.Serialization;
+using Sirenix.Utilities;
 using UnityEngine.SceneManagement;
-using static UnityEngine.GraphicsBuffer;
 
 namespace EasyGameFramework.Editor
 {
@@ -365,24 +363,100 @@ namespace EasyGameFramework.Editor
             public abstract void OpenPrefab();
 
             [FoldoutGroup("自动分析")]
-            [InfoBoxCN("1、如果没有UITextManager组件会自动添加")]
-            [InfoBoxCN("2、如果UITextManager的\"字体资产预设\"依然null，根据UI文本组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值")]
-            [InfoBoxCN("3、如果UITextManager的\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"")]
-            [InfoBoxCN("4、如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
+            [InfoBoxCN("1、如果没有UITextManager组件会自动添加\n" +
+                       "2、如果UITextManager的\"字体资产预设\"是null，根据Text(UI)组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值\n" +
+                       "3、如果UITextManager的\"文本属性预设\"是null，根据Text(UI)组件的字体大小和字体颜色设置，判断属于\"预设管理器\"中的哪个文本属性预设，然后自动赋值\n" +
+                       "4、如果UITextManager的\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"\n" +
+                       "5、如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
             [Button("自动分析处理", Icon = SdfIconType.Tools)]
             [UsedImplicitly]
             [PropertyOrder(6)]
-            private void AutoHandleWarn()
+            private void AutoHandleIncorrect()
             {
                 var msg = "您确定要使用自动处理吗";
                 if (EditorUtility.DisplayDialog("警告", msg, "确认", "取消"))
                 {
                     OpenPrefab();
-                    foreach (var node in Tree)
+                    AutoHandleIncorrectRecursion();
+                }
+            }
+            public void AutoHandleIncorrectRecursion()
+            {
+                foreach (var node in Tree)
+                {
+                    if (!node.IsTextNode())
                     {
-                        node.AutoHandle();
+                        AutoHandleNodeIncorrect(node);
+                    }
+                    AutoHandleIncorrectRecursion(node.Children);
+                }
+            }
+
+            public void AutoHandleIncorrectRecursion(List<PrefabTreeNodeBase> children)
+            {
+                foreach (var child in children)
+                {
+                    if (child.IsTextNode())
+                    {
+                        AutoHandleNodeIncorrect(child);
+                    }
+                    AutoHandleIncorrectRecursion(child.Children);
+                }
+            }
+
+            public void AutoHandleNodeIncorrect(PrefabTreeNodeBase node)
+            {
+                Debug.Assert(node.IsTextNode());
+
+                UiTextManager mgr;
+
+                var mgrs = node.Target.GetComponents<UiTextManager>();
+                if (mgrs.Length >= 1)
+                {
+                    mgr = mgrs[0];
+                    if (mgrs.Length > 1)
+                    {
+                        foreach (var m in mgrs.Skip(1))
+                        {
+                            GameObject.DestroyImmediate(m);
+                        }
                     }
                 }
+                else
+                {
+                    mgr = node.Target.AddComponent<UiTextManager>();
+                }
+
+                // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
+                if (mgr.GetFontAssetPreset() == null)
+                {
+                    foreach (var preset in UiTextPresetsManager.Instance.FontAssetPresets)
+                    {
+                        if (preset.FontAsset == node.TextGUI.font && preset.Material == node.TextGUI.fontSharedMaterial)
+                        {
+                            mgr.SetFontAssetPreset(preset);
+                        }
+                    }
+                }
+
+                if (mgr.GetTextPropertiesPreset() == null)
+                {
+                    foreach (var preset in UiTextPresetsManager.Instance.TextPropertiesPresets)
+                    {
+                        if (preset.FontColor == node.TextGUI.color && preset.FontSize.Approximately(node.TextGUI.fontSize))
+                        {
+                            mgr.SetTextPropertiesPreset(preset);
+                        }
+                    }
+                }
+
+                // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
+                if (mgr.GetFontAssetPreset() == null)
+                {
+                    mgr.SetFontAssetPreset(UiTextPresetsManager.Instance.GetDefaultFontAssetPreset());
+                }
+
+                AssetDatabase.Refresh();
             }
 
             [EnumToggleButtons]
@@ -433,7 +507,7 @@ namespace EasyGameFramework.Editor
                     var split = path.Split('/');
 
                     var s0 = split[0];
-                    var node = Tree.Find(n => n.Name == s0);
+                    var node = Tree.Find(n => n.Target.name == s0);
                     if (node == null)
                     {
                         node = GetPrefabTreeNode(prefab, s0, null);
@@ -443,7 +517,7 @@ namespace EasyGameFramework.Editor
                     for (int i = 1; i < split.Length; i++)
                     {
                         var s = split[i];
-                        var node2 = node.Children.Find(n => n.Name == s);
+                        var node2 = node.Children.Find(n => n.Target.name == s);
                         if (node2 == null)
                         {
                             node2 = GetPrefabTreeNode(prefab, s, node);
@@ -455,25 +529,46 @@ namespace EasyGameFramework.Editor
                 }
             }
 
+            private void UpdatePrefabRecursion(GameObject prefab, List<PrefabTreeNodeBase> children)
+            {
+                if (children.IsNullOrEmpty())
+                    return;
+
+                foreach (var child in children)
+                {
+                    child.UpdatePrefab(prefab);
+                    UpdatePrefabRecursion(prefab, child.Children);
+                }
+            }
+
+            public void UpdatePrefabRecursion(GameObject prefab)
+            {
+                foreach (var node in Tree)
+                {
+                    node.UpdatePrefab(prefab);
+                    UpdatePrefabRecursion(prefab, node.Children);
+                }
+            }
+
             private PrefabTreeNodeBase GetPrefabTreeNode(GameObject prefab, string name, PrefabTreeNodeBase parent)
             {
                 if (parent == null)
                 {
-                    return AllocTreeNode(prefab, prefab.transform, null);
+                    return AllocTreeNode(prefab, prefab, null);
                 }
 
-                foreach (Transform child in parent.Target)
+                foreach (Transform child in parent.Target.transform)
                 {
                     if (child.gameObject.name == name)
                     {
-                        return AllocTreeNode(prefab, child, parent);
+                        return AllocTreeNode(prefab, child.gameObject, parent);
                     }
                 }
 
                 throw new Exception($"找不到{parent.FullName}/{name}，尝试“重新加载资源视图”");
             }
 
-            protected abstract PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+            protected abstract PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
                 PrefabTreeNodeBase parent);
 
             private bool PrefabFilter(GameObject prefab)
@@ -483,7 +578,7 @@ namespace EasyGameFramework.Editor
                 if (ViewMode == ItemsViewModes.All)
                     return true;
 
-                var warn = PrefabHasIncorrect(prefab);
+                var warn = GameObjectHasIncorrect(prefab);
 
                 if (warn && ViewMode.HasFlag(ItemsViewModes.Incorrect))
                 {
@@ -513,7 +608,7 @@ namespace EasyGameFramework.Editor
             {
                 foreach (var node in Tree)
                 {
-                    if (PrefabHasIncorrect(node.Prefab))
+                    if (node.HasIncorrectRecursion())
                     {
                         return true;
                     }
@@ -548,7 +643,12 @@ namespace EasyGameFramework.Editor
 
             public override void OpenPrefab()
             {
-                PrefabStageUtility.OpenPrefab(PrefabPath);
+                var ps = PrefabStageUtility.GetCurrentPrefabStage();
+                if (ps.assetPath == PrefabPath)
+                    return;
+
+                ps = PrefabStageUtility.OpenPrefab(PrefabPath);
+                UpdatePrefabRecursion(ps.prefabContentsRoot);
             }
 
             public override GameObject GetPrefab()
@@ -561,10 +661,16 @@ namespace EasyGameFramework.Editor
                 return _prefab;
             }
 
-            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
                 PrefabTreeNodeBase parent)
             {
-                return new PrefabAssetTreeNode(PrefabPath, prefab, target, parent);
+                var ps = PrefabStageUtility.GetCurrentPrefabStage();
+                if (ps.assetPath == PrefabPath)
+                {
+                    prefab = ps.prefabContentsRoot;
+                }
+
+                return new PrefabTreeNodeBase(this, prefab, target.name, parent);
             }
         }
 
@@ -588,20 +694,20 @@ namespace EasyGameFramework.Editor
                 return _root;
             }
 
-            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, Transform target,
+            protected override PrefabTreeNodeBase AllocTreeNode(GameObject prefab, GameObject target,
                 PrefabTreeNodeBase parent)
             {
-                return new PrefabSceneTreeNode(prefab, target, parent);
+                return new PrefabTreeNodeBase(this, prefab, target.name, parent);
             }
         }
 
-        public static bool PrefabHasIncorrect(GameObject obj)
+        public static bool GameObjectHasIncorrect(GameObject obj)
         {
             var mgrs = obj.GetComponents<UiTextManager>();
-            if (mgrs.IsNullOrEmpty() || mgrs.Length > 1)
+            if (CollectionExtension.IsNullOrEmpty(mgrs) || mgrs.Length > 1)
                 return true;
             var mgr = mgrs[0];
-            if (mgr.FontAssetPreset == null || mgr.TextPropertiesPreset == null)
+            if (mgr.GetFontAssetPreset() == null || mgr.GetTextPropertiesPreset() == null)
                 return true;
 
             return false;
@@ -612,47 +718,58 @@ namespace EasyGameFramework.Editor
         #region PrefabAssetNode
 
         [Serializable]
-        public abstract class PrefabTreeNodeBase
+        public class PrefabTreeNodeBase
         {
-            public string Name => Target.gameObject.name;
+            public string FullName { get; private set; }
+            public string Path { get; private set; }
+            public PrefabItemBase Owner { get; }
 
-            public string FullName { get; }
-            public string Path { get; }
-
-            public GameObject Prefab { get; }
+            public GameObject Prefab { get; private set; }
 
             public TextMeshProUGUI TextGUI { get; private set; }
-            public PrefabTreeNodeBase Parent { get; }
-            public Transform Target { get; }
+            public PrefabTreeNodeBase Parent { get; private set; }
+            public GameObject Target { get; private set; }
             public List<PrefabTreeNodeBase> Children { get; } = new();
             public EasyEditorGUI.TreeNodeState State { get; } = new();
 
-            public PrefabTreeNodeBase(GameObject prefab, Transform target, PrefabTreeNodeBase parent = null)
+            public PrefabTreeNodeBase(PrefabItemBase owner, GameObject prefab, string targetName, PrefabTreeNodeBase parent = null)
             {
+                Owner = owner;
                 Parent = parent;
+                UpdatePrefab(prefab, targetName);
+            }
+
+            public void UpdatePrefab(GameObject prefab)
+            {
+                UpdatePrefab(prefab, Target.name);
+            }
+
+            private void UpdatePrefab(GameObject prefab, string targetName)
+            {
                 Prefab = prefab;
-                Target = target;
-                if (parent == null)
+                if (Parent == null)
                 {
-                    FullName = Name;
+                    FullName = targetName;
                     Path = string.Empty;
+                    Target = prefab;
                 }
                 else
                 {
-                    FullName = parent.FullName + '/' + Name;
-                    if (parent.Path.IsNotNullOrEmpty())
+                    FullName = Parent.FullName + '/' + targetName;
+                    if (Parent.Path.IsNotNullOrEmpty())
                     {
-                        Path = parent.Path + '/' + Name;
+                        Path = Parent.Path + '/' + targetName;
                     }
                     else
                     {
-                        Path = Name;
+                        Path = targetName;
                     }
-                    foreach (Transform child in parent.Target)
+
+                    foreach (Transform child in Parent.Target.transform)
                     {
-                        if (child.gameObject.name == Name)
+                        if (child.gameObject.name == targetName)
                         {
-                            Target = child;
+                            Target = child.gameObject;
                             break;
                         }
                     }
@@ -660,75 +777,36 @@ namespace EasyGameFramework.Editor
 
                 TextGUI = Target.GetComponent<TextMeshProUGUI>();
             }
-
-            public void AutoHandle()
+            
+            public bool IsTextNode()
             {
-                var mgr = Target.GetOrAddComponent<UiTextManager>();
-                TextGUI = Target.GetComponent<TextMeshProUGUI>();
-                // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
-                if (mgr.FontAssetPreset == null)
+                return TextGUI != null;
+            }
+
+            public bool HasIncorrect()
+            {
+                Debug.Assert(IsTextNode());
+                return GameObjectHasIncorrect(Target.gameObject);
+            }
+
+            public bool HasIncorrectRecursion()
+            {
+                if (!IsTextNode())
                 {
-                    for (int i = 0; i < UITextPresetsManager.Instance.FontAssetPresets.Count; i++)
-                    {
-                        var preset = UITextPresetsManager.Instance.FontAssetPresets[i];
-                        if (preset.FontAsset == TextGUI.font && preset.Material == TextGUI.fontSharedMaterial)
-                        {
-                            mgr.FontAssetPresetIndex = i;
-                        }
-                    }
+                    return false;
+                }
+                if (HasIncorrect())
+                    return true;
+                foreach (var child in Children)
+                {
+                    if (child.HasIncorrectRecursion())
+                        return true;
                 }
 
-                // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
-                if (mgr.FontAssetPreset == null)
-                {
-                    mgr.FontAssetPresetIndex = UITextPresetsManager.Instance.DefaultFontAssetPresetIndex;
-                }
-
-                var mgrs = Target.GetComponents<UiTextManager>();
-                if (mgrs.Length > 1)
-                {
-                    foreach (var m in mgrs.Skip(1))
-                    {
-                        GameObject.DestroyImmediate(m);
-                    }
-                }
-
-                Debug.Assert(Target.GetComponents<UiTextManager>().Length <= 1);
+                return false;
             }
 
-            public abstract void Select();
-        }
-
-        public class PrefabAssetTreeNode : PrefabTreeNodeBase
-        {
-            private string _assetPath;
-
-            public PrefabAssetTreeNode(string assetPath, GameObject prefab, Transform target,
-                PrefabTreeNodeBase parent = null) : base(prefab, target, parent)
-            {
-                _assetPath = assetPath;
-            }
-
-            public override void Select()
-            {
-                var ps = PrefabStageUtility.OpenPrefab(_assetPath);
-                var target = Parent == null
-                    ? ps.prefabContentsRoot.transform
-                    : ps.prefabContentsRoot.transform.Find(Path);
-                Debug.Assert(target != null);
-                Selection.activeObject = target;
-                EditorGUIUtility.PingObject(target);
-            }
-        }
-
-        public class PrefabSceneTreeNode : PrefabTreeNodeBase
-        {
-            public PrefabSceneTreeNode(GameObject prefab, Transform target, PrefabTreeNodeBase parent = null) : base(
-                prefab, target, parent)
-            {
-            }
-
-            public override void Select()
+            public void Select()
             {
                 Selection.activeObject = Target;
                 EditorGUIUtility.PingObject(Target);
@@ -744,7 +822,7 @@ namespace EasyGameFramework.Editor
         {
             public override string GetNodeLabel(PrefabTreeNodeBase node)
             {
-                return "       " + node.Name;
+                return "       " + node.Target.name;
             }
 
             public override IList<PrefabTreeNodeBase> GetNodeChildren(PrefabTreeNodeBase node)
@@ -761,17 +839,17 @@ namespace EasyGameFramework.Editor
             protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNodeBase node, Rect headerRect,
                 EasyEditorGUI.TreeNodeInfo info)
             {
-                var p = headerRect.position;
-                p.x += 14;
+                var iconWidth = EditorGUIUtility.singleLineHeight;
+                if (node.IsTextNode() && node.HasIncorrectRecursion())
+                {
+                    var iconRect = headerRect.AlignRight(iconWidth).SetSize(Vector2.one * iconWidth);
+                    var icon = EditorIcons.UnityWarningIcon;
+                    EditorGUI.LabelField(iconRect, new GUIContent(icon));
+                }
 
-                DrawIcon(node, p);
-            }
-
-            private void DrawIcon(PrefabTreeNodeBase node, Vector2 position)
-            {
                 if (node.TextGUI != null)
                 {
-                    var iconRect = new Rect(position, Vector2.one * EditorGUIUtility.singleLineHeight);
+                    var iconRect = headerRect.AddX(14).SetSize(Vector2.one * iconWidth);
                     var icon = EditorGUIUtility.ObjectContent(node.TextGUI, typeof(TextMeshProUGUI)).image;
                     EditorGUI.LabelField(iconRect, new GUIContent(icon));
                 }
@@ -781,10 +859,10 @@ namespace EasyGameFramework.Editor
                 EasyEditorGUI.TreeNodeInfo info)
             {
                 bool hasIncorrect = false;
-                if (node.TextGUI != null)
+                if (node.IsTextNode())
                 {
                     var mgrs = node.Target.GetComponents<UiTextManager>();
-                    if (mgrs.IsNullOrEmpty())
+                    if (CollectionExtension.IsNullOrEmpty(mgrs))
                     {
                         EasyEditorGUI.MessageBox("未被UiTextManager管理", MessageType.Warning);
                         hasIncorrect = true;
@@ -799,25 +877,27 @@ namespace EasyGameFramework.Editor
                         else
                         {
                             var mgr = mgrs[0];
-                            if (mgr.FontAssetPreset == null)
+                            var fontAssetPreset = mgr.GetFontAssetPreset();
+                            if (fontAssetPreset == null)
                             {
                                 EasyEditorGUI.MessageBox("字体资产预设为null！", MessageType.Warning);
                                 hasIncorrect = true;
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"字体资产预设为：{mgr.FontAssetPreset.LabelToShow}",
+                                EasyEditorGUI.MessageBox($"字体资产预设为：{fontAssetPreset.LabelToShow}",
                                     MessageType.Info);
                             }
 
-                            if (mgr.TextPropertiesPreset == null)
+                            var textPropertiesPreset = mgr.GetTextPropertiesPreset();
+                            if (textPropertiesPreset == null)
                             {
                                 EasyEditorGUI.MessageBox("文本属性预设为null！", MessageType.Warning);
                                 hasIncorrect = true;
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"文本属性预设为：{mgr.TextPropertiesPreset.LabelToShow}",
+                                EasyEditorGUI.MessageBox($"文本属性预设为：{textPropertiesPreset.LabelToShow}",
                                     MessageType.Info);
                             }
                         }
@@ -836,7 +916,8 @@ namespace EasyGameFramework.Editor
                         if (SirenixEditorGUI.SDFIconButton(btnRect, new GUIContent("自动处理"), Color.cyan.SetA(0.5f),
                                 Color.white, SdfIconType.Tools))
                         {
-                            node.AutoHandle();
+                            node.Owner.OpenPrefab();
+                            node.Owner.AutoHandleNodeIncorrect(node);
                         }
                     }
                 }

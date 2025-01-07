@@ -1699,6 +1699,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Text (TMP)
       objectReference: {fileID: 0}
+    - target: {fileID: 3085270576319132712, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3085270576319132712, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
     - target: {fileID: 5389826584772733846, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1782,13 +1786,43 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 895268627358715033, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1577381633994008881}
   m_SourcePrefab: {fileID: 100100000, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
 --- !u!224 &1577381633994008879 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5389826584772733846, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
   m_PrefabInstance: {fileID: 1577381633994008878}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1577381633994008880 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 895268627358715033, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+  m_PrefabInstance: {fileID: 1577381633994008878}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1577381633994008881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577381633994008880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FontAssetPresetIndex: 0
+  TextPropertiesPresetIndex: -1
+  _fontAssetPresetToShow:
+    Label: test
+    FontAsset: {fileID: 0}
+    Material: {fileID: 0}
+  _textPropertiesPresetToShow:
+    Label: 
+    FontSize: 0
+    FontColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

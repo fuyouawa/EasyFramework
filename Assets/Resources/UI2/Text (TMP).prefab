@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8152951469405219840}
   - component: {fileID: 994347692841884305}
   - component: {fileID: 1025815847040996984}
+  - component: {fileID: 3521417831265888879}
   m_Layer: 5
   m_Name: Text (TMP) (2)
   m_TagString: Untagged
@@ -136,6 +137,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3521417831265888879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236513769464724768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &895268627358715033
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,8 +218,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 187.19824, y: 83.95557}
+  m_SizeDelta: {x: 574.3965, y: 217.9112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &270419373989354585
 CanvasRenderer:
@@ -203,13 +243,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: qweqweqweqweqweqweqwe
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -236,8 +276,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 82.7
+  m_fontSizeBase: 82.7
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -391,16 +431,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FontAssetPresetIndex: 0
-  TextPropertiesPresetIndex: 0
-  _fontAssetPresetToShow:
-    Label: test
-    FontAsset: {fileID: 0}
-    Material: {fileID: 0}
-  _textPropertiesPresetToShow:
-    Label: jjhnn
-    FontSize: 0
-    FontColor: {r: 0, g: 0, b: 0, a: 0}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2214842931601452036
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +469,7 @@ GameObject:
   - component: {fileID: 5021559724939978626}
   - component: {fileID: 2030106928518659955}
   - component: {fileID: 2220980854356209342}
+  - component: {fileID: 6324700086448988821}
   m_Layer: 5
   m_Name: Text (TMP) (5)
   m_TagString: Untagged
@@ -536,6 +594,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6324700086448988821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2214842931601452036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2462006223327173235
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +644,7 @@ GameObject:
   - component: {fileID: 8175802881203748526}
   - component: {fileID: 4895936086636836321}
   - component: {fileID: 1477025746468964856}
+  - component: {fileID: 6335697922368190821}
   m_Layer: 5
   m_Name: Text (TMP) (3)
   m_TagString: Untagged
@@ -670,6 +768,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &6335697922368190821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2462006223327173235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2526750050933481662
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,6 +818,7 @@ GameObject:
   - component: {fileID: 4385938859304671388}
   - component: {fileID: 456204588748964108}
   - component: {fileID: 6496153044085923878}
+  - component: {fileID: 3930353603304584807}
   m_Layer: 5
   m_Name: Text (TMP) (5)
   m_TagString: Untagged
@@ -804,6 +942,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3930353603304584807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2526750050933481662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2639819388793374076
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,6 +992,7 @@ GameObject:
   - component: {fileID: 984162933968591983}
   - component: {fileID: 5832762557353169379}
   - component: {fileID: 5498196851031906213}
+  - component: {fileID: 146414891376605939}
   m_Layer: 5
   m_Name: Text (TMP) (5)
   m_TagString: Untagged
@@ -938,6 +1116,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &146414891376605939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2639819388793374076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &2971770695014055234
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,6 +1202,7 @@ GameObject:
   - component: {fileID: 8351183056101152535}
   - component: {fileID: 3463528381598454222}
   - component: {fileID: 4571559383892744927}
+  - component: {fileID: 451397429801888295}
   m_Layer: 5
   m_Name: Text (TMP) (4)
   m_TagString: Untagged
@@ -1109,6 +1327,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &451397429801888295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3009564305189481903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &3313267574009090326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1120,6 +1377,7 @@ GameObject:
   - component: {fileID: 7056365476297161209}
   - component: {fileID: 4697695637998453018}
   - component: {fileID: 2148764061578447285}
+  - component: {fileID: 8688803853164845696}
   m_Layer: 5
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
@@ -1244,6 +1502,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8688803853164845696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3313267574009090326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &5959248578641174300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,6 +1552,7 @@ GameObject:
   - component: {fileID: 2155655131168601918}
   - component: {fileID: 7059471977608571648}
   - component: {fileID: 3021174532214745278}
+  - component: {fileID: 3412737917972892433}
   m_Layer: 5
   m_Name: Text (TMP) (5)
   m_TagString: Untagged
@@ -1378,6 +1676,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &3412737917972892433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5959248578641174300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &6600517076185622216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1387,6 +1724,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5669964686330729537}
+  - component: {fileID: 3879083944601455779}
   m_Layer: 5
   m_Name: GameObject
   m_TagString: Untagged
@@ -1414,6 +1752,45 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3879083944601455779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6600517076185622216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &7331375351422237324
 GameObject:
   m_ObjectHideFlags: 0
@@ -1425,6 +1802,7 @@ GameObject:
   - component: {fileID: 618294842165507317}
   - component: {fileID: 444378363579081303}
   - component: {fileID: 5172326284718724043}
+  - component: {fileID: 856750131102205565}
   m_Layer: 5
   m_Name: Text (TMP) (4)
   m_TagString: Untagged
@@ -1548,6 +1926,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &856750131102205565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7331375351422237324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &8356261313177113653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1559,6 +1976,7 @@ GameObject:
   - component: {fileID: 3094591909323134866}
   - component: {fileID: 5765838640259783416}
   - component: {fileID: 7726215107379458310}
+  - component: {fileID: 7872649104010240205}
   m_Layer: 5
   m_Name: Text (TMP) (5)
   m_TagString: Untagged
@@ -1682,6 +2100,45 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7872649104010240205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8356261313177113653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1 &8808371310027903173
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,8 +2150,9 @@ GameObject:
   - component: {fileID: 2830283460807083219}
   - component: {fileID: 8197337403685543594}
   - component: {fileID: 7787971031494953065}
+  - component: {fileID: -5440136904717164274}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text (TMP)1222
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1816,3 +2274,42 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &-5440136904717164274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8808371310027903173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _fontAssetPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _textPropertiesPresetIndex
+      Entry: 7
+      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 

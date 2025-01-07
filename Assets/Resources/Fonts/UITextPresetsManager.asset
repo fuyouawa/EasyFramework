@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e52eee11fc491b489911dea1988dba5, type: 3}
-  m_Name: UITextPresetsManager
-  m_EditorClassIdentifier: 
+  m_Script: {fileID: 0}
+  m_Name: UiTextPresetsManager
+  m_EditorClassIdentifier: Assembly-CSharp-firstpass:EasyGameFramework:UiTextPresetsManager
   RealtimePreview: 0
   FontAssetPresets: []
-  DefaultFontAssetPresetIndex: 0
-  UITextPropertiesPresets: []
+  DefaultFontAssetPresetIndex: -1
+  TextPropertiesPresets: []
+  DefaultTextPropertiesPresetIndex: -1

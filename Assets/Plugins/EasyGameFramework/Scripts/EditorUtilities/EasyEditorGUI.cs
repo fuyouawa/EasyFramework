@@ -8,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using EasyFramework;
+using Sirenix.OdinInspector;
 
 namespace EasyGameFramework
 {
@@ -787,7 +788,7 @@ namespace EasyGameFramework
         /// <param name="wide">If set to <c>true</c> the message box will be wide.</param>
         public static void MessageBox(string message, bool wide = true)
         {
-            SirenixEditorGUI.MessageBox(message, MessageType.None, EasyGUIStyles.InfoBoxCN, wide);
+            MessageBox(message, MessageType.None, wide);
         }
 
         /// <summary>Draws a message box.</summary>
@@ -796,7 +797,7 @@ namespace EasyGameFramework
         /// <param name="wide">If set to <c>true</c> the message box will be wide.</param>
         public static void MessageBox(string message, MessageType messageType, bool wide = true)
         {
-            SirenixEditorGUI.MessageBox(message, messageType, EasyGUIStyles.InfoBoxCN, wide);
+            SirenixEditorGUI.MessageBox(message, messageType, EasyGUIStyles.MessageBox, wide);
         }
 
         #endregion
