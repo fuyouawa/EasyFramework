@@ -600,7 +600,52 @@ MonoBehaviour:
         Assembly-CSharp-firstpass]], mscorlib
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyGameFramework.EF_DebugLog, Assembly-CSharp-firstpass
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
       Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Duration
+      Entry: 4
+      Data: 0
+    - Name: NotLogIfEmpty
+      Entry: 5
+      Data: true
+    - Name: Message
+      Entry: 1
+      Data: HelloWorld!
+    - Name: MessageOnInit
+      Entry: 1
+      Data: OnInit
+    - Name: MessageOnStop
+      Entry: 1
+      Data: OnStop
+    - Name: MessageOnReset
+      Entry: 1
+      Data: OnReset
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -1695,6 +1740,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1486094131}
     m_Modifications:
+    - target: {fileID: -5871624821035347900, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -5871624821035347900, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: -5440136904717164274, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: -5440136904717164274, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 146414891376605939, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 146414891376605939, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 451397429801888295, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 451397429801888295, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 856750131102205565, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 856750131102205565, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
     - target: {fileID: 895268627358715033, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
       propertyPath: m_Name
       value: Text (TMP)
@@ -1703,6 +1768,22 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 3085270576319132712, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 3412737917972892433, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3412737917972892433, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 3521417831265888879, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3521417831265888879, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 3879083944601455779, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3879083944601455779, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 3930353603304584807, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3930353603304584807, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
     - target: {fileID: 5389826584772733846, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1783,6 +1864,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6324700086448988821, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6324700086448988821, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 6335697922368190821, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6335697922368190821, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 7872649104010240205, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 7872649104010240205, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+    - target: {fileID: 8688803853164845696, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8688803853164845696, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1813,16 +1910,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39fb726f77d54f8409f92034d1591766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FontAssetPresetIndex: 0
-  TextPropertiesPresetIndex: -1
-  _fontAssetPresetToShow:
-    Label: test
-    FontAsset: {fileID: 0}
-    Material: {fileID: 0}
-  _textPropertiesPresetToShow:
-    Label: 
-    FontSize: 0
-    FontColor: {r: 0, g: 0, b: 0, a: 0}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  _fontAssetPresetIndex: 0
+  _textPropertiesPresetIndex: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

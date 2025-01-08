@@ -2,13 +2,10 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using System.Collections.Generic;
 using System;
-using System.Collections;
 using System.Linq;
-using EasyFramework;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
-using Sirenix.Utilities.Editor;
 using UnityEngine.SceneManagement;
 
 namespace EasyGameFramework.Editor

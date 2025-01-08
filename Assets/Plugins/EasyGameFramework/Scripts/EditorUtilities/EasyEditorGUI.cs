@@ -452,6 +452,71 @@ namespace EasyGameFramework
 
         #endregion
 
+        #region Box
+
+        public class BoxGroupConfig
+        {
+            public GUIContent Label;
+            public Color? BoxColor;
+            public GUIContent RightLabel = GUIContent.none;
+            public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
+            public OnTitleBarGUIDelegate OnTitleBarGUI;
+            public OnContentGUIDelegate OnContentGUI;
+            
+            public BoxGroupConfig(string label)
+            {
+                Label = new GUIContent(label);
+            }
+
+            public BoxGroupConfig(GUIContent label)
+            {
+                Label = label;
+            }
+        }
+
+        public static void BoxGroup(BoxGroupConfig config)
+        {
+            BoxGroup(config, out var rect);
+        }
+
+        public static void BoxGroup(BoxGroupConfig config, out Rect headerRect)
+        {
+            var color = GUI.color;
+            if (config.BoxColor != null)
+            {
+                GUI.color = (Color)config.BoxColor;
+            }
+            SirenixEditorGUI.BeginBox();
+            GUI.color = color;
+            
+            SirenixEditorGUI.BeginBoxHeader();
+            // GUI.color = color;
+            
+            headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
+
+            if (config.RightLabel != null && config.RightLabel != GUIContent.none)
+            {
+                var s = SirenixGUIStyles.Label.CalcSize(config.RightLabel);
+                EditorGUI.PrefixLabel(headerRect.AlignRight(s.x), config.RightLabel);
+            }
+
+            config.OnCoveredTitleBarGUI?.Invoke(headerRect);
+
+            var rect = headerRect;
+            // rect.x += 13;
+            EditorGUI.LabelField(rect, config.Label);
+
+            config.OnTitleBarGUI?.Invoke(rect);
+            
+            SirenixEditorGUI.EndBoxHeader();
+
+            config.OnContentGUI?.Invoke(headerRect);
+            
+            SirenixEditorGUI.EndBox();
+        }
+
+        #endregion
+
         #region WindowLikeToolBar
 
         public class WindowLikeToolbarConfig : FoldoutToolbarConfig

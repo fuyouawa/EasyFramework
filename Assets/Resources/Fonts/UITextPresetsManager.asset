@@ -12,8 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: UiTextPresetsManager
   m_EditorClassIdentifier: Assembly-CSharp-firstpass:EasyGameFramework:UiTextPresetsManager
-  RealtimePreview: 0
-  FontAssetPresets: []
-  DefaultFontAssetPresetIndex: -1
-  TextPropertiesPresets: []
-  DefaultTextPropertiesPresetIndex: -1
+  _serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  FontAssetPresets:
+  - Label: test
+    FontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    Material: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  TextPropertiesPresets:
+  - Label: ddsss
+    FontSize: 82.7
+    FontColor: {r: 1, g: 1, b: 1, a: 1}
+  - Label: 7777
+    FontSize: 36
+    FontColor: {r: 1, g: 1, b: 1, a: 1}
+  _defaultFontAssetPresetIndex: 0
+  _defaultTextPropertiesPresetIndex: 0

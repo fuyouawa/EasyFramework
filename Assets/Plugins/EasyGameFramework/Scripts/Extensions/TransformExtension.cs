@@ -42,7 +42,7 @@ namespace EasyGameFramework
         public static bool IsParentRecursive(this Transform transform, Transform parent)
         {
             if (transform == parent)
-                throw new Exception("parent和要判断的transform对象是同一个");
+                return false;
 
             var p = transform.parent;
             while (p != parent)
@@ -52,6 +52,34 @@ namespace EasyGameFramework
                 p = p.parent;
             }
             return true;
+        }
+
+        public static List<Transform> FindParents(this Transform transform, Func<Transform, bool> condition)
+        {
+            var ret = new List<Transform>();
+
+            var p = transform.parent;
+            while (p != null)
+            {
+                if (condition(p))
+                {
+                    ret.Add(p);
+                }
+                p = p.parent;
+            }
+
+            return ret;
+        }
+
+        public static void ForEachParentRecursive(this Transform transform, Func<Transform, bool> predicate)
+        {
+            var p = transform.parent;
+            while (p != null)
+            {
+                if (!predicate(p))
+                    return;
+                p = p.parent;
+            }
         }
 
         public static float ScaleSquare(this Transform transform)
