@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Linq;
 using EasyFramework;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.Drawers;
 
 namespace EasyGameFramework
 {
@@ -221,6 +222,7 @@ namespace EasyGameFramework
             public Func<T, string> MenuItemNameGetter = null;
             public string Title = null;
             public bool SupportsMultiSelect = false;
+            public bool PreferAssetPreviewAsIcon;
 
             public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
             {
@@ -256,6 +258,11 @@ namespace EasyGameFramework
         public static IEnumerable<T> DrawSelectorDropdown<T>(SelectorDropdownConfig<T> config,
             params GUILayoutOption[] options)
         {
+            var btnLabel = config.BtnLabel;
+            if (typeof(T) == typeof(Type))
+            {
+                btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), config.PreferAssetPreviewAsIcon);
+            }
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
                 rect => ShowSelectorInPopup(rect, rect.width, config),
                 config.ReturnValuesOnSelectionChange, config.Style, options);
@@ -263,7 +270,8 @@ namespace EasyGameFramework
 
         private static OdinSelector<T> GetSelector<T>(PopupSelectorConfig<T> config)
         {
-            GenericSelector<T> selector;
+            OdinSelector<T> selector;
+
             if (config.MenuItemNameGetter != null)
             {
                 selector = new GenericSelector<T>(config.Title, config.Collection, config.SupportsMultiSelect,
@@ -282,6 +290,7 @@ namespace EasyGameFramework
                     config.OnConfirmed?.Invoke(f);
                 }
             };
+            selector.SelectionTree.EnumerateTree().AddThumbnailIcons(config.PreferAssetPreviewAsIcon);
             selector.SelectionChanged += types => { selector.SelectionTree.Selection.ConfirmSelection(); };
             return selector;
         }
