@@ -1,3 +1,4 @@
+using EasyFramework;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -9,12 +10,12 @@ namespace EasyGameFramework
         [ValueDropdown("FontAssetPresetDropdown")]
         [LabelText("字体资产预设")]
         [SerializeField]
-        private int _fontAssetPresetIndex = -1;
+        private string _fontAssetPresetId;
 
         [ValueDropdown("TextPropertiesPresetDropdown")]
         [LabelText("文本属性预设")]
         [SerializeField]
-        private int _textPropertiesPresetIndex = -1;
+        private string _textPropertiesPresetId;
 
         private TextMeshProUGUI _text;
 
@@ -23,29 +24,33 @@ namespace EasyGameFramework
             ApplyPresets();
         }
 
+        public string FontAssetPresetId => _fontAssetPresetId;
+
         public FontAssetPreset GetFontAssetPreset()
         {
-            return  _fontAssetPresetIndex == -1
+            return  _fontAssetPresetId.IsNullOrEmpty()
                 ? null
-                : UiTextPresetsManager.Instance.FontAssetPresets[(int)_fontAssetPresetIndex];
+                : UiTextPresetsManager.Instance.FontAssetPresets[_fontAssetPresetId];
         }
 
-        public void SetFontAssetPreset(FontAssetPreset preset)
+        public void SetFontAssetPreset(string id)
         {
-            _fontAssetPresetIndex = UiTextPresetsManager.Instance.FontAssetPresets.IndexOf(preset);
+            _fontAssetPresetId = id;
             Changed();
         }
+        
+        public string TextPropertiesPresetId => _textPropertiesPresetId;
 
         public TextPropertiesPreset GetTextPropertiesPreset()
         {
-            return  _textPropertiesPresetIndex == -1
+            return  _textPropertiesPresetId.IsNullOrEmpty()
                 ? null
-                : UiTextPresetsManager.Instance.TextPropertiesPresets[(int)_textPropertiesPresetIndex];
+                : UiTextPresetsManager.Instance.TextPropertiesPresets[_textPropertiesPresetId];
         }
 
-        public void SetTextPropertiesPreset(TextPropertiesPreset preset)
+        public void SetTextPropertiesPreset(string id)
         {
-            _textPropertiesPresetIndex = UiTextPresetsManager.Instance.TextPropertiesPresets.IndexOf(preset);
+            _textPropertiesPresetId = id;
             Changed();
         }
 
@@ -87,10 +92,10 @@ namespace EasyGameFramework
         }
 
 #if UNITY_EDITOR
-        private ValueDropdownList<int> FontAssetPresetDropdown =>
+        private ValueDropdownList<string> FontAssetPresetDropdown =>
             UiTextPresetsManager.Instance.FontAssetPresetDropdown;
 
-        private ValueDropdownList<int> TextPropertiesPresetDropdown =>
+        private ValueDropdownList<string> TextPropertiesPresetDropdown =>
             UiTextPresetsManager.Instance.TextPropertiesPresetDropdown;
 #endif
     }

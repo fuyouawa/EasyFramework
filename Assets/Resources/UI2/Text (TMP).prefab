@@ -157,25 +157,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &895268627358715033
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,25 +423,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &2214842931601452036
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,25 +582,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &2462006223327173235
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,25 +740,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &2526750050933481662
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,25 +898,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &2639819388793374076
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,25 +1056,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &2971770695014055234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,25 +1251,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &3313267574009090326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,25 +1410,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &5959248578641174300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1696,25 +1568,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &6600517076185622216
 GameObject:
   m_ObjectHideFlags: 0
@@ -1772,25 +1628,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: 
+  _textPropertiesPresetId: 
 --- !u!1 &7331375351422237324
 GameObject:
   m_ObjectHideFlags: 0
@@ -1946,25 +1786,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &8356261313177113653
 GameObject:
   m_ObjectHideFlags: 0
@@ -2120,25 +1944,9 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 
 --- !u!1 &8808371310027903173
 GameObject:
   m_ObjectHideFlags: 0
@@ -2294,22 +2102,6 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: _fontAssetPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _textPropertiesPresetIndex
-      Entry: 7
-      Data: System.Nullable`1[[System.Int32, mscorlib]], mscorlib
-    - Name: 
-      Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
+  _fontAssetPresetId: test
+  _textPropertiesPresetId: 

@@ -11,15 +11,15 @@ namespace EasyGameFramework
 {
     internal partial class SingletonCreator
     {
-        public static T GetScriptableObjectSingleton<T>(string assetPath, string assetName)
+        public static T GetScriptableObjectSingleton<T>(string assetDirectory, string assetName)
             where T : ScriptableObject
         {
-            if (!assetPath.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
+            if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
                 throw new ArgumentException($"{assetName}的资源路径必须在Resources目录下！");
             }
 
-            string resourcesPath = assetPath;
+            string resourcesPath = assetDirectory;
             int i = resourcesPath.LastIndexOf("/resources/", StringComparison.OrdinalIgnoreCase);
             if (i >= 0)
             {
@@ -29,12 +29,12 @@ namespace EasyGameFramework
             var instance = Resources.Load<T>(resourcesPath + assetName);
 #if UNITY_EDITOR
 
-            if (!assetPath.StartsWith("Assets/"))
+            if (!assetDirectory.StartsWith("Assets/"))
             {
-                assetPath = "Assets/" + assetPath;
+                assetDirectory = "Assets/" + assetDirectory;
             }
 
-            var assetFilePath = assetPath + assetName + ".asset";
+            var assetFilePath = assetDirectory + assetName + ".asset";
 
             if (instance == null)
             {
@@ -62,9 +62,9 @@ namespace EasyGameFramework
             {
                 instance = ScriptableObject.CreateInstance<T>();
 
-                if (!Directory.Exists(assetPath))
+                if (!Directory.Exists(assetDirectory))
                 {
-                    Directory.CreateDirectory(new DirectoryInfo(assetPath).FullName);
+                    Directory.CreateDirectory(new DirectoryInfo(assetDirectory).FullName);
                     AssetDatabase.Refresh();
                 }
 
@@ -93,13 +93,13 @@ namespace EasyGameFramework
     [AttributeUsage(AttributeTargets.Class)]
     public class ScriptableObjectSingletonAssetPathAttribute : Attribute
     {
-        public string AssetPath;
+        public string AssetDirectory;
 
         public string AssetName;
 
-        public ScriptableObjectSingletonAssetPathAttribute(string assetPath, string assetName)
+        public ScriptableObjectSingletonAssetPathAttribute(string assetDirectory, string assetName)
         {
-            AssetPath = assetPath.Trim().TrimEnd('/', '\\').TrimStart('/', '\\')
+            AssetDirectory = assetDirectory.Trim().TrimEnd('/', '\\').TrimStart('/', '\\')
                 .Replace('\\', '/') + "/";
 
             AssetName = assetName;
@@ -141,7 +141,7 @@ namespace EasyGameFramework
             {
                 if (_instance == null)
                 {
-                    _instance = SingletonCreator.GetScriptableObjectSingleton<T>(AssetPathAttribute.AssetPath,
+                    _instance = SingletonCreator.GetScriptableObjectSingleton<T>(AssetPathAttribute.AssetDirectory,
                         AssetPathAttribute.AssetName.IsNotNullOrEmpty()
                             ? AssetPathAttribute.AssetName
                             : typeof(T).Name);

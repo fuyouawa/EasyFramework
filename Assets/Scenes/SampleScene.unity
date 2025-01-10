@@ -529,15 +529,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _easyViewModelArgs:
     Expand: 0
-    GenerateViewModel: 0
-    AsBinder: 0
-    IsViewModelInitialized: 0
-    IsBinderInitialized: 0
-    Parent: {fileID: 0}
-    GenerateDir: 
-    Namespace: 
-    ClassName: 
-    BaseClass: 
+    DoViewModel: 0
+    DoBinder: 0
+    ViewModel:
+      GenerateDir: 
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: 
+      BaseClass:
+        AssemblyQualifiedName: 
+      IsInitialized: 0
+    Binder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      Comment: 
+      IsInitialized: 0
 --- !u!1 &667694654
 GameObject:
   m_ObjectHideFlags: 0
@@ -623,7 +632,7 @@ GameObject:
   - component: {fileID: 686683924}
   - component: {fileID: 686683926}
   m_Layer: 0
-  m_Name: GameObject (6)
+  m_Name: TestViewModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -745,15 +754,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _easyViewModelArgs:
     Expand: 1
-    GenerateViewModel: 1
-    AsBinder: 0
-    IsViewModelInitialized: 1
-    IsBinderInitialized: 0
-    Parent: {fileID: 0}
-    GenerateDir: Scripts/Ui
-    Namespace: adasd
-    ClassName: 555
-    BaseClass: UnityEngine.MonoBehaviour
+    DoViewModel: 1
+    DoBinder: 0
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: TestViewModel
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+    Binder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      Comment: 
+      IsInitialized: 0
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1332,7 +1351,7 @@ GameObject:
   - component: {fileID: 1496675118}
   - component: {fileID: 1496675119}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: GameObject2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1367,16 +1386,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _easyViewModelArgs:
-    Expand: 0
-    GenerateViewModel: 0
-    AsBinder: 0
-    IsViewModelInitialized: 0
-    IsBinderInitialized: 0
-    Parent: {fileID: 0}
-    GenerateDir: 
-    Namespace: 
-    ClassName: 
-    BaseClass: 
+    Expand: 1
+    DoViewModel: 0
+    DoBinder: 1
+    ViewModel:
+      GenerateDir: 
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: 
+      BaseClass:
+        AssemblyQualifiedName: 
+      IsInitialized: 0
+    Binder:
+      Parent: {fileID: 686683925}
+      TypeToBind:
+        AssemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      NameSameAsGameObjectName: 1
+      Name: GameObject2
+      Comment: 
+      IsInitialized: 1
 --- !u!1 &1640216909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1915,15 +1944,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _easyViewModelArgs:
     Expand: 1
-    GenerateViewModel: 1
-    AsBinder: 0
-    IsViewModelInitialized: 1
-    IsBinderInitialized: 0
-    Parent: {fileID: 0}
-    GenerateDir: Scripts/Ui
-    Namespace: 456rrr
-    ClassName: GameObject
-    BaseClass: UnityEngine.MonoBehaviour
+    DoViewModel: 0
+    DoBinder: 1
+    ViewModel:
+      GenerateDir: 
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: 
+      BaseClass:
+        AssemblyQualifiedName: 
+      IsInitialized: 0
+    Binder:
+      Parent: {fileID: 686683925}
+      TypeToBind:
+        AssemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      NameSameAsGameObjectName: 1
+      Name: GameObject
+      Comment: 
+      IsInitialized: 1
 --- !u!1001 &1577381633994008878
 PrefabInstance:
   m_ObjectHideFlags: 0

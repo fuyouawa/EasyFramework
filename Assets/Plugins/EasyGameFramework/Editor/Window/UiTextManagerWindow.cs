@@ -42,62 +42,6 @@ namespace EasyGameFramework.Editor
             InProject
         }
 
-        public class Settings
-        {
-            [TitleGroupCN("配置")]
-            [LabelText("管理位置")]
-            public ManagerPositions ManagerPosition = ManagerPositions.InProject;
-
-            [TitleGroupCN("配置")]
-            [FolderPath(ParentFolder = "Assets")]
-            [ShowIf("ManagerPosition", ManagerPositions.InProject)]
-            [LabelText("管理路径")]
-            public string AssetsManagerPath = "Resources";
-
-            [EnumToggleButtons]
-            [TitleGroup("配置/显示模式", boldTitle: false)]
-            [HideLabel]
-            public ViewModes ViewModes = ViewModes.All;
-
-            [TitleGroupCN("配置")]
-            [InfoBoxCN("注意：资产视图中的预制体不会实时更新，可能会出现类似错误都解决了但是图标依然是错误，或者预制体删除了但依然在显示，需要再次“重新加载资源视图”",
-                InfoMessageType.Warning)]
-            [InfoBoxCN("任何资产配置的更改, 都需要点击“重新加载资源视图”才会实际应用")]
-            [Button("重新加载资源视图")]
-            [UsedImplicitly]
-            private void Rebuild()
-            {
-                Instance.Rebuild();
-            }
-
-
-            [TitleGroupCN("视图配置")]
-            [LabelText("自动打开选中预制体")]
-            public bool AutoOpenSelectionPrefab = true;
-
-            [TitleGroup("数据存储")]
-            [InfoBoxCN("注意: 当编辑器重新编译的时候, 未保存的更改可能会丢失", InfoMessageType.Warning)]
-            [LabelText("自动保存间隔(秒)")]
-            public float AutoSaveInterval = 5f;
-
-            [TitleGroup("数据存储")]
-            [Button("保存编辑器设置")]
-            [UsedImplicitly]
-            private void Save()
-            {
-                Instance.SaveEditor();
-                AssetDatabase.Refresh();
-            }
-
-            [TitleGroup("数据存储")]
-            [Button("加载编辑器设置")]
-            [UsedImplicitly]
-            private void Load()
-            {
-                Instance.LoadEditor();
-            }
-        }
-
         private static UiTextManagerWindow _instance;
 
         public static UiTextManagerWindow Instance
@@ -131,7 +75,7 @@ namespace EasyGameFramework.Editor
             _instance = window;
         }
 
-        private Settings _settings = new();
+        private UiTextManagerSettings _settings => UiTextManagerSettings.Instance;
         private PrefabItemBase _prevSelectionItem;
 
         public void Rebuild()
@@ -200,7 +144,7 @@ namespace EasyGameFramework.Editor
 
         private void EditorUpdate()
         {
-            if (EditorApplication.timeSinceStartup - _prevAutoSaveTime >= _settings.AutoSaveInterval)
+            if (EditorApplication.timeSinceStartup - _prevAutoSaveTime >= 1f)
             {
                 SaveEditor();
                 _prevAutoSaveTime = EditorApplication.timeSinceStartup;
@@ -209,32 +153,20 @@ namespace EasyGameFramework.Editor
 
         public void SaveEditor()
         {
-            var json = EasyJsonConvert.SerializeObject(_settings, Formatting.Indented);
-            File.WriteAllText(EditorAssetsPath.UiTextManagerSettingsPath, json);
-
             var temp = new WindowTemp
             {
                 WindowPosition = position,
                 MenuWidth = MenuWidth
             };
-            json = EasyJsonConvert.SerializeObject(temp, Formatting.Indented);
+            var json = EasyJsonConvert.SerializeObject(temp, Formatting.Indented);
             File.WriteAllText(EditorAssetsPath.UiTextManagerWindowTempPath, json);
         }
 
         public void LoadEditor()
         {
-            if (!File.Exists(EditorAssetsPath.UiTextManagerSettingsPath))
-                return;
-            var json = File.ReadAllText(EditorAssetsPath.UiTextManagerSettingsPath);
-            var val = EasyJsonConvert.DeserializeObject<Settings>(json);
-            if (val != null)
-            {
-                _settings = val;
-            }
-
             if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
                 return;
-            json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
+            var json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
             var temp = EasyJsonConvert.DeserializeObject<WindowTemp>(json);
             if (temp != null)
             {
@@ -372,11 +304,12 @@ namespace EasyGameFramework.Editor
             public abstract void OpenPrefab();
 
             [FoldoutGroup("自动分析")]
-            [InfoBoxCN("1、如果没有UITextManager组件会自动添加\n" +
-                       "2、如果UITextManager的\"字体资产预设\"是null，根据Text(UI)组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值\n" +
-                       "3、如果UITextManager的\"文本属性预设\"是null，根据Text(UI)组件的字体大小和字体颜色设置，判断属于\"预设管理器\"中的哪个文本属性预设，然后自动赋值\n" +
-                       "4、如果UITextManager的\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"\n" +
-                       "5、如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
+            [InfoBoxCN("1、如果没有UiTextManager组件会自动添加\n" +
+                       "2、如果\"字体资产预设\"是null，根据Text(UI)组件的字体和材质设置，判断属于\"预设管理器\"中的哪个字体资产预设，然后自动赋值\n" +
+                       "3、如果\"文本属性预设\"是null，根据Text(UI)组件的字体大小和字体颜色设置，判断属于\"预设管理器\"中的哪个文本属性预设，然后自动赋值\n" +
+                       "4、如果\"字体资产预设\"依然是null，会使用\"预设管理器\"中定义的\"默认字体资产预设\"（如果有）\n" +
+                       "5、如果\"文本属性预设\"依然是null，会使用\"预设管理器\"中定义的\"默认文本属性预设\"（如果有）\n" +
+                       "6、如果组件上有多个重复的UITextManager，则只保留第一个，删除其他重复项")]
             [Button("自动分析处理", Icon = SdfIconType.Tools)]
             [UsedImplicitly]
             [PropertyOrder(6)]
@@ -394,7 +327,7 @@ namespace EasyGameFramework.Editor
             {
                 foreach (var node in Tree)
                 {
-                    if (!node.IsTextNode())
+                    if (node.IsTextNode())
                     {
                         AutoHandleNodeIncorrect(node);
                     }
@@ -440,33 +373,37 @@ namespace EasyGameFramework.Editor
                 }
 
                 // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
-                if (mgr.GetFontAssetPreset() == null)
+                if (mgr.FontAssetPresetId.IsNullOrEmpty())
                 {
                     foreach (var preset in UiTextPresetsManager.Instance.FontAssetPresets)
                     {
-                        if (preset.FontAsset == node.TextGUI.font && preset.Material == node.TextGUI.fontSharedMaterial)
+                        if (preset.Value.FontAsset == node.TextGUI.font && preset.Value.Material == node.TextGUI.fontSharedMaterial)
                         {
-                            mgr.SetFontAssetPreset(preset);
+                            mgr.SetFontAssetPreset(preset.Key);
                         }
                     }
                 }
 
-                if (mgr.GetTextPropertiesPreset() == null)
+                if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                 {
                     foreach (var preset in UiTextPresetsManager.Instance.TextPropertiesPresets)
                     {
-                        if (preset.FontColor == node.TextGUI.color &&
-                            preset.FontSize.Approximately(node.TextGUI.fontSize))
+                        if (preset.Value.FontColor == node.TextGUI.color &&
+                            preset.Value.FontSize.Approximately(node.TextGUI.fontSize))
                         {
-                            mgr.SetTextPropertiesPreset(preset);
+                            mgr.SetTextPropertiesPreset(preset.Key);
                         }
                     }
                 }
 
                 // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
-                if (mgr.GetFontAssetPreset() == null)
+                if (mgr.FontAssetPresetId.IsNullOrEmpty())
                 {
-                    mgr.SetFontAssetPreset(UiTextPresetsManager.Instance.GetDefaultFontAssetPreset());
+                    mgr.SetFontAssetPreset(UiTextPresetsManager.Instance.DefaultFontAssetPresetId);
+                }
+                if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
+                {
+                    mgr.SetTextPropertiesPreset(UiTextPresetsManager.Instance.DefaultTextPropertiesPresetId);
                 }
 
                 AssetDatabase.Refresh();
@@ -657,7 +594,7 @@ namespace EasyGameFramework.Editor
             public override void OpenPrefab()
             {
                 var ps = PrefabStageUtility.GetCurrentPrefabStage();
-                if (ps.assetPath == PrefabPath)
+                if (ps != null && ps.assetPath == PrefabPath)
                     return;
 
                 ps = PrefabStageUtility.OpenPrefab(PrefabPath);
@@ -678,7 +615,7 @@ namespace EasyGameFramework.Editor
                 PrefabTreeNode parent)
             {
                 var ps = PrefabStageUtility.GetCurrentPrefabStage();
-                if (ps.assetPath == PrefabPath)
+                if (ps != null && ps.assetPath == PrefabPath)
                 {
                     prefab = ps.prefabContentsRoot;
                 }
@@ -892,27 +829,25 @@ namespace EasyGameFramework.Editor
                         else
                         {
                             var mgr = mgrs[0];
-                            var fontAssetPreset = mgr.GetFontAssetPreset();
-                            if (fontAssetPreset == null)
+                            if (mgr.FontAssetPresetId.IsNullOrEmpty())
                             {
-                                EasyEditorGUI.MessageBox("字体资产预设为null！", MessageType.Warning);
+                                EasyEditorGUI.MessageBox("字体资产预设为空！", MessageType.Warning);
                                 hasIncorrect = true;
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"字体资产预设为：{fontAssetPreset.LabelToShow}",
+                                EasyEditorGUI.MessageBox($"字体资产预设为：{mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO")}",
                                     MessageType.Info);
                             }
 
-                            var textPropertiesPreset = mgr.GetTextPropertiesPreset();
-                            if (textPropertiesPreset == null)
+                            if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                             {
-                                EasyEditorGUI.MessageBox("文本属性预设为null！", MessageType.Warning);
+                                EasyEditorGUI.MessageBox("文本属性预设为空！", MessageType.Warning);
                                 hasIncorrect = true;
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"文本属性预设为：{textPropertiesPreset.LabelToShow}",
+                                EasyEditorGUI.MessageBox($"文本属性预设为：{mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO")}",
                                     MessageType.Info);
                             }
                         }

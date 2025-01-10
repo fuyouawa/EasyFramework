@@ -1,3 +1,4 @@
+using EasyFramework;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -17,11 +18,11 @@ namespace EasyGameFramework.Editor
             var mgr = (UiTextManager)target;
             mgr.ApplyPresets();
 
-            var fontAssetPreset = mgr.GetFontAssetPreset();
-            if (fontAssetPreset != null)
+            if (mgr.FontAssetPresetId.IsNotNullOrEmpty())
             {
+                var fontAssetPreset = mgr.GetFontAssetPreset();
                 EasyEditorGUI.FoldoutGroup(
-                    new EasyEditorGUI.FoldoutGroupConfig(this, $"字体资产预设 - {fontAssetPreset.LabelToShow}")
+                    new EasyEditorGUI.FoldoutGroupConfig(this, $"字体资产预设 - {mgr.FontAssetPresetId}")
                     {
                         Expandable = false,
                         OnContentGUI = rect =>
@@ -40,11 +41,11 @@ namespace EasyGameFramework.Editor
                     });
             }
 
-            var textPropertiesPreset = mgr.GetTextPropertiesPreset();
-            if (textPropertiesPreset != null)
+            if (mgr.TextPropertiesPresetId.IsNotNullOrEmpty())
             {
+                var textPropertiesPreset = mgr.GetTextPropertiesPreset();
                 EasyEditorGUI.FoldoutGroup(
-                    new EasyEditorGUI.FoldoutGroupConfig(this, $"文本属性预设 - {textPropertiesPreset.LabelToShow}")
+                    new EasyEditorGUI.FoldoutGroupConfig(this, $"文本属性预设 - {mgr.TextPropertiesPresetId}")
                     {
                         Expandable = false,
                         OnContentGUI = rect =>

@@ -8,8 +8,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using EasyFramework;
-using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.Drawers;
 
 namespace EasyGameFramework
 {
@@ -222,7 +220,6 @@ namespace EasyGameFramework
             public Func<T, string> MenuItemNameGetter = null;
             public string Title = null;
             public bool SupportsMultiSelect = false;
-            public bool PreferAssetPreviewAsIcon;
 
             public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
             {
@@ -261,7 +258,7 @@ namespace EasyGameFramework
             var btnLabel = config.BtnLabel;
             if (typeof(T) == typeof(Type))
             {
-                btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), config.PreferAssetPreviewAsIcon);
+                btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), false);
             }
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
                 rect => ShowSelectorInPopup(rect, rect.width, config),
@@ -290,7 +287,7 @@ namespace EasyGameFramework
                     config.OnConfirmed?.Invoke(f);
                 }
             };
-            selector.SelectionTree.EnumerateTree().AddThumbnailIcons(config.PreferAssetPreviewAsIcon);
+            selector.SelectionTree.EnumerateTree().AddThumbnailIcons(true);
             selector.SelectionChanged += types => { selector.SelectionTree.Selection.ConfirmSelection(); };
             return selector;
         }
