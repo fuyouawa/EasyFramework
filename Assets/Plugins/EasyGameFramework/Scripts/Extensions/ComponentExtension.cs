@@ -1,12 +1,37 @@
+using System;
+using System.Linq;
+using EasyFramework;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyGameFramework
 {
     public static class ComponentExtension
     {
-        public static T GetOrAddComponent<T>(this Component component) where T : Component
+        private static MonoScript[] _allScriptsCache;
+        public static MonoScript GetScript(this Component component)
         {
-            return component.gameObject.GetOrAddComponent<T>();
+            if (_allScriptsCache.IsNullOrEmpty())
+            {
+                _allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
+            }
+
+            try
+            {
+                return _allScriptsCache.First(s => s.GetClass() == component.GetType());
+            }
+            catch (InvalidOperationException)
+            {
+                try
+                {
+                    _allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
+                    return _allScriptsCache.First(s => s.GetClass() == component.GetType());
+                }
+                catch (InvalidOperationException)
+                {
+                    return null;
+                }
+            }
         }
     }
 }

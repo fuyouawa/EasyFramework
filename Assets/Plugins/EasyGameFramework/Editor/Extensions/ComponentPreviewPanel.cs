@@ -299,7 +299,8 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            if (TryGetComponentScript(component, out var script))
+            var script = component.GetScript();
+            if (script != null)
             {
                 string path = AssetDatabase.GetAssetPath(script);
 
@@ -441,27 +442,7 @@ namespace EasyGameFramework.Editor
             }
             return false;
         }
-
-        private bool TryGetComponentScript(Component component, out MonoScript script)
-        {
-            if (_allScripts.IsNullOrEmpty())
-            {
-                _allScripts = MonoImporter.GetAllRuntimeMonoScripts();
-            }
-
-            try
-            {
-                script = _allScripts.FirstOrDefault(s => s.GetClass() == component.GetType());
-                return script != null;
-            }
-            catch (Exception e)
-            {
-                _allScripts = MonoImporter.GetAllRuntimeMonoScripts();
-                script = _allScripts.FirstOrDefault(s => s.GetClass() == component.GetType());
-                return script != null;
-            }
-        }
-
+        
         private bool IsCommonComponentInTargets(Component component)
         {
             return GetTargetComponents(component, false).Count > 0;

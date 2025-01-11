@@ -6,6 +6,7 @@ using EasyFramework;
 using Scriban;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 
 #if UNITY_EDITOR
@@ -18,7 +19,7 @@ using UnityEditor;
 namespace EasyGameFramework
 {
     [Serializable]
-    public class EasyViewModelArgs
+    public class EasyControlArgs
     {
         [Serializable]
         public class TypeStore
@@ -59,10 +60,60 @@ namespace EasyGameFramework
             public string ClassName;
             public TypeStore BaseClass = new();
             public bool IsInitialized;
+            public string AssemblyQualifiedName;
+
+            private Type _classType;
+
+            public Type ClassType
+            {
+                get
+                {
+                    if (_classType != null)
+                    {
+                        if (_classType.Namespace == Namespace
+                            && _classType.Name == ClassName
+                            && _classType.AssemblyQualifiedName == AssemblyQualifiedName)
+                        {
+                            return _classType;
+                        }
+
+                        _classType = null;
+                        AssemblyQualifiedName = string.Empty;
+                    }
+
+                    if (AssemblyQualifiedName.IsNullOrEmpty())
+                    {
+                        var type = ReflectionUtility.FindType(Namespace, ClassName);
+                        if (type == null)
+                            return null;
+                        AssemblyQualifiedName = type.AssemblyQualifiedName;
+                        _classType = type;
+                    }
+                    else
+                    {
+                        _classType = Type.GetType(AssemblyQualifiedName);
+                    }
+
+                    return _classType;
+                }
+                set
+                {
+                    Namespace = value.Namespace;
+                    ClassName = value.Name;
+                    AssemblyQualifiedName = value.AssemblyQualifiedName;
+                    BaseClass.Type = value.BaseType;
+                }
+            }
+        }
+
+        public enum BindAccess
+        {
+            Public,
+            PrivateWithSerializeFieldAttribute
         }
 
         [Serializable]
-        public class BinderArgs
+        public class BounderArgs
         {
             public Transform Parent;
             public TypeStore TypeToBind = new();
@@ -70,25 +121,30 @@ namespace EasyGameFramework
             public string Name;
             public string Comment;
             public bool IsInitialized;
+            public BindAccess Access;
         }
 
         public bool Expand;
 
         public bool DoViewModel;
-        public bool DoBinder;
+        public bool DoBounder;
 
         public ViewModelArgs ViewModel = new();
-        public BinderArgs Binder = new();
+        public BounderArgs Bounder = new();
     }
 
-    public interface IEasyViewModel
+    public class EasyBounderControlAttribute : PropertyAttribute
     {
     }
 
-    public class EasyViewModel : MonoBehaviour, IEasyViewModel
+    public interface IEasyControl
+    {
+    }
+
+    public sealed class EasyControl : MonoBehaviour, IEasyControl
     {
         [SerializeField, HideInInspector]
-        private EasyViewModelArgs _easyViewModelArgs = new();
+        private EasyControlArgs _easyControlArgs = new();
     }
 
 #if UNITY_EDITOR
@@ -98,7 +154,8 @@ namespace EasyGameFramework
         {
             private List<Transform> _parents;
             private Component _comp;
-            private EasyViewModelArgs _args;
+            private EasyControlArgs _args;
+            private bool _isBind;
 
             private static List<Type> _baseTypes;
 
@@ -116,17 +173,17 @@ namespace EasyGameFramework
                 }
             }
 
-            private static EasyViewModelArgs GetArgs(object viewModel)
+            private static EasyControlArgs GetArgs(object viewModel)
             {
                 var argsField = viewModel.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                    .First(f => f.FieldType == typeof(EasyViewModelArgs));
-                return (EasyViewModelArgs)argsField.GetValue(viewModel);
+                    .First(f => f.FieldType == typeof(EasyControlArgs));
+                return (EasyControlArgs)argsField.GetValue(viewModel);
             }
 
-            private static void SetArgs(object viewModel, EasyViewModelArgs args)
+            private static void SetArgs(object viewModel, EasyControlArgs args)
             {
                 var argsField = viewModel.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
-                    .First(f => f.FieldType == typeof(EasyViewModelArgs));
+                    .First(f => f.FieldType == typeof(EasyControlArgs));
                 argsField.SetValue(viewModel, args);
             }
 
@@ -136,10 +193,11 @@ namespace EasyGameFramework
 
                 _comp = (Component)target;
                 _args = GetArgs(target);
+                _isBind = target is not EasyControl;
 
                 _parents = _comp.transform.FindParents(p =>
                 {
-                    var c = p.GetComponent<IEasyViewModel>();
+                    var c = p.GetComponent<IEasyControl>();
                     if (c == null)
                         return false;
                     return GetArgs(c).DoViewModel;
@@ -151,11 +209,13 @@ namespace EasyGameFramework
                 base.DrawTree();
 
                 _args.Expand = EasyEditorGUI.FoldoutGroup(
-                    new EasyEditorGUI.FoldoutGroupConfig(this, "EasyViewModel设置", _args.Expand)
+                    new EasyEditorGUI.FoldoutGroupConfig(this, "EasyControl设置", _args.Expand)
                     {
                         OnContentGUI = rect =>
                         {
+                            EditorGUI.BeginDisabledGroup(_isBind);
                             _args.DoViewModel = EditorGUILayout.Toggle("生成视图模型", _args.DoViewModel);
+                            EditorGUI.EndDisabledGroup();
 
                             bool needExitGui = false;
                             if (_args.DoViewModel)
@@ -175,31 +235,31 @@ namespace EasyGameFramework
                                 });
                             }
 
-                            _args.DoBinder = EditorGUILayout.Toggle("作为被绑定者", _args.DoBinder);
+                            _args.DoBounder = EditorGUILayout.Toggle("作为被绑定者", _args.DoBounder);
 
-                            if (_args.DoBinder)
+                            if (_args.DoBounder)
                             {
-                                if (!_args.Binder.IsInitialized)
+                                if (!_args.Bounder.IsInitialized)
                                 {
                                     var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType())
                                         .ToArray();
 
-                                    _args.Binder.TypeToBind.Type =
+                                    _args.Bounder.TypeToBind.Type =
                                         bindableTypes.Length > 1 ? bindableTypes[1] : bindableTypes[0];
 
                                     if (_parents.IsNotNullOrEmpty())
                                     {
-                                        _args.Binder.Parent = _parents[0];
+                                        _args.Bounder.Parent = _parents[0];
                                     }
 
-                                    _args.Binder.Name = _comp.gameObject.name;
+                                    _args.Bounder.Name = _comp.gameObject.name;
 
-                                    _args.Binder.IsInitialized = true;
+                                    _args.Bounder.IsInitialized = true;
                                 }
 
                                 EasyEditorGUI.BoxGroup(new EasyEditorGUI.BoxGroupConfig("绑定配置")
                                 {
-                                    OnContentGUI = OnBinderContentGUI
+                                    OnContentGUI = OnBounderContentGUI
                                 });
                             }
 
@@ -241,17 +301,36 @@ namespace EasyGameFramework
                 }
             }
 
+            private void FixValues()
+            {
+                if (_isBind)
+                {
+                    Debug.Assert(_comp.GetComponent<EasyControl>() == null);
+                    _args.DoViewModel = true;
+                }
+
+                if (_args.DoViewModel)
+                {
+                    _args.ViewModel.ClassType = target.GetType();
+                    Debug.Assert(_args.ViewModel.ClassType != null);
+
+                    var path = AssetDatabase.GetAssetPath(_comp.GetScript()!);
+                    Debug.Assert(path.IsNotNullOrEmpty());
+
+                    _args.ViewModel.GenerateDir = path[(path.IndexOf('/') + 1)..path.LastIndexOf('/')];
+                }
+            }
+
             private void OnViewModelContentGUI(Rect headerRect, out bool needExitGui)
             {
-                var isBuild = target is not EasyViewModel;
-
                 if (_args.ViewModel.ClassNameSameAsGameObjectName)
                 {
                     _args.ViewModel.ClassName = _comp.gameObject.name;
                 }
 
-                EditorGUILayout.LabelField("状态", isBuild ? "已构建" : "未构建");
+                EditorGUILayout.LabelField("状态", _isBind ? "已构建" : "未构建");
 
+                EditorGUI.BeginDisabledGroup(_isBind);
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.BeginChangeCheck();
                 _args.ViewModel.GenerateDir = SirenixEditorFields.FolderPathField(
@@ -287,8 +366,10 @@ namespace EasyGameFramework
                     EditorUtility.SetDirty(_comp);
                 }
 
+                EditorGUI.EndDisabledGroup();
+
                 if (SirenixEditorGUI.SDFIconButton("构建", EditorGUIUtility.singleLineHeight,
-                        SdfIconType.ArrowUpSquare))
+                        SdfIconType.PencilFill))
                 {
                     if (!CheckBind())
                     {
@@ -297,40 +378,58 @@ namespace EasyGameFramework
 
                     Build();
                 }
+
+                if (_args.ViewModel.ClassType != null)
+                {
+                    if (SirenixEditorGUI.SDFIconButton("绑定", EditorGUIUtility.singleLineHeight,
+                            SdfIconType.Bezier))
+                    {
+                        Bind();
+                    }
+                }
+
+                if (_isBind)
+                {
+                    if (SirenixEditorGUI.SDFIconButton("修正", EditorGUIUtility.singleLineHeight,
+                            SdfIconType.Tools))
+                    {
+                        FixValues();
+                    }
+                }
             }
 
-            private void OnBinderContentGUI(Rect headerRect)
+            private void OnBounderContentGUI(Rect headerRect)
             {
-                if (_args.Binder.NameSameAsGameObjectName)
+                if (_args.Bounder.NameSameAsGameObjectName)
                 {
-                    _args.Binder.Name = _comp.gameObject.name;
+                    _args.Bounder.Name = _comp.gameObject.name;
                 }
 
                 var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType()).ToArray();
                 EditorGUI.BeginChangeCheck();
 
-                if (_args.Binder.TypeToBind.Type == null)
+                if (_args.Bounder.TypeToBind.Type == null)
                 {
                     EasyEditorGUI.MessageBox("必须得有一个要绑定的组件", MessageType.Error);
                 }
 
-                var btnLabel = _args.Binder.TypeToBind.Type == null
+                var btnLabel = _args.Bounder.TypeToBind.Type == null
                     ? "<None>"
-                    : _args.Binder.TypeToBind.Type.FullName;
+                    : _args.Bounder.TypeToBind.Type.FullName;
 
                 EasyEditorGUI.DrawSelectorDropdown(
                     new EasyEditorGUI.SelectorDropdownConfig<Type>("要绑定的组件", btnLabel,
                         bindableTypes,
-                        t => _args.Binder.TypeToBind.Type = t)
+                        t => _args.Bounder.TypeToBind.Type = t)
                     {
                         MenuItemNameGetter = t => t.FullName
                     });
 
-                btnLabel = _args.Binder.Parent == null
+                btnLabel = _args.Bounder.Parent == null
                     ? "<None>"
-                    : _args.Binder.Parent.gameObject.name;
+                    : _args.Bounder.Parent.gameObject.name;
 
-                if (_args.Binder.Parent == null)
+                if (_args.Bounder.Parent == null)
                 {
                     EasyEditorGUI.MessageBox("必须得有一个父级", MessageType.Error);
                 }
@@ -338,21 +437,27 @@ namespace EasyGameFramework
                 EasyEditorGUI.DrawSelectorDropdown(
                     new EasyEditorGUI.SelectorDropdownConfig<Transform>("父级", btnLabel,
                         _parents,
-                        c => _args.Binder.Parent = c)
+                        c => _args.Bounder.Parent = c)
                     {
                         MenuItemNameGetter = c => c.gameObject.name
                     });
 
-                _args.Binder.NameSameAsGameObjectName =
+                _args.Bounder.NameSameAsGameObjectName =
                     EditorGUILayout.Toggle("变量名称与游戏对象名称相同",
-                        _args.Binder.NameSameAsGameObjectName);
+                        _args.Bounder.NameSameAsGameObjectName);
 
-                CheckIdentifier("变量名称", _args.Binder.Name);
-                using (new EditorGUI.DisabledScope(_args.Binder.NameSameAsGameObjectName))
+                CheckIdentifier("变量名称", _args.Bounder.Name);
+                using (new EditorGUI.DisabledScope(_args.Bounder.NameSameAsGameObjectName))
                 {
-                    _args.Binder.Name =
-                        EditorGUILayout.TextField("变量名称", _args.Binder.Name);
+                    _args.Bounder.Name =
+                        EditorGUILayout.TextField("变量名称", _args.Bounder.Name);
                 }
+
+                EditorGUILayout.PrefixLabel("注释");
+                _args.Bounder.Comment = EditorGUILayout.TextArea(_args.Bounder.Comment);
+
+                _args.Bounder.Access =
+                    (EasyControlArgs.BindAccess)SirenixEditorFields.EnumDropdown("访问标识符", _args.Bounder.Access);
 
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -390,16 +495,26 @@ using {{using}};
 
 namespace {{namespace}}
 {
-    public partial class {{class_name}} : IEasyViewModel
+    public partial class {{class_name}} : IEasyControl
     {
         [SerializeField, HideInInspector]
-        private EasyViewModelArgs _easyViewModelArgs = new();
+        private EasyControlArgs _easyControlArgs = new();
 
         {{- for child in children}}
+
         /// <summary>
         /// {{child.comment}}
         /// </summary>
+        {{- if child.access == 'Public' }}
+        [EasyBounderControl]
         public {{child.type}} {{child.name}};
+        {{- end }}
+
+        {{- if child.access == 'PrivateWithSerializeFieldAttribute' }}
+        [SerializeField, EasyBounderControl]
+        private {{child.type}} {{child.name}};
+        {{- end }}
+
         {{- end }}
     }
 
@@ -423,16 +538,26 @@ namespace {{namespace}}
 using {{using}};
 {{- end }}
 
-public partial class {{class_name}} : IEasyViewModel
+public partial class {{class_name}} : IEasyControl
 {
     [SerializeField, HideInInspector]
-    private EasyViewModelArgs _easyViewModelArgs = new();
+    private EasyControlArgs _easyControlArgs = new();
 
     {{- for child in children}}
+
     /// <summary>
     /// {{child.comment}}
     /// </summary>
+    {{- if child.access == 'Public' }}
+    [EasyBounderControl]
     public {{child.type}} {{child.name}};
+    {{- end }}
+
+    {{- if child.access == 'PrivateWithSerializeFieldAttribute' }}
+    [SerializeField, EasyBounderControl]
+    private {{child.type}} {{child.name}};
+    {{- end }}
+
     {{- end }}
 }
 
@@ -504,14 +629,17 @@ namespace Editor
                 }
             }
 
+
             private void BuildCsDesigner(string path)
             {
-                var children = GetChildren();
+                Debug.Assert(_args.DoViewModel);
+
+                var children = GetChildren(_comp.gameObject);
 
                 var data = new
                 {
-                    Usings = children.Select(c => GetArgs(c).Binder.TypeToBind.Type.Namespace)
-                        .Append("EasyGameFramework").Distinct(),
+                    Usings = new[] { "EasyGameFramework", "UnityEngine" }.Concat(children
+                        .Select(c => GetArgs(c).Bounder.TypeToBind.Type.Namespace).Distinct()),
                     Namespace = _args.ViewModel.Namespace,
                     ClassName = _args.ViewModel.ClassName,
                     Children = children.Select(c =>
@@ -519,9 +647,10 @@ namespace Editor
                         var arg = GetArgs(c);
                         return new
                         {
-                            Type = arg.Binder.TypeToBind.Type.Name,
-                            Name = arg.Binder.Name,
-                            Comment = arg.Binder.Comment,
+                            Type = arg.Bounder.TypeToBind.Type.Name,
+                            Name = arg.Bounder.Name,
+                            Comment = arg.Bounder.Comment,
+                            Access = arg.Bounder.Access.ToString(),
                         };
                     })
                 };
@@ -545,9 +674,53 @@ namespace Editor
                 File.WriteAllText(path, result);
             }
 
-            private void BindChildren()
+            private void Bind()
             {
+                Debug.Assert(_args.DoViewModel && _args.ViewModel.ClassType != null);
 
+                if (_comp.GetComponent(_args.ViewModel.ClassType))
+                {
+                    goto delete_self;
+                }
+
+                _comp = _comp.gameObject.AddComponent(_args.ViewModel.ClassType);
+                SetArgs(_comp, _args);
+
+                delete_self:
+                var c = _comp.GetComponent<EasyControl>();
+                if (c != null)
+                    Object.DestroyImmediate(c);
+                
+                var children = GetChildren(_comp.gameObject);
+                var fields = _comp.GetType()
+                    .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+                    .Where(f => f.GetCustomAttribute<EasyBounderControlAttribute>() != null)
+                    .ToArray();
+                foreach (var child in children)
+                {
+                    var comp = (Component)child;
+                    var args = GetArgs(child);
+                    var f = fields.FirstOrDefault(f => f.Name == args.Bounder.Name);
+                    if (f == null)
+                    {
+                        EditorUtility.DisplayDialog("错误",
+                            $"绑定GameObject（{comp.gameObject.name}）失败，" +
+                            $"视图模型中没有“{args.Bounder.Name}”，" +
+                            $"可能需要重新生成视图模型！", "确认");
+                        return;
+                    }
+
+                    var value = comp.gameObject.GetComponent(f.FieldType);
+                    if (value == null)
+                    {
+                        EditorUtility.DisplayDialog("错误",
+                            $"绑定GameObject（{comp.gameObject.name}）失败，" +
+                            $"没有组件“{f.FieldType}”", "确认");
+                        return;
+                    }
+
+                    f.SetValue(_comp, value);
+                }
             }
 
             private bool CheckBind()
@@ -562,14 +735,14 @@ namespace Editor
                     }
                 }
 
-                var children = GetChildren();
+                var children = GetChildren(_comp.gameObject);
                 var nameCheck = new HashSet<string>();
                 foreach (var child in children)
                 {
                     var arg = GetArgs(child);
-                    if (arg.DoBinder)
+                    if (arg.DoBounder)
                     {
-                        string error = GetIdentifierError("变量名称", arg.Binder.Name);
+                        string error = GetIdentifierError("变量名称", arg.Bounder.Name);
                         if (error.IsNotNullOrEmpty())
                         {
                             var comp = (Component)child;
@@ -577,11 +750,11 @@ namespace Editor
                             return false;
                         }
 
-                        if (!nameCheck.Add(arg.Binder.Name))
+                        if (!nameCheck.Add(arg.Bounder.Name))
                         {
                             var comp = (Component)child;
                             EditorUtility.DisplayDialog("错误",
-                                $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{arg.Binder.Name}）", "确认");
+                                $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{arg.Bounder.Name}）", "确认");
                             return false;
                         }
                     }
@@ -590,19 +763,19 @@ namespace Editor
                 return true;
             }
 
-            private IEasyViewModel[] GetChildren()
+            private static IEasyControl[] GetChildren(GameObject obj)
             {
-                return _comp.GetComponentsInChildren<IEasyViewModel>()
+                return obj.GetComponentsInChildren<IEasyControl>()
                     .Where(m =>
                     {
                         var arg = GetArgs(m);
-                        return arg.DoBinder
-                               && arg.Binder.Parent == _comp.transform;
+                        return arg.DoBounder
+                               && arg.Bounder.Parent == obj.transform;
                     }).ToArray();
             }
         }
 
-        [CustomEditor(typeof(EasyViewModel))]
+        [CustomEditor(typeof(EasyControl))]
         public class EasyViewModelEditor : EasyControlEditorBase
         {
         }

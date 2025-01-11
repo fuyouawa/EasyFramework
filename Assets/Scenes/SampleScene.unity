@@ -527,10 +527,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyViewModelArgs:
+  _easyControlArgs:
     Expand: 0
     DoViewModel: 0
-    DoBinder: 0
+    DoBounder: 0
     ViewModel:
       GenerateDir: 
       Namespace: 
@@ -539,7 +539,8 @@ MonoBehaviour:
       BaseClass:
         AssemblyQualifiedName: 
       IsInitialized: 0
-    Binder:
+      AssemblyQualifiedName: 
+    Bounder:
       Parent: {fileID: 0}
       TypeToBind:
         AssemblyQualifiedName: 
@@ -547,6 +548,7 @@ MonoBehaviour:
       Name: 
       Comment: 
       IsInitialized: 0
+      Access: 0
 --- !u!1 &667694654
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,13 +751,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 686683923}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Script: {fileID: 11500000, guid: b64ec4c2b9332f945a6c4cf5bf15a7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyViewModelArgs:
+  _easyControlArgs:
     Expand: 1
     DoViewModel: 1
-    DoBinder: 0
+    DoBounder: 0
     ViewModel:
       GenerateDir: Scripts/Ui
       Namespace: 
@@ -765,7 +767,9 @@ MonoBehaviour:
         AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       IsInitialized: 1
-    Binder:
+      AssemblyQualifiedName: TestViewModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    Bounder:
       Parent: {fileID: 0}
       TypeToBind:
         AssemblyQualifiedName: 
@@ -773,6 +777,9 @@ MonoBehaviour:
       Name: 
       Comment: 
       IsInitialized: 0
+      Access: 0
+  GameObject: {fileID: 2122406322}
+  GameObject2: {fileID: 1496675119}
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1385,10 +1392,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyViewModelArgs:
+  _easyControlArgs:
     Expand: 1
     DoViewModel: 0
-    DoBinder: 1
+    DoBounder: 1
     ViewModel:
       GenerateDir: 
       Namespace: 
@@ -1397,15 +1404,17 @@ MonoBehaviour:
       BaseClass:
         AssemblyQualifiedName: 
       IsInitialized: 0
-    Binder:
+      AssemblyQualifiedName: 
+    Bounder:
       Parent: {fileID: 686683925}
       TypeToBind:
-        AssemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       NameSameAsGameObjectName: 1
       Name: GameObject2
       Comment: 
       IsInitialized: 1
+      Access: 1
 --- !u!1 &1640216909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1942,10 +1951,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyViewModelArgs:
+  _easyControlArgs:
     Expand: 1
     DoViewModel: 0
-    DoBinder: 1
+    DoBounder: 1
     ViewModel:
       GenerateDir: 
       Namespace: 
@@ -1954,15 +1963,17 @@ MonoBehaviour:
       BaseClass:
         AssemblyQualifiedName: 
       IsInitialized: 0
-    Binder:
+      AssemblyQualifiedName: 
+    Bounder:
       Parent: {fileID: 686683925}
       TypeToBind:
-        AssemblyQualifiedName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
+        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       NameSameAsGameObjectName: 1
       Name: GameObject
       Comment: 
       IsInitialized: 1
+      Access: 0
 --- !u!1001 &1577381633994008878
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,19 +1,24 @@
 
+using EasyGameFramework;
 using UnityEngine;
 using EasyGameFramework;
 
-public partial class TestViewModel : IEasyViewModel
+public partial class TestViewModel : IEasyControl
 {
     [SerializeField, HideInInspector]
-    private EasyViewModelArgs _easyViewModelArgs = new();
+    private EasyControlArgs _easyControlArgs = new();
+
     /// <summary>
     /// 
     /// </summary>
-    public Transform GameObject;
+    [EasyBounderControl]
+    public EasyControl GameObject;
+
     /// <summary>
     /// 
     /// </summary>
-    public Transform GameObject2;
+    [SerializeField, EasyBounderControl]
+    private EasyControl GameObject2;
 }
 
 #if UNITY_EDITOR
