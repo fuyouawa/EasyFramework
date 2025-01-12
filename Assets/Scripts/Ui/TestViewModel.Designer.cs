@@ -1,35 +1,24 @@
 
 using EasyGameFramework;
 using UnityEngine;
-using EasyGameFramework;
 
 public partial class TestViewModel : IEasyControl
 {
     [SerializeField, HideInInspector]
     private EasyControlArgs _easyControlArgs = new();
 
+    public EasyControlArgs GetEasyControlArgs() => _easyControlArgs;
+    public void SetEasyControlArgs(EasyControlArgs args) => _easyControlArgs = args;
+
     /// <summary>
-    /// 
+    /// <para>asdasd</para>
     /// </summary>
-    [EasyBounderControl]
+    [EasyBounderControl("GameObject")]
     public EasyControl GameObject;
 
     /// <summary>
     /// 
     /// </summary>
-    [SerializeField, EasyBounderControl]
-    private EasyControl GameObject2;
+    [SerializeField, EasyBounderControl("GameObject2")]
+    private EasyControl _gameObject2;
 }
-
-#if UNITY_EDITOR
-namespace Editor
-{
-    using UnityEditor;
-    using EasyGameFramework.Editor;
-
-    [CustomEditor(typeof(TestViewModel))]
-    public class TestViewModelEditor : EasyControlEditorBase
-    {
-    }
-}
-#endif

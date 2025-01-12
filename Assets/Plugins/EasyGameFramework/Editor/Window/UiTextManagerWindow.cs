@@ -87,7 +87,7 @@ namespace EasyGameFramework.Editor
 
         protected override OdinMenuTree BuildMenuTree()
         {
-            var tree = new OdinMenuTree
+            var tree = new OdinMenuTree(false, OdinMenuStyle.TreeViewStyle)
             {
                 { "设置", _settings, SdfIconType.GearFill },
                 { Group, null }
@@ -102,9 +102,6 @@ namespace EasyGameFramework.Editor
                 LoadPrefabsInScene(tree);
             }
 
-            tree.DefaultMenuStyle = OdinMenuStyle.TreeViewStyle;
-
-            tree.Selection.SupportsMultiSelect = false;
             tree.Selection.SelectionChanged += type =>
             {
                 if (type == SelectionChangedType.ItemAdded)
@@ -123,7 +120,6 @@ namespace EasyGameFramework.Editor
             };
             return tree;
         }
-
 
         protected override void OnEnable()
         {
@@ -377,7 +373,8 @@ namespace EasyGameFramework.Editor
                 {
                     foreach (var preset in UiTextPresetsManager.Instance.FontAssetPresets)
                     {
-                        if (preset.Value.FontAsset == node.TextGUI.font && preset.Value.Material == node.TextGUI.fontSharedMaterial)
+                        if (preset.Value.FontAsset == node.TextGUI.font &&
+                            preset.Value.Material == node.TextGUI.fontSharedMaterial)
                         {
                             mgr.SetFontAssetPreset(preset.Key);
                         }
@@ -401,6 +398,7 @@ namespace EasyGameFramework.Editor
                 {
                     mgr.SetFontAssetPreset(UiTextPresetsManager.Instance.DefaultFontAssetPresetId);
                 }
+
                 if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                 {
                     mgr.SetTextPropertiesPreset(UiTextPresetsManager.Instance.DefaultTextPropertiesPresetId);
@@ -836,7 +834,8 @@ namespace EasyGameFramework.Editor
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"字体资产预设为：{mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO")}",
+                                EasyEditorGUI.MessageBox(
+                                    $"字体资产预设为：{mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO")}",
                                     MessageType.Info);
                             }
 
@@ -847,7 +846,8 @@ namespace EasyGameFramework.Editor
                             }
                             else
                             {
-                                EasyEditorGUI.MessageBox($"文本属性预设为：{mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO")}",
+                                EasyEditorGUI.MessageBox(
+                                    $"文本属性预设为：{mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO")}",
                                     MessageType.Info);
                             }
                         }

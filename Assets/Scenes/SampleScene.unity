@@ -236,8 +236,9 @@ GameObject:
   m_Component:
   - component: {fileID: 472785370}
   - component: {fileID: 472785371}
+  - component: {fileID: 472785372}
   m_Layer: 0
-  m_Name: GameObject (9)
+  m_Name: dgfgdf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -359,6 +360,44 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+--- !u!114 &472785372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472785369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 0
+    DoBounder: 1
+    ViewModel:
+      GenerateDir: Script/Ui
+      Namespace: Test
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject (9)
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 1874861992}
+      TypeToBind:
+        AssemblyQualifiedName: EasyGameFramework.EasyFeedbacks, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      NameSameAsGameObjectName: 1
+      Name: dgfgdf
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 1
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &496268285
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,9 +585,11 @@ MonoBehaviour:
         AssemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
+      AutoAddCommentPara: 1
       Comment: 
       IsInitialized: 0
       Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &667694654
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,11 +816,13 @@ MonoBehaviour:
         AssemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
+      AutoAddCommentPara: 1
       Comment: 
       IsInitialized: 0
       Access: 0
+      AutoNamingNotations: 1
   GameObject: {fileID: 2122406322}
-  GameObject2: {fileID: 1496675119}
+  _gameObject2: {fileID: 1496675119}
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,9 +1455,11 @@ MonoBehaviour:
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       NameSameAsGameObjectName: 1
       Name: GameObject2
+      AutoAddCommentPara: 1
       Comment: 
       IsInitialized: 1
       Access: 1
+      AutoNamingNotations: 1
 --- !u!1 &1640216909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,7 +1605,7 @@ GameObject:
   - component: {fileID: 1874861992}
   - component: {fileID: 1874861991}
   m_Layer: 0
-  m_Name: GameObject (5)
+  m_Name: OOOO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1769,8 +1814,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1937517888}
   - component: {fileID: 1937517889}
+  - component: {fileID: 1937517890}
   m_Layer: 0
-  m_Name: GameObject (10)
+  m_Name: gfjghkhyu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1833,6 +1879,45 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+--- !u!114 &1937517890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937517887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 0
+    DoBounder: 1
+    ViewModel:
+      GenerateDir: 
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: 
+      BaseClass:
+        AssemblyQualifiedName: 
+      IsInitialized: 0
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 1874861992}
+      TypeToBind:
+        AssemblyQualifiedName: EasyGameFramework.EasyFeedbacks, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      NameSameAsGameObjectName: 1
+      Name: gfjghkhyu
+      AutoAddCommentPara: 1
+      Comment: '346456
+
+        ttyutyufgh'
+      IsInitialized: 1
+      Access: 1
+      AutoNamingNotations: 1
 --- !u!1 &2116186562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1971,9 +2056,11 @@ MonoBehaviour:
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       NameSameAsGameObjectName: 1
       Name: GameObject
-      Comment: 
+      AutoAddCommentPara: 1
+      Comment: ssssdd
       IsInitialized: 1
       Access: 0
+      AutoNamingNotations: 1
 --- !u!1001 &1577381633994008878
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,0 +1,7 @@
+{{- for using in usings}}
+using {{using}};
+{{- end }}
+
+public partial class {{class_name}} : {{base_class}}
+{
+}

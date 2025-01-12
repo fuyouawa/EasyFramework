@@ -1,0 +1,30 @@
+{{- for using in usings}}
+using {{using}};
+{{- end }}
+
+namespace {{namespace}}
+{
+    public partial class {{class_name}} : IEasyControl
+    {
+        [SerializeField, HideInInspector]
+        private EasyControlArgs _easyControlArgs = new();
+        
+        public EasyControlArgs GetEasyControlArgs() => _easyControlArgs;
+        public void SetEasyControlArgs(EasyControlArgs args) => _easyControlArgs = args;
+
+        {{- for child in children}}
+
+{{child.comment}}
+        {{- if child.access == 'Public' }}
+        [EasyBounderControl("{{child.origin_name}}")]
+        public {{child.type}} {{child.name}};
+        {{- end }}
+
+        {{- if child.access == 'PrivateWithSerializeFieldAttribute' }}
+        [SerializeField, EasyBounderControl("{{child.origin_name}}")]
+        private {{child.type}} {{child.name}};
+        {{- end }}
+
+        {{- end }}
+    }
+}
