@@ -600,6 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 667694656}
   - component: {fileID: 667694655}
+  - component: {fileID: 667694657}
   m_Layer: 0
   m_Name: GameObject (2)
   m_TagString: Untagged
@@ -663,6 +664,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &667694657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667694654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 1
+    DoBounder: 0
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject (2)
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 0
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &686683923
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +931,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1737453324}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879624654
@@ -1047,6 +1086,7 @@ GameObject:
   m_Component:
   - component: {fileID: 902553711}
   - component: {fileID: 902553710}
+  - component: {fileID: 902553712}
   m_Layer: 0
   m_Name: GameObject (3)
   m_TagString: Untagged
@@ -1110,6 +1150,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &902553712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902553709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 1
+    DoBounder: 0
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject (3)
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 0
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &990830402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,6 +1196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 990830403}
+  - component: {fileID: 990830404}
   m_Layer: 0
   m_Name: GameObject (9)
   m_TagString: Untagged
@@ -1142,6 +1220,43 @@ Transform:
   - {fileID: 1640216910}
   m_Father: {fileID: 1903165441}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &990830404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990830402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 0
+    DoBounder: 1
+    ViewModel:
+      GenerateDir: 
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: 
+      BaseClass:
+        AssemblyQualifiedName: 
+      IsInitialized: 0
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 1903165441}
+      TypeToBind:
+        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      NameSameAsGameObjectName: 1
+      Name: GameObject (9)
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 1
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &1151300943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,6 +1340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1241639929}
   - component: {fileID: 1241639928}
+  - component: {fileID: 1241639930}
   m_Layer: 0
   m_Name: GameObject (1)
   m_TagString: Untagged
@@ -1288,6 +1404,43 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1241639930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241639927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 1
+    DoBounder: 0
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject (1)
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 0
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &1486094127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,6 +1747,50 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+--- !u!1 &1737453323
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1737453324}
+  - component: {fileID: 1737453325}
+  m_Layer: 0
+  m_Name: UnityMainThreadDispatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1737453324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737453323}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 720859278}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1737453325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737453323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58f4a05400a74594ab359048d7b713db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1874861990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,6 +1877,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1903165441}
   - component: {fileID: 1903165440}
+  - component: {fileID: 1903165442}
   m_Layer: 0
   m_Name: GameObject (4)
   m_TagString: Untagged
@@ -1804,6 +2002,43 @@ Transform:
   - {fileID: 990830403}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1903165442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903165439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlArgs:
+    Expand: 1
+    DoViewModel: 1
+    DoBounder: 0
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject (4)
+      BaseClass:
+        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 0}
+      TypeToBind:
+        AssemblyQualifiedName: 
+      NameSameAsGameObjectName: 1
+      Name: 
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 0
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &1937517887
 GameObject:
   m_ObjectHideFlags: 0

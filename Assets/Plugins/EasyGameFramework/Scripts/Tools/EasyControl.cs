@@ -11,7 +11,7 @@ namespace EasyGameFramework
     }
 
     [Serializable]
-    public class EasyControlArgs
+    public class EasyControlEditorArgs
     {
         [Serializable]
         public class TypeStore
@@ -149,18 +149,9 @@ namespace EasyGameFramework
         }
     }
 
-    public interface IEasyControl
+    public sealed class EasyControl : MonoBehaviour
     {
-        public EasyControlArgs GetEasyControlArgs();
-        public void SetEasyControlArgs(EasyControlArgs args);
-    }
-
-    public sealed class EasyControl : MonoBehaviour, IEasyControl
-    {
-        [SerializeField, HideInInspector]
-        private EasyControlArgs _easyControlArgs = new();
-
-        public EasyControlArgs GetEasyControlArgs() => _easyControlArgs;
-        public void SetEasyControlArgs(EasyControlArgs args) => _easyControlArgs = args;
+        [SerializeField]
+        private EasyControlEditorArgs _easyControlEditorArgs = new();
     }
 }

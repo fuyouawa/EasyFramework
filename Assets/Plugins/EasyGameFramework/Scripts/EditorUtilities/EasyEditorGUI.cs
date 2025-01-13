@@ -8,6 +8,9 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using EasyFramework;
+using Sirenix.OdinInspector;
+using System.Reflection;
+using System.Globalization;
 
 namespace EasyGameFramework
 {
@@ -260,6 +263,7 @@ namespace EasyGameFramework
             {
                 btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), false);
             }
+
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
                 rect => ShowSelectorInPopup(rect, rect.width, config),
                 config.ReturnValuesOnSelectionChange, config.Style, options);
@@ -387,6 +391,7 @@ namespace EasyGameFramework
             {
                 GUI.color = (Color)config.BoxColor;
             }
+
             SirenixEditorGUI.BeginBox();
             GUI.color = color;
 
@@ -407,7 +412,7 @@ namespace EasyGameFramework
             {
                 config.OnContentGUI?.Invoke(headerRect);
             }
-            
+
             SirenixEditorGUI.EndBox();
 
             return config.Expand;
@@ -427,7 +432,7 @@ namespace EasyGameFramework
             // }
             SirenixEditorGUI.BeginBoxHeader();
             // GUI.color = color;
-            
+
             headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
             if (config.RightLabel != null && config.RightLabel != GUIContent.none)
@@ -468,7 +473,7 @@ namespace EasyGameFramework
             public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
             public OnTitleBarGUIDelegate OnTitleBarGUI;
             public OnContentGUIDelegate OnContentGUI;
-            
+
             public BoxGroupConfig(string label)
             {
                 Label = new GUIContent(label);
@@ -492,12 +497,13 @@ namespace EasyGameFramework
             {
                 GUI.color = (Color)config.BoxColor;
             }
+
             SirenixEditorGUI.BeginBox();
             GUI.color = color;
-            
+
             SirenixEditorGUI.BeginBoxHeader();
             // GUI.color = color;
-            
+
             headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
             if (config.RightLabel != null && config.RightLabel != GUIContent.none)
@@ -513,11 +519,11 @@ namespace EasyGameFramework
             EditorGUI.LabelField(rect, config.Label);
 
             config.OnTitleBarGUI?.Invoke(rect);
-            
+
             SirenixEditorGUI.EndBoxHeader();
 
             config.OnContentGUI?.Invoke(headerRect);
-            
+
             SirenixEditorGUI.EndBox();
         }
 
@@ -779,6 +785,7 @@ namespace EasyGameFramework
                     boxColor = Color.black;
                 }
             }
+
             var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand)
             {
                 BoxColor = boxColor,
@@ -869,6 +876,18 @@ namespace EasyGameFramework
         public static void MessageBox(string message, MessageType messageType, bool wide = true)
         {
             SirenixEditorGUI.MessageBox(message, messageType, EasyGUIStyles.MessageBox, wide);
+        }
+
+        #endregion
+
+        #region List
+
+        public class ListConfig
+        {
+        }
+
+        public static void BeginList()
+        {
         }
 
         #endregion

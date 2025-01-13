@@ -4,27 +4,27 @@ using {{using}};
 
 namespace {{namespace}}
 {
-    public partial class {{class_name}} : IEasyControl
+    public partial class {{class_name}}
     {
-        [SerializeField, HideInInspector]
-        private EasyControlArgs _easyControlArgs = new();
-        
-        public EasyControlArgs GetEasyControlArgs() => _easyControlArgs;
-        public void SetEasyControlArgs(EasyControlArgs args) => _easyControlArgs = args;
-
         {{- for child in children}}
-
 {{child.comment}}
         {{- if child.access == 'Public' }}
         [EasyBounderControl("{{child.origin_name}}")]
         public {{child.type}} {{child.name}};
         {{- end }}
-
         {{- if child.access == 'PrivateWithSerializeFieldAttribute' }}
         [SerializeField, EasyBounderControl("{{child.origin_name}}")]
         private {{child.type}} {{child.name}};
         {{- end }}
-
         {{- end }}
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// <para>EasyControl的编辑器参数</para>
+        /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
+        /// </summary>
+        [SerializeField]
+        private EasyControlEditorArgs _easyControlEditorArgs = new();
+#endif
     }
 }

@@ -2,23 +2,21 @@
 using EasyGameFramework;
 using UnityEngine;
 
-public partial class TestViewModel : IEasyControl
+public partial class TestViewModel
 {
-    [SerializeField, HideInInspector]
-    private EasyControlArgs _easyControlArgs = new();
 
-    public EasyControlArgs GetEasyControlArgs() => _easyControlArgs;
-    public void SetEasyControlArgs(EasyControlArgs args) => _easyControlArgs = args;
-
-    /// <summary>
-    /// <para>asdasd</para>
-    /// </summary>
     [EasyBounderControl("GameObject")]
     public EasyControl GameObject;
 
+    [EasyBounderControl("GameObject2")]
+    public EasyControl GameObject2;
+
+#if UNITY_EDITOR
     /// <summary>
-    /// 
+    /// <para>EasyControl的编辑器参数</para>
+    /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
     /// </summary>
-    [SerializeField, EasyBounderControl("GameObject2")]
-    private EasyControl _gameObject2;
+    [SerializeField]
+    private EasyControlEditorArgs _easyControlEditorArgs = new();
+#endif
 }

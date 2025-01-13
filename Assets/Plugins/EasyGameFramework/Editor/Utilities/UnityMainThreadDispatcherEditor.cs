@@ -5,24 +5,23 @@ namespace EasyGameFramework.Editor
 {
     public static class UnityMainThreadDispatcherEditor
     {
-        [MenuItem("GameObject/EasyGameFramework/Initialize UnityMainThreadDispatcher", false, 0)]
+        [MenuItem("GameObject/EasyGameFramework/Initialize UnityInvoker", false, 0)]
         private static void InitUnityInvoker(MenuCommand menuCommand)
         {
-            if (Object.FindAnyObjectByType<UnityMainThreadDispatcher>() == null)
-            {
-                var go = new GameObject("UnityMainThreadDispatcher");
-                go.AddComponent<UnityMainThreadDispatcher>();
+            var go = new GameObject("UnityMainThreadDispatcher");
+            go.AddComponent<UnityMainThreadDispatcher>();
             
-                UnityEditor.GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
+            UnityEditor.GameObjectUtility.SetParentAndAlign(go, menuCommand.context as GameObject);
             
-                Undo.RegisterCreatedObjectUndo(go, "Create UnityMainThreadDispatcher");
+            Undo.RegisterCreatedObjectUndo(go, "Create UnityMainThreadDispatcher");
 
-                Selection.activeObject = go;
-            }
-            else
-            {
-                EditorUtility.DisplayDialog("提示", "场景中已经存在一个UnityMainThreadDispatcher！", "确认");
-            }
+            Selection.activeObject = go;
+        }
+
+        [MenuItem("GameObject/EasyGameFramework/Initialize UnityInvoker", true)]
+        private static bool InitUnityInvokerValidation()
+        {
+            return Object.FindAnyObjectByType<UnityMainThreadDispatcher>() == null;
         }
     }
 }
