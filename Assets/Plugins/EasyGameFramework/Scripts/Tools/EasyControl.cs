@@ -1,9 +1,12 @@
 using System;
+using System.Diagnostics;
 using EasyFramework;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace EasyGameFramework
 {
+#if UNITY_EDITOR
     public enum EasyControlBindAccess
     {
         Public,
@@ -138,7 +141,9 @@ namespace EasyGameFramework
         public ViewModelArgs ViewModel = new();
         public BounderArgs Bounder = new();
     }
-
+#endif
+    
+    [Conditional("UNITY_EDITOR")]
     public class EasyBounderControlAttribute : PropertyAttribute
     {
         public string OriginName;
@@ -151,7 +156,9 @@ namespace EasyGameFramework
 
     public sealed class EasyControl : MonoBehaviour
     {
+#if UNITY_EDITOR
         [SerializeField]
         private EasyControlEditorArgs _easyControlEditorArgs = new();
+#endif
     }
 }

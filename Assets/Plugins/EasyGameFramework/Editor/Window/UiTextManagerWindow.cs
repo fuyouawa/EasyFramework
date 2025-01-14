@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEngine.SceneManagement;
+using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace EasyGameFramework.Editor
 {
@@ -154,16 +154,17 @@ namespace EasyGameFramework.Editor
                 WindowPosition = position,
                 MenuWidth = MenuWidth
             };
-            var json = EasyJsonConvert.SerializeObject(temp, Formatting.Indented);
-            File.WriteAllText(EditorAssetsPath.UiTextManagerWindowTempPath, json);
+            
+            var json = SerializationUtility.SerializeValue(temp, DataFormat.JSON);
+            File.WriteAllBytes(EditorAssetsPath.UiTextManagerWindowTempPath, json);
         }
 
         public void LoadEditor()
         {
             if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
                 return;
-            var json = File.ReadAllText(EditorAssetsPath.UiTextManagerWindowTempPath);
-            var temp = EasyJsonConvert.DeserializeObject<WindowTemp>(json);
+            var json = File.ReadAllBytes(EditorAssetsPath.UiTextManagerWindowTempPath);
+            var temp = SerializationUtility.DeserializeValue<WindowTemp>(json, DataFormat.JSON);
             if (temp != null)
             {
                 position = temp.WindowPosition;
