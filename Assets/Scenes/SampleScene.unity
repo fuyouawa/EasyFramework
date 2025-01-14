@@ -372,30 +372,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 0
-    DoBounder: 1
+    DoBounder: 0
     ViewModel:
-      GenerateDir: Script/Ui
-      Namespace: Test
+      GenerateDir: 
+      Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject (9)
+      ClassName: 
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      IsInitialized: 1
+        AssemblyQualifiedName: 
+      IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
-      Parent: {fileID: 1874861992}
+      Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: EasyGameFramework.EasyFeedbacks, Assembly-CSharp-firstpass,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        AssemblyQualifiedName: 
       NameSameAsGameObjectName: 1
-      Name: dgfgdf
+      Name: 
       AutoAddCommentPara: 1
       Comment: 
-      IsInitialized: 1
+      IsInitialized: 0
       Access: 0
       AutoNamingNotations: 1
 --- !u!1 &496268285
@@ -566,8 +564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
-    Expand: 0
+  _easyControlEditorArgs:
+    Expand: 1
     DoViewModel: 0
     DoBounder: 0
     ViewModel:
@@ -676,19 +674,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 1
+    DoViewModel: 0
     DoBounder: 0
     ViewModel:
-      GenerateDir: Scripts/Ui
+      GenerateDir: 
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject (2)
+      ClassName: 
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      IsInitialized: 1
+        AssemblyQualifiedName: 
+      IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
@@ -833,7 +830,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b64ec4c2b9332f945a6c4cf5bf15a7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  Sss:
+  - 
+  - 
+  GameObject: {fileID: 2122406322}
+  GameObject2: {fileID: 0}
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 1
     DoBounder: 0
@@ -859,8 +861,6 @@ MonoBehaviour:
       IsInitialized: 0
       Access: 0
       AutoNamingNotations: 1
-  GameObject: {fileID: 2122406322}
-  _gameObject2: {fileID: 1496675119}
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -1162,19 +1162,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 1
+    DoViewModel: 0
     DoBounder: 0
     ViewModel:
-      GenerateDir: Scripts/Ui
+      GenerateDir: 
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject (3)
+      ClassName: 
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      IsInitialized: 1
+        AssemblyQualifiedName: 
+      IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
@@ -1232,10 +1231,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 0
-    DoBounder: 1
+    DoBounder: 0
     ViewModel:
       GenerateDir: 
       Namespace: 
@@ -1246,15 +1245,14 @@ MonoBehaviour:
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
-      Parent: {fileID: 1903165441}
+      Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        AssemblyQualifiedName: 
       NameSameAsGameObjectName: 1
-      Name: GameObject (9)
+      Name: 
       AutoAddCommentPara: 1
       Comment: 
-      IsInitialized: 1
+      IsInitialized: 0
       Access: 0
       AutoNamingNotations: 1
 --- !u!1 &1151300943
@@ -1416,19 +1414,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 1
+    DoViewModel: 0
     DoBounder: 0
     ViewModel:
-      GenerateDir: Scripts/Ui
+      GenerateDir: 
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject (1)
+      ClassName: 
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      IsInitialized: 1
+        AssemblyQualifiedName: 
+      IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
@@ -1588,7 +1585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 0
     DoBounder: 1
@@ -1611,7 +1608,7 @@ MonoBehaviour:
       AutoAddCommentPara: 1
       Comment: 
       IsInitialized: 1
-      Access: 1
+      Access: 0
       AutoNamingNotations: 1
 --- !u!1 &1640216909
 GameObject:
@@ -2014,19 +2011,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 1
+    DoViewModel: 0
     DoBounder: 0
     ViewModel:
-      GenerateDir: Scripts/Ui
+      GenerateDir: 
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject (4)
+      ClassName: 
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      IsInitialized: 1
+        AssemblyQualifiedName: 
+      IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
@@ -2126,10 +2122,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 0
-    DoBounder: 1
+    DoBounder: 0
     ViewModel:
       GenerateDir: 
       Namespace: 
@@ -2140,18 +2136,15 @@ MonoBehaviour:
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
-      Parent: {fileID: 1874861992}
+      Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: EasyGameFramework.EasyFeedbacks, Assembly-CSharp-firstpass,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        AssemblyQualifiedName: 
       NameSameAsGameObjectName: 1
-      Name: gfjghkhyu
+      Name: 
       AutoAddCommentPara: 1
-      Comment: '346456
-
-        ttyutyufgh'
-      IsInitialized: 1
-      Access: 1
+      Comment: 
+      IsInitialized: 0
+      Access: 0
       AutoNamingNotations: 1
 --- !u!1 &2116186562
 GameObject:
@@ -2271,7 +2264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlArgs:
+  _easyControlEditorArgs:
     Expand: 1
     DoViewModel: 0
     DoBounder: 1
@@ -2292,7 +2285,7 @@ MonoBehaviour:
       NameSameAsGameObjectName: 1
       Name: GameObject
       AutoAddCommentPara: 1
-      Comment: ssssdd
+      Comment: 
       IsInitialized: 1
       Access: 0
       AutoNamingNotations: 1

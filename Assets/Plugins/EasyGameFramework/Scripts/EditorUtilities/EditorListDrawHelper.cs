@@ -146,99 +146,38 @@
 //             }
 //             this.EndDropZone();
 //             SirenixEditorGUI.EndIndentedVertical();
-//
-//             if (this.info.OrderedCollectionResolver != null)
-//             {
-//                 if (this.info.RemoveAt >= 0 && Event.current.type == EventType.Repaint)
-//                 {
-//                     try
-//                     {
-//                         if (this.info.CustomRemoveIndexFunction != null)
-//                         {
-//                             foreach (var parent in this.Property.ParentValues)
-//                             {
-//                                 this.info.CustomRemoveIndexFunction(
-//                                     parent,
-//                                     this.info.RemoveAt);
-//                             }
-//                         }
-//                         else if (this.info.CustomRemoveElementFunction != null)
-//                         {
-//                             for (int i = 0; i < this.Property.ParentValues.Count; i++)
-//                             {
-//                                 this.info.CustomRemoveElementFunction(
-//                                     this.Property.ParentValues[i],
-//                                     this.Property.Children[this.info.RemoveAt].ValueEntry.WeakValues[i]);
-//                             }
-//                         }
-//                         else
-//                         {
-//                             this.info.OrderedCollectionResolver.QueueRemoveAt(this.info.RemoveAt);
-//                         }
-//                     }
-//                     finally
-//                     {
-//                         this.info.RemoveAt = -1;
-//                     }
-//
-//                     GUIHelper.RequestRepaint();
-//                 }
-//             }
-//             else if (this.info.RemoveValues != null && Event.current.type == EventType.Repaint)
+//             
+//             if (this.info.RemoveAt >= 0 && Event.current.type == EventType.Repaint)
 //             {
 //                 try
 //                 {
-//                     if (this.info.CustomRemoveElementFunction != null)
+//                     if (this.info.CustomRemoveIndexFunction != null)
 //                     {
-//                         for (int i = 0; i < this.Property.ParentValues.Count; i++)
-//                         {
-//                             this.info.CustomRemoveElementFunction(
-//                                 this.Property.ParentValues[i],
-//                                 this.info.RemoveValues[i]);
-//                         }
+//                         info.CustomRemoveIndexFunction(info, info.RemoveAt);
+//                     }
+//                     else if (this.info.CustomRemoveElementFunction != null)
+//                     {
+//                         info.CustomRemoveElementFunction(info, info.Collection[info.RemoveAt]);
 //                     }
 //                     else
 //                     {
-//                         this.info.CollectionResolver.QueueRemove(this.info.RemoveValues);
+//                         info.Collection.RemoveAt(info.RemoveAt);
 //                     }
 //                 }
 //                 finally
 //                 {
-//                     this.info.RemoveValues = null;
+//                     this.info.RemoveAt = -1;
 //                 }
 //
 //                 GUIHelper.RequestRepaint();
-//             }
-//
-//             if (this.info.ObjectPicker != null && this.info.ObjectPicker.IsReadyToClaim &&
-//                 Event.current.type == EventType.Repaint)
-//             {
-//                 var value = this.info.ObjectPicker.ClaimObject();
-//
-//                 if (this.info.JumpToNextPageOnAdd)
-//                 {
-//                     this.info.StartIndex = int.MaxValue;
-//                 }
-//
-//                 object[] values = new object[this.info.Property.Tree.WeakTargets.Count];
-//
-//                 values[0] = value;
-//                 for (int j = 1; j < values.Length; j++)
-//                 {
-//                     values[j] = Sirenix.Serialization.SerializationUtility.CreateCopy(value);
-//                 }
-//
-//                 this.info.CollectionResolver.QueueAdd(values);
 //             }
 //         }
 //
 //         private DropZoneHandle BeginDropZone()
 //         {
-//             if (this.info.OrderedCollectionResolver == null) return null;
-//
 //             var dropZone = DragAndDropManager.BeginDropZone(
-//                 this.info.Property.Tree.GetHashCode() + "-" + this.info.Property.Path,
-//                 this.info.CollectionResolver.ElementType, true);
+//                 this.info.GetHashCode(),
+//                 this.info.Collection.GetType(), true);
 //
 //             if (Event.current.type == EventType.Repaint && DragAndDropManager.IsDragInProgress)
 //             {
@@ -921,8 +860,8 @@
 //             public Action<object> GetCustomAddFunctionVoid;
 //             public Func<object, object> GetCustomAddFunction;
 //
-//             public Action<object, int> CustomRemoveIndexFunction;
-//             public Action<object, object> CustomRemoveElementFunction;
+//             public Action<ListDrawerConfigInfo, int> CustomRemoveIndexFunction;
+//             public Action<ListDrawerConfigInfo, object> CustomRemoveElementFunction;
 //
 //             public Func<object, object> GetListElementLabelText;
 //             public Action<object, int> OnBeginListElementGUI;

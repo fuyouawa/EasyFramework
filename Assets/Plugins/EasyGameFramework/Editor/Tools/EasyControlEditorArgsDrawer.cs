@@ -1,11 +1,12 @@
 using Sirenix.OdinInspector.Editor;
 using System.Collections.Generic;
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using EasyFramework;
-using Scriban;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
@@ -41,6 +42,7 @@ namespace EasyGameFramework.Editor
         }
 
         private static Type[] _easyControlTypes;
+
         public static bool IsEasyControl(Type targetType)
         {
             if (_easyControlTypes == null)
@@ -63,6 +65,7 @@ namespace EasyGameFramework.Editor
                     return args;
                 }
             }
+
             return null;
         }
 
@@ -123,6 +126,7 @@ namespace EasyGameFramework.Editor
                 {
                     return false;
                 }
+
                 return args.DoViewModel;
             });
         }
@@ -522,41 +526,56 @@ namespace EasyGameFramework.Editor
 
         private void BuildCs(string path)
         {
-            if (!File.Exists(path))
+            if (File.Exists(path)) return;
+
+            var data = new
             {
-                var data = new
+                Usings = new List<string>
                 {
-                    Usings = new List<string>
-                    {
-                        "System",
-                        "System.Collections.Generic",
-                        _args.ViewModel.BaseClass.Type.Namespace
-                    },
-                    Namespace = _args.ViewModel.Namespace,
-                    ClassName = _args.ViewModel.ClassName,
-                    BaseClass = _args.ViewModel.BaseClass.Type.Name
-                };
+                    "System",
+                    "System.Collections.Generic",
+                    "UnityEngine",
+                    _args.ViewModel.BaseClass.Type.Namespace
+                }.Distinct(),
+                ClassName = _args.ViewModel.ClassName,
+                Namespace = _args.ViewModel.Namespace,
+                BaseClassName = _args.ViewModel.BaseClass.Type.Name
+            };
 
-                var parsedTemplate = Template.Parse(_args.ViewModel.Namespace.IsNotNullOrWhiteSpace()
-                    ? CodeGenerator
-                    : CodeGenerator2);
+            var compileUnit = new CodeCompileUnit();
 
-                if (parsedTemplate.HasErrors)
-                {
-                    foreach (var error in parsedTemplate.Messages)
-                    {
-                        Debug.Log($"Error: {error.Message}");
-                    }
+            var codeNamespace = new CodeNamespace(data.Namespace);
+            compileUnit.Namespaces.Add(codeNamespace);
 
-                    return;
-                }
-
-                var result = parsedTemplate.Render(data);
-
-                File.WriteAllText(path, result);
+            foreach (var u in data.Usings)
+            {
+                codeNamespace.Imports.Add(new CodeNamespaceImport(u));
             }
-        }
 
+            var codeClass = new CodeTypeDeclaration(data.ClassName)
+            {
+                IsPartial = true,
+                TypeAttributes = TypeAttributes.Public
+            };
+
+            codeClass.BaseTypes.Add(data.BaseClassName);
+
+            codeNamespace.Types.Add(codeClass);
+
+            using var writer = new StringWriter();
+            var provider = CodeDomProvider.CreateProvider("CSharp");
+            var options = new CodeGeneratorOptions
+            {
+                BracingStyle = "C",
+                IndentString = "    "
+            };
+
+            provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
+
+            var result = writer.ToString();
+            result = result[result.IndexOf("using System;", StringComparison.Ordinal)..];
+            File.WriteAllText(path, result);
+        }
 
         private void BuildCsDesigner(string path)
         {
@@ -580,68 +599,123 @@ namespace EasyGameFramework.Editor
                         Type = args.Bounder.TypeToBind.Type.Name,
                         Name = args.Bounder.GetName(),
                         OriginName = args.Bounder.Name,
-                        Comment = GetBounderComment(args),
-                        Access = args.Bounder.Access.ToString(),
+                        CommentSplits = GetBounderCommentSplits(args),
+                        Access = args.Bounder.Access,
                     };
                 })
             };
 
-            var parsedTemplate = Template.Parse(_args.ViewModel.Namespace.IsNotNullOrWhiteSpace()
-                ? DesignerCodeGenerator
-                : DesignerCodeGenerator2);
+            var compileUnit = new CodeCompileUnit();
 
-            if (parsedTemplate.HasErrors)
+            var codeNamespace = new CodeNamespace(data.Namespace);
+            compileUnit.Namespaces.Add(codeNamespace);
+
+            foreach (var u in data.Usings)
             {
-                foreach (var error in parsedTemplate.Messages)
-                {
-                    Debug.Log($"Error: {error.Message}");
-                }
-
-                return;
+                codeNamespace.Imports.Add(new CodeNamespaceImport(u));
             }
 
-            var result = parsedTemplate.Render(data);
+            var codeClass = new CodeTypeDeclaration(data.ClassName)
+            {
+                IsPartial = true,
+                TypeAttributes = TypeAttributes.Public
+            };
 
+            foreach (var child in data.Children)
+            {
+                var field = new CodeMemberField
+                {
+                    Name = child.Name,
+                    Type = new CodeTypeReference(child.Type),
+                    Attributes = child.Access == EasyControlBindAccess.Public
+                        ? MemberAttributes.Public
+                        : MemberAttributes.Private
+                };
+
+                if (child.Access == EasyControlBindAccess.PrivateWithSerializeFieldAttribute)
+                {
+                    field.CustomAttributes.Add(new CodeAttributeDeclaration("SerializeField"));
+                }
+
+                field.CustomAttributes.Add(new CodeAttributeDeclaration(
+                    "EasyBounderControl",
+                    new CodeAttributeArgument(new CodePrimitiveExpression(child.OriginName))
+                ));
+
+                if (child.CommentSplits.IsNotNullOrEmpty())
+                {
+                    foreach (var split in child.CommentSplits)
+                    {
+                        field.Comments.Add(new CodeCommentStatement(split));
+                    }
+                }
+                codeClass.Members.Add(field);
+            }
+
+            if (data.Namespace.IsNotNullOrWhiteSpace())
+            {
+                codeClass.Members.Add(new CodeSnippetTypeMember(@"
+#if UNITY_EDITOR
+        /// <summary>
+        /// <para>EasyControl的编辑器参数</para>
+        /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
+        /// </summary>
+        [SerializeField()]
+        private EasyControlEditorArgs _easyControlEditorArgs;
+#endif"));
+            }
+            else
+            {
+                codeClass.Members.Add(new CodeSnippetTypeMember(@"
+#if UNITY_EDITOR
+    /// <summary>
+    /// <para>EasyControl的编辑器参数</para>
+    /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
+    /// </summary>
+    [SerializeField()]
+    private EasyControlEditorArgs _easyControlEditorArgs;
+#endif"));
+            }
+
+            // Add class to namespace
+            codeNamespace.Types.Add(codeClass);
+
+            using var writer = new StringWriter();
+            var provider = CodeDomProvider.CreateProvider("CSharp");
+            var options = new CodeGeneratorOptions
+            {
+                BracingStyle = "C",
+                IndentString = "    "
+            };
+
+            provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
+
+            var result = writer.ToString();
             File.WriteAllText(path, result);
+        }
 
-            string GetBounderComment(EasyControlEditorArgs args)
+        private List<string> GetBounderCommentSplits(EasyControlEditorArgs args)
+        {
+            if (args.Bounder.Comment.IsNullOrWhiteSpace())
             {
-                if (args.Bounder.Comment.IsNullOrWhiteSpace())
-                {
-                    return string.Empty;
-                }
-
-                var comment = args.Bounder.Comment.Replace("\r\n", "\n");
-                var commentSplits = comment.Split('\n').ToList();
-
-                if (args.Bounder.AutoAddCommentPara)
-                {
-                    for (int i = 0; i < commentSplits.Count; i++)
-                    {
-                        commentSplits[i] = "<para>" + commentSplits[i] + "</para>";
-                    }
-                }
-
-                commentSplits.Insert(0, "<summary>");
-                commentSplits.Add("</summary>");
-
-                if (_args.ViewModel.Namespace.IsNotNullOrWhiteSpace())
-                {
-                    for (int i = 0; i < commentSplits.Count; i++)
-                    {
-                        commentSplits[i] = "\t\t/// " + commentSplits[i];
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < commentSplits.Count; i++)
-                    {
-                        commentSplits[i] = "\t/// " + commentSplits[i];
-                    }
-                }
-
-                return string.Join("\r\n", commentSplits);
+                return null;
             }
+
+            var comment = args.Bounder.Comment.Replace("\r\n", "\n");
+            var commentSplits = comment.Split('\n').ToList();
+
+            if (args.Bounder.AutoAddCommentPara)
+            {
+                for (int i = 0; i < commentSplits.Count; i++)
+                {
+                    commentSplits[i] = "<para>" + commentSplits[i] + "</para>";
+                }
+            }
+
+            commentSplits.Insert(0, "<summary>");
+            commentSplits.Add("</summary>");
+
+            return commentSplits;
         }
 
         private void Bind()
