@@ -139,7 +139,7 @@ namespace EasyGameFramework.Editor
             }
 
             _args.Expand = EasyEditorGUI.FoldoutGroup(
-                new EasyEditorGUI.FoldoutGroupConfig(this, "EasyControl设置", _args.Expand)
+                new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), "EasyControl设置", _args.Expand)
                 {
                     OnContentGUI = rect =>
                     {
@@ -160,7 +160,7 @@ namespace EasyGameFramework.Editor
                                 _args.ViewModel.IsInitialized = true;
                             }
 
-                            EasyEditorGUI.BoxGroup(new EasyEditorGUI.BoxGroupConfig("视图模型配置")
+                            EasyEditorGUI.BoxGroup(new BoxGroupConfig("视图模型配置")
                             {
                                 OnContentGUI = headerRect => OnViewModelContentGUI(headerRect, out needExitGui)
                             });
@@ -192,7 +192,7 @@ namespace EasyGameFramework.Editor
                                 _args.Bounder.IsInitialized = true;
                             }
 
-                            EasyEditorGUI.BoxGroup(new EasyEditorGUI.BoxGroupConfig("绑定配置")
+                            EasyEditorGUI.BoxGroup(new BoxGroupConfig("绑定配置")
                             {
                                 OnContentGUI = OnBounderContentGUI
                             });
@@ -240,7 +240,7 @@ namespace EasyGameFramework.Editor
                 ? "<None>"
                 : _args.ViewModel.BaseClass.Type.FullName;
             EasyEditorGUI.DrawSelectorDropdown(
-                new EasyEditorGUI.SelectorDropdownConfig<Type>("父级", lbl, BaseTypes,
+                new SelectorDropdownConfig<Type>("父级", lbl, BaseTypes,
                     t => _args.ViewModel.BaseClass.Type = t)
                 {
                     MenuItemNameGetter = t => t.FullName
@@ -303,7 +303,7 @@ namespace EasyGameFramework.Editor
                 : _args.Bounder.TypeToBind.Type.FullName;
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new EasyEditorGUI.SelectorDropdownConfig<Type>("要绑定的组件", btnLabel,
+                new SelectorDropdownConfig<Type>("要绑定的组件", btnLabel,
                     bindableTypes,
                     t => _args.Bounder.TypeToBind.Type = t)
                 {
@@ -320,7 +320,7 @@ namespace EasyGameFramework.Editor
             }
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new EasyEditorGUI.SelectorDropdownConfig<Transform>("父级", btnLabel,
+                new SelectorDropdownConfig<Transform>("父级", btnLabel,
                     _parents,
                     c => _args.Bounder.Parent = c)
                 {

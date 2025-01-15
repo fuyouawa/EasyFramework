@@ -7,7 +7,7 @@ namespace EasyGameFramework.Editor
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            var config = new EasyEditorGUI.FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), GetLabel(label),
+            var config = new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), GetLabel(label),
                 Property.State.Expanded)
             {
                 OnTitleBarGUI = OnTitleBarGUI,

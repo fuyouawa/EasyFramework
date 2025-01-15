@@ -30,7 +30,7 @@ namespace EasyGameFramework.Editor
 
         [Flags]
         public enum ViewModes
-        {
+        { 
             Correct = 1,
             Incorrect = 1 << 2,
             All = Correct | Incorrect,
@@ -679,7 +679,7 @@ namespace EasyGameFramework.Editor
             public PrefabTreeNode Parent { get; private set; }
             public GameObject Target { get; private set; }
             public List<PrefabTreeNode> Children { get; } = new();
-            public EasyEditorGUI.TreeNodeState State { get; } = new();
+            public TreeNodeState State { get; } = new();
 
             public PrefabTreeNode(PrefabItemBase owner, GameObject prefab, string targetName,
                 PrefabTreeNode parent = null)
@@ -781,14 +781,14 @@ namespace EasyGameFramework.Editor
                 return node.Children;
             }
 
-            public override EasyEditorGUI.TreeNodeState GetNodeState(PrefabTreeNode node)
+            public override TreeNodeState GetNodeState(PrefabTreeNode node)
             {
                 node.State.Expandable = true;
                 return node.State;
             }
 
             protected override void OnNodeCoveredTitleBarGUI(PrefabTreeNode node, Rect headerRect,
-                EasyEditorGUI.TreeNodeInfo info)
+                TreeNodeInfo info)
             {
                 var iconWidth = EditorGUIUtility.singleLineHeight;
                 if (node.IsTextNode() && node.HasIncorrectRecursion())
@@ -807,7 +807,7 @@ namespace EasyGameFramework.Editor
             }
 
             protected override void OnBeforeChildrenContentGUI(PrefabTreeNode node, Rect headerRect,
-                EasyEditorGUI.TreeNodeInfo info)
+                TreeNodeInfo info)
             {
                 bool hasIncorrect = false;
                 if (node.IsTextNode())

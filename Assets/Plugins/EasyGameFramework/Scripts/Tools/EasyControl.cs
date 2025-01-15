@@ -17,43 +17,13 @@ namespace EasyGameFramework
     public class EasyControlEditorArgs
     {
         [Serializable]
-        public class TypeStore
-        {
-            public string AssemblyQualifiedName;
-            private Type _typeCache;
-
-            public Type Type
-            {
-                get
-                {
-                    if (AssemblyQualifiedName.IsNullOrEmpty())
-                        return null;
-
-                    if (_typeCache == null)
-                    {
-                        _typeCache = Type.GetType(AssemblyQualifiedName, true);
-                    }
-
-                    Debug.Assert(_typeCache.AssemblyQualifiedName == AssemblyQualifiedName);
-
-                    return _typeCache;
-                }
-                set
-                {
-                    AssemblyQualifiedName = value.AssemblyQualifiedName;
-                    _typeCache = null;
-                }
-            }
-        }
-
-        [Serializable]
         public class ViewModelArgs
         {
             public string GenerateDir;
             public string Namespace;
             public bool ClassNameSameAsGameObjectName = true;
             public string ClassName;
-            public TypeStore BaseClass = new();
+            public SerializableType BaseClass;
             public bool IsInitialized;
             public string AssemblyQualifiedName;
 
@@ -105,7 +75,7 @@ namespace EasyGameFramework
         public class BounderArgs
         {
             public Transform Parent;
-            public TypeStore TypeToBind = new();
+            public SerializableType TypeToBind = new();
             public bool NameSameAsGameObjectName = true;
             public string Name;
             public bool AutoAddCommentPara = true;

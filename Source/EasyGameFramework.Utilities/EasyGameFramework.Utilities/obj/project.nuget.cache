@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "6U+iSw74yYM=",
+  "success": true,
+  "projectFilePath": "E:\\Code\\Unity\\EasyGameFramework\\Source\\EasyGameFramework.Utilities\\EasyGameFramework.Utilities\\EasyGameFramework.Utilities.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\29071\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\29071\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -120,7 +120,7 @@ namespace EasyGameFramework.Editor
         
         public class ResultTreeNode
         {
-            public EasyEditorGUI.TreeNodeState State { get; } = new();
+            public TreeNodeState State { get; } = new();
             public string Name { get; }
             public string FullName { get; }
             public Transform Target { get; }
@@ -175,12 +175,12 @@ namespace EasyGameFramework.Editor
                 return node.Children;
             }
 
-            public override EasyEditorGUI.TreeNodeState GetNodeState(ResultTreeNode node)
+            public override TreeNodeState GetNodeState(ResultTreeNode node)
             {
                 return node.State;
             }
 
-            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, Rect headerRect, EasyEditorGUI.TreeNodeInfo info)
+            protected override void OnNodeCoveredTitleBarGUI(ResultTreeNode node, Rect headerRect, TreeNodeInfo info)
             {
                 if (node.IsSearched)
                 {

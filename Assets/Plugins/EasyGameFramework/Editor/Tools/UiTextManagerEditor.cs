@@ -22,7 +22,7 @@ namespace EasyGameFramework.Editor
             {
                 var fontAssetPreset = mgr.GetFontAssetPreset();
                 EasyEditorGUI.FoldoutGroup(
-                    new EasyEditorGUI.FoldoutGroupConfig(this, $"字体资产预设 - {mgr.FontAssetPresetId}")
+                    new FoldoutGroupConfig(this, $"字体资产预设 - {mgr.FontAssetPresetId}")
                     {
                         Expandable = false,
                         OnContentGUI = rect =>
@@ -45,7 +45,7 @@ namespace EasyGameFramework.Editor
             {
                 var textPropertiesPreset = mgr.GetTextPropertiesPreset();
                 EasyEditorGUI.FoldoutGroup(
-                    new EasyEditorGUI.FoldoutGroupConfig(this, $"文本属性预设 - {mgr.TextPropertiesPresetId}")
+                    new FoldoutGroupConfig(this, $"文本属性预设 - {mgr.TextPropertiesPresetId}")
                     {
                         Expandable = false,
                         OnContentGUI = rect =>

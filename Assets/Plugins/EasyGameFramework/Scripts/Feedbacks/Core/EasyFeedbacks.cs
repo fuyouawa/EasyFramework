@@ -334,11 +334,10 @@ namespace EasyGameFramework
                 FeedbackList.Add(inst);
             }
 
-            var config = new EasyEditorGUI.PopupSelectorConfig<Type>(s_allFeedbackTypes, OnConfirm)
+            EasyEditorGUI.ShowSelectorInPopup(new PopupSelectorConfig<Type>(s_allFeedbackTypes, OnConfirm)
             {
                 MenuItemNameGetter = t => t.GetCustomAttribute<AddEasyFeedbackMenuAttribute>().Path
-            };
-            EasyEditorGUI.ShowSelectorInPopup(config);
+            });
         }
 #endif
     }

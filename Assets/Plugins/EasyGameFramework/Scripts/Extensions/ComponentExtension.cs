@@ -20,14 +20,14 @@ namespace EasyGameFramework
             {
                 return _allScriptsCache.First(s => s.GetClass() == component.GetType());
             }
-            catch (InvalidOperationException)
+            catch (Exception)
             {
                 try
                 {
                     _allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
                     return _allScriptsCache.First(s => s.GetClass() == component.GetType());
                 }
-                catch (InvalidOperationException)
+                catch (Exception)
                 {
                     return null;
                 }
