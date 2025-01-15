@@ -382,13 +382,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -574,13 +574,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -684,13 +684,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -845,15 +845,14 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: TestViewModel
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _assemblyQualifiedName: 
       IsInitialized: 1
       AssemblyQualifiedName: TestViewModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -1172,13 +1171,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -1241,13 +1240,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -1424,13 +1423,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -1595,14 +1594,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 686683925}
       TypeToBind:
-        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: GameObject2
       AutoAddCommentPara: 1
@@ -1887,14 +1885,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: OOOO
       BaseClass:
-        AssemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _assemblyQualifiedName: 
       IsInitialized: 1
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -1935,9 +1932,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 1903165439}
-    - {fileID: 902553709}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -1949,148 +1944,7 @@ MonoBehaviour:
         Assembly-CSharp-firstpass]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
       Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: TargetAudioSource
-      Entry: 6
-      Data: 
-    - Name: Mode
-      Entry: 3
-      Data: 0
-    - Name: RandomSfx
-      Entry: 7
-      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: MinVolume
-      Entry: 4
-      Data: 1
-    - Name: MaxVolume
-      Entry: 4
-      Data: 1
-    - Name: MinPitch
-      Entry: 4
-      Data: 1
-    - Name: MaxPitch
-      Entry: 4
-      Data: 1
-    - Name: SfxAudioMixerGroup
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 3|EasyGameFramework.EF_GameObjectInvokeMethod, Assembly-CSharp-firstpass
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: Picker
-      Entry: 7
-      Data: 4|EasyGameFramework.MethodPicker, Assembly-CSharp-firstpass
-    - Name: _targetObject
-      Entry: 10
-      Data: 0
-    - Name: _targetComponentName
-      Entry: 1
-      Data: Transform
-    - Name: _targetMemberName
-      Entry: 1
-      Data: SetParent (Transform p)
-    - Name: _parameters
-      Entry: 7
-      Data: 5|EasyGameFramework.ReadOnlyVariantList, Assembly-CSharp-firstpass
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 6|EasyGameFramework.Variant, Assembly-CSharp-firstpass
-    - Name: _integralValue
-      Entry: 3
-      Data: 0
-    - Name: _floatingPointValue
-      Entry: 4
-      Data: 0
-    - Name: _booleanValue
-      Entry: 5
-      Data: false
-    - Name: _stringValue
-      Entry: 6
-      Data: 
-    - Name: _unityObjectValue
-      Entry: 10
-      Data: 1
-    - Name: _type
-      Entry: 3
-      Data: 5
-    - Name: _name
-      Entry: 1
-      Data: p
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -2142,13 +1996,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -2253,13 +2107,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: 
       AutoAddCommentPara: 1
@@ -2395,14 +2249,13 @@ MonoBehaviour:
       ClassNameSameAsGameObjectName: 1
       ClassName: 
       BaseClass:
-        AssemblyQualifiedName: 
+        _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 686683925}
       TypeToBind:
-        AssemblyQualifiedName: EasyGameFramework.EasyControl, Assembly-CSharp-firstpass,
-          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+        _assemblyQualifiedName: 
       NameSameAsGameObjectName: 1
       Name: GameObject
       AutoAddCommentPara: 1

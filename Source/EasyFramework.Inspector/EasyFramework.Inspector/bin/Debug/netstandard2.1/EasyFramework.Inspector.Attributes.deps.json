@@ -1,0 +1,54 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "EasyFramework.Inspector.Attributes/1.0.0": {
+        "dependencies": {
+          "Sirenix.OdinInspector.Attributes": "1.0.0.0",
+          "UnityEngine.CoreModule": "0.0.0.0"
+        },
+        "runtime": {
+          "EasyFramework.Inspector.Attributes.dll": {}
+        }
+      },
+      "Sirenix.OdinInspector.Attributes/1.0.0.0": {
+        "runtime": {
+          "Sirenix.OdinInspector.Attributes.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "UnityEngine.CoreModule/0.0.0.0": {
+        "runtime": {
+          "UnityEngine.CoreModule.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "EasyFramework.Inspector.Attributes/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Sirenix.OdinInspector.Attributes/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "UnityEngine.CoreModule/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

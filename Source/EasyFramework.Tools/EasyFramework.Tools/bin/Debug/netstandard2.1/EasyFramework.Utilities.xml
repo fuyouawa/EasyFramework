@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyFramework.Utilities</name>
+    </assembly>
+    <members>
+        <member name="F:EasyGameFramework.BigTitleCNAttribute.Title">
+            <summary>
+            The title displayed above the property in the inspector.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleCNAttribute.Subtitle">
+            <summary>
+            Optional subtitle.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleCNAttribute.Bold">
+            <summary>
+            If <c>true</c> the title will be displayed with a bold font.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleCNAttribute.HorizontalLine">
+            <summary>
+            Gets a value indicating whether or not to draw a horizontal line below the title.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleCNAttribute.TitleAlignment">
+            <summary>
+            Title alignment.
+            </summary>
+        </member>
+        <member name="M:EasyGameFramework.BigTitleCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a title above any property in the inspector.
+            </summary>
+            <param name="title">The title displayed above the property in the inspector.</param>
+            <param name="subtitle">Optional subtitle</param>
+            <param name="titleAlignment">Title alignment</param>
+            <param name="horizontalLine">Horizontal line</param>
+            <param name="bold">If <c>true</c> the title will be drawn with a bold font.</param>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleGroupCNAttribute.Subtitle">
+            <summary>
+            Optional subtitle.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleGroupCNAttribute.Alignment">
+            <summary>
+            Title alignment.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleGroupCNAttribute.HorizontalLine">
+            <summary>
+            Gets a value indicating whether or not to draw a horizontal line below the title.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleGroupCNAttribute.BoldTitle">
+            <summary>
+            If <c>true</c> the title will be displayed with a bold font.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.BigTitleGroupCNAttribute.Indent">
+            <summary>
+            Gets a value indicating whether or not to indent all group members.
+            </summary>
+        </member>
+        <member name="M:EasyGameFramework.BigTitleGroupCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean,System.Boolean,System.Single)">
+            <summary>
+            Groups properties vertically together with a title, an optional subtitle, and an optional horizontal line. 
+            </summary>
+            <param name="title">The title-</param>
+            <param name="subtitle">Optional subtitle.</param>
+            <param name="alignment">The text alignment.</param>
+            <param name="horizontalLine">Horizontal line.</param>
+            <param name="boldTitle">Bold text.</param>
+            <param name="indent">Whether or not to indent all group members.</param>
+            <param name="order">The group order.</param>
+        </member>
+        <member name="M:EasyGameFramework.BigTitleGroupCNAttribute.CombineValuesWith(Sirenix.OdinInspector.PropertyGroupAttribute)">
+            <summary>
+            Combines TitleGroup attributes.
+            </summary>
+            <param name="other">The other group attribute to combine with.</param>
+        </member>
+        <member name="T:EasyGameFramework.InfoBoxCNAttribute">
+            <summary>
+            扩展自Sirenix.OdinInspector.InfoBoxAttribute
+            优化中文字体的显示
+            使用方法和Sirenix.OdinInspector.InfoBoxAttribute一样
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.InfoBoxCNAttribute.Message">
+            <summary>
+            The message to display in the info box.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.InfoBoxCNAttribute.InfoMessageType">
+            <summary>
+            The type of the message box.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.InfoBoxCNAttribute.VisibleIf">
+            <summary>
+            Optional member field, property or function to show and hide the info box.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.InfoBoxCNAttribute.GUIAlwaysEnabled">
+            <summary>
+            When <c>true</c> the InfoBox will ignore the GUI.enable flag and always draw as enabled.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.InfoBoxCNAttribute.IconColor">
+            <summary>Supports a variety of color formats, including named colors (e.g. "red", "orange", "green", "blue"), hex codes (e.g. "#FF0000" and "#FF0000FF"), and RGBA (e.g. "RGBA(1,1,1,1)") or RGB (e.g. "RGB(1,1,1)"), including Odin attribute expressions (e.g "@this.MyColor"). Here are the available named colors: black, blue, clear, cyan, gray, green, grey, magenta, orange, purple, red, transparent, transparentBlack, transparentWhite, white, yellow, lightblue, lightcyan, lightgray, lightgreen, lightgrey, lightmagenta, lightorange, lightpurple, lightred, lightyellow, darkblue, darkcyan, darkgray, darkgreen, darkgrey, darkmagenta, darkorange, darkpurple, darkred, darkyellow.</summary>
+        </member>
+        <member name="P:EasyGameFramework.InfoBoxCNAttribute.Icon">
+            <summary>
+            The icon to be displayed next to the message.
+            </summary>
+        </member>
+        <member name="M:EasyGameFramework.InfoBoxCNAttribute.#ctor(System.String,Sirenix.OdinInspector.InfoMessageType,System.String)">
+            <summary>
+            Displays an info box above the property.
+            </summary>
+            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
+            <param name="infoMessageType">The type of the message box.</param>
+            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
+        </member>
+        <member name="M:EasyGameFramework.InfoBoxCNAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Displays an info box above the property.
+            </summary>
+            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
+            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
+        </member>
+        <member name="M:EasyGameFramework.InfoBoxCNAttribute.#ctor(System.String,Sirenix.OdinInspector.SdfIconType,System.String)">
+            <summary>
+            Displays an info box above the property.
+            </summary>
+            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
+            <param name="icon">The icon to be displayed next to the message.</param>
+            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
+        </member>
+        <member name="F:EasyGameFramework.TitleCNAttribute.Title">
+            <summary>
+            The title displayed above the property in the inspector.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleCNAttribute.Subtitle">
+            <summary>
+            Optional subtitle.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleCNAttribute.Bold">
+            <summary>
+            If <c>true</c> the title will be displayed with a bold font.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleCNAttribute.HorizontalLine">
+            <summary>
+            Gets a value indicating whether or not to draw a horizontal line below the title.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleCNAttribute.TitleAlignment">
+            <summary>
+            Title alignment.
+            </summary>
+        </member>
+        <member name="M:EasyGameFramework.TitleCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a title above any property in the inspector.
+            </summary>
+            <param name="title">The title displayed above the property in the inspector.</param>
+            <param name="subtitle">Optional subtitle</param>
+            <param name="titleAlignment">Title alignment</param>
+            <param name="horizontalLine">Horizontal line</param>
+            <param name="bold">If <c>true</c> the title will be drawn with a bold font.</param>
+        </member>
+        <member name="F:EasyGameFramework.TitleGroupCNAttribute.Subtitle">
+            <summary>
+            Optional subtitle.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleGroupCNAttribute.Alignment">
+            <summary>
+            Title alignment.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleGroupCNAttribute.HorizontalLine">
+            <summary>
+            Gets a value indicating whether or not to draw a horizontal line below the title.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleGroupCNAttribute.BoldTitle">
+            <summary>
+            If <c>true</c> the title will be displayed with a bold font.
+            </summary>
+        </member>
+        <member name="F:EasyGameFramework.TitleGroupCNAttribute.Indent">
+            <summary>
+            Gets a value indicating whether or not to indent all group members.
+            </summary>
+        </member>
+        <member name="M:EasyGameFramework.TitleGroupCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean,System.Boolean,System.Single)">
+            <summary>
+            Groups properties vertically together with a title, an optional subtitle, and an optional horizontal line. 
+            </summary>
+            <param name="title">The title-</param>
+            <param name="subtitle">Optional subtitle.</param>
+            <param name="alignment">The text alignment.</param>
+            <param name="horizontalLine">Horizontal line.</param>
+            <param name="boldTitle">Bold text.</param>
+            <param name="indent">Whether or not to indent all group members.</param>
+            <param name="order">The group order.</param>
+        </member>
+        <member name="M:EasyGameFramework.TitleGroupCNAttribute.CombineValuesWith(Sirenix.OdinInspector.PropertyGroupAttribute)">
+            <summary>
+            Combines TitleGroup attributes.
+            </summary>
+            <param name="other">The other group attribute to combine with.</param>
+        </member>
+        <member name="M:EasyGameFramework.AnimationCurveExtension.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single)">
+            <summary>
+            <para>将给定的time从[0-maxTime]映射到[0-1]</para>
+            <para>然后传给AnimationCurve.Evaluate</para>
+            </summary>
+            <param name="curve"></param>
+            <param name="time"></param>
+            <param name="maxTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyGameFramework.AnimationCurveExtension.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            <para>将给定的time从[0-maxTime]映射到[0-1]</para>
+            <para>然后传给AnimationCurve.Evaluate</para>
+            <para>之后将结果从[0-1]映射到[minValue-maxValue]</para>
+            <para>注意：AnimationCurve.Evaluate的结果必须在[0-1]区间</para>
+            </summary>
+            <param name="curve"></param>
+            <param name="time"></param>
+            <param name="maxTime"></param>
+            <param name="minValue"></param>
+            <param name="maxValue"></param>
+            <returns>[minValue-maxValue]区间的数值</returns>
+        </member>
+        <member name="M:EasyGameFramework.EasyEventDispatcherExtension.RegisterEasyEventSubscriberInUnityThread``1(``0,System.Boolean,EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            <para>注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）</para>
+            <para>确保会在Unity线程触发</para>
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="includeBaseClass">包含基类的事件处理器</param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyGameFramework.EasyEventDispatcherExtension.RegisterEasyEventHandlerInUnityThread``2(``0,EasyFramework.EasyEventHandlerDelegate{``1},EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            <para>注册事件处理器</para>
+            <para>确保会在Unity线程触发</para>
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="target"></param>
+            <param name="handler"></param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        </member>
+        <member name="M:EasyGameFramework.GradientExtension.EvaluateWithRemap(UnityEngine.Gradient,System.Single,System.Single)">
+            <summary>
+            <para>将给定的time从[0-maxTime]映射到[0-1]</para>
+            <para>然后传给Gradient.Evaluate</para>
+            </summary>
+            <param name="gradient"></param>
+            <param name="time"></param>
+            <param name="maxTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyGameFramework.MathUtility.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            将一个在[A, B]区间的x, 映射到[C, D]区间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EasyGameFramework.MathUtility.GetVerticesOfRotatedRectangle(UnityEngine.Rect,System.Single)">
+            <summary>
+            获取旋转后矩形的四个顶点
+            </summary>
+            <returns>[左下角, 左上角, 右上角, 右下角]</returns>
+        </member>
+        <member name="M:EasyGameFramework.MathUtility.GetVerticesOfRotatedRectangle(UnityEngine.Vector2,UnityEngine.Vector2,System.Single)">
+            <summary>
+            获取旋转后矩形的四个顶点
+            </summary>
+            <returns>[左下角, 左上角, 右上角, 右下角]</returns>
+        </member>
+    </members>
+</doc>
