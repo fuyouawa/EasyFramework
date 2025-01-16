@@ -32,5 +32,24 @@ namespace EasyGameFramework
 
             return (Texture2D)_findTexture.Invoke(null, null);
         }
+        
+        private static Type _typeOfAddComponentWindow;
+
+        public static Type TypeOfAddComponentWindow
+        {
+            get
+            {
+                if (_typeOfAddComponentWindow == null)
+                {
+                    _typeOfAddComponentWindow = Type.GetType("UnityEditor.AddComponent.AddComponentWindow, UnityEditor");
+                }
+                return _typeOfAddComponentWindow;
+            }
+        }
+        
+        public static void ShowAddComponentWindow(Rect rect, GameObject[] gos)
+        {
+            TypeOfAddComponentWindow.InvokeMethod("Show", null, rect, gos);
+        }
     }
 }

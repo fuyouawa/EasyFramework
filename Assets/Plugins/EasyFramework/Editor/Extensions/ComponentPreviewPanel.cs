@@ -64,7 +64,7 @@ namespace EasyGameFramework.Editor
 
                 _listDrawer.OnAddDropdownCallback += buttonRect =>
                 {
-                    AddComponentWindowHelper.Show(
+                    EasyEditorHelper.ShowAddComponentWindow(
                         new Rect(Screen.width / 2f - 230f / 2f, buttonRect.y + BlockWidth, 230, 0),
                         _editor._targetItems.Select(i => i.Target).ToArray());
                 };

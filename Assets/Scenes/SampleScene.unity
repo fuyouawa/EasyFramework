@@ -385,17 +385,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &496268285
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,17 +569,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &667694654
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,17 +671,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &686683923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,17 +1150,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &990830402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1243,17 +1211,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1151300943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,17 +1386,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1486094127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1597,17 +1549,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 686683925}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 686683925}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: GameObject2
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 1
-      Access: 1
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: GameObject2, AutoAddCommentPara: 1, Comment: , IsInitialized: 1, Access: 1, AutoNamingNotations: 1}
 --- !u!1 &1640216909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,17 +1832,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 1
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1903165439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1983,7 +1919,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1903165439}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Script: {fileID: 254731335, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _easyControlEditorArgs:
@@ -1991,13 +1927,14 @@ MonoBehaviour:
     DoViewModel: 0
     DoBounder: 0
     ViewModel:
-      GenerateDir: 
+      GenerateDir: Scripts/Ui
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: 
+      ClassName: GameObject (4)
       BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
+        _assemblyQualifiedName: UnityEngine.MonoBehaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      IsInitialized: 1
       AssemblyQualifiedName: 
     Bounder:
       Parent: {fileID: 0}
@@ -2110,17 +2047,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &2116186562
 GameObject:
   m_ObjectHideFlags: 0
@@ -2252,17 +2181,9 @@ MonoBehaviour:
         _assemblyQualifiedName: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 686683925}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 686683925}, TypeToBind:
         _assemblyQualifiedName: 
-      NameSameAsGameObjectName: 1
-      Name: GameObject
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 1
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: GameObject, AutoAddCommentPara: 1, Comment: , IsInitialized: 1, Access: 0, AutoNamingNotations: 1}
 --- !u!1001 &1577381633994008878
 PrefabInstance:
   m_ObjectHideFlags: 0

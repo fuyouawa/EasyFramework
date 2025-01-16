@@ -9,15 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e52eee11fc491b489911dea1988dba5, type: 3}
+  m_Script: {fileID: 11500000, guid: 99a947ad559db374db33667089b0645e, type: 3}
   m_Name: UiTextPresetsManager
   m_EditorClassIdentifier: 
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -25,8 +23,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: FontAssetPresets
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[EasyGameFramework.FontAssetPreset,
-        Assembly-CSharp-firstpass]], mscorlib
+      Data: 0|EasyGameFramework.FontAssetPresetDictionary, Assembly-CSharp-firstpass
     - Name: comparer
       Entry: 7
       Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
@@ -36,28 +33,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 1
-      Data: test
-    - Name: $v
-      Entry: 7
-      Data: 2|EasyGameFramework.FontAssetPreset, Assembly-CSharp-firstpass
-    - Name: FontAsset
-      Entry: 10
       Data: 0
-    - Name: Material
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -66,8 +42,7 @@ MonoBehaviour:
       Data: 
     - Name: TextPropertiesPresets
       Entry: 7
-      Data: 3|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[EasyGameFramework.TextPropertiesPreset,
-        Assembly-CSharp-firstpass]], mscorlib
+      Data: 2|EasyGameFramework.TextPropertiesPresetDictionary, Assembly-CSharp-firstpass
     - Name: comparer
       Entry: 9
       Data: 1
@@ -80,5 +55,5 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  _defaultFontAssetPresetId: test
-  _defaultTextPropertiesPresetId: 
+  DefaultFontAssetPresetId: 
+  DefaultTextPropertiesPresetId: 
