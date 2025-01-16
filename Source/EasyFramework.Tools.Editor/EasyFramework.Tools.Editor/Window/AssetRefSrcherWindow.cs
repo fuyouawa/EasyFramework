@@ -21,7 +21,7 @@ namespace EasyGameFramework.Editor
                 if (_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<AssetRefSrcherWindow>());
-                    _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher Window");
+                    _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher");
                 }
 
                 Debug.Assert(_instance != null);
@@ -29,11 +29,11 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        [MenuItem("Tools/EasyGameFramework/AssetReferenceSearcher Window")]
+        [MenuItem("Tools/EasyGameFramework/Tools/AssetReferenceSearcher")]
         [UsedImplicitly]
         public static void ShowWindow()
         {
-            _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher Window");
+            _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher");
         }
 
         public enum Modes

@@ -90,7 +90,7 @@ namespace EasyGameFramework.Editor
         #region Editor
 
         private List<Transform> _parents;
-        private EasyControlSettings _settings => EasyGameFrameworkSettings.Instance.EasyControlSettings;
+        private EasyControlSettings _settings => EasyControlSettings.Instance;
         private Component _comp;
         private EasyControlEditorArgs _args;
         private bool _isBind;
@@ -350,8 +350,9 @@ namespace EasyGameFramework.Editor
                 }
             }
 
-            _args.Bounder.Access =
-                (EasyControlBindAccess)SirenixEditorFields.EnumDropdown("访问标识符", _args.Bounder.Access);
+            _args.Bounder.Access = EnumSelector<EasyControlBindAccess>.DrawEnumField(
+                new GUIContent("访问标识符"),
+                _args.Bounder.Access);
 
             _args.Bounder.AutoAddCommentPara = EditorGUILayout.Toggle(
                 "注释自动添加段落xml",

@@ -12,48 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a947ad559db374db33667089b0645e, type: 3}
   m_Name: UiTextPresetsManager
   m_EditorClassIdentifier: 
-  _serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: FontAssetPresets
-      Entry: 7
-      Data: 0|EasyGameFramework.FontAssetPresetDictionary, Assembly-CSharp-firstpass
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
-        mscorlib]], mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: TextPropertiesPresets
-      Entry: 7
-      Data: 2|EasyGameFramework.TextPropertiesPresetDictionary, Assembly-CSharp-firstpass
-    - Name: comparer
-      Entry: 9
-      Data: 1
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  DefaultFontAssetPresetId: 
-  DefaultTextPropertiesPresetId: 
+  _fontAssetPresets:
+  - Id: TODO
+    FontAsset: {fileID: 0}
+    Material: {fileID: 0}
+  - Id: TODO2
+    FontAsset: {fileID: 0}
+    Material: {fileID: 0}
+  _textPropertiesPresets: []
+  _defaultFontAssetPresetId: TODO2
+  _defaultTextPropertiesPresetId: 

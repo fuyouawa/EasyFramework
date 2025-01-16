@@ -9,7 +9,7 @@ namespace EasyGameFramework
 
         static AssetsPath()
         {
-            PluginsDir = "Plugins/EasyGameFramework";
+            PluginsDir = "Plugins/EasyFramework";
             EditorResDirectory = Path.Combine(PluginsDir, "Editor/Resources");
         }
     }

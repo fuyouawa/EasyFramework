@@ -51,7 +51,7 @@ namespace EasyGameFramework.Editor
                 if (_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
-                    _instance = GetWindow<UiTextManagerWindow>("UiTextManager Window");
+                    _instance = GetWindow<UiTextManagerWindow>("UiTextManager");
                 }
 
                 Debug.Assert(_instance != null);
@@ -59,11 +59,11 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        [MenuItem("Tools/EasyGameFramework/UiTextManager Window")]
+        [MenuItem("Tools/EasyGameFramework/Tools/UiTextManager")]
         public static void ShowWindow()
         {
             var isNew = HasOpenInstances<UiTextManagerWindow>();
-            var window = GetWindow<UiTextManagerWindow>("UiTextManager Window");
+            var window = GetWindow<UiTextManagerWindow>("UiTextManager");
             if (!isNew)
             {
                 if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))

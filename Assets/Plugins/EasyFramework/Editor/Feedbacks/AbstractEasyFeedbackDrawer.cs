@@ -1,10 +1,12 @@
 using System.Linq;
 using EasyFramework;
+using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
 namespace EasyGameFramework.Editor
 {
+    [DrawerPriority(0, 0, 2001)]
     public class AbstractEasyFeedbackDrawer : FoldoutValueDrawer<AbstractEasyFeedback>
     {
         private static readonly float IconWidth = EditorGUIUtility.singleLineHeight;

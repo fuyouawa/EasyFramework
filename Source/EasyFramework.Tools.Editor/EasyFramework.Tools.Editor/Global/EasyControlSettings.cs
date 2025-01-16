@@ -1,11 +1,10 @@
 using System;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 namespace EasyGameFramework.Editor
 {
-    [Serializable]
-    public class EasyControlSettings
+    [EditorResourcesAssetPath]
+    public class EasyControlSettings : ScriptableObjectSingleton<EasyControlSettings>
     {
         [Serializable]
         public class ViewModelDefaultSettings
@@ -34,12 +33,5 @@ namespace EasyGameFramework.Editor
         public ViewModelDefaultSettings ViewModelDefault = new ViewModelDefaultSettings();
         [HideLabel, BoxGroup("被绑定者-默认值设置")]
         public BounderDefaultSettings BounderDefault = new BounderDefaultSettings();
-    }
-    
-    [EditorResourcesAssetPath]
-    public class EasyGameFrameworkSettings : ScriptableObjectSingleton<EasyGameFrameworkSettings>
-    {
-        [LabelText("EasyControl设置")]
-        public EasyControlSettings EasyControlSettings = new EasyControlSettings();
     }
 }
