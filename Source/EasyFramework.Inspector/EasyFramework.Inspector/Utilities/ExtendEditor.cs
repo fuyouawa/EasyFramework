@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -111,6 +112,16 @@ namespace EasyFramework.Inspector
                     throw new Exception("T is different from the type in the CustomEditor attribute");
                 return t;
             }
+        }
+
+        public T[] GetTargets()
+        {
+            return targets.Select(t =>
+            {
+                if (!(t is T t2))
+                    throw new Exception("T is different from the type in the CustomEditor attribute");
+                return t2;
+            }).ToArray();
         }
     }
 }
