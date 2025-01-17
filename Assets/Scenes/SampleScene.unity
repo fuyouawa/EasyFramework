@@ -159,7 +159,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &285958563
 Transform:
   m_ObjectHideFlags: 0
@@ -259,7 +262,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!114 &472785372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -422,8 +428,9 @@ GameObject:
   m_Component:
   - component: {fileID: 567495755}
   - component: {fileID: 567495756}
+  - component: {fileID: 567495757}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GameObject113
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,6 +479,42 @@ MonoBehaviour:
     Bounder: {Parent: {fileID: 0}, TypeToBind:
         _assemblyQualifiedName: 
 , NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
+--- !u!114 &567495757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567495754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2015963308, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlEditorArgs:
+    Expand: 1
+    DoViewModel: 0
+    DoBounder: 1
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject
+      BaseClass:
+        _serializedData: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 686683925}
+      TypeToBind:
+        _serializedData: EasyFramework.Tools.EasyControl, EasyFramework.Tools
+      NameSameAsGameObjectName: 1
+      Name: GameObject113
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 1
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1 &667694654
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +553,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &667694656
 Transform:
   m_ObjectHideFlags: 0
@@ -563,7 +609,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 686683925}
-  - component: {fileID: 686683924}
+  - component: {fileID: 686683927}
   - component: {fileID: 686683926}
   m_Layer: 0
   m_Name: TestViewModel
@@ -572,27 +618,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &686683924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686683923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce19b0dafeb3d714e9a09cffcb18a239, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  InitializationMode: 0
-  AutoInitialization: 1
-  AutoPlayOnStart: 0
-  AutoPlayOnEnable: 0
-  CanPlay: 1
-  CanPlayWhileAlreadyPlaying: 0
-  CanMultiPlay: 0
-  FeedbackList:
-    _serializedData: 022f000000000170000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b004500610073007900470061006d0065004600720061006d00650077006f0072006b002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200041007300730065006d0062006c0079002d004300530068006100720070002d006600690072007300740070006100730073005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
 --- !u!4 &686683925
 Transform:
   m_ObjectHideFlags: 0
@@ -623,27 +648,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Test: []
   Type:
-    _serializedData: UnityEditor.Android.ADB, UnityEditor.Android.Extensions
-  TestType:
-    _name: 
-  FF:
-    serializedCollection:
-    - Sirenix.OdinInspector.Editor.Examples.OnInspectorDisposeExamples+A, Sirenix.OdinInspector.Editor
-  GameObject: {fileID: 0}
-  _gameObject2: {fileID: 0}
+    _serializedData: 
+  GameObject: {fileID: 2122406323}
+  _gameObject2: {fileID: 1496675120}
+  GameObject113: {fileID: 567495757}
   _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 0
+    DoViewModel: 1
     DoBounder: 0
     ViewModel:
-      GenerateDir: 
+      GenerateDir: Scripts/Ui
       Namespace: 
       ClassNameSameAsGameObjectName: 1
-      ClassName: 
+      ClassName: TestViewModel
       BaseClass:
-        _serializedData: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
+        _serializedData: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+      IsInitialized: 1
+      AssemblyQualifiedName: TestViewModel, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
@@ -655,6 +677,27 @@ MonoBehaviour:
       IsInitialized: 0
       Access: 0
       AutoNamingNotations: 1
+--- !u!114 &686683927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686683923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1335754259, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializationMode: 0
+  AutoInitialization: 1
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 0
+  CanMultiPlay: 0
+  FeedbackList:
+    _serializedData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +735,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &720859278
 Transform:
   m_ObjectHideFlags: 0
@@ -761,7 +807,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!1 &897682392
 GameObject:
   m_ObjectHideFlags: 0
@@ -868,7 +917,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &902553711
 Transform:
   m_ObjectHideFlags: 0
@@ -1010,7 +1062,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &1151300945
 Transform:
   m_ObjectHideFlags: 0
@@ -1064,7 +1119,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &1241639929
 Transform:
   m_ObjectHideFlags: 0
@@ -1220,6 +1278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1496675118}
   - component: {fileID: 1496675119}
+  - component: {fileID: 1496675120}
   m_Layer: 0
   m_Name: GameObject2
   m_TagString: Untagged
@@ -1271,6 +1330,42 @@ MonoBehaviour:
     Bounder: {Parent: {fileID: 686683925}, TypeToBind:
         _assemblyQualifiedName: 
 , NameSameAsGameObjectName: 1, Name: GameObject2, AutoAddCommentPara: 1, Comment: , IsInitialized: 1, Access: 1, AutoNamingNotations: 1}
+--- !u!114 &1496675120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496675117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2015963308, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _easyControlEditorArgs:
+    Expand: 1
+    DoViewModel: 0
+    DoBounder: 1
+    ViewModel:
+      GenerateDir: Scripts/Ui
+      Namespace: 
+      ClassNameSameAsGameObjectName: 1
+      ClassName: GameObject2
+      BaseClass:
+        _serializedData: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+      IsInitialized: 1
+      AssemblyQualifiedName: 
+    Bounder:
+      Parent: {fileID: 686683925}
+      TypeToBind:
+        _serializedData: EasyFramework.Tools.EasyControl, EasyFramework.Tools
+      NameSameAsGameObjectName: 1
+      Name: GameObject2
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 1
+      Access: 1
+      AutoNamingNotations: 1
 --- !u!1 &1640216909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,7 +1419,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!1 &1737453323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1407,7 +1505,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &1874861992
 Transform:
   m_ObjectHideFlags: 0
@@ -1492,7 +1593,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!4 &1903165441
 Transform:
   m_ObjectHideFlags: 0
@@ -1534,17 +1638,9 @@ MonoBehaviour:
         _serializedData: 
       IsInitialized: 0
       AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
+    Bounder: {Parent: {fileID: 0}, TypeToBind:
         _serializedData: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
+, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1937517887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1599,7 +1695,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!114 &1937517890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1680,7 +1779,10 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 2e
+    _serializedData: .
+  <IsInitialized>k__BackingField: 0
+  <CoroutineHelper>k__BackingField: {fileID: 0}
+  <TimeSinceLastPlay>k__BackingField: 0
 --- !u!1 &2122406320
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,6 +1793,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2122406321}
   - component: {fileID: 2122406322}
+  - component: {fileID: 2122406323}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1723,7 +1826,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 2122406320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
+  m_Script: {fileID: 1335754259, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitializationMode: 0
+  AutoInitialization: 1
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 0
+  CanMultiPlay: 0
+  FeedbackList:
+    _serializedData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000013100000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e00450046005f0053006f0075006e0064002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c007300010000002d01050000004c006100620065006c002b010600000045006e00610062006c006500011f010f000000440065006c00610079004200650066006f007200650050006c0061007900000000002b010800000042006c006f0063006b0069006e006700002b010d00000052006500700065006100740046006f00720065007600650072000017010e00000041006d006f0075006e0074004f006600520065007000650061007400010000001f011600000049006e00740065007200760061006c004200650074007700650065006e005200650070006500610074007300000000002d0103000000530066007800010109000000520061006e0064006f006d005300660078002f02000000013000000055006e0069007400790045006e00670069006e0065002e0041007500640069006f0043006c00690070005b005d002c00200055006e0069007400790045006e00670069006e0065002e0041007500640069006f004d006f00640075006c0065000200000006000000000000000007051d010a00000050006c00610079004d006500740068006f006400000000000000000017010800000050006f006f006c00530069007a0065000a0000002b0117000000530074006f00700053006f0075006e0064004f006e0046006500650064006200610063006b00530074006f007000011f01090000004d0069006e0056006f006c0075006d0065000000803f1f01090000004d006100780056006f006c0075006d0065000000803f1f01080000004d0069006e00500069007400630068000000803f1f01080000004d0061007800500069007400630068000000803f2d011200000053006600780041007500640069006f004d006900780065007200470072006f00750070001701080000005000720069006f007200690074007900800000001f0109000000500061006e00530074006500720065006f00000000001f010c0000005300700061007400690061006c0042006c0065006e006400000000001f010c00000044006f00700070006c00650072004c006500760065006c000000803f170106000000530070007200650061006400000000001d010b00000052006f006c006c006f00660066004d006f006400650000000000000000001f010b0000004d0069006e00440069007300740061006e00630065000000803f1f010b0000004d0061007800440069007300740061006e00630065000000fa432b011500000055007300650043007500730074006f006d0052006f006c006c006f006600660043007500720076006500002d011200000043007500730074006f006d0052006f006c006c006f0066006600430075007200760065002b01140000005500730065005300700061007400690061006c0042006c0065006e00640043007500720076006500002d01110000005300700061007400690061006c0042006c0065006e006400430075007200760065002b01150000005500730065005200650076006500720062005a006f006e0065004d006900780043007500720076006500002d01120000005200650076006500720062005a006f006e0065004d0069007800430075007200760065002b010e00000055007300650053007000720065006100640043007500720076006500002d010b00000053007000720065006100640043007500720076006500050705
+--- !u!114 &2122406323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122406320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 2015963308, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _easyControlEditorArgs:
@@ -1731,17 +1855,25 @@ MonoBehaviour:
     DoViewModel: 0
     DoBounder: 1
     ViewModel:
-      GenerateDir: 
-      Namespace: 
+      GenerateDir: Plugins/EasyFramework/Assemblies
+      Namespace: EasyFramework.Tools
       ClassNameSameAsGameObjectName: 1
-      ClassName: 
+      ClassName: GameObject
       BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
+        _serializedData: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+      IsInitialized: 1
       AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 686683925}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: GameObject, AutoAddCommentPara: 1, Comment: , IsInitialized: 1, Access: 0, AutoNamingNotations: 1}
+    Bounder:
+      Parent: {fileID: 686683925}
+      TypeToBind:
+        _serializedData: EasyFramework.Tools.EasyControl, EasyFramework.Tools
+      NameSameAsGameObjectName: 1
+      Name: GameObject
+      AutoAddCommentPara: 1
+      Comment: 
+      IsInitialized: 1
+      Access: 0
+      AutoNamingNotations: 1
 --- !u!1001 &1577381633994008878
 PrefabInstance:
   m_ObjectHideFlags: 0

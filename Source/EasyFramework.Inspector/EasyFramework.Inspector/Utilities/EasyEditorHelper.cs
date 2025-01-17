@@ -8,41 +8,41 @@ namespace EasyFramework.Inspector
 {
     public static class EasyEditorHelper
     {
-        private static MethodInfo _forceRebuildInspectors;
+        private static MethodInfo s_forceRebuildInspectors;
         public static void ForceRebuildInspectors()
         {
-            if (_forceRebuildInspectors == null)
+            if (s_forceRebuildInspectors == null)
             {
-                _forceRebuildInspectors = typeof(EditorUtility).GetMethod("ForceRebuildInspectors",
+                s_forceRebuildInspectors = typeof(EditorUtility).GetMethod("ForceRebuildInspectors",
                     BindingFlags.NonPublic | BindingFlags.Static);
             }
 
-            _forceRebuildInspectors!.Invoke(null, null);
+            s_forceRebuildInspectors!.Invoke(null, null);
         }
 
-        private static MethodInfo _findTexture;
+        private static MethodInfo s_findTexture;
         public static Texture2D FindTexture(Type type)
         {
-            if (_findTexture == null)
+            if (s_findTexture == null)
             {
-                _findTexture = typeof(EditorGUIUtility).GetMethodEx("FindTexture",
+                s_findTexture = typeof(EditorGUIUtility).GetMethodEx("FindTexture",
                     BindingFlags.NonPublic | BindingFlags.Static, new[] { typeof(Type) });
             }
 
-            return (Texture2D)_findTexture.Invoke(null, null);
+            return (Texture2D)s_findTexture.Invoke(null, null);
         }
         
-        private static Type _typeOfAddComponentWindow;
+        private static Type s_typeOfAddComponentWindow;
 
         public static Type TypeOfAddComponentWindow
         {
             get
             {
-                if (_typeOfAddComponentWindow == null)
+                if (s_typeOfAddComponentWindow == null)
                 {
-                    _typeOfAddComponentWindow = Type.GetType("UnityEditor.AddComponent.AddComponentWindow, UnityEditor");
+                    s_typeOfAddComponentWindow = Type.GetType("UnityEditor.AddComponent.AddComponentWindow, UnityEditor");
                 }
-                return _typeOfAddComponentWindow;
+                return s_typeOfAddComponentWindow;
             }
         }
         

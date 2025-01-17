@@ -23,7 +23,7 @@ namespace EasyFramework.Tools
         public Color FontColor = Color.white;
     }
 
-    [ScriptableObjectSingletonAssetPath("Assets/Resources/Fonts")]
+    [ConfigAssetPath]
     public class UiTextPresetsManager : ScriptableObjectSingleton<UiTextPresetsManager>
     {
         [SerializeField] private List<FontAssetPreset> _fontAssetPresets = new List<FontAssetPreset>();

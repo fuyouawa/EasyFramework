@@ -44,20 +44,20 @@ namespace EasyFramework.Tools.Editor
             InProject
         }
 
-        private static UiTextManagerWindow _instance;
+        private static UiTextManagerWindow s_instance;
 
         public static UiTextManagerWindow Instance
         {
             get
             {
-                if (_instance == null)
+                if (s_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
-                    _instance = GetWindow<UiTextManagerWindow>("Ui Text Manager");
+                    s_instance = GetWindow<UiTextManagerWindow>("Ui Text Manager");
                 }
 
-                Debug.Assert(_instance != null);
-                return _instance;
+                Debug.Assert(s_instance != null);
+                return s_instance;
             }
         }
 
@@ -74,10 +74,10 @@ namespace EasyFramework.Tools.Editor
                 }
             }
 
-            _instance = window;
+            s_instance = window;
         }
 
-        private UiTextManagerSettings _settings => UiTextManagerSettings.Instance;
+        private static UiTextManagerSettings Settings => UiTextManagerSettings.Instance;
         private PrefabItemBase _prevSelectionItem;
 
         public void Rebuild()
@@ -85,17 +85,17 @@ namespace EasyFramework.Tools.Editor
             ForceMenuTreeRebuild();
         }
 
-        private static readonly string Group = "资产视图";
+        private const string Group = "资产视图";
 
         protected override OdinMenuTree BuildMenuTree()
         {
             var tree = new OdinMenuTree(false, OdinMenuStyle.TreeViewStyle)
             {
-                { "设置", _settings, SdfIconType.GearFill },
+                { "设置", Settings, SdfIconType.GearFill },
                 { Group, null }
             };
 
-            if (_settings.ManagerPosition == ManagerPositions.InProject)
+            if (Settings.ManagerPosition == ManagerPositions.InProject)
             {
                 LoadPrefabsInProject(tree);
             }
@@ -113,7 +113,7 @@ namespace EasyFramework.Tools.Editor
                         _prevSelectionItem?.ClearCache();
                         _prevSelectionItem = item;
                         item.Analyse();
-                        if (_settings.AutoOpenSelectionPrefab)
+                        if (Settings.AutoOpenSelectionPrefab)
                         {
                             item.OpenPrefab();
                         }
@@ -215,9 +215,9 @@ namespace EasyFramework.Tools.Editor
 
         private void LoadPrefabsInProject(OdinMenuTree tree)
         {
-            var assetsPath = $"Assets/{_settings.AssetsManagerPath}/";
+            var assetsPath = $"Assets/{Settings.AssetsManagerPath}/";
 
-            if (_settings.AssetsManagerPath.IsNotNullOrEmpty())
+            if (Settings.AssetsManagerPath.IsNotNullOrEmpty())
             {
                 var allPrefabs = AssetDatabase.GetAllAssetPaths()
                     .Where(p => p.StartsWith(assetsPath) &&
@@ -264,21 +264,21 @@ namespace EasyFramework.Tools.Editor
 
         private bool AssetItemFilter(PrefabItemBase item)
         {
-            if (_settings == null)
+            if (Settings == null)
                 return true;
-            if (_settings.ViewModes == 0)
+            if (Settings.ViewModes == 0)
                 return false;
-            if (_settings.ViewModes == ViewModes.All)
+            if (Settings.ViewModes == ViewModes.All)
                 return true;
 
             var warn = item.HasIncorrect();
 
-            if (warn && _settings.ViewModes.HasFlag(ViewModes.Incorrect))
+            if (warn && Settings.ViewModes.HasFlag(ViewModes.Incorrect))
             {
                 return true;
             }
 
-            if (!warn && _settings.ViewModes.HasFlag(ViewModes.Correct))
+            if (!warn && Settings.ViewModes.HasFlag(ViewModes.Correct))
             {
                 return true;
             }

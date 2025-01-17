@@ -23,10 +23,8 @@ namespace EasyGameFramework.Editor
             public static readonly GUIStyle Footer = "RL FooterButton";
         }
 
-        private static readonly float BlockWidth = EditorGUIUtility.singleLineHeight;
-        private static readonly string CopiedComponentIDPrefsKey = "Component Tool Panel Copied Component ID";
-
-        private static MonoScript[] _allScripts;
+        private static readonly float s_blockWidth = EditorGUIUtility.singleLineHeight;
+        private static readonly string s_copiedComponentIdPrefsKey = "Component Tool Panel Copied Component ID";
 
         private class TargetItem
         {
@@ -56,13 +54,14 @@ namespace EasyGameFramework.Editor
                 if (_initialized) return;
                 _initialized = true;
 
-                _listDrawer = new EasyReorderableList(new List<Component>(Components), EasyReorderableListThemes.SquareLike);
+                _listDrawer = new EasyReorderableList(new List<Component>(Components),
+                    EasyReorderableListThemes.SquareLike);
                 _foldout = true;
 
                 _listDrawer.OnAddDropdownCallback += buttonRect =>
                 {
                     EasyEditorHelper.ShowAddComponentWindow(
-                        new Rect(Screen.width / 2f - 230f / 2f, buttonRect.y + BlockWidth, 230, 0),
+                        new Rect(Screen.width / 2f - 230f / 2f, buttonRect.y + s_blockWidth, 230, 0),
                         _editor._targetItems.Select(i => i.Target).ToArray());
                 };
 
@@ -218,7 +217,8 @@ namespace EasyGameFramework.Editor
         {
             if (_targetItems.Count > 1)
             {
-                _expandTargets = EditorGUILayout.Foldout(_expandTargets, $"多个游戏对象的组件预览面板（数量：{_targetItems.Count}）", true);
+                _expandTargets =
+                    EditorGUILayout.Foldout(_expandTargets, $"多个游戏对象的组件预览面板（数量：{_targetItems.Count}）", true);
             }
 
             if (_targetItems.Count == 1 || _expandTargets)
@@ -238,11 +238,11 @@ namespace EasyGameFramework.Editor
             {
                 rect.x += 14;
                 var iconRect = new Rect(rect);
-                iconRect.width = iconRect.height = BlockWidth;
+                iconRect.width = iconRect.height = s_blockWidth;
 
                 EditorGUI.LabelField(iconRect, Icons.Warn);
-                
-                rect.x += (BlockWidth + 1) * 2;
+
+                rect.x += (s_blockWidth + 1) * 2;
                 rect.y -= 2;
                 //Name Handler
                 GUIStyle guiStyle = new GUIStyle(EditorStyles.boldLabel);
@@ -255,22 +255,22 @@ namespace EasyGameFramework.Editor
 
             var compIconRect = new Rect(rect);
             compIconRect.x += 14;
-            compIconRect.width = compIconRect.height = BlockWidth;
+            compIconRect.width = compIconRect.height = s_blockWidth;
 
             var enableToggleRect = new Rect(compIconRect);
-            enableToggleRect.x += BlockWidth + 1;
+            enableToggleRect.x += s_blockWidth + 1;
 
             var componentLabelRect = new Rect(enableToggleRect)
             {
                 width = rect.width - 125
             };
-            componentLabelRect.x += BlockWidth + 1;
+            componentLabelRect.x += s_blockWidth + 1;
 
             var editBtnRect = new Rect(rect)
             {
                 x = rect.xMax
             };
-            editBtnRect.width = editBtnRect.height = BlockWidth;
+            editBtnRect.width = editBtnRect.height = s_blockWidth;
             editBtnRect.x -= EditorGUIUtility.singleLineHeight;
             editBtnRect.x -= EditorGUIUtility.singleLineHeight - 1;
 
@@ -308,7 +308,7 @@ namespace EasyGameFramework.Editor
                     }
                 }
             }
-            
+
             var foldoutRect = new Rect(rect);
             foldoutRect.x += 10;
             foldoutRect.width -= 10;
@@ -405,7 +405,8 @@ namespace EasyGameFramework.Editor
                 var ct = component.GetType();
                 var ci = component.GetComponents(ct).IndexOf(component);
 
-                foreach (var comps in _targetItems.Where(i => i.Target != component.gameObject).Select(i => i.Components))
+                foreach (var comps in _targetItems.Where(i => i.Target != component.gameObject)
+                             .Select(i => i.Components))
                 {
                     foreach (var c in comps)
                     {
@@ -436,9 +437,10 @@ namespace EasyGameFramework.Editor
                 var i = comps.IndexOf(component);
                 return i != 0;
             }
+
             return false;
         }
-        
+
         private bool IsCommonComponentInTargets(Component component)
         {
             return GetTargetComponents(component, false).Count > 0;
@@ -452,7 +454,9 @@ namespace EasyGameFramework.Editor
             {
                 return false;
             }
-            if (t.Name == "ParticleSystemRenderer" && t.Assembly.FullName.StartsWith("UnityEngine.ParticleSystemModule"))
+
+            if (t.Name == "ParticleSystemRenderer" &&
+                t.Assembly.FullName.StartsWith("UnityEngine.ParticleSystemModule"))
             {
                 return false;
             }

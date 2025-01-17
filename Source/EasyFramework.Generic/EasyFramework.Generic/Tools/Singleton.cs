@@ -26,13 +26,13 @@ namespace EasyFramework.Generic
 
     public class Singleton<T> where T : Singleton<T>
     {
-        private static readonly Lazy<T> _instance;
+        private static readonly Lazy<T> s_instance;
 
-        public static T Instance => _instance.Value;
+        public static T Instance => s_instance.Value;
 
         static Singleton()
         {
-            _instance = new Lazy<T>(SingletonCreator.CreateSingleton<T>);
+            s_instance = new Lazy<T>(SingletonCreator.CreateSingleton<T>);
         }
     }
 }

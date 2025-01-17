@@ -107,24 +107,24 @@ namespace EasyFramework.Utilities
     public class ScriptableObjectSingleton<T> : ScriptableObject
         where T : ScriptableObjectSingleton<T>, new()
     {
-        private static ScriptableObjectSingletonAssetPathAttribute _assetPathAttribute;
+        private static ScriptableObjectSingletonAssetPathAttribute s_assetPathAttribute;
 
-        private static T _instance;
+        private static T s_instance;
 
         public static ScriptableObjectSingletonAssetPathAttribute AssetPathAttribute
         {
             get
             {
-                if (_assetPathAttribute == null)
+                if (s_assetPathAttribute == null)
                 {
-                    _assetPathAttribute = typeof(T).GetCustomAttribute<ScriptableObjectSingletonAssetPathAttribute>();
-                    if (_assetPathAttribute == null)
+                    s_assetPathAttribute = typeof(T).GetCustomAttribute<ScriptableObjectSingletonAssetPathAttribute>();
+                    if (s_assetPathAttribute == null)
                     {
                         throw new Exception($"{typeof(T).Name}必须定义一个[ScriptableObjectSingletonAssetPath]的Attribute!");
                     }
                 }
 
-                return _assetPathAttribute;
+                return s_assetPathAttribute;
             }
         }
 
@@ -132,15 +132,15 @@ namespace EasyFramework.Utilities
         {
             get
             {
-                if (_instance == null)
+                if (s_instance == null)
                 {
-                    _instance = SingletonCreator.GetScriptableObject<T>(AssetPathAttribute.AssetDirectory,
+                    s_instance = SingletonCreator.GetScriptableObject<T>(AssetPathAttribute.AssetDirectory,
                         AssetPathAttribute.AssetName.IsNotNullOrEmpty()
                             ? AssetPathAttribute.AssetName
                             : typeof(T).Name);
                 }
 
-                return _instance;
+                return s_instance;
             }
         }
     }

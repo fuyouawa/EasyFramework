@@ -5,15 +5,15 @@ namespace EasyFramework.Inspector
 {
     public static class EasyGUIStyles
     {
-        private static GUIStyle _messageBox;
+        private static GUIStyle s_messageBox;
 
         public static GUIStyle MessageBox
         {
             get
             {
-                if (_messageBox == null)
+                if (s_messageBox == null)
                 {
-                    _messageBox = new GUIStyle(SirenixGUIStyles.MessageBox)
+                    s_messageBox = new GUIStyle(SirenixGUIStyles.MessageBox)
                     {
                         fontSize = 13,
                         margin = new RectOffset(4, 4, 6, 6),
@@ -21,7 +21,7 @@ namespace EasyFramework.Inspector
                         // fontStyle = FontStyle.Normal
                     };
                 }
-                return _messageBox;
+                return s_messageBox;
             }
         }
     }

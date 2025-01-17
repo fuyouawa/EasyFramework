@@ -17,7 +17,7 @@ namespace EasyFramework.Tools.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            _expand = this.GetPersistent("_expand", false);
+            _expand = this.GetPersistent("_expand", true);
             var feedbacks = (EasyFeedbacks)target;
             
             feedbacks.FeedbackList.OnAddElementVoid = OnAddElement;

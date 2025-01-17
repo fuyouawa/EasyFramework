@@ -14,20 +14,20 @@ namespace EasyFramework.Tools.Editor
 {
     internal class AssetRefSrcherWindow : OdinEditorWindow
     {
-        private static AssetRefSrcherWindow _instance;
+        private static AssetRefSrcherWindow s_instance;
 
         public static AssetRefSrcherWindow Instance
         {
             get
             {
-                if (_instance == null)
+                if (s_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<AssetRefSrcherWindow>());
-                    _instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
+                    s_instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
                 }
 
-                Debug.Assert(_instance != null);
-                return _instance;
+                Debug.Assert(s_instance != null);
+                return s_instance;
             }
         }
 
@@ -35,7 +35,7 @@ namespace EasyFramework.Tools.Editor
         [UsedImplicitly]
         public static void ShowWindow()
         {
-            _instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
+            s_instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
         }
 
         public enum Modes
@@ -205,20 +205,20 @@ namespace EasyFramework.Tools.Editor
 
         #endregion
 
-        private static Type[] _allComponentTypes;
+        private static Type[] s_allComponentTypes;
 
         public static Type[] AllComponentTypes
         {
             get
             {
-                if (_allComponentTypes == null)
+                if (s_allComponentTypes == null)
                 {
-                    _allComponentTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    s_allComponentTypes = AppDomain.CurrentDomain.GetAssemblies()
                         .SelectMany(a => a.GetTypes())
                         .Where(t => t.IsSubclassOf(typeof(Component))).ToArray();
                 }
 
-                return _allComponentTypes;
+                return s_allComponentTypes;
             }
         }
 

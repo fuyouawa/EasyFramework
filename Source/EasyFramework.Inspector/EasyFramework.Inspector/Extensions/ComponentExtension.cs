@@ -8,24 +8,24 @@ namespace EasyFramework.Inspector
 {
     public static class ComponentExtension
     {
-        private static MonoScript[] _allScriptsCache;
+        private static MonoScript[] s_allScriptsCache;
         public static MonoScript GetScript(this Component component)
         {
-            if (_allScriptsCache.IsNullOrEmpty())
+            if (s_allScriptsCache.IsNullOrEmpty())
             {
-                _allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
+                s_allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
             }
 
             try
             {
-                return _allScriptsCache.First(s => s.GetClass() == component.GetType());
+                return s_allScriptsCache.First(s => s.GetClass() == component.GetType());
             }
             catch (Exception)
             {
                 try
                 {
-                    _allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
-                    return _allScriptsCache.First(s => s.GetClass() == component.GetType());
+                    s_allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
+                    return s_allScriptsCache.First(s => s.GetClass() == component.GetType());
                 }
                 catch (Exception)
                 {

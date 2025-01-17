@@ -83,7 +83,7 @@ namespace EasyFramework.Inspector
                 {
                     using (new EditorGUI.DisabledScope(!CanAdd()))
                     {
-                        if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.AddDropdown.image, "添加组件"), Styles.Footer))
+                        if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.AddDropdown, "添加组件"), Styles.Footer))
                         {
                             DoAddElement(rightBtnRect);
                         }
@@ -94,7 +94,7 @@ namespace EasyFramework.Inspector
 
                 if (DisplayCollapseButton)
                 {
-                    if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.Collapse.image, "折叠所有"), Styles.Footer))
+                    if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.Collapse, "折叠所有"), Styles.Footer))
                     {
                         OnCollapseCallback?.Invoke();
                     }
@@ -104,7 +104,7 @@ namespace EasyFramework.Inspector
 
                 if (DisplayExpandButton)
                 {
-                    if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.Expand.image, "展开所有"), Styles.Footer))
+                    if (GUI.Button(rightBtnRect, new GUIContent(EasyEditorIcons.Expand, "展开所有"), Styles.Footer))
                     {
                         OnExpandCallback?.Invoke();
                     }
@@ -137,7 +137,7 @@ namespace EasyFramework.Inspector
 
                     using (new EditorGUI.DisabledScope(CanRemove(index)))
                     {
-                        if (GUI.Button(removeBtnRect, new GUIContent(EasyEditorIcons.Remove.image, "删除组件"), Styles.Footer))
+                        if (GUI.Button(removeBtnRect, new GUIContent(EasyEditorIcons.Remove, "删除组件"), Styles.Footer))
                         {
                             DoRemoveElement(index);
                         }

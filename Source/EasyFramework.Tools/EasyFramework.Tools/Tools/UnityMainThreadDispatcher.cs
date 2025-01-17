@@ -28,19 +28,19 @@ namespace EasyFramework.Tools
 
     public class UnityMainThreadDispatcher : MonoSingleton<UnityMainThreadDispatcher>, IEasyEventDispatcher
     {
-        private static readonly Queue<Action> _executionQueue = new Queue<Action>();
+        private static readonly Queue<Action> s_executionQueue = new Queue<Action>();
 
         public void Update() {
-            lock(_executionQueue) {
-                while (_executionQueue.Count > 0) {
-                    _executionQueue.Dequeue().Invoke();
+            lock(s_executionQueue) {
+                while (s_executionQueue.Count > 0) {
+                    s_executionQueue.Dequeue().Invoke();
                 }
             }
         }
 
         public void Enqueue(IEnumerator action) {
-            lock (_executionQueue) {
-                _executionQueue.Enqueue (() => {
+            lock (s_executionQueue) {
+                s_executionQueue.Enqueue (() => {
                     StartCoroutine (action);
                 });
             }

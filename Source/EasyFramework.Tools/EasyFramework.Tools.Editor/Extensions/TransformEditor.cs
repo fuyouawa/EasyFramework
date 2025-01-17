@@ -36,10 +36,10 @@ namespace EasyFramework.Tools.Editor
             }));
         }
 
-        private static Contents _contents;
+        private static Contents s_contents;
         public override void OnInspectorGUI()
         {
-            _contents ??= new Contents();
+            s_contents ??= new Contents();
 
             _componentPreviewPanel.OnHeaderGUI();
             serializedObject.ApplyModifiedProperties();
@@ -56,7 +56,7 @@ namespace EasyFramework.Tools.Editor
             var w = EditorGUIUtility.singleLineHeight;
             using (new EditorGUILayout.HorizontalScope())
             {
-                var v2 = EditorGUILayout.Vector3Field(_contents.PositionContent, v);
+                var v2 = EditorGUILayout.Vector3Field(s_contents.PositionContent, v);
                 if (GUILayout.Button("Z", GUILayout.Width(w)))
                     v2 = Vector3.zero;
                 if (v != v2)
@@ -66,7 +66,7 @@ namespace EasyFramework.Tools.Editor
             using (new EditorGUILayout.HorizontalScope())
             {
                 v = Target.rotation.eulerAngles;
-                var v2 = EditorGUILayout.Vector3Field(_contents.RotationContent, v);
+                var v2 = EditorGUILayout.Vector3Field(s_contents.RotationContent, v);
                 if (GUILayout.Button("Z", GUILayout.Width(w)))
                     v2 = Vector3.zero;
                 if (v != v2)
@@ -77,7 +77,7 @@ namespace EasyFramework.Tools.Editor
             v = Target.lossyScale;
             using (new EditorGUI.DisabledScope(true))
             {
-                EditorGUILayout.Vector3Field(_contents.ScaleContent, v);
+                EditorGUILayout.Vector3Field(s_contents.ScaleContent, v);
             }
         }
     }
