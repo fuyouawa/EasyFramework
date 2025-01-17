@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     internal class SingletonCreator
     {

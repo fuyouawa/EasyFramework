@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor;
 
-namespace EasyGameFramework
+namespace EasyFramework.Inspector
 {
     public static class InspectorPropertyExtension
     {

@@ -1,7 +1,6 @@
-using System.Diagnostics;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public static class GizmosUtility
     {

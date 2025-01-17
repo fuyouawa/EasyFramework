@@ -1,7 +1,7 @@
 using System.Collections;
 using Sirenix.OdinInspector;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("辅助/运行指定帧数")]
     public class EF_AuxiliaryRunFrame : AbstractEasyFeedback

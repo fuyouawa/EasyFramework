@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     //TODO EasySignal
     public class EasySignal

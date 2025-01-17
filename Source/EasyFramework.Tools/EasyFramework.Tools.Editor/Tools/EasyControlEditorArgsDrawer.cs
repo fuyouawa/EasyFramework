@@ -6,14 +6,16 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public static class EasyControlUtility
     {
@@ -59,6 +61,8 @@ namespace EasyGameFramework.Editor
         {
             foreach (var component in target.GetComponents<Component>())
             {
+                if (component == null)
+                    continue;
                 var args = GetArgs(component);
                 if (args != null)
                 {
@@ -74,6 +78,8 @@ namespace EasyGameFramework.Editor
             return target.GetComponentsInChildren<Component>()
                 .Where(c =>
                 {
+                    if (c == null)
+                        return false;
                     if (c.gameObject == target)
                         return false;
                     var args = GetArgs(c);
@@ -172,7 +178,9 @@ namespace EasyGameFramework.Editor
                         {
                             if (!_args.Bounder.IsInitialized)
                             {
-                                var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType())
+                                var bindableTypes = _comp.GetComponents<Component>()
+                                    .Where(c => c != null)
+                                    .Select(c => c.GetType())
                                     .ToArray();
 
                                 _args.Bounder.TypeToBind.Value =
@@ -290,7 +298,9 @@ namespace EasyGameFramework.Editor
                 _args.Bounder.Name = _comp.gameObject.name;
             }
 
-            var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType()).ToArray();
+            var bindableTypes = _comp.GetComponents<Component>()
+                .Where(c => c != null)
+                .Select(c => c.GetType()).ToArray();
             EditorGUI.BeginChangeCheck();
 
             if (_args.Bounder.TypeToBind.Value == null)
@@ -421,70 +431,7 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        private static string _codeGenerator;
-        private static string _codeGenerator2;
-        private static string _designerCodeGenerator;
-        private static string _designerCodeGenerator2;
-
-        private static string CodeGenerator
-        {
-            get
-            {
-                if (_codeGenerator.IsNullOrEmpty())
-                {
-                    _codeGenerator = File.ReadAllText(Path.Combine(Application.dataPath, AssetsPath.EditorResDirectory,
-                        "EasyControl.CodeGenerator.scriban"));
-                }
-
-                return _codeGenerator;
-            }
-        }
-
-        private static string CodeGenerator2
-        {
-            get
-            {
-                if (_codeGenerator2.IsNullOrEmpty())
-                {
-                    _codeGenerator2 = File.ReadAllText(Path.Combine(Application.dataPath, AssetsPath.EditorResDirectory,
-                        "EasyControl.CodeGenerator2.scriban"));
-                }
-
-                return _codeGenerator2;
-            }
-        }
-
-        private static string DesignerCodeGenerator
-        {
-            get
-            {
-                if (_designerCodeGenerator.IsNullOrEmpty())
-                {
-                    _designerCodeGenerator = File.ReadAllText(Path.Combine(Application.dataPath,
-                        AssetsPath.EditorResDirectory,
-                        "EasyControl.DesignerCodeGenerator.scriban"));
-                }
-
-                return _designerCodeGenerator;
-            }
-        }
-
-        private static string DesignerCodeGenerator2
-        {
-            get
-            {
-                if (_designerCodeGenerator2.IsNullOrEmpty())
-                {
-                    _designerCodeGenerator2 = File.ReadAllText(Path.Combine(Application.dataPath,
-                        AssetsPath.EditorResDirectory,
-                        "EasyControl.DesignerCodeGenerator2.scriban"));
-                }
-
-                return _designerCodeGenerator2;
-            }
-        }
-
-        [MenuItem("GameObject/EasyGameFramework/Add EasyControl-ViewModel")]
+        [MenuItem("GameObject/EasyFramework/Add EasyControl-ViewModel")]
         private static void AddEasyControlViewModel()
         {
             foreach (var o in Selection.gameObjects)
@@ -494,7 +441,7 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        [MenuItem("GameObject/EasyGameFramework/Add EasyControl-Bounder")]
+        [MenuItem("GameObject/EasyFramework/Add EasyControl-Bounder")]
         private static void AddEasyControlBounder()
         {
             foreach (var o in Selection.gameObjects)

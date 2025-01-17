@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("粒子/播放粒子")]
     public class EF_ParticlePlay : AbstractEasyFeedback

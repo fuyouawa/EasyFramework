@@ -1,6 +1,6 @@
 using Sirenix.OdinInspector;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("辅助/运行指定时间(秒)")]
     public class EF_AuxiliaryRunSecond : AbstractEasyFeedback

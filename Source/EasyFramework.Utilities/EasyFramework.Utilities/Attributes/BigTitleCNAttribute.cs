@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [DontApplyToListElements]
     [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]

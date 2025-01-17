@@ -5,18 +5,20 @@ using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using TMPro;
-using EasyFramework;
 using UnityEditor;
 using UnityEngine;
 using JetBrains.Annotations;
 using UnityEditor.SceneManagement;
 using System.Collections.Generic;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
+using EasyFramework.Utilities;
 using Sirenix.Serialization;
 using Sirenix.Utilities;
 using UnityEngine.SceneManagement;
 using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public class UiTextManagerWindow : OdinMenuEditorWindow
     {
@@ -51,7 +53,7 @@ namespace EasyGameFramework.Editor
                 if (_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<UiTextManagerWindow>());
-                    _instance = GetWindow<UiTextManagerWindow>("UiTextManager");
+                    _instance = GetWindow<UiTextManagerWindow>("Ui Text Manager");
                 }
 
                 Debug.Assert(_instance != null);
@@ -59,11 +61,11 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        [MenuItem("Tools/EasyGameFramework/Tools/UiTextManager")]
+        [MenuItem("Tools/EasyGameFramework/Tools/Ui Text Manager")]
         public static void ShowWindow()
         {
             var isNew = HasOpenInstances<UiTextManagerWindow>();
-            var window = GetWindow<UiTextManagerWindow>("UiTextManager");
+            var window = GetWindow<UiTextManagerWindow>("Ui Text Manager");
             if (!isNew)
             {
                 if (!File.Exists(EditorAssetsPath.UiTextManagerWindowTempPath))
@@ -798,7 +800,7 @@ namespace EasyGameFramework.Editor
 
                 if (node.TextGUI != null)
                 {
-                    var iconRect = headerRect.AddX(14).SetSize(Vector2.one * iconWidth);
+                    var iconRect = headerRect.AddX(14f).SetSize(Vector2.one * iconWidth);
                     var icon = EditorGUIUtility.ObjectContent(node.TextGUI, typeof(TextMeshProUGUI)).image;
                     EditorGUI.LabelField(iconRect, new GUIContent(icon));
                 }

@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector.Editor;
-using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     public abstract class TreeValueDrawer<T, TElement> : OdinValueDrawer<T>
         where T : IList<TElement>

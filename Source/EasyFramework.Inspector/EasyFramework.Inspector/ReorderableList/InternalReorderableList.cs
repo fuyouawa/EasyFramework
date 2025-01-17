@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     //TODO: better handling for serializedObjects with mixed values
     //TODO: make it not rely on GUILayout at all, so its safe to use under PropertyDrawers.

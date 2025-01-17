@@ -1,9 +1,9 @@
 using System;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public static class GameObjectUtility
     {

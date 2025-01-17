@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public abstract class MemberPicker

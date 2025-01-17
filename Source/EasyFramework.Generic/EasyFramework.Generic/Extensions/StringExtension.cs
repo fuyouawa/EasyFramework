@@ -1,6 +1,6 @@
 using System;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     public enum InvalidIdentifierTypes
     {

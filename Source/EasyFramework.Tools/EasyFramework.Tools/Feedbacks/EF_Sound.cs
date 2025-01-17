@@ -1,12 +1,13 @@
 using System;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("音效/播放声音")]
     public class EF_Sound : AbstractEasyFeedback

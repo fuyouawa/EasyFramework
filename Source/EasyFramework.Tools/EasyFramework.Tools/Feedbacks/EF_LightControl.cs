@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
- namespace EasyGameFramework
+ namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("光照/光照控制")]
     public class EF_LightControl : AbstractEasyFeedback

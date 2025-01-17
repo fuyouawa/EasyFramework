@@ -1,7 +1,8 @@
+using EasyFramework.Inspector;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     [CustomEditor(typeof(Transform), true)]
     [CanEditMultipleObjects]

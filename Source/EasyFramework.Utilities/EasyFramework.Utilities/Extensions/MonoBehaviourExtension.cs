@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public static class MonoBehaviourExtension
     {

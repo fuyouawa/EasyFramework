@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyFramework.Utilities;
 using TMPro;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [Serializable]
     public class FontAssetPreset

@@ -1,11 +1,11 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class GameObjectReferenceDrawer : OdinValueDrawer<GameObjectReference>
     {

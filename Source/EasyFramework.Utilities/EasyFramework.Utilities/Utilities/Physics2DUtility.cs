@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using System.Linq;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public class RaycastHit2DEqualityComparer : IEqualityComparer<RaycastHit2D>
     {

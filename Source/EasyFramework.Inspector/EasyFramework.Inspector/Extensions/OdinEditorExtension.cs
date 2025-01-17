@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     public static class OdinEditorExtension
     {

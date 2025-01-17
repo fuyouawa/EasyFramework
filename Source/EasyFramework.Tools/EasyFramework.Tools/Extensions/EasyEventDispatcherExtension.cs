@@ -1,6 +1,6 @@
-using EasyFramework;
+using EasyFramework.Generic;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public static class EasyEventDispatcherExtension
     {

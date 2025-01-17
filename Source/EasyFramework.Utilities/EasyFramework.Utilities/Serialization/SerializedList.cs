@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public class SerializedList<T> : BinarySerailizedValue<List<T>>, IEnumerable<T>

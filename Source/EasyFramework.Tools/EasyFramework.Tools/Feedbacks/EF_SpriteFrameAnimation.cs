@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("精灵/帧动画")]
     public class EF_SpriteFrameAnimation : AbstractEasyFeedback

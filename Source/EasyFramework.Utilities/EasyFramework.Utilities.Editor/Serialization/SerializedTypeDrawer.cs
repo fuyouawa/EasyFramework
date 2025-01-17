@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class SerializedTypeDrawer : OdinValueDrawer<SerializedType>
     {

@@ -2,15 +2,15 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public class EasyControlSettingsWindow : OdinEditorWindow
     {
-        [MenuItem("Tools/EasyGameFramework/Settings/EasyControlSettings")]
+        [MenuItem("Tools/EasyGameFramework/Settings/Easy Control Settings")]
         [UsedImplicitly]
         public static void ShowWindow()
         {
-            GetWindow<EasyControlSettingsWindow>("EasyControlSettings");
+            GetWindow<EasyControlSettingsWindow>("Easy Control Settings");
         }
 
         protected override object GetTarget()

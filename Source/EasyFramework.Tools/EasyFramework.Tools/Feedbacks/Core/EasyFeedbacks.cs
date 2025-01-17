@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using EasyFramework.Utilities;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public class EasyFeedbacks : MonoBehaviour
     {

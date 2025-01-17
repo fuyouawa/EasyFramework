@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     public abstract class FoldoutValueDrawer<T> : OdinValueDrawer<T>
     {

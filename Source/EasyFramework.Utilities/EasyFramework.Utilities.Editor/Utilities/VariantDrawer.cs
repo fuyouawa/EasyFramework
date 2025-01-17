@@ -1,12 +1,13 @@
 using System;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     [DrawerPriority(0, 0, 2001)]
     public class VariantDrawer : OdinValueDrawer<Variant>

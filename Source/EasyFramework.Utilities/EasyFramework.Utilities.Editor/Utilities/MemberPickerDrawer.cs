@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class MemberPickerDrawer<T> : OdinValueDrawer<T>
         where T : MemberPicker

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Inspector
 {
     public static class EditorWindowExtension
     {

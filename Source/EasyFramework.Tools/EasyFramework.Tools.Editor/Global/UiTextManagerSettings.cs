@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using EasyFramework.Utilities;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEditor;
-using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
-    [EditorResourcesAssetPath]
+    [EditorConfigAssetPath]
     public class UiTextManagerSettings : ScriptableObjectSingleton<UiTextManagerSettings>
     {
         [TitleGroupCN("配置")]

@@ -1,12 +1,13 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public class AbstractEasyFeedbackDrawer<T> : FoldoutValueDrawer<T>
         where T : AbstractEasyFeedback

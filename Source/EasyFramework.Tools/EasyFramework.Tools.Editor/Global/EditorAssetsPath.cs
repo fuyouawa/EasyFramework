@@ -1,28 +1,28 @@
 using System.IO;
+using EasyFramework.Utilities;
 using UnityEditor;
-using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public static class EditorAssetsPath
     {
         public static readonly string TempDirectory;
-        public static readonly string ResDirectory;
+        public static readonly string ConfigsDirectory;
         public static readonly string UiTextManagerWindowTempPath;
 
 
         static EditorAssetsPath()
         {
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
-            ResDirectory = AssetsPath.EditorResDirectory;
+            ConfigsDirectory = AssetsPath.EditorConfigsDirectory;
             UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");
 
-            Directory.CreateDirectory(TempDirectory);
+            System.IO.Directory.CreateDirectory(TempDirectory);
         }
     }
-    public class EditorResourcesAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    public class EditorConfigAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public EditorResourcesAssetPathAttribute() : base(EditorAssetsPath.ResDirectory)
+        public EditorConfigAssetPathAttribute() : base(EditorAssetsPath.ConfigsDirectory)
         {
         }
     }

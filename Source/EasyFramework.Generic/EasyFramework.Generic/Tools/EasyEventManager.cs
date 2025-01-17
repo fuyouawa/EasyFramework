@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     /// <summary>
     /// <para>事件处理器的触发行为扩展</para>

@@ -1,10 +1,11 @@
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.OdinInspector.Editor.ValueResolvers;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     [DrawerPriority(1.0, 0.0, 0.0)]
     public class BigTitleCNAttributeDrawer : OdinAttributeDrawer<BigTitleCNAttribute>

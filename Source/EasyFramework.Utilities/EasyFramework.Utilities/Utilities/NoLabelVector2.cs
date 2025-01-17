@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public struct NoLabelVector2

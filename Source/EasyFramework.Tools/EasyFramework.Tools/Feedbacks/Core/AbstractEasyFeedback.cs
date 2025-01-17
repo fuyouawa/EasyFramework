@@ -3,7 +3,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public class AddEasyFeedbackMenuAttribute : Attribute
     {

@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Diagnostics;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
 [AttributeUsage(AttributeTargets.All, AllowMultiple = true, Inherited = true)]
 [Conditional("UNITY_EDITOR")]

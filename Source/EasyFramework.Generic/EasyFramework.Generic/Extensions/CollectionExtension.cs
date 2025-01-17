@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     public static class CollectionExtension
     {

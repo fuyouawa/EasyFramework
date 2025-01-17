@@ -1,13 +1,12 @@
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities.Editor;
 using System;
 using System.Linq;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     [CustomEditor(typeof(EasyFeedbacks))]
     [CanEditMultipleObjects]

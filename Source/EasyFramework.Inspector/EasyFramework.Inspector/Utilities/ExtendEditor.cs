@@ -3,7 +3,7 @@ using System.Reflection;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     public abstract class ExtendEditor : UnityEditor.Editor
     {

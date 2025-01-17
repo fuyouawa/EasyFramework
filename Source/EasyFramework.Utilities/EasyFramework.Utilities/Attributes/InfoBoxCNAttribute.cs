@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     /// <summary>
     /// 扩展自Sirenix.OdinInspector.InfoBoxAttribute

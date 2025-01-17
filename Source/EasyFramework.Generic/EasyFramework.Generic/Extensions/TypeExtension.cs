@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
     public static class TypeExtension
     {

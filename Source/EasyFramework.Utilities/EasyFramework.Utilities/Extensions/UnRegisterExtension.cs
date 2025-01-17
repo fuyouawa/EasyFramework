@@ -1,11 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public abstract class UnRegisterTrigger : MonoBehaviour
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public class GetValuePicker : MemberPicker

@@ -2,7 +2,7 @@ using System.Collections;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("游戏物体/实例化")]
     public class EF_GameObjectInstantiate : AbstractEasyFeedback

@@ -1,8 +1,7 @@
 using System;
-using EasyGameFramework;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public struct FlexibleFloat

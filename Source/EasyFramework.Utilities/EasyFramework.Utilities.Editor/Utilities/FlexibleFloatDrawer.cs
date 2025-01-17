@@ -2,7 +2,7 @@ using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class FlexibleFloatDrawer : OdinValueDrawer<FlexibleFloat>
     {

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("游戏物体/设置激活")]
     public class EF_GameObjectSetActive : AbstractEasyFeedback

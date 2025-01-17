@@ -1,9 +1,8 @@
 using System.Reflection;
-using EasyFramework;
+using EasyFramework.Generic;
 using Sirenix.OdinInspector.Editor;
-using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class GetValuePickerDrawer : MemberPickerDrawer<GetValuePicker>
     {

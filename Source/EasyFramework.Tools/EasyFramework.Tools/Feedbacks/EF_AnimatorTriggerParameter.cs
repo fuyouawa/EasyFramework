@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("动画器/触发参数")]
     public class EF_AnimatorTriggerParameter : AbstractEasyFeedback

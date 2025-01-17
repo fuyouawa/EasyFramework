@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     [CustomEditor(typeof(UiTextPresetsManager))]
     public class UiTextPresetsManagerEditor : OdinEditor

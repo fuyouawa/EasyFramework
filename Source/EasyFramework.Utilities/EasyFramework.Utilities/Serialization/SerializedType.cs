@@ -1,10 +1,9 @@
 using System;
-using EasyFramework;
+using EasyFramework.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public class SerializedType : StringSerializedValue<Type>

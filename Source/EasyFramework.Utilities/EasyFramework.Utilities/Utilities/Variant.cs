@@ -1,9 +1,9 @@
 using System;
-using EasyFramework;
 using System.Collections.Generic;
+using EasyFramework.Generic;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     public enum VariantTypeEnum
     {

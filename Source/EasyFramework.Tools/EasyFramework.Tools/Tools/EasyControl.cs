@@ -1,9 +1,10 @@
 using System;
 using System.Diagnostics;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Utilities;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public enum EasyControlBindAccess
     {

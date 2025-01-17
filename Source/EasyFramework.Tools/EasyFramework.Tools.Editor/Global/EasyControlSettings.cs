@@ -1,9 +1,10 @@
 using System;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
-    [EditorResourcesAssetPath]
+    [EditorConfigAssetPath]
     public class EasyControlSettings : ScriptableObjectSingleton<EasyControlSettings>
     {
         [Serializable]

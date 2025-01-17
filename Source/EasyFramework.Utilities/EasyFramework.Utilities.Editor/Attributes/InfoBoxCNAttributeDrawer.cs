@@ -1,6 +1,8 @@
-[assembly: Sirenix.OdinInspector.Editor.Validation.RegisterValidator(typeof(EasyGameFramework.Editor.InformationValidator))]
+using EasyFramework.Inspector;
 
-namespace EasyGameFramework.Editor
+[assembly: Sirenix.OdinInspector.Editor.Validation.RegisterValidator(typeof(EasyFramework.Utilities.Editor.InformationValidator))]
+
+namespace EasyFramework.Utilities.Editor
 {
     using Sirenix.OdinInspector;
     using Sirenix.OdinInspector.Editor;

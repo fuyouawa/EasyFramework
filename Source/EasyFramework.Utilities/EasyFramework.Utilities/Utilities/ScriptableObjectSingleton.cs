@@ -1,26 +1,43 @@
 using System;
+using EasyFramework.Generic;
 using System.Reflection;
-using EasyFramework;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     internal partial class SingletonCreator
     {
-        public static T GetScriptableObjectSingleton<T>(string assetDirectory, string assetName)
+        public static T GetScriptableObject<T>(string assetDirectory, string assetName)
             where T : ScriptableObject
         {
+            if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
+            {
+                if (!assetDirectory.Contains("/editor/", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new ArgumentException(
+                        $"\"{assetDirectory + '/' + assetName}\"'s resource path must be under the Resources directory！");
+                }
+                else
+                {
+                    if (!Application.isEditor)
+                    {
+                        throw new ArgumentException(
+                            $"editor asserts({assetDirectory + '/' + assetName}) can only be loaded in edit mode!");
+                    }
+                }
+            }
+
             if (Application.isEditor)
             {
-                return GetScriptableObjectSingletonInEditor<T>(assetDirectory, assetName);
+                return GetScriptableObjectInEditor<T>(assetDirectory, assetName);
             }
             else
             {
-                return InternalGetScriptableObjectSingleton<T>(assetDirectory, assetName);
+                return InternalGetScriptableObject<T>(assetDirectory, assetName);
             }
         }
 
-        private static T InternalGetScriptableObjectSingleton<T>(string assetDirectory, string assetName)
+        private static T InternalGetScriptableObject<T>(string assetDirectory, string assetName)
             where T : ScriptableObject
         {
             if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
@@ -46,14 +63,17 @@ namespace EasyGameFramework
         }
 
         private static MethodInfo _getScriptableObjectSingletonInEditorMethod;
-        private static T GetScriptableObjectSingletonInEditor<T>(string assetDirectory, string assetName)
+
+        private static T GetScriptableObjectInEditor<T>(string assetDirectory, string assetName)
             where T : ScriptableObject
         {
             if (_getScriptableObjectSingletonInEditorMethod == null)
             {
-                var type = Type.GetType("EasyFramework.EditorSingletonCreator, EasyFramework.Inspector")!;
-                _getScriptableObjectSingletonInEditorMethod = type.GetMethod("GetScriptableObjectSingleton", BindingFlags.Static | BindingFlags.Public)!;
+                var type = Type.GetType("EasyFramework.Inspector.EditorSingletonCreator, EasyFramework.Inspector")!;
+                _getScriptableObjectSingletonInEditorMethod =
+                    type.GetMethod("GetScriptableObject", BindingFlags.Static | BindingFlags.Public)!;
             }
+
             var m = _getScriptableObjectSingletonInEditorMethod.MakeGenericMethod(typeof(T));
             return (T)m.Invoke(null, new object[] { assetDirectory, assetName });
         }
@@ -114,7 +134,7 @@ namespace EasyGameFramework
             {
                 if (_instance == null)
                 {
-                    _instance = SingletonCreator.GetScriptableObjectSingleton<T>(AssetPathAttribute.AssetDirectory,
+                    _instance = SingletonCreator.GetScriptableObject<T>(AssetPathAttribute.AssetDirectory,
                         AssetPathAttribute.AssetName.IsNotNullOrEmpty()
                             ? AssetPathAttribute.AssetName
                             : typeof(T).Name);

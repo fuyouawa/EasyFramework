@@ -1,10 +1,6 @@
-using Sirenix.OdinInspector.Editor;
-using System;
-using System.Linq;
-using EasyFramework;
 using UnityEditor.Callbacks;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     internal static class CustomEditorLoader
     {

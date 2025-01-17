@@ -1,6 +1,7 @@
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("游戏物体/调用函数")]
     public class EF_GameObjectInvokeMethod : AbstractEasyFeedback

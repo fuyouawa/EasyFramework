@@ -1,5 +1,6 @@
 using System.Linq;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -7,7 +8,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     [CustomEditor(typeof(UiTextManager))]
     public class UiTextManagerEditor : OdinEditor

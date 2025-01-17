@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
-using EasyFramework;
+using EasyFramework.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Inspector
 {
     public static class ComponentExtension
     {

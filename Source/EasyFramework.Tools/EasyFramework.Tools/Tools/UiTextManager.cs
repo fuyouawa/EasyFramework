@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public class UiTextManager : MonoBehaviour
     {

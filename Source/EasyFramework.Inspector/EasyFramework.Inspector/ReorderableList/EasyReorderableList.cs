@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Inspector
 {
     public enum EasyReorderableListThemes
     {

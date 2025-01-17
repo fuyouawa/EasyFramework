@@ -1,8 +1,7 @@
 using Sirenix.Serialization;
 using System;
-using System.Collections.Generic;
 
-namespace EasyGameFramework
+namespace EasyFramework.Utilities
 {
     [Serializable]
     public abstract class BinarySerailizedValue<T> : TSerailizedValue<T, byte[]>

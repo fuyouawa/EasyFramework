@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using EasyGameFramework;
+using EasyFramework.Tools;
 using UnityEngine;
 
 

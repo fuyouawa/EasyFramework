@@ -33,7 +33,7 @@ using System;
 // ReSharper disable ArrangeNamespaceBody
 // ReSharper disable InconsistentNaming
 
-namespace EasyFramework
+namespace EasyFramework.Generic
 {
   /// <summary>
   /// Indicates that the value of the marked element could be <c>null</c> sometimes,

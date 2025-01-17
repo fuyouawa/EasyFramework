@@ -1,10 +1,11 @@
+using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.OdinInspector.Editor.ValueResolvers;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public sealed class BigTitleGroupCNAttributeDrawer : OdinGroupDrawer<BigTitleGroupCNAttribute>
     {

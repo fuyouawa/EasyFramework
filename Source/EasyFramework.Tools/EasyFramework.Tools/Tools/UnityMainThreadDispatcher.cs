@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EasyFramework;
+using EasyFramework.Generic;
+using EasyFramework.Utilities;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     public struct ApplicationQuitEvent {}
 

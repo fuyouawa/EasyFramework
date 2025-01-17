@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     public static class UnityMainThreadDispatcherEditor
     {

@@ -1,7 +1,7 @@
 using Sirenix.Utilities.Editor;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Inspector
 {
     public static class EasyGUIStyles
     {

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using EasyGameFramework;
-using Sirenix.Config;
-using Sirenix.OdinInspector;
+using EasyFramework.Utilities;
 using UnityEngine;
 
 public partial class TestViewModel : MonoBehaviour

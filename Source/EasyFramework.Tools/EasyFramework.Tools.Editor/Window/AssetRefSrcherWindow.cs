@@ -3,12 +3,14 @@ using Sirenix.OdinInspector.Editor;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using EasyFramework.Inspector;
+using EasyFramework.Utilities;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Tools.Editor
 {
     internal class AssetRefSrcherWindow : OdinEditorWindow
     {
@@ -21,7 +23,7 @@ namespace EasyGameFramework.Editor
                 if (_instance == null)
                 {
                     Debug.Assert(HasOpenInstances<AssetRefSrcherWindow>());
-                    _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher");
+                    _instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
                 }
 
                 Debug.Assert(_instance != null);
@@ -29,11 +31,11 @@ namespace EasyGameFramework.Editor
             }
         }
 
-        [MenuItem("Tools/EasyGameFramework/Tools/AssetReferenceSearcher")]
+        [MenuItem("Tools/EasyGameFramework/Tools/Asset Reference Searcher")]
         [UsedImplicitly]
         public static void ShowWindow()
         {
-            _instance = GetWindow<AssetRefSrcherWindow>("AssetReferenceSearcher");
+            _instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
         }
 
         public enum Modes

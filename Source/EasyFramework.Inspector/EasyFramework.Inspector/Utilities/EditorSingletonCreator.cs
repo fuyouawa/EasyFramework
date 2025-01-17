@@ -3,38 +3,21 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Inspector
 {
     internal class EditorSingletonCreator
     {
-        public static T GetScriptableObjectSingleton<T>(string assetDirectory, string assetName)
+        public static T GetScriptableObject<T>(string assetDirectory, string assetName)
             where T : ScriptableObject
         {
-            if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new ArgumentException($"{assetName}的资源路径必须在Resources目录下！");
-            }
-
-            string resourcesPath = assetDirectory;
-            int i = resourcesPath.LastIndexOf("/resources/", StringComparison.OrdinalIgnoreCase);
-            if (i >= 0)
-            {
-                resourcesPath = resourcesPath.Substring(i + "/resources/".Length);
-            }
-
-            var instance = Resources.Load<T>(resourcesPath + assetName);
-
             if (!assetDirectory.StartsWith("Assets/"))
             {
                 assetDirectory = "Assets/" + assetDirectory;
             }
 
             var assetFilePath = assetDirectory + assetName + ".asset";
-
-            if (instance == null)
-            {
-                instance = AssetDatabase.LoadAssetAtPath<T>(assetFilePath);
-            }
+            
+            var instance = AssetDatabase.LoadAssetAtPath<T>(assetFilePath);
 
             if (instance == null)
             {

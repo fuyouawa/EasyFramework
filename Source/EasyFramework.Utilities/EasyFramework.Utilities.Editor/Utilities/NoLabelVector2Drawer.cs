@@ -3,7 +3,7 @@ using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyGameFramework.Editor
+namespace EasyFramework.Utilities.Editor
 {
     public class NoLabelVector2Drawer : OdinValueDrawer<NoLabelVector2>
     {

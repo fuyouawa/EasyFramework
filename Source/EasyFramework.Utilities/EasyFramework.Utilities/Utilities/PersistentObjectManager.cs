@@ -1,7 +1,7 @@
 ﻿// using System;
 // using System.Collections.Generic;
 //
-// namespace EasyGameFramework
+// namespace EasyFramework.Utilities
 // {
 //     public static class PersistentObjectManager
 //     {

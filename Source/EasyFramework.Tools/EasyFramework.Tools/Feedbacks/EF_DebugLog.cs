@@ -1,8 +1,8 @@
-using EasyFramework;
+using EasyFramework.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-namespace EasyGameFramework
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("调试/打印")]
     public class EF_DebugLog : AbstractEasyFeedback

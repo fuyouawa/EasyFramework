@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
-using EasyFramework;
+using EasyFramework.Generic;
 
-namespace EasyGameFramework
+namespace EasyFramework.Inspector
 {
     public delegate void OnCoveredTitleBarGUIDelegate(Rect headerRect);
 
