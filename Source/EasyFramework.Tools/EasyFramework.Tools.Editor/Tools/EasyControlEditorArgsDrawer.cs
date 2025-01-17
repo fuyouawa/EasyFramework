@@ -123,7 +123,7 @@ namespace EasyFramework.Tools.Editor
             _comp = (Component)Property.Parent.ValueEntry.WeakSmartValue;
 
             _args = ValueEntry.SmartValue;
-            _isBind = _comp as EasyControl != null;
+            _isBind = _comp as EasyControl == null;
 
             _parents = _comp.transform.FindParents(p =>
             {
@@ -533,7 +533,7 @@ namespace EasyFramework.Tools.Editor
 
             var data = new
             {
-                Usings = new[] { "EasyGameFramework", "UnityEngine" }
+                Usings = new[] { "EasyFramework.Tools", "UnityEngine" }
                     .Concat(children
                         .Select(c => EasyControlUtility.GetArgs(c).Bounder.TypeToBind.Value.Namespace))
                     .Distinct(),
@@ -597,6 +597,7 @@ namespace EasyFramework.Tools.Editor
                         field.Comments.Add(new CodeCommentStatement(split));
                     }
                 }
+
                 codeClass.Members.Add(field);
             }
 

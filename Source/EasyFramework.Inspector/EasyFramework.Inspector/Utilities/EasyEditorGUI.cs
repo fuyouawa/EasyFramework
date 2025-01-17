@@ -25,6 +25,7 @@ namespace EasyFramework.Inspector
         public Func<T, string> MenuItemNameGetter = null;
         public string Title = null;
         public bool SupportsMultiSelect = false;
+        public bool AddThumbnailIcons = true;
 
         public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
         {
@@ -468,7 +469,10 @@ namespace EasyFramework.Inspector
                     config.OnConfirmed?.Invoke(f);
                 }
             };
-            selector.SelectionTree.EnumerateTree().AddThumbnailIcons(true);
+            if (config.AddThumbnailIcons)
+            {
+                selector.SelectionTree.EnumerateTree().AddThumbnailIcons(true);
+            }
             selector.SelectionChanged += types => { selector.SelectionTree.Selection.ConfirmSelection(); };
             return selector;
         }
