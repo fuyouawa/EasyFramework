@@ -21,7 +21,7 @@ namespace EasyGameFramework
             public string Namespace;
             public bool ClassNameSameAsGameObjectName = true;
             public string ClassName;
-            public SerializableType BaseClass;
+            public SerializedType BaseClass;
             public bool IsInitialized;
             public string AssemblyQualifiedName;
 
@@ -64,7 +64,7 @@ namespace EasyGameFramework
                     Namespace = value.Namespace;
                     ClassName = value.Name;
                     AssemblyQualifiedName = value.AssemblyQualifiedName;
-                    BaseClass.Type = value.BaseType;
+                    BaseClass.Value = value.BaseType;
                 }
             }
         }
@@ -73,7 +73,7 @@ namespace EasyGameFramework
         public class BounderArgs
         {
             public Transform Parent;
-            public SerializableType TypeToBind;
+            public SerializedType TypeToBind;
             public bool NameSameAsGameObjectName = true;
             public string Name;
             public bool AutoAddCommentPara = true;

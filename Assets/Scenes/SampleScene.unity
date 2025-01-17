@@ -159,20 +159,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -180,6 +167,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &285958563
 Transform:
   m_ObjectHideFlags: 0
@@ -279,80 +268,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: TargetAudioSource
-      Entry: 6
-      Data: 
-    - Name: Mode
-      Entry: 3
-      Data: 0
-    - Name: RandomSfx
-      Entry: 7
-      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: MinVolume
-      Entry: 4
-      Data: 1
-    - Name: MaxVolume
-      Entry: 4
-      Data: 1
-    - Name: MinPitch
-      Entry: 4
-      Data: 1
-    - Name: MaxPitch
-      Entry: 4
-      Data: 1
-    - Name: SfxAudioMixerGroup
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -360,6 +276,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!114 &472785372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -610,20 +528,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -631,6 +536,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &667694656
 Transform:
   m_ObjectHideFlags: 0
@@ -712,65 +619,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|EasyGameFramework.EF_DebugLog, Assembly-CSharp-firstpass
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: Duration
-      Entry: 4
-      Data: 0
-    - Name: NotLogIfEmpty
-      Entry: 5
-      Data: true
-    - Name: Message
-      Entry: 1
-      Data: HelloWorld!
-    - Name: MessageOnInit
-      Entry: 1
-      Data: OnInit
-    - Name: MessageOnStop
-      Entry: 1
-      Data: OnStop
-    - Name: MessageOnReset
-      Entry: 1
-      Data: OnReset
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -778,6 +627,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &686683925
 Transform:
   m_ObjectHideFlags: 0
@@ -828,12 +679,13 @@ MonoBehaviour:
     Bounder:
       Parent: {fileID: 0}
       TypeToBind:
-        _assemblyQualifiedName: 
+        _assemblyQualifiedName: EasyGameFramework.EasyFeedbacks, Assembly-CSharp-firstpass,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       NameSameAsGameObjectName: 1
-      Name: 
+      Name: TestViewModel
       AutoAddCommentPara: 1
       Comment: 
-      IsInitialized: 0
+      IsInitialized: 1
       Access: 0
       AutoNamingNotations: 1
 --- !u!1 &720859276
@@ -873,20 +725,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -894,6 +733,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &720859278
 Transform:
   m_ObjectHideFlags: 0
@@ -962,20 +803,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -983,6 +811,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!1 &897682392
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,20 +919,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1110,6 +927,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &902553711
 Transform:
   m_ObjectHideFlags: 0
@@ -1251,20 +1070,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1272,6 +1078,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &1151300945
 Transform:
   m_ObjectHideFlags: 0
@@ -1325,20 +1133,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1346,6 +1141,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &1241639929
 Transform:
   m_ObjectHideFlags: 0
@@ -1605,80 +1402,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|EasyGameFramework.EF_AudioSource, Assembly-CSharp-firstpass
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: TargetAudioSource
-      Entry: 6
-      Data: 
-    - Name: Mode
-      Entry: 3
-      Data: 0
-    - Name: RandomSfx
-      Entry: 7
-      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: MinVolume
-      Entry: 4
-      Data: 1
-    - Name: MaxVolume
-      Entry: 4
-      Data: 1
-    - Name: MinPitch
-      Entry: 4
-      Data: 1
-    - Name: MaxPitch
-      Entry: 4
-      Data: 1
-    - Name: SfxAudioMixerGroup
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1686,6 +1410,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!1 &1737453323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,20 +1494,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1789,6 +1502,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!4 &1874861992
 Transform:
   m_ObjectHideFlags: 0
@@ -1873,20 +1588,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -1894,6 +1596,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 022f000000000170000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b004500610073007900470061006d0065004600720061006d00650077006f0072006b002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200041007300730065006d0062006c0079002d004300530068006100720070002d006600690072007300740070006100730073005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f0100000001480000004500610073007900470061006d0065004600720061006d00650077006f0072006b002e00450046005f0041006e0069006d00610074006f007200540072006900670067006500720050006100720061006d0065007400650072002c00200041007300730065006d0062006c0079002d004300530068006100720070002d00660069007200730074007000610073007300010000002d01050000004c006100620065006c002b010600000045006e00610062006c006500011f010f000000440065006c00610079004200650066006f007200650050006c00610079000000f6422b010800000042006c006f0063006b0069006e006700002b010d00000052006500700065006100740046006f00720065007600650072000017010e00000041006d006f0075006e0074004f006600520065007000650061007400010000001f011600000049006e00740065007200760061006c004200650074007700650065006e005200650070006500610074007300000000002d010e00000054006100720067006500740041006e0069006d00610074006f0072002d010d00000050006100720061006d0065007400650072004e0061006d006500050705
 --- !u!4 &1903165441
 Transform:
   m_ObjectHideFlags: 0
@@ -1924,7 +1628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _easyControlEditorArgs:
     Expand: 1
-    DoViewModel: 0
+    DoViewModel: 1
     DoBounder: 0
     ViewModel:
       GenerateDir: Scripts/Ui
@@ -2001,20 +1705,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -2022,6 +1713,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!114 &1937517890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2102,20 +1795,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: FeedbackList
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyGameFramework.AbstractEasyFeedback,
-        Assembly-CSharp-firstpass]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
+    SerializationNodes: []
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -2123,6 +1803,8 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
+  FeedbackList:
+    _serializedCollection: 2e
 --- !u!1 &2122406320
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,14 +29,14 @@ namespace EasyGameFramework
         [SerializeField] private string _stringValue;
         [SerializeField] private UnityEngine.Object _unityObjectValue;
         [SerializeField] private string _name;
-        [SerializeField] private SerializableType _type;
+        [SerializeField] private SerializedType _type;
 
-        public Type Type => _type.Type;
+        public Type Type => _type.Value;
         public VariantTypeEnum TypeEnum
         {
             get
             {
-                var t = _type.Type;
+                var t = _type.Value;
                 if (t.IsIntegerType())
                     return VariantTypeEnum.Integer;
                 if (t.IsFloatingPointType())
@@ -61,7 +61,7 @@ namespace EasyGameFramework
 
         public void Setup(Type objectType, string name)
         {
-            _type.Type = objectType;
+            _type.Value = objectType;
             _name = name;
         }
 

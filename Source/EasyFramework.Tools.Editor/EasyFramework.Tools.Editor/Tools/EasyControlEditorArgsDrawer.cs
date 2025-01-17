@@ -155,7 +155,7 @@ namespace EasyGameFramework.Editor
                                 _args.ViewModel.ClassName = _comp.gameObject.name;
                                 _args.ViewModel.GenerateDir = _settings.ViewModelDefault.GenerateDir;
                                 _args.ViewModel.Namespace = _settings.ViewModelDefault.Namespace;
-                                _args.ViewModel.BaseClass.Type = typeof(MonoBehaviour);
+                                _args.ViewModel.BaseClass.Value = typeof(MonoBehaviour);
 
                                 _args.ViewModel.IsInitialized = true;
                             }
@@ -175,7 +175,7 @@ namespace EasyGameFramework.Editor
                                 var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType())
                                     .ToArray();
 
-                                _args.Bounder.TypeToBind.Type =
+                                _args.Bounder.TypeToBind.Value =
                                     bindableTypes.Length > 1 ? bindableTypes[1] : bindableTypes[0];
 
                                 if (_parents.IsNotNullOrEmpty())
@@ -236,12 +236,12 @@ namespace EasyGameFramework.Editor
                     EditorGUILayout.TextField("类名", _args.ViewModel.ClassName);
             }
 
-            var lbl = _args.ViewModel.BaseClass.Type == null
+            var lbl = _args.ViewModel.BaseClass.Value == null
                 ? "<None>"
-                : _args.ViewModel.BaseClass.Type.FullName;
+                : _args.ViewModel.BaseClass.Value.FullName;
             EasyEditorGUI.DrawSelectorDropdown(
                 new SelectorDropdownConfig<Type>("父级", lbl, BaseTypes,
-                    t => _args.ViewModel.BaseClass.Type = t)
+                    t => _args.ViewModel.BaseClass.Value = t)
                 {
                     MenuItemNameGetter = t => t.FullName
                 });
@@ -293,19 +293,19 @@ namespace EasyGameFramework.Editor
             var bindableTypes = _comp.GetComponents<Component>().Select(c => c.GetType()).ToArray();
             EditorGUI.BeginChangeCheck();
 
-            if (_args.Bounder.TypeToBind.Type == null)
+            if (_args.Bounder.TypeToBind.Value == null)
             {
                 EasyEditorGUI.MessageBox("必须得有一个要绑定的组件", MessageType.Error);
             }
 
-            var btnLabel = _args.Bounder.TypeToBind.Type == null
+            var btnLabel = _args.Bounder.TypeToBind.Value == null
                 ? "<None>"
-                : _args.Bounder.TypeToBind.Type.FullName;
+                : _args.Bounder.TypeToBind.Value.FullName;
 
             EasyEditorGUI.DrawSelectorDropdown(
                 new SelectorDropdownConfig<Type>("要绑定的组件", btnLabel,
                     bindableTypes,
-                    t => _args.Bounder.TypeToBind.Type = t)
+                    t => _args.Bounder.TypeToBind.Value = t)
                 {
                     MenuItemNameGetter = t => t.FullName
                 });
@@ -536,11 +536,11 @@ namespace EasyGameFramework.Editor
                     "System",
                     "System.Collections.Generic",
                     "UnityEngine",
-                    _args.ViewModel.BaseClass.Type.Namespace
+                    _args.ViewModel.BaseClass.Value.Namespace
                 }.Distinct(),
                 ClassName = _args.ViewModel.ClassName,
                 Namespace = _args.ViewModel.Namespace,
-                BaseClassName = _args.ViewModel.BaseClass.Type.Name
+                BaseClassName = _args.ViewModel.BaseClass.Value.Name
             };
 
             var compileUnit = new CodeCompileUnit();
@@ -588,7 +588,7 @@ namespace EasyGameFramework.Editor
             {
                 Usings = new[] { "EasyGameFramework", "UnityEngine" }
                     .Concat(children
-                        .Select(c => EasyControlUtility.GetArgs(c).Bounder.TypeToBind.Type.Namespace))
+                        .Select(c => EasyControlUtility.GetArgs(c).Bounder.TypeToBind.Value.Namespace))
                     .Distinct(),
                 Namespace = _args.ViewModel.Namespace,
                 ClassName = _args.ViewModel.ClassName,
@@ -597,7 +597,7 @@ namespace EasyGameFramework.Editor
                     var args = EasyControlUtility.GetArgs(c);
                     return new
                     {
-                        Type = args.Bounder.TypeToBind.Type.Name,
+                        Type = args.Bounder.TypeToBind.Value.Name,
                         Name = args.Bounder.GetName(),
                         OriginName = args.Bounder.Name,
                         CommentSplits = GetBounderCommentSplits(args),

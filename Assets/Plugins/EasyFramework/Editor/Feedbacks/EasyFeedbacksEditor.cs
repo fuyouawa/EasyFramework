@@ -72,7 +72,6 @@ namespace EasyGameFramework.Editor
             Tree.RootProperty.Children["FeedbackList"].Draw(new GUIContent("反馈列表"));
             EditorGUI.BeginDisabledGroup(!EditorApplication.isPlaying);
             EditorGUILayout.BeginHorizontal();
-
             EditorGUI.BeginDisabledGroup(feedbacks.IsInitialized);
             if (SirenixEditorGUI.Button("初始化", ButtonSizes.Medium))
             {
