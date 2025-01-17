@@ -26,5 +26,27 @@
             <param name="handler"></param>
             <param name="triggerExtension">事件处理器的触发行为扩展</param>
         </member>
+        <member name="M:EasyGameFramework.EF_Sound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
+            <summary>
+            Plays a sound differently based on the selected play method
+            </summary>
+            <param name="sfx"></param>
+            <param name="position"></param>
+        </member>
+        <member name="M:EasyGameFramework.EF_Sound.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
+            <summary>
+            Plays the audio source with the specified volume and pitch
+            </summary>
+            <param name="audioSource"></param>
+            <param name="sfx"></param>
+            <param name="volume"></param>
+            <param name="pitch"></param>
+        </member>
+        <member name="M:EasyGameFramework.EF_Sound.GetAudioSourceFromPool">
+            <summary>
+            Gets an audio source from the pool if possible
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>
