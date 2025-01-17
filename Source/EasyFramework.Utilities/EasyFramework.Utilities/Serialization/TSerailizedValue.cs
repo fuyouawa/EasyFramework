@@ -1,9 +1,10 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyGameFramework
 {
-    [Serializable]
+    [Serializable, InlineProperty]
     public abstract class TSerailizedValue<TValue, TSerializedData> : ISerializationCallbackReceiver
     {
         public abstract TValue Value { get; set; }

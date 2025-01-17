@@ -2,6 +2,7 @@ using System;
 using EasyFramework;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
+using UnityEngine;
 
 namespace EasyGameFramework
 {
@@ -14,7 +15,8 @@ namespace EasyGameFramework
             set => _type = value;
         }
 
-        [NonSerialized, ShowInInspector] private Type _type;
+        [NonSerialized, ShowInInspector]
+        private Type _type;
 
         protected override void SerializeData(ref string serializedData)
         {

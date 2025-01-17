@@ -1,5 +1,6 @@
 using System.Linq;
 using EasyFramework;
+using Sirenix.Config;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
