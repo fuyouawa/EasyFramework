@@ -278,22 +278,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &496268285
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,22 +447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!114 &567495757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,22 +552,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &686683923
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,7 +649,7 @@ MonoBehaviour:
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
   FeedbackList:
-    _serializedData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+    _serializedData: 022f00000000016c000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000013700000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c0073002e00450046005f0041007500640069006f0053006f0075007200630065002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c007300010000002d01050000004c006100620065006c002b010600000045006e00610062006c006500011f010f000000440065006c00610079004200650066006f007200650050006c0061007900000000002b010800000042006c006f0063006b0069006e006700002b010d00000052006500700065006100740046006f00720065007600650072000017010e00000041006d006f0075006e0074004f006600520065007000650061007400010000001f011600000049006e00740065007200760061006c004200650074007700650065006e005200650070006500610074007300000000002d011100000054006100720067006500740041007500640069006f0053006f0075007200630065001d01040000004d006f00640065000000000000000000010109000000520061006e0064006f006d005300660078002f02000000013000000055006e0069007400790045006e00670069006e0065002e0041007500640069006f0043006c00690070005b005d002c00200055006e0069007400790045006e00670069006e0065002e0041007500640069006f004d006f00640075006c0065000200000006000000000000000007051f01090000004d0069006e0056006f006c0075006d0065000000803f1f01090000004d006100780056006f006c0075006d0065000000803f1f01080000004d0069006e00500069007400630068000000803f1f01080000004d0061007800500069007400630068000000803f2d011200000053006600780041007500640069006f004d006900780065007200470072006f0075007000050705
 --- !u!1 &720859276
 GameObject:
   m_ObjectHideFlags: 0
@@ -948,22 +900,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &990830402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1009,22 +945,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
+--- !u!1 &1110261505 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 895268627358715033, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+  m_PrefabInstance: {fileID: 1577381633994008878}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1151300943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,22 +1075,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1486094127
 GameObject:
   m_ObjectHideFlags: 0
@@ -1314,22 +1223,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 1
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 686683925}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: GameObject2, AutoAddCommentPara: 1, Comment: , IsInitialized: 1, Access: 1, AutoNamingNotations: 1}
 --- !u!114 &1496675120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1539,22 +1432,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 1
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: Scripts/Ui
-      Namespace: 555
-      ClassNameSameAsGameObjectName: 1
-      ClassName: OOOO
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 1
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &1903165439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,22 +1588,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06984205a87eaf147822b2235430df3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 0
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: 
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: 
-      BaseClass:
-        _assemblyQualifiedName: 
-      IsInitialized: 0
-      AssemblyQualifiedName: 
-    Bounder: {Parent: {fileID: 0}, TypeToBind:
-        _assemblyQualifiedName: 
-, NameSameAsGameObjectName: 1, Name: , AutoAddCommentPara: 1, Comment: , IsInitialized: 0, Access: 0, AutoNamingNotations: 1}
 --- !u!1 &2116186562
 GameObject:
   m_ObjectHideFlags: 0
@@ -2025,13 +1886,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 895268627358715033, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1577381633994008884}
   m_SourcePrefab: {fileID: 100100000, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
 --- !u!224 &1577381633994008879 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5389826584772733846, guid: 86e1bd07a8962104eb71103c4e67d7ca, type: 3}
   m_PrefabInstance: {fileID: 1577381633994008878}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1577381633994008884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110261505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1974863294, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fontAssetPresetId: 
+  _textPropertiesPresetId: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

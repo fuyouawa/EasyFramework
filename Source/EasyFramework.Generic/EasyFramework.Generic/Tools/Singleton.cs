@@ -20,11 +20,13 @@ namespace EasyFramework.Generic
 
             var inst = ctor.Invoke(null) as T;
             Debug.Assert(inst != null);
+
             return inst;
         }
     }
 
-    public class Singleton<T> where T : Singleton<T>
+    public class Singleton<T>
+        where T : Singleton<T>
     {
         private static readonly Lazy<T> s_instance;
 

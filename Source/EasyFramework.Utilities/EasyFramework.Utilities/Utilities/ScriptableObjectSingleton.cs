@@ -8,7 +8,7 @@ namespace EasyFramework.Utilities
     internal partial class SingletonCreator
     {
         public static T GetScriptableObject<T>(string assetDirectory, string assetName)
-            where T : ScriptableObject
+            where T : ScriptableObject, IUnitySingleton
         {
             if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
@@ -38,7 +38,7 @@ namespace EasyFramework.Utilities
         }
 
         private static T InternalGetScriptableObject<T>(string assetDirectory, string assetName)
-            where T : ScriptableObject
+            where T : ScriptableObject, IUnitySingleton
         {
             if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
@@ -58,6 +58,7 @@ namespace EasyFramework.Utilities
             {
                 throw new Exception($"加载ScriptableObject：{typeof(T).Name}失败！");
             }
+            instance.OnSingletonInit(SingletonInitialModes.Load);
 
             return instance;
         }
@@ -65,7 +66,7 @@ namespace EasyFramework.Utilities
         private static MethodInfo _getScriptableObjectSingletonInEditorMethod;
 
         private static T GetScriptableObjectInEditor<T>(string assetDirectory, string assetName)
-            where T : ScriptableObject
+            where T : ScriptableObject, IUnitySingleton
         {
             if (_getScriptableObjectSingletonInEditorMethod == null)
             {
@@ -76,10 +77,6 @@ namespace EasyFramework.Utilities
 
             var m = _getScriptableObjectSingletonInEditorMethod.MakeGenericMethod(typeof(T));
             return (T)m.Invoke(null, new object[] { assetDirectory, assetName });
-        }
-
-        internal static void LoadInstanceIfAssetExists(string assetPath, string defaultFileNameWithoutExtension = null)
-        {
         }
     }
 
@@ -104,7 +101,7 @@ namespace EasyFramework.Utilities
         }
     }
 
-    public class ScriptableObjectSingleton<T> : ScriptableObject
+    public class ScriptableObjectSingleton<T> : ScriptableObject, IUnitySingleton
         where T : ScriptableObjectSingleton<T>, new()
     {
         private static ScriptableObjectSingletonAssetPathAttribute s_assetPathAttribute;
@@ -142,6 +139,11 @@ namespace EasyFramework.Utilities
 
                 return s_instance;
             }
+        }
+
+        public virtual void OnSingletonInit(SingletonInitialModes mode)
+        {
+            
         }
     }
 }

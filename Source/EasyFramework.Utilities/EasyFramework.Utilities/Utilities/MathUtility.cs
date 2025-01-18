@@ -159,13 +159,5 @@ namespace EasyFramework.Utilities
                     Mathf.Pow(t, 2) * endPoint;
         }
         
-        public static float Round(this float value, int decimals)
-        {
-            return (float)System.Math.Round(value, decimals);
-        }
-        public static float Round(this float value)
-        {
-            return (float)System.Math.Round(value);
-        }
     }
 }

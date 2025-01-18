@@ -1,15 +1,28 @@
-﻿using System;
+using System;
+using EasyFramework.Generic;
 using UnityEngine;
 
 namespace EasyFramework.Utilities
 {
+    public enum SingletonInitialModes
+    {
+        Load,
+        Create
+    }
+
+    public interface IUnitySingleton
+    {
+        void OnSingletonInit(SingletonInitialModes mode);
+    }
+
     internal partial class SingletonCreator
     {
-        public static T CreateMonoSingleton<T>() where T : Component
+        public static T CreateMonoSingleton<T>() where T : Component, IUnitySingleton
         {
             if (!Application.isPlaying)
                 return null;
 
+            T inst;
             var instances = UnityEngine.Object.FindObjectsOfType<T>();
             if (instances.Length > 1)
             {
@@ -17,18 +30,22 @@ namespace EasyFramework.Utilities
             }
             if (instances.Length == 1)
             {
-                return instances[0];
+                inst = instances[0];
+                inst.OnSingletonInit(SingletonInitialModes.Load);
             }
-
-            var obj = new GameObject(typeof(T).Name);
-            UnityEngine.Object.DontDestroyOnLoad(obj);
-            var inst = obj.AddComponent<T>();
+            else
+            {
+                var obj = new GameObject(typeof(T).Name);
+                UnityEngine.Object.DontDestroyOnLoad(obj);
+                inst = obj.AddComponent<T>();
+                inst.OnSingletonInit(SingletonInitialModes.Create);
+            }
 
             return inst;
         }
     }
 
-    public class MonoSingleton<T> : MonoBehaviour
+    public class MonoSingleton<T> : MonoBehaviour, IUnitySingleton
         where T : MonoSingleton<T>
     {
         private static T _instance;
@@ -70,6 +87,10 @@ namespace EasyFramework.Utilities
         protected virtual void OnDestroy()
         {
             _instance = null;
+        }
+
+        public virtual void OnSingletonInit(SingletonInitialModes mode)
+        {
         }
     }
 }

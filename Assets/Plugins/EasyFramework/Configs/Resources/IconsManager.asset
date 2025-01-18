@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 213382987, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
+  m_Name: IconsManager
+  m_EditorClassIdentifier: 
+  IconClear: {fileID: 588755049, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconError: {fileID: -1006533882, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconHide: {fileID: -846060060, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconInfo: {fileID: 1051942032, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconResizeAllDirections: {fileID: -1791711879, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconResizeVerticalOnly: {fileID: -1842501923, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconSpanToBottom: {fileID: -963685053, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconSpanToBottomBg: {fileID: 2030646513, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconWarning: {fileID: 2000806680, guid: bafa791d564fa50499827b067601f619, type: 3}
+  SearchIcon: {fileID: -1315027747, guid: bafa791d564fa50499827b067601f619, type: 3}
+  SlicedBackground: {fileID: 1926957630, guid: bafa791d564fa50499827b067601f619, type: 3}
+  SlicedBackground2: {fileID: 1600542431, guid: bafa791d564fa50499827b067601f619, type: 3}
+  SlicedBackground3: {fileID: -803909252, guid: bafa791d564fa50499827b067601f619, type: 3}
+  IconCollapse: {fileID: -1633570471, guid: bafa791d564fa50499827b067601f619, type: 3}
