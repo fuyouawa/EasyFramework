@@ -34,7 +34,7 @@ namespace EasyFramework.Tools.Editor
                 OnContentGUI = rect =>
                 {
                     EasyEditorGUI.Title("初始化");
-                    feedbacks.InitializationMode = EnumSelector<EasyFeedbacks.InitializationModes>.DrawEnumField(
+                    feedbacks.InitializationMode = EasyEditorGUI.EnumField(
                         new GUIContent("初始化模式"),
                         feedbacks.InitializationMode);
 

@@ -45,11 +45,12 @@ namespace EasyFramework.Tools.Editor
                         OnContentGUI = rect =>
                         {
                             EditorGUI.BeginChangeCheck();
-                            fontAssetPreset.FontAsset = (TMP_FontAsset)SirenixEditorFields.UnityObjectField(
-                                new GUIContent("字体资产"), fontAssetPreset.FontAsset, typeof(TMP_FontAsset), false);
-                            fontAssetPreset.Material =
-                                (Material)SirenixEditorFields.UnityObjectField(new GUIContent("材质"),
-                                    fontAssetPreset.Material, typeof(Material), false);
+                            fontAssetPreset.FontAsset = EasyEditorGUI.UnityObjectField(
+                                new GUIContent("字体资产"),
+                                fontAssetPreset.FontAsset, false);
+                            fontAssetPreset.Material = EasyEditorGUI.UnityObjectField(
+                                new GUIContent("材质"),
+                                fontAssetPreset.Material, false);
                             if (EditorGUI.EndChangeCheck())
                             {
                                 EditorUtility.SetDirty(mgr);
@@ -68,10 +69,14 @@ namespace EasyFramework.Tools.Editor
                         OnContentGUI = rect =>
                         {
                             EditorGUI.BeginChangeCheck();
-                            textPropertiesPreset.FontSize =
-                                EditorGUILayout.FloatField("字体资产", textPropertiesPreset.FontSize);
-                            textPropertiesPreset.FontColor = SirenixEditorFields.ColorField(new GUIContent("字体颜色"),
+                            textPropertiesPreset.FontSize = EditorGUILayout.FloatField(
+                                "字体资产",
+                                textPropertiesPreset.FontSize);
+
+                            textPropertiesPreset.FontColor = SirenixEditorFields.ColorField(
+                                new GUIContent("字体颜色"),
                                 textPropertiesPreset.FontColor);
+
                             if (EditorGUI.EndChangeCheck())
                             {
                                 EditorUtility.SetDirty(mgr);

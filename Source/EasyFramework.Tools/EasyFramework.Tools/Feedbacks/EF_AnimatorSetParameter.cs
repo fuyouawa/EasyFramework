@@ -1,4 +1,3 @@
-using Sirenix.OdinInspector;
 using System;
 using UnityEngine;
 
@@ -14,23 +13,13 @@ namespace EasyFramework.Tools
             Bool
         }
 
-        [FoldoutGroup("Set Parameter")]
-        [Required]
         public Animator TargetAnimator;
-        [FoldoutGroup("Set Parameter")]
         public string ParameterName;
-        [FoldoutGroup("Set Parameter")]
         public ParameterTypes ParameterType;
-        [FoldoutGroup("Set Parameter")]
-        [ShowIf("ParameterType", ParameterTypes.Int)]
         public int IntToSet;
-        [FoldoutGroup("Set Parameter")]
-        [ShowIf("ParameterType", ParameterTypes.Float)]
         public float FloatToSet;
-        [FoldoutGroup("Set Parameter")]
-        [ShowIf("ParameterType", ParameterTypes.Bool)]
         public bool BoolToSet;
-        
+
         public override string Tip => "设置指定Animator的参数";
 
         private int _paramId;

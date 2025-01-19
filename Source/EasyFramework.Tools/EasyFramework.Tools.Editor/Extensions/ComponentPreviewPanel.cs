@@ -455,8 +455,7 @@ namespace EasyGameFramework.Editor
                 return false;
             }
 
-            if (t.Name == "ParticleSystemRenderer" &&
-                t.Assembly.FullName.StartsWith("UnityEngine.ParticleSystemModule"))
+            if (t == typeof(ParticleSystemRenderer))
             {
                 return false;
             }
