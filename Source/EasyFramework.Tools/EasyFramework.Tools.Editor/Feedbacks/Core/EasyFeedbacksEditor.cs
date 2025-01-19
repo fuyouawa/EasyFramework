@@ -52,8 +52,8 @@ namespace EasyFramework.Tools.Editor
 
                     _initializationMode.Draw(new GUIContent("初始化模式"));
                     _autoInitialization.Draw(new GUIContent("自动初始化", "确保播放前所有Feedbacks都初始化"));
-                    _autoPlayOnStart.Draw(new GUIContent("Start时自动播放", "在Start时自动播放一次"));
-                    _autoPlayOnEnable.Draw(new GUIContent("Enable时自动播放", "在OnEnable时自动播放一次"));
+                    _autoPlayOnStart.Draw(new GUIContent("开始时自动播放", "在开始时自动播放一次"));
+                    _autoPlayOnEnable.Draw(new GUIContent("激活时自动播放", "在激活时自动播放一次"));
 
                     EasyEditorGUI.Title("播放");
                     _canPlay.Draw(new GUIContent("是否可以播放", "是否可以播放"));
@@ -64,7 +64,7 @@ namespace EasyFramework.Tools.Editor
                         _canMultiPlay.Draw(new GUIContent(
                             "是否可以多重播放",
                             "是否可以同时存在多个播放\n" +
-                            "注意：Feedback的OnFeedbackStop只会在最后一个播放结束时调用"));
+                            "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用"));
                     }
                 }
             });

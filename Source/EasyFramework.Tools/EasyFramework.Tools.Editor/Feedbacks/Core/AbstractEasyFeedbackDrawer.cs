@@ -81,13 +81,13 @@ namespace EasyFramework.Tools.Editor
 
             _label.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_label, this),
-                "Feedback设置",
+                "反馈设置",
                 _label.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
                     _delayBeforePlay.Draw(new GUIContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"));
-                    _blocking.Draw(new GUIContent("阻塞", "是否会阻塞Feedbacks运行"));
+                    _blocking.Draw(new GUIContent("阻塞", "是否会阻塞反馈运行"));
                     _repeatForever.Draw(new GUIContent("无限重复", "无限重复播放"));
 
                     if (!value.RepeatForever)
@@ -107,6 +107,11 @@ namespace EasyFramework.Tools.Editor
             if (GUILayout.Button("播放"))
             {
                 value.StartCoroutine(value.PlayCo());
+            }
+
+            if (GUILayout.Button("重置"))
+            {
+                value.Reset();
             }
 
             if (GUILayout.Button("停止"))

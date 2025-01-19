@@ -1,12 +1,10 @@
 using System.Collections;
-using Sirenix.OdinInspector;
 
 namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("辅助/运行指定帧数")]
     public class EF_AuxiliaryRunFrame : AbstractEasyFeedback
     {
-        [FoldoutGroup("Run Frame")]
         public float Frame;
         
         public override string Tip => "运行指定帧数";

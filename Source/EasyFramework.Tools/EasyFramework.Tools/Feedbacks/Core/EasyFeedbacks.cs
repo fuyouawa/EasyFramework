@@ -9,11 +9,11 @@ namespace EasyFramework.Tools
     {
         public enum InitializationModes
         {
-            Awake,
-            Start
+            OnAwake,
+            OnStart
         }
 
-        public InitializationModes InitializationMode = InitializationModes.Awake;
+        public InitializationModes InitializationMode = InitializationModes.OnAwake;
         public bool AutoInitialization = true;
         public bool AutoPlayOnStart;
         public bool AutoPlayOnEnable;
@@ -50,7 +50,7 @@ namespace EasyFramework.Tools
 
             _coroutines = new List<Coroutine>();
             CoroutineHelper = coroutineHelper;
-            if (InitializationMode == InitializationModes.Awake)
+            if (InitializationMode == InitializationModes.OnAwake)
             {
                 Initialize();
             }
@@ -58,7 +58,7 @@ namespace EasyFramework.Tools
 
         private void Start()
         {
-            if (InitializationMode == InitializationModes.Start)
+            if (InitializationMode == InitializationModes.OnStart)
             {
                 Initialize();
             }

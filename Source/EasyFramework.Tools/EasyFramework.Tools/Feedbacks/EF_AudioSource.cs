@@ -1,7 +1,4 @@
 using System;
-using EasyFramework.Utilities;
-using Sirenix.OdinInspector;
-using UnityEngine.Audio;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
