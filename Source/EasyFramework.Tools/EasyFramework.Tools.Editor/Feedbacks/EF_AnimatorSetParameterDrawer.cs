@@ -9,53 +9,54 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_AnimatorSetParameterDrawer : AbstractEasyFeedbackDrawer<EF_AnimatorSetParameter>
     {
-        private InspectorProperty _property;
+        private InspectorProperty _targetAnimator;
+        private InspectorProperty _parameterName;
+        private InspectorProperty _parameterType;
+        private InspectorProperty _intToSet;
+        private InspectorProperty _floatToSet;
+        private InspectorProperty _boolToSet;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _property = Property.Children["TargetAnimator"];
+            _targetAnimator = Property.Children["TargetAnimator"];
+            _parameterName = Property.Children["ParameterName"];
+            _parameterType = Property.Children["ParameterType"];
+            _intToSet = Property.Children["IntToSet"];
+            _floatToSet = Property.Children["FloatToSet"];
+            _boolToSet = Property.Children["BoolToSet"];
         }
 
         protected override void DrawOtherPropertyLayout()
         {
             var value = ValueEntry.SmartValue;
 
-            _property.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_property, this),
+            _targetAnimator.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(_targetAnimator, this),
                 "设置参数",
-                _property.State.Expanded)
+                _targetAnimator.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
-                    value.TargetAnimator = EasyEditorGUI.UnityObjectField(
-                        new GUIContent("目标动画机"),
-                        value.TargetAnimator, true);
+                    if (value.TargetAnimator == null)
+                    {
+                        EasyEditorGUI.MessageBox("目标动画机不能为空！", MessageType.Error);
+                    }
 
-                    value.ParameterName = EditorGUILayout.TextField(
-                        new GUIContent("参数名称"),
-                        value.ParameterName);
-
-                    value.ParameterType = EasyEditorGUI.EnumField(
-                        new GUIContent("参数类型"),
-                        value.ParameterType);
+                    _targetAnimator.Draw(new GUIContent("目标动画机"));
+                    _parameterName.Draw(new GUIContent("参数名称"));
+                    _parameterType.Draw(new GUIContent("参数类型"));
 
                     switch (value.ParameterType)
                     {
                         case EF_AnimatorSetParameter.ParameterTypes.Int:
-                            value.IntToSet = EditorGUILayout.IntField(
-                                new GUIContent("Int To Set"),
-                                value.IntToSet);
+                            _intToSet.Draw(new GUIContent("参数设置（Int）"));
                             break;
                         case EF_AnimatorSetParameter.ParameterTypes.Float:
-                            value.FloatToSet = EditorGUILayout.FloatField(
-                                new GUIContent("Float To Set"),
-                                value.FloatToSet);
+                            _floatToSet.Draw(new GUIContent("参数设置（Float）"));
                             break;
                         case EF_AnimatorSetParameter.ParameterTypes.Bool:
-                            value.BoolToSet = EditorGUILayout.Toggle(
-                                new GUIContent("Bool To Set"),
-                                value.BoolToSet);
+                            _boolToSet.Draw(new GUIContent("参数设置（Bool）"));
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

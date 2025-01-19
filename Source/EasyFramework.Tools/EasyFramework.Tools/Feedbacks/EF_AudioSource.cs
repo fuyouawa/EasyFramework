@@ -7,37 +7,25 @@ using Random = UnityEngine.Random;
 
 namespace EasyFramework.Tools
 {
-    [AddEasyFeedbackMenu("音效/播放音效源")]
+    [AddEasyFeedbackMenu("音效/播放音频源")]
     public class EF_AudioSource : AbstractEasyFeedback
     {
-        public enum Modes { Play, Pause, UnPause, Stop }
+        public enum Modes
+        {
+            Play,
+            Pause,
+            UnPause,
+            Stop
+        }
 
-        [FoldoutGroup("Audio Source")]
-        [Required]
         public AudioSource TargetAudioSource;
-        [FoldoutGroup("Audio Source")]
         public Modes Mode = Modes.Play;
-
-        [FoldoutGroup("Audio Source")]
-        [TitleCN("Random Sound")]
         public AudioClip[] RandomSfx = Array.Empty<AudioClip>();
-
-        [FoldoutGroup("Audio Settings")]
-        [TitleCN("Volume")]
         public float MinVolume = 1f;
-        [FoldoutGroup("Audio Settings")]
         public float MaxVolume = 1f;
-
-        [FoldoutGroup("Audio Settings")]
-        [TitleCN("Pitch")]
         public float MinPitch = 1f;
-        [FoldoutGroup("Audio Settings")]
         public float MaxPitch = 1f;
 
-        [FoldoutGroup("Audio Settings")]
-        [TitleCN("Mixer")]
-        public AudioMixerGroup SfxAudioMixerGroup;
-        
         public override string Tip => "播放场景中指定的AudioSource";
 
         private AudioClip _randomClip;
@@ -58,6 +46,7 @@ namespace EasyFramework.Tools
                         _randomClip = RandomSfx[Random.Range(0, RandomSfx.Length)];
                         TargetAudioSource.clip = _randomClip;
                     }
+
                     float volume = Random.Range(MinVolume, MaxVolume);
                     float pitch = Random.Range(MinPitch, MaxPitch);
                     _duration = TargetAudioSource.clip.length;
@@ -82,6 +71,7 @@ namespace EasyFramework.Tools
                     throw new ArgumentOutOfRangeException();
             }
         }
+
         private void PlayAudioSource(AudioSource audioSource, float volume, float pitch)
         {
             audioSource.volume = volume;

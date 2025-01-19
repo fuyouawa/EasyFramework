@@ -46,11 +46,25 @@ namespace EasyFramework.Tools.Editor
             return "      " + (value.Label.IsNullOrEmpty() ? "TODO" : value.Label);
         }
 
-        private InspectorProperty _property;
+        private InspectorProperty _label;
+        private InspectorProperty _enable;
+        private InspectorProperty _delayBeforePlay;
+        private InspectorProperty _blocking;
+        private InspectorProperty _repeatForever;
+        private InspectorProperty _amountOfRepeat;
+        private InspectorProperty _intervalBetweenRepeats;
+
+
         protected override void Initialize()
         {
             base.Initialize();
-            _property = Property.Children["Label"];
+            _label = Property.Children["Label"];
+            _enable = Property.Children["Enable"];
+            _delayBeforePlay = Property.Children["DelayBeforePlay"];
+            _blocking = Property.Children["Blocking"];
+            _repeatForever = Property.Children["RepeatForever"];
+            _amountOfRepeat = Property.Children["AmountOfRepeat"];
+            _intervalBetweenRepeats = Property.Children["IntervalBetweenRepeats"];
         }
 
         protected override void OnContentGUI(Rect headerRect)
@@ -62,34 +76,26 @@ namespace EasyFramework.Tools.Editor
                 EasyEditorGUI.MessageBox(value.Tip, MessageType.Info);
             }
 
-            value.Label = EditorGUILayout.TextField(new GUIContent("标签"), value.Label);
-            value.Enable = EditorGUILayout.Toggle(new GUIContent("激活"), value.Enable);
+            _label.Draw(new GUIContent("标签"));
+            _enable.Draw(new GUIContent("激活"));
 
-            _property.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_property, this),
+            _label.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(_label, this),
                 "Feedback设置",
-                _property.State.Expanded)
+                _label.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
-                    value.DelayBeforePlay = EditorGUILayout.FloatField(
-                        new GUIContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"),
-                        value.DelayBeforePlay);
-                    value.Blocking = EditorGUILayout.Toggle(
-                        new GUIContent("阻塞", "是否会阻塞Feedbacks运行"),
-                        value.Blocking);
+                    _delayBeforePlay.Draw(new GUIContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"));
+                    _blocking.Draw(new GUIContent("阻塞", "是否会阻塞Feedbacks运行"));
+                    _repeatForever.Draw(new GUIContent("无限重复", "无限重复播放"));
 
-                    value.RepeatForever = EditorGUILayout.Toggle(
-                        new GUIContent("无限重复", "无限重复播放"),
-                        value.RepeatForever);
+                    if (!value.RepeatForever)
+                    {
+                        _amountOfRepeat.Draw(new GUIContent("重复次数", "重复播放的次数"));
+                    }
 
-                    value.AmountOfRepeat = EditorGUILayout.IntField(
-                        new GUIContent("重复次数", "重复播放的次数"),
-                        value.AmountOfRepeat);
-
-                    value.IntervalBetweenRepeats = EditorGUILayout.FloatField(
-                        new GUIContent("重复间隔", "每次循环播放的间隔"),
-                        value.IntervalBetweenRepeats);
+                    _intervalBetweenRepeats.Draw(new GUIContent("重复间隔", "每次循环播放的间隔"));
                 }
             });
 
@@ -102,6 +108,7 @@ namespace EasyFramework.Tools.Editor
             {
                 value.StartCoroutine(value.PlayCo());
             }
+
             if (GUILayout.Button("停止"))
             {
                 value.Stop();
@@ -121,9 +128,11 @@ namespace EasyFramework.Tools.Editor
                 {
                     s_ignoreDrawFields = typeof(AbstractEasyFeedback).GetFields().ToArray();
                 }
+
                 return s_ignoreDrawFields;
             }
         }
+
         protected virtual void DrawOtherPropertyLayout()
         {
             foreach (var child in Property.Children)
