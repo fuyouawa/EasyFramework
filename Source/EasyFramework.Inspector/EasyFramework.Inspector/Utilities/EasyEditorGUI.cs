@@ -276,6 +276,22 @@ namespace EasyFramework.Inspector
 
         #endregion
 
+        #region Label
+
+        public static Rect PrefixLabel(Rect totalRect, LabelConfig config)
+        {
+            var colorTmp = GUI.color;
+            if (config.Color != null)
+            {
+                GUI.color = (Color)config.Color;
+            }
+            var rect = EditorGUI.PrefixLabel(totalRect, config.Content, config.Style);
+            GUI.color = colorTmp;
+            return rect;
+        }
+
+        #endregion
+
         #region Foldout
 
         public static bool FoldoutHeader(FoldoutHeaderConfig config)
@@ -343,10 +359,10 @@ namespace EasyFramework.Inspector
 
             headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
-            if (config.RightLabel != null && config.RightLabel != GUIContent.none)
+            if (config.RightLabelConfig != null && config.RightLabelConfig.Content != GUIContent.none)
             {
-                var s = SirenixGUIStyles.Label.CalcSize(config.RightLabel);
-                EditorGUI.PrefixLabel(headerRect.AlignRight(s.x), config.RightLabel);
+                var s = SirenixGUIStyles.Label.CalcSize(config.RightLabelConfig.Content);
+                PrefixLabel(headerRect.AlignRight(s.x), config.RightLabelConfig);
             }
 
             config.OnCoveredTitleBarGUI?.Invoke(headerRect);

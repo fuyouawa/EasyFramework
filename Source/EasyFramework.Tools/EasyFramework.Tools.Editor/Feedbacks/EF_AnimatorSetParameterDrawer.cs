@@ -33,17 +33,17 @@ namespace EasyFramework.Tools.Editor
 
             _targetAnimator.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_targetAnimator, this),
-                "设置参数",
+                "动画控制器参数设置",
                 _targetAnimator.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
                     if (value.TargetAnimator == null)
                     {
-                        EasyEditorGUI.MessageBox("目标动画机不能为空！", MessageType.Error);
+                        EasyEditorGUI.MessageBox("目标动画控制器不能为空！", MessageType.Error);
                     }
 
-                    _targetAnimator.Draw(new GUIContent("目标动画机"));
+                    _targetAnimator.Draw(new GUIContent("目标动画控制器"));
                     _parameterName.Draw(new GUIContent("参数名称"));
                     _parameterType.Draw(new GUIContent("参数类型"));
 

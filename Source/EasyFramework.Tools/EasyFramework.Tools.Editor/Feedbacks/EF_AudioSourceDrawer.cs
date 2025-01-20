@@ -27,7 +27,7 @@ namespace EasyFramework.Tools.Editor
 
             _targetAudioSource.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_targetAudioSource, this),
-                "播放音频源", _targetAudioSource.State.Expanded)
+                "音频源播放", _targetAudioSource.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
@@ -43,12 +43,12 @@ namespace EasyFramework.Tools.Editor
                     SirenixEditorFields.MinMaxSlider(
                         new GUIContent("响度范围"),
                         ref value.MinVolume, ref value.MaxVolume,
-                        0f, 10f, true);
+                        0f, 2f, true);
 
                     SirenixEditorFields.MinMaxSlider(
                         new GUIContent("音高范围"),
                         ref value.MinPitch, ref value.MaxPitch,
-                        0f, 10f, true);
+                        -3f, 3f, true);
                 }
             });
         }

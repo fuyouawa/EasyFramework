@@ -12,84 +12,57 @@ namespace EasyFramework.Tools
     [AddEasyFeedbackMenu("音效/播放声音")]
     public class EF_Sound : AbstractEasyFeedback
     {
-        public enum PlayMethods { Cached, OnDemand, Pool }
+        public enum PlayMethods
+        {
+            Cached,
+            OnDemand,
+            Pool
+        }
 
-        [FoldoutGroup("Sound")]
         public AudioClip Sfx;
-        [FoldoutGroup("Sound")]
-        [HideIf("@Sfx != null")]
         public AudioClip[] RandomSfx = Array.Empty<AudioClip>();
 
-        [FoldoutGroup("Play Method")]
+        // 播放方式
+
         public PlayMethods PlayMethod = PlayMethods.Cached;
-        [FoldoutGroup("Play Method")]
-        [ShowIf("PlayMethod", PlayMethods.Pool)]
         public int PoolSize = 10;
-        [FoldoutGroup("Play Method")]
         public bool StopSoundOnFeedbackStop = true;
 
-        [FoldoutGroup("Sound Properties")]
-        [TitleCN("Volume")]
-        [Range(0f, 2f)]
+        // 声音属性
+
         public float MinVolume = 1f;
-        [FoldoutGroup("Sound Properties")]
-        [Range(0f, 2f)]
         public float MaxVolume = 1f;
-
-        [FoldoutGroup("Sound Properties")]
-        [TitleCN("Pitch")]
-        [Range(-3f, 3f)]
         public float MinPitch = 1f;
-        [FoldoutGroup("Sound Properties")]
-        [Range(-3f, 3f)]
         public float MaxPitch = 1f;
-
-        [FoldoutGroup("Sound Properties")]
-        [TitleCN("Mixer")]
         public AudioMixerGroup SfxAudioMixerGroup;
-        [FoldoutGroup("Sound Properties")]
         public int Priority = 128;
 
-        [FoldoutGroup("Spatial Settings")]
-        [Range(-1f, 1f)]
+        // 空间设置
+
         public float PanStereo;
-        [FoldoutGroup("Spatial Settings")]
-        [Range(0f, 1f)]
         public float SpatialBlend;
 
-        [FoldoutGroup("3D Sound Settings")]
-        [Range(0f, 5f)]
+        // 3d声音设置
+
         public float DopplerLevel = 1f;
-        [FoldoutGroup("3D Sound Settings")]
-        [Range(0, 360)]
         public int Spread = 0;
-        [FoldoutGroup("3D Sound Settings")]
+
         public AudioRolloffMode RolloffMode = AudioRolloffMode.Logarithmic;
-        [FoldoutGroup("3D Sound Settings")]
         public float MinDistance = 1f;
-        [FoldoutGroup("3D Sound Settings")]
         public float MaxDistance = 500f;
-        [FoldoutGroup("3D Sound Settings")]
+
         public bool UseCustomRolloffCurve = false;
-        [FoldoutGroup("3D Sound Settings")]
-        [ShowIf("UseCustomRolloffCurve")]
         public AnimationCurve CustomRolloffCurve;
-        [FoldoutGroup("3D Sound Settings")]
+
         public bool UseSpatialBlendCurve = false;
-        [FoldoutGroup("3D Sound Settings")]
-        [ShowIf("UseSpatialBlendCurve")]
         public AnimationCurve SpatialBlendCurve;
-        [FoldoutGroup("3D Sound Settings")]
+
         public bool UseReverbZoneMixCurve = false;
-        [FoldoutGroup("3D Sound Settings")]
-        [ShowIf("UseReverbZoneMixCurve")]
         public AnimationCurve ReverbZoneMixCurve;
-        [FoldoutGroup("3D Sound Settings")]
+
         public bool UseSpreadCurve = false;
-        [FoldoutGroup("3D Sound Settings")]
-        [ShowIf("UseSpreadCurve")]
         public AnimationCurve SpreadCurve;
-        
+
         public override string Tip => "配置一个声音用于播放, 在初始化时会自动创建对应的AudioSource";
 
         private AudioClip _randomClip;
@@ -105,6 +78,7 @@ namespace EasyFramework.Tools
             {
                 _cachedAudioSource = CreateAudioSource(Owner.gameObject, "CachedFeedbackAudioSource");
             }
+
             if (PlayMethod == PlayMethods.Pool)
             {
                 // create a pool
@@ -148,7 +122,6 @@ namespace EasyFramework.Tools
                     _duration = _randomClip.length;
                     PlaySound(_randomClip, Owner.transform.position);
                 }
-
             }
         }
 
@@ -211,6 +184,7 @@ namespace EasyFramework.Tools
                     {
                         PlayAudioSource(_tempAudioSource, sfx, volume, pitch, SfxAudioMixerGroup, Priority);
                     }
+
                     break;
             }
         }
@@ -233,7 +207,8 @@ namespace EasyFramework.Tools
         /// <param name="sfx"></param>
         /// <param name="volume"></param>
         /// <param name="pitch"></param>
-        private void PlayAudioSource(AudioSource audioSource, AudioClip sfx, float volume, float pitch, AudioMixerGroup audioMixerGroup = null, int priority = 128)
+        private void PlayAudioSource(AudioSource audioSource, AudioClip sfx, float volume, float pitch,
+            AudioMixerGroup audioMixerGroup = null, int priority = 128)
         {
             _audioSource = audioSource;
             // we set that audio source clip to the one in paramaters
@@ -251,16 +226,33 @@ namespace EasyFramework.Tools
             audioSource.rolloffMode = RolloffMode;
             audioSource.minDistance = MinDistance;
             audioSource.maxDistance = MaxDistance;
-            if (UseSpreadCurve) { audioSource.SetCustomCurve(AudioSourceCurveType.Spread, SpreadCurve); }
-            if (UseCustomRolloffCurve) { audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, CustomRolloffCurve); }
-            if (UseSpatialBlendCurve) { audioSource.SetCustomCurve(AudioSourceCurveType.SpatialBlend, SpatialBlendCurve); }
-            if (UseReverbZoneMixCurve) { audioSource.SetCustomCurve(AudioSourceCurveType.ReverbZoneMix, ReverbZoneMixCurve); }
+            if (UseSpreadCurve)
+            {
+                audioSource.SetCustomCurve(AudioSourceCurveType.Spread, SpreadCurve);
+            }
+
+            if (UseCustomRolloffCurve)
+            {
+                audioSource.SetCustomCurve(AudioSourceCurveType.CustomRolloff, CustomRolloffCurve);
+            }
+
+            if (UseSpatialBlendCurve)
+            {
+                audioSource.SetCustomCurve(AudioSourceCurveType.SpatialBlend, SpatialBlendCurve);
+            }
+
+            if (UseReverbZoneMixCurve)
+            {
+                audioSource.SetCustomCurve(AudioSourceCurveType.ReverbZoneMix, ReverbZoneMixCurve);
+            }
+
             // we set our loop setting
             audioSource.loop = false;
             if (audioMixerGroup != null)
             {
                 audioSource.outputAudioMixerGroup = audioMixerGroup;
             }
+
             // we start playing the sound
             audioSource.Play();
         }
@@ -278,6 +270,7 @@ namespace EasyFramework.Tools
                     return _pool[i];
                 }
             }
+
             return null;
         }
     }

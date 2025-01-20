@@ -32,12 +32,11 @@ namespace EasyFramework.Tools.Editor
 
         protected override void DrawOtherPropertyLayout()
         {
-            base.DrawOtherPropertyLayout();
             var value = ValueEntry.SmartValue;
 
             _prefab.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_prefab, this),
-                "实例化", _prefab.State.Expanded)
+                "游戏对象实例化", _prefab.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {

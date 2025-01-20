@@ -17,11 +17,9 @@ namespace EasyFramework.Tools.Editor
 
         protected override void DrawOtherPropertyLayout()
         {
-            base.DrawOtherPropertyLayout();
-            
             _picker.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_picker, this),
-                "调用函数", _picker.State.Expanded)
+                "游戏对象的函数调用", _picker.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {

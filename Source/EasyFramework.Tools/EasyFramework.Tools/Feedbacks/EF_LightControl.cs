@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using EasyFramework.Utilities;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.Tools

@@ -4,6 +4,7 @@ using System.Reflection;
 using EasyFramework.Generic;
 using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,22 +29,25 @@ namespace EasyFramework.Tools.Editor
             value.Enable = EditorGUI.Toggle(buttonRect, value.Enable);
         }
 
-        protected override string GetRightLabel(GUIContent label)
+        protected override LabelConfig GetRightLabelConfig(GUIContent label)
         {
-            var attr = ValueEntry.SmartValue.GetType().GetCustomAttribute<AddEasyFeedbackMenuAttribute>();
-            if (attr != null)
-            {
-                return $"[{attr.Path.Split("/").Last()}]";
-            }
-
-            return base.GetRightLabel(label);
+            var attr = Property.GetAttribute<AddEasyFeedbackMenuAttribute>();
+            return new LabelConfig(
+                $"[{attr.Path.Replace("/", " - ")}]",
+                Color.yellow,
+                SirenixGUIStyles.BoldLabel);
         }
 
-        protected override string GetLabel(GUIContent label)
+        protected override Color GetRightLabelColor(GUIContent label)
+        {
+            return Color.yellow;
+        }
+
+        protected override GUIContent GetLabel(GUIContent label)
         {
             var value = ValueEntry.SmartValue;
 
-            return "      " + (value.Label.IsNullOrEmpty() ? "TODO" : value.Label);
+            return new GUIContent("      " + (value.Label.IsNullOrEmpty() ? "TODO" : value.Label));
         }
 
         private InspectorProperty _label;
@@ -53,7 +57,6 @@ namespace EasyFramework.Tools.Editor
         private InspectorProperty _repeatForever;
         private InspectorProperty _amountOfRepeat;
         private InspectorProperty _intervalBetweenRepeats;
-
 
         protected override void Initialize()
         {
@@ -96,7 +99,7 @@ namespace EasyFramework.Tools.Editor
                     }
 
                     _intervalBetweenRepeats.Draw(new GUIContent("重复间隔", "每次循环播放的间隔"));
-                }
+                },
             });
 
             DrawOtherPropertyLayout();

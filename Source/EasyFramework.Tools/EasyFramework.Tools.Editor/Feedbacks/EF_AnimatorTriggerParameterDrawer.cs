@@ -24,17 +24,17 @@ namespace EasyFramework.Tools.Editor
 
             _targetAnimator.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_targetAnimator, this),
-                "触发参数", _targetAnimator.State.Expanded)
+                "动画控制器参数触发", _targetAnimator.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
                     if (value.TargetAnimator == null)
                     {
-                        EasyEditorGUI.MessageBox("目标动画机不能为空！", MessageType.Error);
+                        EasyEditorGUI.MessageBox("目标动画控制器不能为空！", MessageType.Error);
                     }
 
-                    _targetAnimator.Draw(new GUIContent("目标动画机"));
-                    _parameterName.Draw(new GUIContent("参数名称", "要进行触发的Trigger参数名称"));
+                    _targetAnimator.Draw(new GUIContent("目标动画控制器"));
+                    _parameterName.Draw(new GUIContent("参数名称", "要进行触发的参数名称"));
                 }
             });
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyFramework.Tools
 {
-    [AddEasyFeedbackMenu("动画器/设置参数")]
+    [AddEasyFeedbackMenu("动画控制器/设置参数")]
     public class EF_AnimatorSetParameter : AbstractEasyFeedback
     {
         public enum ParameterTypes
@@ -20,7 +20,7 @@ namespace EasyFramework.Tools
         public float FloatToSet;
         public bool BoolToSet;
 
-        public override string Tip => "设置指定Animator的参数";
+        public override string Tip => "设置指定动画控制器的参数";
 
         private int _paramId;
 

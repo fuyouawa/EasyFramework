@@ -45,7 +45,7 @@ namespace EasyFramework.Tools.Editor
             {
                 OnContentGUI = rect =>
                 {
-                    _targetLight.Draw(new GUIContent("对象"));
+                    _targetLight.Draw(new GUIContent("目标光照"));
                     _duration.Draw(new GUIContent("持续时间"));
                     _disableOnStop.Draw(new GUIContent("停止时禁用"));
                     _relativeValues.Draw(new GUIContent("使用相对数值"));

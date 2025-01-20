@@ -52,6 +52,43 @@ namespace EasyFramework.Inspector
         }
     }
 
+    public class LabelConfig
+    {
+        public GUIContent Content;
+        public Color? Color;
+        public GUIStyle Style;
+
+        public LabelConfig()
+        {
+            Content = GUIContent.none;
+        }
+
+        public LabelConfig(GUIContent content, GUIStyle style = null)
+        {
+            Content = content;
+            Style = style;
+        }
+        public LabelConfig(GUIContent content, Color color, GUIStyle style = null)
+        {
+            Content = content;
+            Style = style;
+            Color = color;
+        }
+
+        public LabelConfig(string content, GUIStyle style = null)
+        {
+            Content = new GUIContent(content);
+            Style = style;
+        }
+
+        public LabelConfig(string content, Color color, GUIStyle style = null)
+        {
+            Content = new GUIContent(content);
+            Style = style;
+            Color = color;
+        }
+    }
+
     public class FoldoutHeaderConfig
     {
         public GUIContent Label;
@@ -59,7 +96,7 @@ namespace EasyFramework.Inspector
         public bool Expandable = true;
         public Color? BoxColor;
         public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
-        public GUIContent RightLabel = GUIContent.none;
+        public LabelConfig RightLabelConfig = new LabelConfig();
 
         public FoldoutHeaderConfig(string label, bool expand = true)
         {

@@ -12,20 +12,26 @@ namespace EasyFramework.Inspector
             {
                 OnTitleBarGUI = OnTitleBarGUI,
                 OnCoveredTitleBarGUI = OnCoveredTitleBarGUI,
-                OnContentGUI = OnContentGUI
+                OnContentGUI = OnContentGUI,
+                RightLabelConfig = GetRightLabelConfig(label),
             };
 
             Property.State.Expanded = EasyEditorGUI.FoldoutGroup(config);
         }
 
-        protected virtual string GetLabel(GUIContent label)
+        protected virtual GUIContent GetLabel(GUIContent label)
         {
-            return label.text;
+            return label;
         }
 
-        protected virtual string GetRightLabel(GUIContent label)
+        protected virtual LabelConfig GetRightLabelConfig(GUIContent label)
         {
-            return string.Empty;
+            return new LabelConfig();
+        }
+
+        protected virtual Color GetRightLabelColor(GUIContent label)
+        {
+            return Color.white;
         }
         
         protected virtual void OnCoveredTitleBarGUI(Rect headerRect)

@@ -19,16 +19,14 @@ namespace EasyFramework.Tools.Editor
 
         protected override void DrawOtherPropertyLayout()
         {
-            base.DrawOtherPropertyLayout();
-            
             _target.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_target, this),
-                "设置启用状态", _target.State.Expanded)
+                "游戏对象的激活设置", _target.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
-                    _target.Draw(new GUIContent("对象"));
-                    _activeToSet.Draw(new GUIContent("启用状态"));
+                    _target.Draw(new GUIContent("目标游戏对象"));
+                    _activeToSet.Draw(new GUIContent("激活设置"));
                 }
             });
         }

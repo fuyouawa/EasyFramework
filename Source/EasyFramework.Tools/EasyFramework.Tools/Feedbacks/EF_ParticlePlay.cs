@@ -8,44 +8,31 @@ namespace EasyFramework.Tools
     [AddEasyFeedbackMenu("粒子/播放粒子")]
     public class EF_ParticlePlay : AbstractEasyFeedback
     {
-        public enum Modes { Play, Stop, Pause, Emit }
+        public enum Modes
+        {
+            Play,
+            Stop,
+            Pause,
+            Emit
+        }
 
-        [FoldoutGroup("Bound Particles")]
+        public ParticleSystem TargetParticleSystem;
         public Modes Mode = Modes.Play;
-
-        [FoldoutGroup("Bound Particles")]
-        [ShowIf("Mode", Modes.Emit)]
         public int EmitCount = 100;
-
-        [FoldoutGroup("Bound Particles")]
-        public ParticleSystem BoundParticleSystem;
-        [FoldoutGroup("Bound Particles")]
-        public bool WithChildrenParticles = true;
-        [FoldoutGroup("Bound Particles")]
-        [HideIf("@BoundParticleSystem != null")]
+        public bool WithChildrenParticleSystems = true;
         public ParticleSystem[] RandomParticleSystems = Array.Empty<ParticleSystem>();
-        [FoldoutGroup("Bound Particles")]
         public bool ActivateOnPlay = false;
-        [FoldoutGroup("Bound Particles")]
         public bool StopSystemOnInit = true;
-        [FoldoutGroup("Bound Particles")]
-        public float DeclaredDuration = 0f;
+        public float Duration = 0f;
 
-        [FoldoutGroup("Simulation Speed")]
-        public bool ForceSimulationSpeed = false;
-        [FoldoutGroup("Simulation Speed")]
-        [ShowIf("ForceSimulationSpeed")]
-        public Vector2 ForcedSimulationSpeed = new Vector2(0.1f, 1f);
-        
         public override string Tip => "播放场景中指定的粒子系统";
 
         private ParticleSystem.EmitParams _emitParams;
 
-        
 
         public override float GetDuration()
         {
-            return DeclaredDuration;
+            return Duration;
         }
 
         protected override void OnFeedbackInit()
@@ -70,7 +57,7 @@ namespace EasyFramework.Tools
         {
             if (ActivateOnPlay)
             {
-                BoundParticleSystem.gameObject.SetActive(true);
+                TargetParticleSystem.gameObject.SetActive(true);
 
                 foreach (var particle in RandomParticleSystems)
                 {
@@ -83,24 +70,19 @@ namespace EasyFramework.Tools
                 int random = Random.Range(0, RandomParticleSystems.Length);
                 HandleParticleSystemAction(RandomParticleSystems[random]);
             }
-            else if (BoundParticleSystem != null)
+            else if (TargetParticleSystem != null)
             {
-                HandleParticleSystemAction(BoundParticleSystem);
+                HandleParticleSystemAction(TargetParticleSystem);
             }
         }
+
         private void HandleParticleSystemAction(ParticleSystem targetParticleSystem)
         {
-            if (ForceSimulationSpeed)
-            {
-                var main = targetParticleSystem.main;
-                main.simulationSpeed = Random.Range(ForcedSimulationSpeed.x, ForcedSimulationSpeed.y);
-            }
-
             switch (Mode)
             {
                 case Modes.Play:
                     if (targetParticleSystem != null)
-                        targetParticleSystem.Play(WithChildrenParticles);
+                        targetParticleSystem.Play(WithChildrenParticleSystems);
                     break;
                 case Modes.Emit:
                     _emitParams.applyShapeToPosition = true;
@@ -109,11 +91,11 @@ namespace EasyFramework.Tools
                     break;
                 case Modes.Stop:
                     if (targetParticleSystem != null)
-                        targetParticleSystem.Stop(WithChildrenParticles);
+                        targetParticleSystem.Stop(WithChildrenParticleSystems);
                     break;
                 case Modes.Pause:
                     if (targetParticleSystem != null)
-                        targetParticleSystem.Pause(WithChildrenParticles);
+                        targetParticleSystem.Pause(WithChildrenParticleSystems);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -126,9 +108,10 @@ namespace EasyFramework.Tools
             {
                 particle.Stop();
             }
-            if (BoundParticleSystem != null)
+
+            if (TargetParticleSystem != null)
             {
-                BoundParticleSystem.Stop();
+                TargetParticleSystem.Stop();
             }
         }
     }

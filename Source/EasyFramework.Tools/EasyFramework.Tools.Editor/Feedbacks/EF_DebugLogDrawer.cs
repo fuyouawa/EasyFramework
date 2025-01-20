@@ -35,7 +35,7 @@ namespace EasyFramework.Tools.Editor
 
             _duration.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_duration, this),
-                "打印", _duration.State.Expanded)
+                "调试打印设置", _duration.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
