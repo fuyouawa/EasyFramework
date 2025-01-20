@@ -77,7 +77,7 @@ namespace EasyFramework.Tools.Editor
             }
 
             _label.Draw(new GUIContent("标签"));
-            _enable.Draw(new GUIContent("激活"));
+            _enable.Draw(new GUIContent("启用"));
 
             _label.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_label, this),

@@ -1,11 +1,12 @@
 using System;
 using System.Reflection;
 using EasyFramework.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.Utilities
 {
-    [Serializable]
+    [Serializable, InlineProperty, HideLabel, HideReferenceObjectPicker]
     public abstract class MemberPicker
     {
         [SerializeField] private GameObject _targetObject;

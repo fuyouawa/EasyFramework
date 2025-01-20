@@ -1,16 +1,10 @@
 using EasyFramework.Utilities;
-using Sirenix.OdinInspector;
 
 namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("游戏物体/调用函数")]
     public class EF_GameObjectInvokeMethod : AbstractEasyFeedback
     {
-        [Required]
-        [FoldoutGroup("Invoke Method")]
-        [HideReferenceObjectPicker]
-        [HideLabel]
-        [DisableInPlayMode]
         public MethodPicker Picker = new MethodPicker();
         
         public override string Tip => "调用GameObject上的一个函数";

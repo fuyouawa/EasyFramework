@@ -53,7 +53,7 @@ namespace EasyFramework.Tools.Editor
                     _initializationMode.Draw(new GUIContent("初始化模式"));
                     _autoInitialization.Draw(new GUIContent("自动初始化", "确保播放前所有Feedbacks都初始化"));
                     _autoPlayOnStart.Draw(new GUIContent("开始时自动播放", "在开始时自动播放一次"));
-                    _autoPlayOnEnable.Draw(new GUIContent("激活时自动播放", "在激活时自动播放一次"));
+                    _autoPlayOnEnable.Draw(new GUIContent("启用时自动播放", "在启用时自动播放一次"));
 
                     EasyEditorGUI.Title("播放");
                     _canPlay.Draw(new GUIContent("是否可以播放", "是否可以播放"));

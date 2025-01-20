@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyFramework.Utilities
 {
-    [Serializable, InlineProperty]
+    [Serializable, InlineProperty, HideReferenceObjectPicker]
     public abstract class TSerailizedValue<TValue, TSerializedData> : ISerializationCallbackReceiver
     {
         public abstract TValue Value { get; set; }

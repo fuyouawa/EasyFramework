@@ -14,15 +14,30 @@ namespace EasyFramework.Utilities
 
         public bool TryInvoke(out object returnValue)
         {
-            returnValue = null;
-            var m = GetTargetMethod();
-            if (m == null) return false;
+            try
+            {
+                returnValue = Invoke();
+                return true;
+            }
+            catch (Exception e)
+            {
+                returnValue = null;
+                return false;
+            }
+        }
 
-            returnValue = m.Invoke(GetTargetComponent(),
+        public object Invoke()
+        {
+            var m = GetTargetMethod();
+            if (m == null)
+            {
+                throw new ArgumentException("Invoke failed: Target method is null!");
+            }
+
+            return m.Invoke(GetTargetComponent(),
                 m.GetParameters().Length != 0
                     ? _parameters.Select(p => p.GetRawValue()).ToArray()
                     : null);
-            return true;
         }
     }
 }

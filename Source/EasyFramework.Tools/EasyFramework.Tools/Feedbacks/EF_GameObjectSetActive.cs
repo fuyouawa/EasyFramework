@@ -1,21 +1,18 @@
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.Tools
 {
-    [AddEasyFeedbackMenu("游戏物体/设置激活")]
+    [AddEasyFeedbackMenu("游戏物体/设置启用状态")]
     public class EF_GameObjectSetActive : AbstractEasyFeedback
     {
-        [FoldoutGroup("Set Active")]
-        public GameObject BoundObject;
-        [FoldoutGroup("Set Active")]
+        public GameObject Target;
         public bool ActiveToSet = true;
         
-        public override string Tip => "设置GameObject激活状态";
+        public override string Tip => "设置游戏对象的启用状态";
 
         protected override void OnFeedbackPlay()
         {
-            BoundObject.SetActive(ActiveToSet);
+            Target.SetActive(ActiveToSet);
         }
 
         protected override void OnFeedbackStop()

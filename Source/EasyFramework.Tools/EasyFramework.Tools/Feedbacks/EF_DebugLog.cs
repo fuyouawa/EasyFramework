@@ -1,5 +1,3 @@
-using EasyFramework.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.Tools

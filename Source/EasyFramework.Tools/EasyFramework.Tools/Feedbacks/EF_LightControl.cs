@@ -4,66 +4,33 @@ using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
- namespace EasyFramework.Tools
+namespace EasyFramework.Tools
 {
     [AddEasyFeedbackMenu("光照/光照控制")]
     public class EF_LightControl : AbstractEasyFeedback
     {
-        public enum Modes { OverTime, Instant }
-
-        [FoldoutGroup("Light")]
-        public Light BoundLight;
-        [FoldoutGroup("Light")]
-        public Modes Mode = Modes.OverTime;
-        [FoldoutGroup("Light")]
-        [HideIf("Mode", Modes.Instant)]
+        public Light TargetLight;
         public float Duration = 0.2f;
-        [FoldoutGroup("Light")]
         public bool DisableOnStop = false;
-        [FoldoutGroup("Light")]
         public bool RelativeValues = true;
-        [FoldoutGroup("Light")]
-        public bool AllowAdditivePlays = false;
 
-        [FoldoutGroup("Color")]
         public bool ModifyColor = true;
-        [FoldoutGroup("Color")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public Gradient ColorOverTime;
-        [FoldoutGroup("Color")]
-        [ShowIf("Mode", Modes.Instant)]
-        public Color InstantColor = Color.red;
+        public FlexibleColor Color = new FlexibleColor(UnityEngine.Color.white);
 
-        [FoldoutGroup("Intensity")]
         public bool ModifyIntensity = true;
-        [FoldoutGroup("Intensity")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public AnimationCurve IntensityCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0));
-        [FoldoutGroup("Intensity")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public float RemapIntensityZero = 0f;
-        [FoldoutGroup("Intensity")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public float RemapIntensityOne = 1f;
-        [FoldoutGroup("Intensity")]
-        [ShowIf("Mode", Modes.Instant)]
-        public float InstantIntensity = 1f;
+        public FlexibleFloat Intensity = new FlexibleFloat(
+            FlexibleModes.Overtime,
+            1f,
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)),
+            0f, 1f);
 
-        [FoldoutGroup("Range")]
         public bool ModifyRange = true;
-        [FoldoutGroup("Range")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public AnimationCurve RangeCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0));
-        [FoldoutGroup("Range")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public float RemapRangeZero = 0f;
-        [FoldoutGroup("Range")]
-        [ShowIf("Mode", Modes.OverTime)]
-        public float RemapRangeOne = 1f;
-        [FoldoutGroup("Range")]
-        [ShowIf("Mode", Modes.Instant)]
-        public float InstantRange = 10f;
-        
+        public FlexibleFloat Range = new FlexibleFloat(
+            FlexibleModes.Overtime,
+            10f,
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)),
+            0f, 10f);
+
         public override string Tip => "光照控制";
 
         protected float _initialRange;
@@ -79,37 +46,45 @@ using UnityEngine;
 
         protected override void OnFeedbackInit()
         {
-            if (BoundLight == null)
+            if (TargetLight == null)
                 return;
 
-            _initialRange = BoundLight.range;
-            _initialShadowStrength = BoundLight.shadowStrength;
-            _initialIntensity = BoundLight.intensity;
-            _initialColor = BoundLight.color;
+            _initialRange = TargetLight.range;
+            _initialShadowStrength = TargetLight.shadowStrength;
+            _initialIntensity = TargetLight.intensity;
+            _initialColor = TargetLight.color;
         }
 
         protected override void OnFeedbackPlay()
         {
-            if (_coroutine != null && !AllowAdditivePlays)
+            if (_coroutine != null)
             {
                 StopCoroutine(_coroutine);
                 _coroutine = null;
             }
 
-            BoundLight.enabled = true;
-            switch (Mode)
+            TargetLight.enabled = true;
+
+            if (Color.IsOvertime || Intensity.IsOvertime || Range.IsOvertime)
             {
-                case Modes.OverTime:
-                    _coroutine = StartCoroutine(LightSequence());
-                    break;
-                case Modes.Instant:
-                    BoundLight.intensity = InstantIntensity;
-                    BoundLight.range = InstantRange;
-                    if (ModifyColor)
-                        BoundLight.color = InstantColor;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                StartCoroutine(LightSequence());
+            }
+            else
+            {
+                if (ModifyIntensity)
+                {
+                    TargetLight.intensity = Intensity.InstantOfValue;
+                }
+
+                if (ModifyColor)
+                {
+                    TargetLight.color = Color.InstantOfColor;
+                }
+
+                if (ModifyRange)
+                {
+                    TargetLight.range = Range.InstantOfValue;
+                }
             }
         }
 
@@ -123,7 +98,7 @@ using UnityEngine;
 
             if (DisableOnStop)
             {
-                BoundLight.enabled = false;
+                TargetLight.enabled = false;
             }
         }
 
@@ -140,27 +115,29 @@ using UnityEngine;
 
         protected virtual void SetLightValues(float time)
         {
-            var intensity = IntensityCurve.EvaluateWithRemap(time, Duration, RemapIntensityZero, RemapIntensityOne);
-            var range = RangeCurve.EvaluateWithRemap(time, Duration, RemapRangeZero, RemapRangeOne);
-
-            var color = ColorOverTime.EvaluateWithRemap(time, Duration);
+            var intensity = Intensity.Evaluate(time, Duration);
+            var range = Intensity.Evaluate(time, Duration);
+            var color = Color.Evaluate(time, Duration);
 
             if (RelativeValues)
             {
                 intensity += _initialIntensity;
                 range += _initialRange;
             }
+
             if (ModifyIntensity)
             {
-                BoundLight.intensity = intensity;
+                TargetLight.intensity = intensity;
             }
+
             if (ModifyRange)
             {
-                BoundLight.range = range;
+                TargetLight.range = range;
             }
+
             if (ModifyColor)
             {
-                BoundLight.color = color;
+                TargetLight.color = color;
             }
         }
     }
