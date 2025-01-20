@@ -7,26 +7,20 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_GameObjectSetActiveDrawer : AbstractEasyFeedbackDrawer<EF_GameObjectSetActive>
     {
-        private InspectorProperty _target;
-        private InspectorProperty _activeToSet;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _target = Property.Children["Target"];
-            _activeToSet = Property.Children["ActiveToSet"];
-        }
-
         protected override void DrawOtherPropertyLayout()
         {
-            _target.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_target, this),
-                "游戏对象的激活设置", _target.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "激活设置", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    _target.Draw(new GUIContent("目标游戏对象"));
-                    _activeToSet.Draw(new GUIContent("激活设置"));
+                    Feedback.Target = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("目标对象"),
+                        Feedback.Target);
+
+                    Feedback.ActiveToSet = EasyEditorField.Value(
+                        EditorHelper.TempContent("激活设置"),
+                        Feedback.ActiveToSet);
                 }
             });
         }

@@ -7,57 +7,51 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_DebugLogDrawer : AbstractEasyFeedbackDrawer<EF_DebugLog>
     {
-        private InspectorProperty _duration;
-        private InspectorProperty _message;
-        private InspectorProperty _logOnInit;
-        private InspectorProperty _messageOnInit;
-        private InspectorProperty _logOnStop;
-        private InspectorProperty _messageOnStop;
-        private InspectorProperty _logOnReset;
-        private InspectorProperty _messageOnReset;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _duration = Property.Children["Duration"];
-            _message = Property.Children["Message"];
-            _logOnInit = Property.Children["LogOnInit"];
-            _messageOnInit = Property.Children["MessageOnInit"];
-            _logOnStop = Property.Children["LogOnStop"];
-            _messageOnStop = Property.Children["MessageOnStop"];
-            _logOnReset = Property.Children["LogOnReset"];
-            _messageOnReset = Property.Children["MessageOnReset"];
-        }
-
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _duration.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_duration, this),
-                "调试打印设置", _duration.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "调试打印设置", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    _duration.Draw(new GUIContent("持续时间"));
-                    _message.Draw(new GUIContent("打印信息"));
+                    Feedback.Duration = EasyEditorField.Value(
+                        EditorHelper.TempContent("持续时间"),
+                        Feedback.Duration);
+                    Feedback.Message = EasyEditorField.Value(
+                        EditorHelper.TempContent("打印信息"),
+                        Feedback.Message);
+                    
+                    Feedback.LogOnInit = EasyEditorField.Value(
+                        EditorHelper.TempContent("在初始化时打印"),
+                        Feedback.LogOnInit);
 
-                    _logOnInit.Draw(new GUIContent("在初始化时打印"));
-                    if (value.LogOnInit)
+                    if (Feedback.LogOnInit)
                     {
-                        _messageOnInit.Draw(new GUIContent("初始化时的打印信息"));
+                        Feedback.MessageOnInit = EasyEditorField.Value(
+                            EditorHelper.TempContent("初始化时的打印信息"),
+                            Feedback.MessageOnInit);
+                    }
+                    
+                    Feedback.LogOnStop = EasyEditorField.Value(
+                        EditorHelper.TempContent("在停止时打印"),
+                        Feedback.LogOnStop);
+
+                    if (Feedback.LogOnStop)
+                    {
+                        Feedback.MessageOnStop = EasyEditorField.Value(
+                            EditorHelper.TempContent("结束时的打印信息"),
+                            Feedback.MessageOnStop);
                     }
 
-                    _logOnStop.Draw(new GUIContent("在停止时打印"));
-                    if (value.LogOnStop)
-                    {
-                        _messageOnStop.Draw(new GUIContent("结束时的打印信息"));
-                    }
+                    Feedback.LogOnReset = EasyEditorField.Value(
+                        EditorHelper.TempContent("在结束时打印"),
+                        Feedback.LogOnReset);
 
-                    _logOnReset.Draw(new GUIContent("在结束时打印"));
-                    if (value.LogOnReset)
+                    if (Feedback.LogOnReset)
                     {
-                        _messageOnReset.Draw(new GUIContent("重置时的打印信息"));
+                        Feedback.MessageOnReset = EasyEditorField.Value(
+                            EditorHelper.TempContent("重置时的打印信息"),
+                            Feedback.MessageOnReset);
                     }
                 }
             });

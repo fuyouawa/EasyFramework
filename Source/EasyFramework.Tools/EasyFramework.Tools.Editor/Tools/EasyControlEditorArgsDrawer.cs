@@ -360,7 +360,7 @@ namespace EasyFramework.Tools.Editor
                 }
             }
 
-            _args.Bounder.Access = EasyEditorGUI.EnumField(
+            _args.Bounder.Access = EasyEditorField.Enum(
                 new GUIContent("访问标识符"),
                 _args.Bounder.Access);
 

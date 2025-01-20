@@ -1,3 +1,4 @@
+using EasyFramework.Generic;
 using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
@@ -9,45 +10,54 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_AudioSourceDrawer : AbstractEasyFeedbackDrawer<EF_AudioSource>
     {
-        private InspectorProperty _targetAudioSource;
-        private InspectorProperty _mode;
-        private InspectorProperty _randomSfx;
+        private InspectorProperty _randomSfxProperty;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _targetAudioSource = Property.Children["TargetAudioSource"];
-            _mode = Property.Children["Mode"];
-            _randomSfx = Property.Children["RandomSfx"];
+            _randomSfxProperty = Property.Children["RandomSfx"];
         }
 
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _targetAudioSource.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_targetAudioSource, this),
-                "音频源播放", _targetAudioSource.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "音频源设置", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    if (value.TargetAudioSource == null)
+                    if (Feedback.TargetAudioSource == null && Feedback.RandomSfx.IsNullOrEmpty())
                     {
                         EasyEditorGUI.MessageBox("音频源不能为空！", MessageType.Error);
                     }
 
-                    _targetAudioSource.Draw(new GUIContent("目标音频源"));
-                    _mode.Draw(new GUIContent("模式"));
-                    _randomSfx.Draw(new GUIContent("随机音频"));
+                    Feedback.TargetAudioSource = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("音频源"),
+                        Feedback.TargetAudioSource);
 
+                    if (Feedback.TargetAudioSource == null)
+                    {
+                        _randomSfxProperty.Draw(EditorHelper.TempContent("随机音频"));
+                    }
+
+                    Feedback.Mode = EasyEditorField.Enum(
+                        EditorHelper.TempContent("模式"),
+                        Feedback.Mode);
+                }
+            });
+
+            FreeExpand2 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey2, "声音属性", FreeExpand2)
+            {
+                OnContentGUI = rect =>
+                {
                     SirenixEditorFields.MinMaxSlider(
-                        new GUIContent("响度范围"),
-                        ref value.MinVolume, ref value.MaxVolume,
+                        EditorHelper.TempContent("响度范围"),
+                        ref Feedback.MinVolume, ref Feedback.MaxVolume,
                         0f, 2f, true);
 
                     SirenixEditorFields.MinMaxSlider(
-                        new GUIContent("音高范围"),
-                        ref value.MinPitch, ref value.MaxPitch,
+                        EditorHelper.TempContent("音高范围"),
+                        ref Feedback.MinPitch, ref Feedback.MaxPitch,
                         -3f, 3f, true);
                 }
             });

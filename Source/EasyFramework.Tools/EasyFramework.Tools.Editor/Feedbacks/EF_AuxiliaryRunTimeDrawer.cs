@@ -9,36 +9,28 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_AuxiliaryRunTimeDrawer : AbstractEasyFeedbackDrawer<EF_AuxiliaryRunTime>
     {
-        private InspectorProperty _mode;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _mode = Property.Children["Mode"];
-        }
-
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _mode.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_mode, this),
-                "运行时间设置", _mode.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "运行时间设置", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    value.Mode = EasyEditorGUI.EnumField(
-                        new GUIContent("模式"), value.Mode);
+                    Feedback.Mode = EasyEditorField.Enum(
+                        EditorHelper.TempContent("模式"),
+                        Feedback.Mode);
 
-                    switch (value.Mode)
+                    switch (Feedback.Mode)
                     {
                         case EF_AuxiliaryRunTime.Modes.Frame:
-                            value.Frame = EditorGUILayout.IntField(
-                                new GUIContent("帧"), value.Frame);
+                            Feedback.Frame = EditorGUILayout.IntField(
+                                EditorHelper.TempContent("帧"),
+                                Feedback.Frame);
                             break;
                         case EF_AuxiliaryRunTime.Modes.Seconds:
-                            value.Seconds = EditorGUILayout.FloatField(
-                                new GUIContent("秒"), value.Seconds);
+                            Feedback.Seconds = EditorGUILayout.FloatField(
+                                EditorHelper.TempContent("秒"),
+                                Feedback.Seconds);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();

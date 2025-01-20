@@ -1,5 +1,7 @@
+using EasyFramework.Generic;
 using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyFramework.Tools.Editor
@@ -7,54 +9,67 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_ParticlePlayDrawer : AbstractEasyFeedbackDrawer<EF_ParticlePlay>
     {
-        private InspectorProperty _targetParticleSystem;
-        private InspectorProperty _mode;
-        private InspectorProperty _emitCount;
-        private InspectorProperty _withChildrenParticleSystems;
-        private InspectorProperty _randomParticleSystems;
-        private InspectorProperty _activateOnPlay;
-        private InspectorProperty _stopSystemOnInit;
-        private InspectorProperty _duration;
+        private InspectorProperty _randomParticleSystemsProperty;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _targetParticleSystem = Property.Children["TargetParticleSystem"];
-            _mode = Property.Children["Mode"];
-            _emitCount = Property.Children["EmitCount"];
-            _withChildrenParticleSystems = Property.Children["WithChildrenParticleSystems"];
-            _randomParticleSystems = Property.Children["RandomParticleSystems"];
-            _activateOnPlay = Property.Children["ActivateOnPlay"];
-            _stopSystemOnInit = Property.Children["StopSystemOnInit"];
-            _duration = Property.Children["Duration"];
+            _randomParticleSystemsProperty = Property.Children[nameof(EF_ParticlePlay.RandomParticleSystems)];
         }
 
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _targetParticleSystem.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_targetParticleSystem, this),
-                "粒子播放", _targetParticleSystem.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "粒子系统设置", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    _targetParticleSystem.Draw(new GUIContent("目标粒子系统"));
-                    _mode.Draw(new GUIContent("模式"));
-                    if (value.Mode == EF_ParticlePlay.Modes.Emit)
+                    if (Feedback.TargetParticleSystem == null && Feedback.RandomParticleSystems.IsNullOrEmpty())
                     {
-                        _emitCount.Draw(new GUIContent("发射数量"));
+                        EasyEditorGUI.MessageBox("粒子系统不能为空！", MessageType.Error);
                     }
-                    _withChildrenParticleSystems.Draw(new GUIContent("包括子粒子系统"));
 
-                    if (value.TargetParticleSystem == null)
+                    Feedback.TargetParticleSystem = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("粒子系统"),
+                        Feedback.TargetParticleSystem);
+
+                    if (Feedback.TargetParticleSystem == null)
                     {
-                        _randomParticleSystems.Draw(new GUIContent("随机粒子系统"));
+                        _randomParticleSystemsProperty.Draw(EditorHelper.TempContent("随机粒子系统"));
                     }
                     
-                    _activateOnPlay.Draw(new GUIContent("播放时激活"));
-                    _stopSystemOnInit.Draw(new GUIContent("初始化时停止系统"));
-                    _duration.Draw(new GUIContent("持续时间"));
+                    Feedback.Duration = EasyEditorField.Value(
+                        EditorHelper.TempContent("持续时间"),
+                        Feedback.Duration);
+
+                    Feedback.StopSystemOnInit = EasyEditorField.Value(
+                        EditorHelper.TempContent("初始化时停止系统"),
+                        Feedback.StopSystemOnInit);
+
+                    Feedback.ActivateOnPlay = EasyEditorField.Value(
+                        EditorHelper.TempContent("播放时激活"),
+                        Feedback.ActivateOnPlay);
+                }
+            });
+            FreeExpand2 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey2, "播放设置", FreeExpand2)
+            {
+                OnContentGUI = rect =>
+                {
+                    Feedback.Mode = EasyEditorField.Enum(
+                        EditorHelper.TempContent("模式"),
+                        Feedback.Mode);
+
+                    if (Feedback.Mode == EF_ParticlePlay.Modes.Emit)
+                    {
+                        Feedback.EmitCount = EasyEditorField.Value(
+                            EditorHelper.TempContent("发射数量"),
+                            Feedback.EmitCount);
+                    }
+
+                    Feedback.WithChildrenParticleSystems = EasyEditorField.Value(
+                        EditorHelper.TempContent("包括子粒子系统"),
+                        Feedback.WithChildrenParticleSystems);
                 }
             });
         }    }

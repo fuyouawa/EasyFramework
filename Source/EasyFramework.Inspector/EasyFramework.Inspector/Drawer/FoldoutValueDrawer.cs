@@ -24,16 +24,12 @@ namespace EasyFramework.Inspector
             return label;
         }
 
+        private readonly LabelConfig _labelConfig = new LabelConfig();
         protected virtual LabelConfig GetRightLabelConfig(GUIContent label)
         {
-            return new LabelConfig();
+            return _labelConfig;
         }
 
-        protected virtual Color GetRightLabelColor(GUIContent label)
-        {
-            return Color.white;
-        }
-        
         protected virtual void OnCoveredTitleBarGUI(Rect headerRect)
         {
         }

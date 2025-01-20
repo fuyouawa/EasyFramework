@@ -1,63 +1,65 @@
 using EasyFramework.Inspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace EasyFramework.Tools.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_GameObjectInstantiateDrawer : AbstractEasyFeedbackDrawer<EF_GameObjectInstantiate>
     {
-        private InspectorProperty _prefab;
-        private InspectorProperty _hasLiftTime;
-        private InspectorProperty _liftTime;
-        private InspectorProperty _parent;
-        private InspectorProperty _relative;
-        private InspectorProperty _position;
-        private InspectorProperty _rotation;
-        private InspectorProperty _localScale;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _prefab = Property.Children["Prefab"];
-            _hasLiftTime = Property.Children["HasLiftTime"];
-            _liftTime = Property.Children["LiftTime"];
-            _parent = Property.Children["Parent"];
-            _relative = Property.Children["Relative"];
-            _position = Property.Children["Position"];
-            _rotation = Property.Children["Rotation"];
-            _localScale = Property.Children["LocalScale"];
-        }
-
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _prefab.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_prefab, this),
-                "游戏对象实例化", _prefab.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "预制体设置",FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    if (value.Prefab == null)
+                    if (Feedback.Prefab == null)
                     {
                         EasyEditorGUI.MessageBox("预制体不能为空！", MessageType.Error);
                     }
+                    
+                    Feedback.Prefab = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("预制体"),
+                        Feedback.Prefab);
 
-                    _prefab.Draw(new GUIContent("预制体"));
-                    _hasLiftTime.Draw(new GUIContent("拥有生命时间"));
+                    Feedback.HasLiftTime = EasyEditorField.Value(
+                        EditorHelper.TempContent("拥有生命时间"),
+                        Feedback.HasLiftTime);
 
-                    if (value.HasLiftTime)
+                    if (Feedback.HasLiftTime)
                     {
-                        _liftTime.Draw(new GUIContent("生命时间"));
+                        Feedback.LiftTime = EasyEditorField.Value(
+                            EditorHelper.TempContent("生命时间"),
+                            Feedback.LiftTime);
                     }
+                }
+            });
 
-                    _parent.Draw(new GUIContent("父级"));
-                    _relative.Draw(new GUIContent("相对"));
-                    _position.Draw(new GUIContent("坐标"));
-                    _rotation.Draw(new GUIContent("旋转"));
-                    _localScale.Draw(new GUIContent("局部缩放"));
+            FreeExpand2 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey2, "变换设置", FreeExpand2)
+            {
+                OnContentGUI = rect =>
+                {
+                    Feedback.Parent = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("父级"),
+                        Feedback.Parent);
+                    
+                    Feedback.Relative = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("相对"),
+                        Feedback.Relative);
+                    
+                    Feedback.Position = EasyEditorField.Value(
+                        EditorHelper.TempContent("坐标"),
+                        Feedback.Position);
+                    
+                    Feedback.Rotation = EasyEditorField.Value(
+                        EditorHelper.TempContent("旋转"),
+                        Feedback.Rotation);
+                    
+                    Feedback.LocalScale = EasyEditorField.Value(
+                        EditorHelper.TempContent("局部缩放"),
+                        Feedback.LocalScale);
                 }
             });
         }

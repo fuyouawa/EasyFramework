@@ -29,18 +29,15 @@ namespace EasyFramework.Tools.Editor
             value.Enable = EditorGUI.Toggle(buttonRect, value.Enable);
         }
 
+        private readonly LabelConfig _labelConfig = new LabelConfig(
+            new GUIContent(),
+            Color.yellow);
+
         protected override LabelConfig GetRightLabelConfig(GUIContent label)
         {
             var attr = Property.GetAttribute<AddEasyFeedbackMenuAttribute>();
-            return new LabelConfig(
-                $"[{attr.Path.Replace("/", " - ")}]",
-                Color.yellow,
-                SirenixGUIStyles.BoldLabel);
-        }
-
-        protected override Color GetRightLabelColor(GUIContent label)
-        {
-            return Color.yellow;
+            _labelConfig.Content.text = $"[{attr.Path.Replace("/", " - ")}]";
+            return _labelConfig;
         }
 
         protected override GUIContent GetLabel(GUIContent label)
@@ -50,24 +47,86 @@ namespace EasyFramework.Tools.Editor
             return new GUIContent("      " + (value.Label.IsNullOrEmpty() ? "TODO" : value.Label));
         }
 
-        private InspectorProperty _label;
-        private InspectorProperty _enable;
-        private InspectorProperty _delayBeforePlay;
-        private InspectorProperty _blocking;
-        private InspectorProperty _repeatForever;
-        private InspectorProperty _amountOfRepeat;
-        private InspectorProperty _intervalBetweenRepeats;
+        private InspectorProperty _property;
+
+        private InspectorProperty _freeProperty1;
+        private InspectorProperty _freeProperty2;
+        private InspectorProperty _freeProperty3;
+        private InspectorProperty _freeProperty4;
+        private InspectorProperty _freeProperty5;
+        private InspectorProperty _freeProperty6;
+
+        protected bool FreeExpand1
+        {
+            get => _freeProperty1.State.Expanded;
+            set => _freeProperty1.State.Expanded = value;
+        }
+
+        protected bool FreeExpand2
+        {
+            get => _freeProperty2.State.Expanded;
+            set => _freeProperty2.State.Expanded = value;
+        }
+
+        protected bool FreeExpand3
+        {
+            get => _freeProperty3.State.Expanded;
+            set => _freeProperty3.State.Expanded = value;
+        }
+
+        protected bool FreeExpand4
+        {
+            get => _freeProperty4.State.Expanded;
+            set => _freeProperty4.State.Expanded = value;
+        }
+
+        protected bool FreeExpand5
+        {
+            get => _freeProperty5.State.Expanded;
+            set => _freeProperty5.State.Expanded = value;
+        }
+
+        protected bool FreeExpand6
+        {
+            get => _freeProperty6.State.Expanded;
+            set => _freeProperty6.State.Expanded = value;
+        }
+
+
+        protected object FreeKey1 { get; private set; }
+        protected object FreeKey2 { get; private set; }
+        protected object FreeKey3 { get; private set; }
+        protected object FreeKey4 { get; private set; }
+        protected object FreeKey5 { get; private set; }
+        protected object FreeKey6 { get; private set; }
+
+        protected T Feedback { get; private set; }
 
         protected override void Initialize()
         {
             base.Initialize();
-            _label = Property.Children["Label"];
-            _enable = Property.Children["Enable"];
-            _delayBeforePlay = Property.Children["DelayBeforePlay"];
-            _blocking = Property.Children["Blocking"];
-            _repeatForever = Property.Children["RepeatForever"];
-            _amountOfRepeat = Property.Children["AmountOfRepeat"];
-            _intervalBetweenRepeats = Property.Children["IntervalBetweenRepeats"];
+            _property = Property.Children[nameof(AbstractEasyFeedback.Label)];
+            _freeProperty1 = Property.Children[nameof(AbstractEasyFeedback.Enable)];
+            _freeProperty2 = Property.Children[nameof(AbstractEasyFeedback.DelayBeforePlay)];
+            _freeProperty3 = Property.Children[nameof(AbstractEasyFeedback.Blocking)];
+            _freeProperty4 = Property.Children[nameof(AbstractEasyFeedback.RepeatForever)];
+            _freeProperty5 = Property.Children[nameof(AbstractEasyFeedback.AmountOfRepeat)];
+            _freeProperty6 = Property.Children[nameof(AbstractEasyFeedback.IntervalBetweenRepeats)];
+
+            FreeKey1 = UniqueDrawerKey.Create(_freeProperty1, this);
+            FreeKey2 = UniqueDrawerKey.Create(_freeProperty2, this);
+            FreeKey3 = UniqueDrawerKey.Create(_freeProperty3, this);
+            FreeKey4 = UniqueDrawerKey.Create(_freeProperty4, this);
+            FreeKey5 = UniqueDrawerKey.Create(_freeProperty5, this);
+            FreeKey6 = UniqueDrawerKey.Create(_freeProperty6, this);
+
+            Feedback = ValueEntry.SmartValue;
+
+            var style = new GUIStyle(SirenixGUIStyles.BoldLabel);
+            style.fontSize += 1;
+            style.padding.bottom += 2;
+            style.padding.left -= 9;
+            _labelConfig.Style = style;
         }
 
         protected override void OnContentGUI(Rect headerRect)
@@ -79,26 +138,40 @@ namespace EasyFramework.Tools.Editor
                 EasyEditorGUI.MessageBox(value.Tip, MessageType.Info);
             }
 
-            _label.Draw(new GUIContent("标签"));
-            _enable.Draw(new GUIContent("启用"));
+            value.Label = EasyEditorField.Value(
+                EditorHelper.TempContent("标签"),
+                value.Label);
+            value.Enable = EasyEditorField.Value(
+                new GUIContent("启用"),
+                value.Enable);
 
-            _label.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_label, this),
+            _property.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(_property, this),
                 "反馈设置",
-                _label.State.Expanded)
+                _property.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
-                    _delayBeforePlay.Draw(new GUIContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"));
-                    _blocking.Draw(new GUIContent("阻塞", "是否会阻塞反馈运行"));
-                    _repeatForever.Draw(new GUIContent("无限重复", "无限重复播放"));
+                    value.DelayBeforePlay = EasyEditorField.Value(
+                        EditorHelper.TempContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"),
+                        value.DelayBeforePlay);
+                    value.Blocking = EasyEditorField.Value(
+                        EditorHelper.TempContent("阻塞", "是否会阻塞反馈运行"),
+                        value.Blocking);
+                    value.RepeatForever = EasyEditorField.Value(
+                        EditorHelper.TempContent("无限重复", "无限重复播放"),
+                        value.RepeatForever);
 
                     if (!value.RepeatForever)
                     {
-                        _amountOfRepeat.Draw(new GUIContent("重复次数", "重复播放的次数"));
+                        value.AmountOfRepeat = EasyEditorField.Value(
+                            EditorHelper.TempContent("重复次数", "重复播放的次数"),
+                            value.AmountOfRepeat);
                     }
 
-                    _intervalBetweenRepeats.Draw(new GUIContent("重复间隔", "每次循环播放的间隔"));
+                    value.IntervalBetweenRepeats = EasyEditorField.Value(
+                        EditorHelper.TempContent("重复间隔", "每次循环播放的间隔"),
+                        value.IntervalBetweenRepeats);
                 },
             });
 

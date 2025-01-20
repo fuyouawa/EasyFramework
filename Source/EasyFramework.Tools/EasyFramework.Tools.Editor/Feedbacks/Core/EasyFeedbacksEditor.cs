@@ -12,14 +12,7 @@ namespace EasyFramework.Tools.Editor
     [CanEditMultipleObjects]
     public class EasyFeedbacksEditor : OdinEditor
     {
-        private InspectorProperty _initializationMode;
-        private InspectorProperty _autoInitialization;
-        private InspectorProperty _autoPlayOnStart;
-        private InspectorProperty _autoPlayOnEnable;
-        private InspectorProperty _canPlay;
-        private InspectorProperty _canPlayWhileAlreadyPlaying;
-        private InspectorProperty _canMultiPlay;
-        private InspectorProperty _feedbackList;
+        private InspectorProperty _feedbackListProperty;
 
         protected override void OnEnable()
         {
@@ -27,48 +20,56 @@ namespace EasyFramework.Tools.Editor
             var feedbacks = (EasyFeedbacks)target;
             feedbacks.FeedbackList.OnAddElementVoid = OnAddElement;
 
-            _initializationMode = Tree.RootProperty.Children["InitializationMode"];
-            _autoInitialization = Tree.RootProperty.Children["AutoInitialization"];
-            _autoPlayOnStart = Tree.RootProperty.Children["AutoPlayOnStart"];
-            _autoPlayOnEnable = Tree.RootProperty.Children["AutoPlayOnEnable"];
-            _canPlay = Tree.RootProperty.Children["CanPlay"];
-            _canPlayWhileAlreadyPlaying = Tree.RootProperty.Children["CanPlayWhileAlreadyPlaying"];
-            _canMultiPlay = Tree.RootProperty.Children["CanMultiPlay"];
-            _feedbackList = Tree.RootProperty.Children["FeedbackList"];
+            _feedbackListProperty = Tree.RootProperty.Children[nameof(EasyFeedbacks.FeedbackList)];
         }
 
         protected override void DrawTree()
         {
             Tree.BeginDraw(true);
-            
+
             var feedbacks = (EasyFeedbacks)target;
 
-            _initializationMode.State.Expanded = EasyEditorGUI.FoldoutGroup(
-                new FoldoutGroupConfig(this, "设置", _initializationMode.State.Expanded)
-            {
-                OnContentGUI = rect =>
+            _feedbackListProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(
+                new FoldoutGroupConfig(this, "设置", _feedbackListProperty.State.Expanded)
                 {
-                    EasyEditorGUI.Title("初始化");
-
-                    _initializationMode.Draw(new GUIContent("初始化模式"));
-                    _autoInitialization.Draw(new GUIContent("自动初始化", "确保播放前所有Feedbacks都初始化"));
-                    _autoPlayOnStart.Draw(new GUIContent("开始时自动播放", "在开始时自动播放一次"));
-                    _autoPlayOnEnable.Draw(new GUIContent("启用时自动播放", "在启用时自动播放一次"));
-
-                    EasyEditorGUI.Title("播放");
-                    _canPlay.Draw(new GUIContent("是否可以播放", "是否可以播放"));
-                    _canPlayWhileAlreadyPlaying.Draw(new GUIContent("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放"));
-
-                    if (feedbacks.CanPlayWhileAlreadyPlaying)
+                    OnContentGUI = rect =>
                     {
-                        _canMultiPlay.Draw(new GUIContent(
-                            "是否可以多重播放",
-                            "是否可以同时存在多个播放\n" +
-                            "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用"));
+                        EasyEditorGUI.Title("初始化");
+
+                        feedbacks.InitializationMode = EasyEditorField.Enum(
+                            EditorHelper.TempContent("初始化模式"),
+                            feedbacks.InitializationMode);
+                        feedbacks.AutoInitialization = EasyEditorField.Value(
+                            EditorHelper.TempContent("自动初始化", "确保播放前所有Feedbacks都初始化"),
+                            feedbacks.AutoInitialization);
+                        feedbacks.AutoPlayOnStart = EasyEditorField.Value(
+                            EditorHelper.TempContent("开始时自动播放", "在开始时自动播放一次"),
+                            feedbacks.AutoPlayOnStart);
+                        feedbacks.AutoPlayOnEnable = EasyEditorField.Value(
+                            EditorHelper.TempContent("启用时自动播放", "在启用时自动播放一次"),
+                            feedbacks.AutoPlayOnEnable);
+
+                        EasyEditorGUI.Title("播放");
+
+                        feedbacks.CanPlay = EasyEditorField.Value(
+                            EditorHelper.TempContent("是否可以播放", "是否可以播放"),
+                            feedbacks.CanPlay);
+                        feedbacks.CanPlayWhileAlreadyPlaying = EasyEditorField.Value(
+                            EditorHelper.TempContent("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放"),
+                            feedbacks.CanPlayWhileAlreadyPlaying);
+
+                        if (feedbacks.CanPlayWhileAlreadyPlaying)
+                        {
+                            feedbacks.CanMultiPlay = EasyEditorField.Value(
+                                EditorHelper.TempContent("是否可以多重播放",
+                                    "是否可以同时存在多个播放\n" +
+                                    "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用"),
+                                feedbacks.CanMultiPlay);
+                        }
                     }
-                }
-            });
-            _feedbackList.Draw(new GUIContent("反馈列表"));
+                });
+
+            _feedbackListProperty.Draw(EditorHelper.TempContent("反馈列表"));
 
             EditorGUI.BeginDisabledGroup(!EditorApplication.isPlaying);
             EditorGUILayout.BeginHorizontal();
@@ -77,12 +78,14 @@ namespace EasyFramework.Tools.Editor
             {
                 feedbacks.Initialize();
             }
+
             EditorGUI.EndDisabledGroup();
 
             if (GUILayout.Button("播放"))
             {
                 feedbacks.Play();
             }
+
             if (GUILayout.Button("停止"))
             {
                 feedbacks.Stop();
@@ -93,7 +96,7 @@ namespace EasyFramework.Tools.Editor
 
             Tree.EndDraw();
         }
-        
+
         private static Type[] s_allFeedbackTypes;
 
         private static Type[] AllFeedbackTypes
@@ -109,6 +112,7 @@ namespace EasyFramework.Tools.Editor
                                     && t.HasCustomAttribute<AddEasyFeedbackMenuAttribute>())
                         .ToArray();
                 }
+
                 return s_allFeedbackTypes;
             }
         }

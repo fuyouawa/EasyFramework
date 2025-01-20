@@ -12,14 +12,14 @@ namespace EasyFramework.Tools.Editor
         protected override void Initialize()
         {
             base.Initialize();
-            _picker = Property.Children["Picker"];
+            _picker = Property.Children[nameof(EF_GameObjectInvokeMethod.Picker)];
         }
 
         protected override void DrawOtherPropertyLayout()
         {
             _picker.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_picker, this),
-                "游戏对象的函数调用", _picker.State.Expanded)
+                "函数调用", _picker.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {

@@ -88,7 +88,7 @@ namespace EasyFramework.Tools.Editor
                         ref value.MinPitch, ref value.MaxPitch,
                         -3f, 3f, true);
 
-                    value.SfxAudioMixerGroup = EasyEditorGUI.UnityObjectField(
+                    value.SfxAudioMixerGroup = EasyEditorField.UnityObject(
                         new GUIContent("混音器组"), value.SfxAudioMixerGroup, true);
 
                     _priority.Draw(new GUIContent("优先级"));
@@ -112,7 +112,7 @@ namespace EasyFramework.Tools.Editor
 
             _dopplerLevel.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(_dopplerLevel, this),
-                "3d声音设置", _dopplerLevel.State.Expanded)
+                "3D Sound Settings", _dopplerLevel.State.Expanded)
             {
                 OnContentGUI = rect =>
                 {
@@ -123,7 +123,7 @@ namespace EasyFramework.Tools.Editor
                         new GUIContent("扩展度"),
                         value.Spread, 0, 360);
 
-                    value.RolloffMode = EasyEditorGUI.EnumField(
+                    value.RolloffMode = EasyEditorField.Enum(
                         new GUIContent("衰减方式"),
                         value.RolloffMode);
 

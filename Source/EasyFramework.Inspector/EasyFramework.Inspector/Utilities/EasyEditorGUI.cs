@@ -659,21 +659,5 @@ namespace EasyFramework.Inspector
         }
 
         #endregion
-
-        #region Field
-
-        public static T EnumField<T>(GUIContent label, T value, GUIStyle style = null)
-            where T : Enum
-        {
-            return EnumSelector<T>.DrawEnumField(label, value, style);
-        }
-
-        public static T UnityObjectField<T>(GUIContent label, T value, bool allocSceneObjects, params GUILayoutOption[] options)
-            where T : UnityEngine.Object
-        {
-            return (T)SirenixEditorFields.UnityObjectField(label, value, typeof(T), allocSceneObjects, options);
-        }
-
-        #endregion
     }
 }

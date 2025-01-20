@@ -1,7 +1,5 @@
 using System;
 using EasyFramework.Generic;
-using EasyFramework.Utilities;
-using Sirenix.OdinInspector;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine;
@@ -42,7 +40,7 @@ namespace EasyFramework.Tools
         public float PanStereo;
         public float SpatialBlend;
 
-        // 3d声音设置
+        // 3D Sound Settings
 
         public float DopplerLevel = 1f;
         public int Spread = 0;

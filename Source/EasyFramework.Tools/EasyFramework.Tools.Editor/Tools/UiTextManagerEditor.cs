@@ -45,10 +45,10 @@ namespace EasyFramework.Tools.Editor
                         OnContentGUI = rect =>
                         {
                             EditorGUI.BeginChangeCheck();
-                            fontAssetPreset.FontAsset = EasyEditorGUI.UnityObjectField(
+                            fontAssetPreset.FontAsset = EasyEditorField.UnityObject(
                                 new GUIContent("字体资产"),
                                 fontAssetPreset.FontAsset, false);
-                            fontAssetPreset.Material = EasyEditorGUI.UnityObjectField(
+                            fontAssetPreset.Material = EasyEditorField.UnityObject(
                                 new GUIContent("材质"),
                                 fontAssetPreset.Material, false);
                             if (EditorGUI.EndChangeCheck())

@@ -8,33 +8,25 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_AnimatorTriggerParameterDrawer : AbstractEasyFeedbackDrawer<EF_AnimatorTriggerParameter>
     {
-        private InspectorProperty _targetAnimator;
-        private InspectorProperty _parameterName;
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-            _targetAnimator = Property.Children["TargetAnimator"];
-            _parameterName = Property.Children["ParameterName"];
-        }
-
         protected override void DrawOtherPropertyLayout()
         {
-            var value = ValueEntry.SmartValue;
-
-            _targetAnimator.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_targetAnimator, this),
-                "动画控制器参数触发", _targetAnimator.State.Expanded)
+            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
+                FreeKey1, "参数触发", FreeExpand1)
             {
                 OnContentGUI = rect =>
                 {
-                    if (value.TargetAnimator == null)
+                    if (Feedback.TargetAnimator == null)
                     {
-                        EasyEditorGUI.MessageBox("目标动画控制器不能为空！", MessageType.Error);
+                        EasyEditorGUI.MessageBox("动画控制器不能为空！", MessageType.Error);
                     }
 
-                    _targetAnimator.Draw(new GUIContent("目标动画控制器"));
-                    _parameterName.Draw(new GUIContent("参数名称", "要进行触发的参数名称"));
+                    Feedback.TargetAnimator = EasyEditorField.UnityObject(
+                        EditorHelper.TempContent("动画控制器"),
+                        Feedback.TargetAnimator);
+
+                    Feedback.ParameterName = EasyEditorField.Value(
+                        EditorHelper.TempContent("参数名称", "要进行触发的参数名称"),
+                        Feedback.ParameterName);
                 }
             });
         }
