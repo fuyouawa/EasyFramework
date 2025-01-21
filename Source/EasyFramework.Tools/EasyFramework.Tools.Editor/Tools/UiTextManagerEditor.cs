@@ -16,25 +16,23 @@ namespace EasyFramework.Tools.Editor
         protected override void DrawTree()
         {
             Tree.BeginDraw(true);
+            
+            var mgr = (UiTextManager)target;
 
-            var fontAssetPresetId = Tree.RootProperty.Children["_fontAssetPresetId"];
-            var textPropertiesPresetId = Tree.RootProperty.Children["_textPropertiesPresetId"];
-
-            var lbl = fontAssetPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO");
+            var lbl = mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO");
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("字体资产预设"),
                 EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.FontAssetPresets.Select(p => p.Id),
-                id => fontAssetPresetId.SetWeakSmartValue(id)));
+                id => mgr.FontAssetPresetId = id));
 
-            lbl = textPropertiesPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO");
+            lbl = mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO");
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("文本属性预设"),
                 EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.TextPropertiesPresets.Select(p => p.Id),
-                id => textPropertiesPresetId.SetWeakSmartValue(id)));
+                id => mgr.TextPropertiesPresetId = id));
 
-            var mgr = (UiTextManager)target;
             mgr.ApplyPresets();
 
             if (mgr.FontAssetPresetId.IsNotNullOrEmpty())

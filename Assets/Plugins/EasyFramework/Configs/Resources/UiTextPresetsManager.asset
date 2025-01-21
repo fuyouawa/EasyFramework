@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: -379343991, guid: 6779b0bc566385843af7dad4adf22855, type: 3}
   m_Name: UiTextPresetsManager
   m_EditorClassIdentifier: 
-  _fontAssetPresets: []
-  _textPropertiesPresets: []
-  _defaultFontAssetPresetId: 
-  _defaultTextPropertiesPresetId: 
+  FontAssetPresets: []
+  TextPropertiesPresets: []
+  DefaultFontAssetPresetId: 
+  DefaultTextPropertiesPresetId: 

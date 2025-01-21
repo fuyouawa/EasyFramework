@@ -347,14 +347,9 @@ namespace EasyFramework.Inspector
 
         public static bool FoldoutGroup(FoldoutGroupConfig config)
         {
-            var color = GUI.color;
-            if (config.BoxColor != null)
-            {
-                GUI.color = (Color)config.BoxColor;
-            }
-
+            BeginGUIColor(config.BoxColor);
             SirenixEditorGUI.BeginBox();
-            GUI.color = color;
+            EndGUIColor();
 
             config.Expand = BeginFoldoutHeader(config, out var headerRect);
             config.OnTitleBarGUI?.Invoke(headerRect);

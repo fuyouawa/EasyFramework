@@ -26,55 +26,41 @@ namespace EasyFramework.Tools
     [ConfigAssetPath]
     public class UiTextPresetsManager : ScriptableObjectSingleton<UiTextPresetsManager>
     {
-        [SerializeField] private List<FontAssetPreset> _fontAssetPresets = new List<FontAssetPreset>();
-        [SerializeField] private List<TextPropertiesPreset> _textPropertiesPresets = new List<TextPropertiesPreset>();
-        [SerializeField] private string _defaultFontAssetPresetId;
-        [SerializeField] private string _defaultTextPropertiesPresetId;
+        public List<FontAssetPreset> FontAssetPresets = new List<FontAssetPreset>();
+        public List<TextPropertiesPreset> TextPropertiesPresets = new List<TextPropertiesPreset>();
+        public string DefaultFontAssetPresetId;
+        public string DefaultTextPropertiesPresetId;
 
-        public List<FontAssetPreset> FontAssetPresets => _fontAssetPresets;
-        public List<TextPropertiesPreset> TextPropertiesPresets => _textPropertiesPresets;
-
-        public string DefaultFontAssetPresetId
-        {
-            get => _defaultFontAssetPresetId;
-            set => _defaultFontAssetPresetId = value;
-        }
-
-        public string DefaultTextPropertiesPresetId
-        {
-            get => _defaultTextPropertiesPresetId;
-            set => _defaultTextPropertiesPresetId = value;
-        }
 
         public FontAssetPreset MatchFontAssetPreset(TMP_FontAsset fontAsset, Material material)
         {
-            return _fontAssetPresets.FirstOrDefault(p => p.FontAsset == fontAsset && p.Material == material);
+            return FontAssetPresets.FirstOrDefault(p => p.FontAsset == fontAsset && p.Material == material);
         }
 
         public FontAssetPreset GetFontAssetPreset(string id)
         {
-            return _fontAssetPresets.FirstOrDefault(p => p.Id == id);
+            return FontAssetPresets.FirstOrDefault(p => p.Id == id);
         }
 
         public TextPropertiesPreset MatchTextPropertiesPreset(float fontSize, Color fontColor)
         {
-            return _textPropertiesPresets.FirstOrDefault(p =>
+            return TextPropertiesPresets.FirstOrDefault(p =>
                 p.FontSize.Approximately(fontSize) && p.FontColor == fontColor);
         }
 
         public TextPropertiesPreset GetTextPropertiesPreset(string id)
         {
-            return _textPropertiesPresets.FirstOrDefault(p => p.Id == id);
+            return TextPropertiesPresets.FirstOrDefault(p => p.Id == id);
         }
 
         public FontAssetPreset GetDefaultFontAssetPreset()
         {
-            return GetFontAssetPreset(_defaultFontAssetPresetId);
+            return GetFontAssetPreset(DefaultFontAssetPresetId);
         }
 
         public TextPropertiesPreset GetDefaultTextPropertiesPreset()
         {
-            return GetTextPropertiesPreset(_defaultTextPropertiesPresetId);
+            return GetTextPropertiesPreset(DefaultTextPropertiesPresetId);
         }
     }
 }

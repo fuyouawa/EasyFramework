@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: -426513290, guid: 390596f73bf5a7e49813b5df2cde81e8, type: 3}
   m_Name: UiTextManagerSettings
   m_EditorClassIdentifier: 
-  ManagerPosition: 1
+  ManagerPosition: 0
   AssetsManagerPath: Resources
   ViewModes: 5
   AutoOpenSelectionPrefab: 1

@@ -14,7 +14,7 @@ namespace EasyFramework.Tools.Editor
         protected override void Initialize()
         {
             base.Initialize();
-            _randomSfx = Property.Children["RandomSfx"];
+            _randomSfx = Property.Children[nameof(EF_Sound.RandomSfx)];
         }
 
         protected override void PostBuildPropertiesGroups()

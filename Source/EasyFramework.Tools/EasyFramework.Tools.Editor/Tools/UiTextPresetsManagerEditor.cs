@@ -11,35 +11,40 @@ namespace EasyFramework.Tools.Editor
     [CustomEditor(typeof(UiTextPresetsManager))]
     public class UiTextPresetsManagerEditor : OdinEditor
     {
+        private InspectorProperty _fontAssetPresets;
+        private InspectorProperty _textPropertiesPresets;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _fontAssetPresets = Tree.RootProperty.Children[nameof(UiTextPresetsManager.FontAssetPresets)];
+            _textPropertiesPresets = Tree.RootProperty.Children[nameof(UiTextPresetsManager.TextPropertiesPresets)];
+        }
+
         protected override void DrawTree()
         {
             Tree.BeginDraw(true);
-            
-            var fontAssetPresets = Tree.RootProperty.Children["_fontAssetPresets"];
-            var textPropertiesPresets = Tree.RootProperty.Children["_textPropertiesPresets"];
-            var defaultFontAssetPresetId = Tree.RootProperty.Children["_defaultFontAssetPresetId"];
-            var defaultTextPropertiesPresetId = Tree.RootProperty.Children["_defaultTextPropertiesPresetId"];
+
+            var mgr = (UiTextPresetsManager)target;
             
             EasyEditorGUI.Title("字体资产");
-            fontAssetPresets.Draw(new GUIContent("字体资产预设表"));
+            _fontAssetPresets.Draw(new GUIContent("字体资产预设表"));
             EasyEditorGUI.Title("文本属性");
-            textPropertiesPresets.Draw(new GUIContent("文本属性预设表"));
+            _textPropertiesPresets.Draw(new GUIContent("文本属性预设表"));
             
             EasyEditorGUI.Title("默认预设");
 
-            var lbl = defaultFontAssetPresetId.WeakSmartValue<string>();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("默认字体资产预设"),
-                EditorHelper.TempContent2(lbl),
-                fontAssetPresets.WeakSmartValue<List<FontAssetPreset>>().Select(p => p.Id),
-                id => defaultFontAssetPresetId.SetWeakSmartValue(id)));
+                EditorHelper.TempContent2(mgr.DefaultFontAssetPresetId),
+                mgr.FontAssetPresets.Select(p => p.Id),
+                id => mgr.DefaultFontAssetPresetId = id));
 
-            lbl = defaultTextPropertiesPresetId.WeakSmartValue<string>();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("默认文本属性预设"),
-                EditorHelper.TempContent2(lbl),
-                textPropertiesPresets.WeakSmartValue<List<TextPropertiesPreset>>().Select(p => p.Id),
-                id => defaultTextPropertiesPresetId.SetWeakSmartValue(id)));
+                EditorHelper.TempContent2(mgr.DefaultTextPropertiesPresetId),
+                mgr.TextPropertiesPresets.Select(p => p.Id),
+                id => mgr.DefaultTextPropertiesPresetId = id));
 
             Tree.EndDraw();
         }
