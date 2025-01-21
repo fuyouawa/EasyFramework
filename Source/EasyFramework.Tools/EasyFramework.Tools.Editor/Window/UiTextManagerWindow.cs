@@ -771,9 +771,9 @@ namespace EasyFramework.Tools.Editor
 
         public class PrefabTreeDrawer : TreeValueDrawer<PrefabTree, PrefabTreeNode>
         {
-            public override string GetNodeLabel(PrefabTreeNode node)
+            public override GUIContent GetNodeLabel(PrefabTreeNode node)
             {
-                return "       " + node.Target.name;
+                return new GUIContent("       " + node.Target.name);
             }
 
             public override IList<PrefabTreeNode> GetNodeChildren(PrefabTreeNode node)

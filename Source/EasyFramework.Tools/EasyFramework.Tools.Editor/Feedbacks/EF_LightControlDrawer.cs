@@ -19,75 +19,59 @@ namespace EasyFramework.Tools.Editor
             _rangeProperty = Property.Children[nameof(EF_LightControl.Range)];
         }
 
-        protected override void DrawOtherPropertyLayout()
+        protected override void PostBuildPropertiesGroups()
         {
-            FreeExpand1 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                FreeKey1, "光照控制", FreeExpand1)
+            PropertiesGroups.Add(new PropertiesGroupInfo("光照控制", rect =>
             {
-                OnContentGUI = rect =>
-                {
-                    Feedback.TargetLight = EasyEditorField.UnityObject(
-                        EditorHelper.TempContent("目标光照"),
-                        Feedback.TargetLight);
-                    Feedback.Duration = EasyEditorField.Value(
-                        EditorHelper.TempContent("持续时间"),
-                        Feedback.Duration);
-                    Feedback.DisableOnStop = EasyEditorField.Value(
-                        EditorHelper.TempContent("停止时禁用"),
-                        Feedback.DisableOnStop);
-                    Feedback.RelativeValues = EasyEditorField.Value(
-                        EditorHelper.TempContent("使用相对数值"),
-                        Feedback.RelativeValues);
-                }
-            });
+                Feedback.TargetLight = EasyEditorField.UnityObject(
+                    EditorHelper.TempContent("目标光照"),
+                    Feedback.TargetLight);
+                Feedback.Duration = EasyEditorField.Value(
+                    EditorHelper.TempContent("持续时间"),
+                    Feedback.Duration);
+                Feedback.DisableOnStop = EasyEditorField.Value(
+                    EditorHelper.TempContent("停止时禁用"),
+                    Feedback.DisableOnStop);
+                Feedback.RelativeValues = EasyEditorField.Value(
+                    EditorHelper.TempContent("使用相对数值"),
+                    Feedback.RelativeValues);
+            }));
 
-            FreeExpand2 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                FreeKey2, "光照颜色", FreeExpand2)
+            PropertiesGroups.Add(new PropertiesGroupInfo("光照颜色", rect =>
             {
-                OnContentGUI = rect =>
+                Feedback.ModifyColor = EasyEditorField.Value(
+                    EditorHelper.TempContent("修改颜色"),
+                    Feedback.ModifyColor);
+
+                if (Feedback.ModifyColor)
                 {
-                    Feedback.ModifyColor = EasyEditorField.Value(
-                        EditorHelper.TempContent("修改颜色"),
-                        Feedback.ModifyColor);
-
-                    if (Feedback.ModifyColor)
-                    {
-                        _colorProperty.Draw(EditorHelper.TempContent("颜色"));
-                    }
+                    _colorProperty.Draw(EditorHelper.TempContent("颜色"));
                 }
-            });
+            }));
 
-            FreeExpand3 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                FreeKey3, "光照强度", FreeExpand3)
+            PropertiesGroups.Add(new PropertiesGroupInfo("光照强度", rect =>
             {
-                OnContentGUI = rect =>
+                Feedback.ModifyIntensity = EasyEditorField.Value(
+                    EditorHelper.TempContent("修改强度"),
+                    Feedback.ModifyIntensity);
+
+                if (Feedback.ModifyColor)
                 {
-                    Feedback.ModifyIntensity = EasyEditorField.Value(
-                        EditorHelper.TempContent("修改强度"),
-                        Feedback.ModifyIntensity);
-
-                    if (Feedback.ModifyColor)
-                    {
-                        _intensityProperty.Draw(EditorHelper.TempContent("强度"));
-                    }
+                    _intensityProperty.Draw(EditorHelper.TempContent("强度"));
                 }
-            });
+            }));
 
-            FreeExpand4 = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                FreeKey4, "光照范围", FreeExpand4)
+            PropertiesGroups.Add(new PropertiesGroupInfo("光照范围", rect =>
             {
-                OnContentGUI = rect =>
-                {
-                    Feedback.ModifyRange = EasyEditorField.Value(
-                        EditorHelper.TempContent("修改范围"),
-                        Feedback.ModifyRange);
+                Feedback.ModifyRange = EasyEditorField.Value(
+                    EditorHelper.TempContent("修改范围"),
+                    Feedback.ModifyRange);
 
-                    if (Feedback.ModifyRange)
-                    {
-                        _rangeProperty.Draw(EditorHelper.TempContent("范围"));
-                    }
+                if (Feedback.ModifyRange)
+                {
+                    _rangeProperty.Draw(EditorHelper.TempContent("范围"));
                 }
-            });
+            }));
         }
     }
 }

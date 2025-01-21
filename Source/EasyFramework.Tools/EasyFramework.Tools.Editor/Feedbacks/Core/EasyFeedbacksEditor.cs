@@ -14,6 +14,8 @@ namespace EasyFramework.Tools.Editor
     {
         private InspectorProperty _feedbackListProperty;
 
+        private FoldoutGroupConfig _foldoutGroupConfig;
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -21,6 +23,49 @@ namespace EasyFramework.Tools.Editor
             feedbacks.FeedbackList.OnAddElementVoid = OnAddElement;
 
             _feedbackListProperty = Tree.RootProperty.Children[nameof(EasyFeedbacks.FeedbackList)];
+
+            _foldoutGroupConfig = new FoldoutGroupConfig(
+                this, new GUIContent("设置"),
+                _feedbackListProperty.State.Expanded,
+                OnSettingsContentGUI);
+        }
+
+        private void OnSettingsContentGUI(Rect headerRect)
+        {
+            EasyEditorGUI.Title("初始化");
+
+            var feedbacks = (EasyFeedbacks)target;
+
+            feedbacks.InitializationMode = EasyEditorField.Enum(
+                EditorHelper.TempContent("初始化模式"),
+                feedbacks.InitializationMode);
+            feedbacks.AutoInitialization = EasyEditorField.Value(
+                EditorHelper.TempContent("自动初始化", "确保播放前所有Feedbacks都初始化"),
+                feedbacks.AutoInitialization);
+            feedbacks.AutoPlayOnStart = EasyEditorField.Value(
+                EditorHelper.TempContent("开始时自动播放", "在开始时自动播放一次"),
+                feedbacks.AutoPlayOnStart);
+            feedbacks.AutoPlayOnEnable = EasyEditorField.Value(
+                EditorHelper.TempContent("启用时自动播放", "在启用时自动播放一次"),
+                feedbacks.AutoPlayOnEnable);
+
+            EasyEditorGUI.Title("播放");
+
+            feedbacks.CanPlay = EasyEditorField.Value(
+                EditorHelper.TempContent("是否可以播放", "是否可以播放"),
+                feedbacks.CanPlay);
+            feedbacks.CanPlayWhileAlreadyPlaying = EasyEditorField.Value(
+                EditorHelper.TempContent("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放"),
+                feedbacks.CanPlayWhileAlreadyPlaying);
+
+            if (feedbacks.CanPlayWhileAlreadyPlaying)
+            {
+                feedbacks.CanMultiPlay = EasyEditorField.Value(
+                    EditorHelper.TempContent("是否可以多重播放",
+                        "是否可以同时存在多个播放\n" +
+                        "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用"),
+                    feedbacks.CanMultiPlay);
+            }
         }
 
         protected override void DrawTree()
@@ -29,45 +74,8 @@ namespace EasyFramework.Tools.Editor
 
             var feedbacks = (EasyFeedbacks)target;
 
-            _feedbackListProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(
-                new FoldoutGroupConfig(this, "设置", _feedbackListProperty.State.Expanded)
-                {
-                    OnContentGUI = rect =>
-                    {
-                        EasyEditorGUI.Title("初始化");
-
-                        feedbacks.InitializationMode = EasyEditorField.Enum(
-                            EditorHelper.TempContent("初始化模式"),
-                            feedbacks.InitializationMode);
-                        feedbacks.AutoInitialization = EasyEditorField.Value(
-                            EditorHelper.TempContent("自动初始化", "确保播放前所有Feedbacks都初始化"),
-                            feedbacks.AutoInitialization);
-                        feedbacks.AutoPlayOnStart = EasyEditorField.Value(
-                            EditorHelper.TempContent("开始时自动播放", "在开始时自动播放一次"),
-                            feedbacks.AutoPlayOnStart);
-                        feedbacks.AutoPlayOnEnable = EasyEditorField.Value(
-                            EditorHelper.TempContent("启用时自动播放", "在启用时自动播放一次"),
-                            feedbacks.AutoPlayOnEnable);
-
-                        EasyEditorGUI.Title("播放");
-
-                        feedbacks.CanPlay = EasyEditorField.Value(
-                            EditorHelper.TempContent("是否可以播放", "是否可以播放"),
-                            feedbacks.CanPlay);
-                        feedbacks.CanPlayWhileAlreadyPlaying = EasyEditorField.Value(
-                            EditorHelper.TempContent("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放"),
-                            feedbacks.CanPlayWhileAlreadyPlaying);
-
-                        if (feedbacks.CanPlayWhileAlreadyPlaying)
-                        {
-                            feedbacks.CanMultiPlay = EasyEditorField.Value(
-                                EditorHelper.TempContent("是否可以多重播放",
-                                    "是否可以同时存在多个播放\n" +
-                                    "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用"),
-                                feedbacks.CanMultiPlay);
-                        }
-                    }
-                });
+            _foldoutGroupConfig.Expand = _feedbackListProperty.State.Expanded;
+            _feedbackListProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
 
             _feedbackListProperty.Draw(EditorHelper.TempContent("反馈列表"));
 

@@ -27,15 +27,17 @@ namespace EasyFramework.Tools.Editor
             
             EasyEditorGUI.Title("默认预设");
 
+            var lbl = defaultFontAssetPresetId.WeakSmartValue<string>();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
-                "默认字体资产预设",
-                defaultFontAssetPresetId.WeakSmartValue<string>(),
+                EditorHelper.TempContent("默认字体资产预设"),
+                EditorHelper.TempContent2(lbl),
                 fontAssetPresets.WeakSmartValue<List<FontAssetPreset>>().Select(p => p.Id),
                 id => defaultFontAssetPresetId.SetWeakSmartValue(id)));
 
+            lbl = defaultTextPropertiesPresetId.WeakSmartValue<string>();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
-                "默认文本属性预设",
-                defaultTextPropertiesPresetId.WeakSmartValue<string>(),
+                EditorHelper.TempContent("默认文本属性预设"),
+                EditorHelper.TempContent2(lbl),
                 textPropertiesPresets.WeakSmartValue<List<TextPropertiesPreset>>().Select(p => p.Id),
                 id => defaultTextPropertiesPresetId.SetWeakSmartValue(id)));
 

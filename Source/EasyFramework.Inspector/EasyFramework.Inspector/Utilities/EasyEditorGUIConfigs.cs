@@ -10,48 +10,6 @@ namespace EasyFramework.Inspector
 
     public delegate void OnContentGUIDelegate(Rect headerRect);
 
-    public delegate void OnBeforeFoldoutGUIDelegate(Rect headerRect);
-
-    public class PopupSelectorConfig<T>
-    {
-        public IEnumerable<T> Collection;
-        public Action<T> OnConfirmed;
-        public Func<T, string> MenuItemNameGetter = null;
-        public string Title = null;
-        public bool SupportsMultiSelect = false;
-        public bool AddThumbnailIcons = true;
-
-        public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
-        {
-            Collection = collection;
-            OnConfirmed = onConfirmed;
-        }
-    }
-
-    public class SelectorDropdownConfig<T> : PopupSelectorConfig<T>
-    {
-        public GUIContent Label;
-        public GUIContent BtnLabel;
-        public bool ReturnValuesOnSelectionChange = true;
-        public GUIStyle Style;
-
-        public SelectorDropdownConfig(string label, string btnLabel, IEnumerable<T> collection,
-            Action<T> onConfirmed)
-            : base(collection, onConfirmed)
-        {
-            Label = new GUIContent(label);
-            BtnLabel = new GUIContent(btnLabel);
-        }
-
-        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, IEnumerable<T> collection,
-            Action<T> onConfirmed)
-            : base(collection, onConfirmed)
-        {
-            Label = label;
-            BtnLabel = btnLabel;
-        }
-    }
-
     public class LabelConfig
     {
         public GUIContent Content;
@@ -68,43 +26,69 @@ namespace EasyFramework.Inspector
             Content = content;
             Style = style;
         }
+
         public LabelConfig(GUIContent content, Color color, GUIStyle style = null)
         {
             Content = content;
             Style = style;
             Color = color;
         }
+    }
 
-        public LabelConfig(string content, GUIStyle style = null)
+    public class PopupSelectorConfig<T>
+    {
+        public IEnumerable<T> Collection;
+        public Action<T> OnConfirmed;
+        public Func<T, string> MenuItemNameGetter = null;
+        public string Title = null;
+        public bool SupportsMultiSelect = false;
+        public bool AddThumbnailIcons = true;
+
+        public PopupSelectorConfig()
         {
-            Content = new GUIContent(content);
-            Style = style;
         }
 
-        public LabelConfig(string content, Color color, GUIStyle style = null)
+        public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
         {
-            Content = new GUIContent(content);
-            Style = style;
-            Color = color;
+            Collection = collection;
+            OnConfirmed = onConfirmed;
+        }
+    }
+
+    public class SelectorDropdownConfig<T> : PopupSelectorConfig<T>
+    {
+        public GUIContent Label;
+        public GUIContent BtnLabel;
+        public bool ReturnValuesOnSelectionChange = true;
+        public GUIStyle Style;
+
+        public SelectorDropdownConfig()
+        {
+        }
+
+        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, IEnumerable<T> collection,
+            Action<T> onConfirmed)
+            : base(collection, onConfirmed)
+        {
+            Label = label;
+            BtnLabel = btnLabel;
         }
     }
 
     public class FoldoutHeaderConfig
     {
         public GUIContent Label;
+        public LabelConfig RightLabelConfig;
         public bool Expand;
         public bool Expandable = true;
         public Color? BoxColor;
         public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
-        public LabelConfig RightLabelConfig = new LabelConfig();
 
-        public FoldoutHeaderConfig(string label, bool expand = true)
+        public FoldoutHeaderConfig()
         {
-            Label = new GUIContent(label);
-            Expand = expand;
         }
 
-        public FoldoutHeaderConfig(GUIContent label, bool expand = true)
+        public FoldoutHeaderConfig(GUIContent label, bool expand)
         {
             Label = label;
             Expand = expand;
@@ -117,35 +101,36 @@ namespace EasyFramework.Inspector
         public OnTitleBarGUIDelegate OnTitleBarGUI;
         public OnContentGUIDelegate OnContentGUI;
 
-        public FoldoutGroupConfig(object key, string label, bool expand = true)
-            : this(key, new GUIContent(label), expand)
+        public FoldoutGroupConfig()
         {
         }
 
-        public FoldoutGroupConfig(object key, GUIContent label, bool expand = true)
+        public FoldoutGroupConfig(object key, GUIContent label, bool expand,
+            OnContentGUIDelegate onContentGUI)
             : base(label, expand)
         {
             Key = key;
+            OnContentGUI = onContentGUI;
         }
     }
 
     public class BoxGroupConfig
     {
         public GUIContent Label;
+        public LabelConfig RightLabel;
         public Color? BoxColor;
-        public GUIContent RightLabel = GUIContent.none;
         public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
         public OnTitleBarGUIDelegate OnTitleBarGUI;
         public OnContentGUIDelegate OnContentGUI;
 
-        public BoxGroupConfig(string label)
+        public BoxGroupConfig()
         {
-            Label = new GUIContent(label);
         }
 
-        public BoxGroupConfig(GUIContent label)
+        public BoxGroupConfig(GUIContent label, OnContentGUIDelegate onContentGUI = null)
         {
             Label = label;
+            OnContentGUI = onContentGUI;
         }
     }
 
@@ -155,13 +140,11 @@ namespace EasyFramework.Inspector
         public bool Expand;
         public bool ShowFoldout = true;
 
-        public FoldoutToolbarConfig(string label, bool expand = true)
+        public FoldoutToolbarConfig()
         {
-            Label = new GUIContent(label);
-            Expand = expand;
         }
 
-        public FoldoutToolbarConfig(GUIContent label, bool expand = true)
+        public FoldoutToolbarConfig(GUIContent label, bool expand)
         {
             Label = label;
             Expand = expand;
@@ -175,11 +158,11 @@ namespace EasyFramework.Inspector
         public string ExpandButtonTooltip = "展开所有";
         public string CollapseButtonTooltip = "折叠所有";
 
-        public WindowLikeToolbarConfig(string label, bool expand = true) : base(label, expand)
+        public WindowLikeToolbarConfig()
         {
         }
 
-        public WindowLikeToolbarConfig(GUIContent label, bool expand = true) : base(label, expand)
+        public WindowLikeToolbarConfig(GUIContent label, bool expand) : base(label, expand)
         {
         }
     }
@@ -190,14 +173,15 @@ namespace EasyFramework.Inspector
         public Action<Rect> OnTitleBarGUI = null;
         public Action OnContentGUI = null;
 
-        public WindowLikeToolGroupConfig(object key, string label, bool expand = true) : base(label, expand)
+        public WindowLikeToolGroupConfig()
         {
-            Key = key;
         }
 
-        public WindowLikeToolGroupConfig(object key, GUIContent label, bool expand = true) : base(label, expand)
+        public WindowLikeToolGroupConfig(object key, GUIContent label, bool expand, Action onContentGUI) : base(label,
+            expand)
         {
             Key = key;
+            OnContentGUI = onContentGUI;
         }
     }
 
@@ -220,7 +204,7 @@ namespace EasyFramework.Inspector
 
     public class TreeGroupConfig<TElement>
     {
-        public delegate string NodeLabelGetterDelegate(TElement node);
+        public delegate GUIContent NodeLabelGetterDelegate(TElement node);
 
         public delegate IList<TElement> NodeChildrenGetterDelegate(TElement node);
 
@@ -249,12 +233,7 @@ namespace EasyFramework.Inspector
         public OnBeforeChildrenContentGUIDelegate OnBeforeChildrenContentGUI;
         public OnAfterChildrenContentGUIDelegate OnAfterChildrenContentGUI;
 
-        public TreeGroupConfig(object key, string label,
-            NodeLabelGetterDelegate nodeLabelGetter,
-            NodeChildrenGetterDelegate nodeChildrenGetter,
-            NodeStateGetterDelegate nodeStateGetter,
-            bool expand = true) : this(key, new GUIContent(label), nodeLabelGetter, nodeChildrenGetter,
-            nodeStateGetter, expand)
+        public TreeGroupConfig()
         {
         }
 
@@ -262,7 +241,7 @@ namespace EasyFramework.Inspector
             NodeLabelGetterDelegate nodeLabelGetter,
             NodeChildrenGetterDelegate nodeChildrenGetter,
             NodeStateGetterDelegate nodeStateGetter,
-            bool expand = true)
+            bool expand)
         {
             Key = key;
             NodeLabelGetter = nodeLabelGetter;

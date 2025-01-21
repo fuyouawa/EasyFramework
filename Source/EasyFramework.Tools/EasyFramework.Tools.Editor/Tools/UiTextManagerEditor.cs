@@ -20,15 +20,17 @@ namespace EasyFramework.Tools.Editor
             var fontAssetPresetId = Tree.RootProperty.Children["_fontAssetPresetId"];
             var textPropertiesPresetId = Tree.RootProperty.Children["_textPropertiesPresetId"];
 
+            var lbl = fontAssetPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO");
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
-                "字体资产预设",
-                fontAssetPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO"),
+                EditorHelper.TempContent("字体资产预设"),
+                EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.FontAssetPresets.Select(p => p.Id),
                 id => fontAssetPresetId.SetWeakSmartValue(id)));
 
+            lbl = textPropertiesPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO");
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
-                "文本属性预设",
-                textPropertiesPresetId.WeakSmartValue<string>().DefaultIfNullOrEmpty("TODO"),
+                EditorHelper.TempContent("文本属性预设"),
+                EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.TextPropertiesPresets.Select(p => p.Id),
                 id => textPropertiesPresetId.SetWeakSmartValue(id)));
 
@@ -38,23 +40,20 @@ namespace EasyFramework.Tools.Editor
             if (mgr.FontAssetPresetId.IsNotNullOrEmpty())
             {
                 var fontAssetPreset = mgr.GetFontAssetPreset();
-                EasyEditorGUI.FoldoutGroup(
-                    new FoldoutGroupConfig(this, $"字体资产预设 - {mgr.FontAssetPresetId}")
+                EasyEditorGUI.BoxGroup(
+                    EditorHelper.TempContent($"字体资产预设 - {mgr.FontAssetPresetId}"),
+                    rect =>
                     {
-                        Expandable = false,
-                        OnContentGUI = rect =>
+                        EditorGUI.BeginChangeCheck();
+                        fontAssetPreset.FontAsset = EasyEditorField.UnityObject(
+                            EditorHelper.TempContent2("字体资产"),
+                            fontAssetPreset.FontAsset, false);
+                        fontAssetPreset.Material = EasyEditorField.UnityObject(
+                            EditorHelper.TempContent2("材质"),
+                            fontAssetPreset.Material, false);
+                        if (EditorGUI.EndChangeCheck())
                         {
-                            EditorGUI.BeginChangeCheck();
-                            fontAssetPreset.FontAsset = EasyEditorField.UnityObject(
-                                new GUIContent("字体资产"),
-                                fontAssetPreset.FontAsset, false);
-                            fontAssetPreset.Material = EasyEditorField.UnityObject(
-                                new GUIContent("材质"),
-                                fontAssetPreset.Material, false);
-                            if (EditorGUI.EndChangeCheck())
-                            {
-                                EditorUtility.SetDirty(mgr);
-                            }
+                            EditorUtility.SetDirty(mgr);
                         }
                     });
             }
@@ -62,25 +61,22 @@ namespace EasyFramework.Tools.Editor
             if (mgr.TextPropertiesPresetId.IsNotNullOrEmpty())
             {
                 var textPropertiesPreset = mgr.GetTextPropertiesPreset();
-                EasyEditorGUI.FoldoutGroup(
-                    new FoldoutGroupConfig(this, $"文本属性预设 - {mgr.TextPropertiesPresetId}")
+                EasyEditorGUI.BoxGroup(
+                    EditorHelper.TempContent($"文本属性预设 - {mgr.TextPropertiesPresetId}"),
+                    rect =>
                     {
-                        Expandable = false,
-                        OnContentGUI = rect =>
+                        EditorGUI.BeginChangeCheck();
+                        textPropertiesPreset.FontSize = EditorGUILayout.FloatField(
+                            "字体资产",
+                            textPropertiesPreset.FontSize);
+
+                        textPropertiesPreset.FontColor = SirenixEditorFields.ColorField(
+                            new GUIContent("字体颜色"),
+                            textPropertiesPreset.FontColor);
+
+                        if (EditorGUI.EndChangeCheck())
                         {
-                            EditorGUI.BeginChangeCheck();
-                            textPropertiesPreset.FontSize = EditorGUILayout.FloatField(
-                                "字体资产",
-                                textPropertiesPreset.FontSize);
-
-                            textPropertiesPreset.FontColor = SirenixEditorFields.ColorField(
-                                new GUIContent("字体颜色"),
-                                textPropertiesPreset.FontColor);
-
-                            if (EditorGUI.EndChangeCheck())
-                            {
-                                EditorUtility.SetDirty(mgr);
-                            }
+                            EditorUtility.SetDirty(mgr);
                         }
                     });
             }

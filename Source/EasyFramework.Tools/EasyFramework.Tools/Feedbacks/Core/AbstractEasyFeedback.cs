@@ -27,6 +27,7 @@ namespace EasyFramework.Tools
         public float IntervalBetweenRepeats = 0f;
 
         public virtual string Tip => string.Empty;
+        public virtual string GroupName => string.Empty;
 
         public EasyFeedbacks Owner { get; private set; }
         public bool IsPlaying { get; protected set; }

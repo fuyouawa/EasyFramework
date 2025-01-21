@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EasyFramework.Generic;
@@ -10,6 +11,12 @@ using UnityEngine;
 
 namespace EasyFramework.Tools.Editor
 {
+    internal class EasyFeedbackHelper
+    {
+        private static FieldInfo[] s_ignoreDrawFields;
+        public static FieldInfo[] IgnoreDrawFields => s_ignoreDrawFields ??= typeof(AbstractEasyFeedback).GetFields().ToArray();
+    }
+
     public class AbstractEasyFeedbackDrawer<T> : FoldoutValueDrawer<T>
         where T : AbstractEasyFeedback
     {
@@ -47,80 +54,49 @@ namespace EasyFramework.Tools.Editor
             return new GUIContent("      " + (value.Label.IsNullOrEmpty() ? "TODO" : value.Label));
         }
 
-        private InspectorProperty _property;
-
-        private InspectorProperty _freeProperty1;
-        private InspectorProperty _freeProperty2;
-        private InspectorProperty _freeProperty3;
-        private InspectorProperty _freeProperty4;
-        private InspectorProperty _freeProperty5;
-        private InspectorProperty _freeProperty6;
-
-        protected bool FreeExpand1
+        protected class PropertiesGroupInfo
         {
-            get => _freeProperty1.State.Expanded;
-            set => _freeProperty1.State.Expanded = value;
+            public GUIContent Label = new GUIContent();
+            public OnContentGUIDelegate OnContentGUI;
+
+            public PropertiesGroupInfo(string label, OnContentGUIDelegate onContentGui)
+            {
+                Label.text = label;
+                OnContentGUI = onContentGui;
+            }
+
+            public PropertiesGroupInfo(GUIContent label, OnContentGUIDelegate onContentGui)
+            {
+                Label = label;
+                OnContentGUI = onContentGui;
+            }
         }
 
-        protected bool FreeExpand2
-        {
-            get => _freeProperty2.State.Expanded;
-            set => _freeProperty2.State.Expanded = value;
-        }
+        private readonly List<InspectorProperty> _properties = new List<InspectorProperty>();
+        private readonly List<FoldoutGroupConfig> _foldoutGroupConfigs = new List<FoldoutGroupConfig>();
 
-        protected bool FreeExpand3
-        {
-            get => _freeProperty3.State.Expanded;
-            set => _freeProperty3.State.Expanded = value;
-        }
-
-        protected bool FreeExpand4
-        {
-            get => _freeProperty4.State.Expanded;
-            set => _freeProperty4.State.Expanded = value;
-        }
-
-        protected bool FreeExpand5
-        {
-            get => _freeProperty5.State.Expanded;
-            set => _freeProperty5.State.Expanded = value;
-        }
-
-        protected bool FreeExpand6
-        {
-            get => _freeProperty6.State.Expanded;
-            set => _freeProperty6.State.Expanded = value;
-        }
-
-
-        protected object FreeKey1 { get; private set; }
-        protected object FreeKey2 { get; private set; }
-        protected object FreeKey3 { get; private set; }
-        protected object FreeKey4 { get; private set; }
-        protected object FreeKey5 { get; private set; }
-        protected object FreeKey6 { get; private set; }
+        protected List<PropertiesGroupInfo> PropertiesGroups = new List<PropertiesGroupInfo>();
 
         protected T Feedback { get; private set; }
 
         protected override void Initialize()
         {
             base.Initialize();
-            _property = Property.Children[nameof(AbstractEasyFeedback.Label)];
-            _freeProperty1 = Property.Children[nameof(AbstractEasyFeedback.Enable)];
-            _freeProperty2 = Property.Children[nameof(AbstractEasyFeedback.DelayBeforePlay)];
-            _freeProperty3 = Property.Children[nameof(AbstractEasyFeedback.Blocking)];
-            _freeProperty4 = Property.Children[nameof(AbstractEasyFeedback.RepeatForever)];
-            _freeProperty5 = Property.Children[nameof(AbstractEasyFeedback.AmountOfRepeat)];
-            _freeProperty6 = Property.Children[nameof(AbstractEasyFeedback.IntervalBetweenRepeats)];
-
-            FreeKey1 = UniqueDrawerKey.Create(_freeProperty1, this);
-            FreeKey2 = UniqueDrawerKey.Create(_freeProperty2, this);
-            FreeKey3 = UniqueDrawerKey.Create(_freeProperty3, this);
-            FreeKey4 = UniqueDrawerKey.Create(_freeProperty4, this);
-            FreeKey5 = UniqueDrawerKey.Create(_freeProperty5, this);
-            FreeKey6 = UniqueDrawerKey.Create(_freeProperty6, this);
-
             Feedback = ValueEntry.SmartValue;
+
+            PropertiesGroups.Add(new PropertiesGroupInfo("反馈设置", OnSettingsContentGUI));
+            PostBuildPropertiesGroups();
+
+            for (int i = 0; i < PropertiesGroups.Count; i++)
+            {
+                var prop = Property.Children[i];
+                var info = PropertiesGroups[i];
+
+                _properties.Add(prop);
+                _foldoutGroupConfigs.Add(new FoldoutGroupConfig(
+                    UniqueDrawerKey.Create(prop, this),
+                    info.Label, true, info.OnContentGUI));
+            }
 
             var style = new GUIStyle(SirenixGUIStyles.BoldLabel);
             style.fontSize += 1;
@@ -129,99 +105,106 @@ namespace EasyFramework.Tools.Editor
             _labelConfig.Style = style;
         }
 
-        protected override void OnContentGUI(Rect headerRect)
+        protected virtual void PostBuildPropertiesGroups()
         {
-            var value = ValueEntry.SmartValue;
-
-            if (value.Tip.IsNotNullOrWhiteSpace())
+            var label = new GUIContent();
+            if (Feedback.GroupName.IsNullOrEmpty())
             {
-                EasyEditorGUI.MessageBox(value.Tip, MessageType.Info);
+                var attr = Property.GetAttribute<AddEasyFeedbackMenuAttribute>();
+                label.text = attr.Path.Split('/').Last();
+            }
+            else
+            {
+                label.text = Feedback.GroupName;
             }
 
-            value.Label = EasyEditorField.Value(
-                EditorHelper.TempContent("标签"),
-                value.Label);
-            value.Enable = EasyEditorField.Value(
-                new GUIContent("启用"),
-                value.Enable);
-
-            _property.State.Expanded = EasyEditorGUI.FoldoutGroup(new FoldoutGroupConfig(
-                UniqueDrawerKey.Create(_property, this),
-                "反馈设置",
-                _property.State.Expanded)
+            PropertiesGroups.Add(new PropertiesGroupInfo(label, rect =>
             {
-                OnContentGUI = rect =>
+                foreach (var child in Property.Children)
                 {
-                    value.DelayBeforePlay = EasyEditorField.Value(
-                        EditorHelper.TempContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"),
-                        value.DelayBeforePlay);
-                    value.Blocking = EasyEditorField.Value(
-                        EditorHelper.TempContent("阻塞", "是否会阻塞反馈运行"),
-                        value.Blocking);
-                    value.RepeatForever = EasyEditorField.Value(
-                        EditorHelper.TempContent("无限重复", "无限重复播放"),
-                        value.RepeatForever);
-
-                    if (!value.RepeatForever)
+                    if (!Array.Exists(EasyFeedbackHelper.IgnoreDrawFields, f => f.Name == child.Name))
                     {
-                        value.AmountOfRepeat = EasyEditorField.Value(
-                            EditorHelper.TempContent("重复次数", "重复播放的次数"),
-                            value.AmountOfRepeat);
+                        child.Draw();
                     }
+                }
+            }));
+        }
 
-                    value.IntervalBetweenRepeats = EasyEditorField.Value(
-                        EditorHelper.TempContent("重复间隔", "每次循环播放的间隔"),
-                        value.IntervalBetweenRepeats);
-                },
-            });
+        private void OnSettingsContentGUI(Rect headerRect)
+        {
+            EasyEditorField.Value(
+                EditorHelper.TempContent("播放前延迟", "在正式Play前经过多少时间的延迟(s)"),
+                ref Feedback.DelayBeforePlay);
+            EasyEditorField.Value(
+                EditorHelper.TempContent("阻塞", "是否会阻塞反馈运行"),
+                ref Feedback.Blocking);
+            EasyEditorField.Value(
+                EditorHelper.TempContent("无限重复", "无限重复播放"),
+                ref Feedback.RepeatForever);
 
-            DrawOtherPropertyLayout();
+            if (!Feedback.RepeatForever)
+            {
+                EasyEditorField.Value(
+                    EditorHelper.TempContent("重复次数", "重复播放的次数"),
+                    ref Feedback.AmountOfRepeat);
+            }
+
+            EasyEditorField.Value(
+                EditorHelper.TempContent("重复间隔", "每次循环播放的间隔"),
+                ref Feedback.IntervalBetweenRepeats);
+        }
+
+        protected override void OnContentGUI(Rect headerRect)
+        {
+            if (Feedback.Tip.IsNotNullOrWhiteSpace())
+            {
+                EasyEditorGUI.MessageBox(Feedback.Tip, MessageType.Info);
+            }
+
+            EasyEditorField.Value(
+                EditorHelper.TempContent("标签"),
+                ref Feedback.Label);
+            EasyEditorField.Value(
+                new GUIContent("启用"),
+                ref Feedback.Enable);
+
+            DrawPropertiesGroups();
 
             EditorGUI.BeginDisabledGroup(!Application.isPlaying);
             EditorGUILayout.BeginHorizontal();
 
             if (GUILayout.Button("播放"))
             {
-                value.StartCoroutine(value.PlayCo());
+                Feedback.StartCoroutine(Feedback.PlayCo());
             }
 
             if (GUILayout.Button("重置"))
             {
-                value.Reset();
+                Feedback.Reset();
             }
 
             if (GUILayout.Button("停止"))
             {
-                value.Stop();
+                Feedback.Stop();
             }
 
             EditorGUILayout.EndHorizontal();
             EditorGUI.EndDisabledGroup();
         }
 
-        private static FieldInfo[] s_ignoreDrawFields;
-
-        private static FieldInfo[] IgnoreDrawFields
+        private void DrawPropertiesGroups()
         {
-            get
+            for (int i = 0; i < PropertiesGroups.Count; i++)
             {
-                if (s_ignoreDrawFields == null)
-                {
-                    s_ignoreDrawFields = typeof(AbstractEasyFeedback).GetFields().ToArray();
-                }
-
-                return s_ignoreDrawFields;
+                FoldoutGroup(_foldoutGroupConfigs[i], _properties[i]);
             }
-        }
 
-        protected virtual void DrawOtherPropertyLayout()
-        {
-            foreach (var child in Property.Children)
+            return;
+
+            void FoldoutGroup(FoldoutGroupConfig config, InspectorProperty property)
             {
-                if (!Array.Exists(IgnoreDrawFields, f => f.Name == child.Name))
-                {
-                    child.Draw();
-                }
+                config.Expand = property.State.Expanded;
+                property.State.Expanded = EasyEditorGUI.FoldoutGroup(config);
             }
         }
     }

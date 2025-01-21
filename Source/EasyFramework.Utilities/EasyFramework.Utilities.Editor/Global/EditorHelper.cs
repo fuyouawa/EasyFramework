@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework.Tools.Editor
+namespace EasyFramework.Utilities.Editor
 {
     internal static class EditorHelper
     {

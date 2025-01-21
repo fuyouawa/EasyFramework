@@ -9,13 +9,27 @@ namespace EasyFramework.Inspector
 {
     public class EasyEditorField
     {
+        public static void Enum<T>(GUIContent label, ref T value, GUIStyle style = null)
+            where T : Enum
+        {
+            value = Enum(label, value, style);
+        }
+
         public static T Enum<T>(GUIContent label, T value, GUIStyle style = null)
             where T : Enum
         {
             return EnumSelector<T>.DrawEnumField(label, value, style);
         }
 
-        public static T UnityObject<T>(GUIContent label, T value, bool allocSceneObjects = true, params GUILayoutOption[] options)
+        public static void UnityObject<T>(GUIContent label, ref T value, bool allocSceneObjects = true,
+            params GUILayoutOption[] options)
+            where T : Object
+        {
+            value = UnityObject(label, value, allocSceneObjects, options);
+        }
+
+        public static T UnityObject<T>(GUIContent label, T value, bool allocSceneObjects = true,
+            params GUILayoutOption[] options)
             where T : Object
         {
             return (T)SirenixEditorFields.UnityObjectField(label, value, typeof(T), allocSceneObjects, options);
@@ -59,6 +73,47 @@ namespace EasyFramework.Inspector
         public static Gradient Value(GUIContent label, Gradient value)
         {
             return EditorGUILayout.GradientField(label, value);
+        }
+
+
+        public static void Value(GUIContent label, ref int value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref float value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref bool value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref string value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref Vector3 value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref Vector2 value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref Color value)
+        {
+            value = Value(label, value);
+        }
+
+        public static void Value(GUIContent label, ref Gradient value)
+        {
+            value = Value(label, value);
         }
     }
 }

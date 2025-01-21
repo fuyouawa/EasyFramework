@@ -167,9 +167,9 @@ namespace EasyFramework.Tools.Editor
 
         public class ResultTreeDrawer : TreeValueDrawer<ResultTree, ResultTreeNode>
         {
-            public override string GetNodeLabel(ResultTreeNode node)
+            public override GUIContent GetNodeLabel(ResultTreeNode node)
             {
-                return node.IsSearched ? string.Empty : node.Name;
+                return node.IsSearched ? GUIContent.none : new GUIContent(node.Name);
             }
 
             public override IList<ResultTreeNode> GetNodeChildren(ResultTreeNode node)

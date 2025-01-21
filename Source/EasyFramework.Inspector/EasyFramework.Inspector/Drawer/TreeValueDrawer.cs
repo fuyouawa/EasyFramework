@@ -34,7 +34,7 @@ namespace EasyFramework.Inspector
             );
         }
 
-        public abstract string GetNodeLabel(TElement node);
+        public abstract GUIContent GetNodeLabel(TElement node);
         public abstract IList<TElement> GetNodeChildren(TElement node);
         public abstract TreeNodeState GetNodeState(TElement node);
 

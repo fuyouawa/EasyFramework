@@ -69,19 +69,29 @@ namespace EasyFramework.Utilities.Editor
 
     public class ReadOnlyVariantListDrawer : OdinValueDrawer<ReadOnlyVariantList>
     {
-        protected override void DrawPropertyLayout(GUIContent label)
+        private FoldoutGroupConfig _foldoutGroupConfig;
+
+        protected override void Initialize()
         {
-            Property.State.Expanded = EasyEditorGUI.FoldoutGroup(
-                new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), label, Property.State.Expanded)
+            base.Initialize();
+            _foldoutGroupConfig = new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(Property, this),
+                GUIContent.none, true,
+                rect =>
                 {
-                    OnContentGUI = rect =>
+                    foreach (var child in Property.Children)
                     {
-                        foreach (var child in Property.Children)
-                        {
-                            child.Draw();
-                        }
+                        child.Draw();
                     }
                 });
+        }
+
+        protected override void DrawPropertyLayout(GUIContent label)
+        {
+            _foldoutGroupConfig.Label = label;
+            _foldoutGroupConfig.Expand = Property.State.Expanded;
+
+            Property.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
         }
     }
 }

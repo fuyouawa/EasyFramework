@@ -14,46 +14,55 @@ namespace EasyFramework.Inspector
     {
         #region Internal
 
-        private static readonly GUIContent _text = new GUIContent();
-        private static readonly GUIContent _text2 = new GUIContent();
-
-        private static readonly Dictionary<Type, Stack<object>> InfoStack = new Dictionary<Type, Stack<object>>();
-
-        private static void PushContext(Type infoType, object info)
+        private struct ContextInfo
         {
-            if (InfoStack.Count > 1024)
+            public string Key;
+            public object Context;
+            public Type ContextType;
+        }
+
+        private static readonly Stack<ContextInfo> ContextStack = new Stack<ContextInfo>();
+
+        private static void PushContext(string key, object context, Type contextType)
+        {
+            if (ContextStack.Count > 1024)
             {
                 throw new Exception("Stack leak of EasyEditorGUI.Begin - End api!");
             }
 
-            if (!InfoStack.TryGetValue(infoType, out var stack))
+            ContextStack.Push(new ContextInfo()
             {
-                stack = new Stack<object>();
-                InfoStack[infoType] = stack;
+                Context = context,
+                Key = key,
+                ContextType = contextType
+            });
+        }
+
+        private static void PushContext<T>(string key, T context)
+        {
+            PushContext(key, context, typeof(T));
+        }
+
+        private static T PopContext<T>(string key)
+        {
+            return (T)PopContext(key, typeof(T));
+        }
+
+        private static object PopContext(string key, Type contextType)
+        {
+            var ctx = ContextStack.Pop();
+            if (ctx.Key != key)
+            {
+                throw new ArgumentException($"Context key mismatch, expected \"{key}\", actual \"{ctx.Key}\"");
             }
 
-            stack.Push(info);
-        }
-
-        private static void PushContext<T>(T info)
-        {
-            PushContext(typeof(T), info);
-        }
-
-        private static T PopContext<T>()
-        {
-            return (T)PopContext(typeof(T));
-        }
-
-        private static object PopContext(Type infoType)
-        {
-            if (!InfoStack.TryGetValue(infoType, out var stack))
+            if (ctx.ContextType != contextType)
             {
                 throw new ArgumentException(
-                    $"The type({infoType.Name}) cannot be found in stack, perhaps because End does not match Begin");
+                    $"Context type mismatch, expected \"{contextType}\", actual \"{ctx.ContextType}\"");
             }
 
-            return stack.Pop();
+            return ctx.Context;
         }
 
         #endregion
@@ -240,6 +249,7 @@ namespace EasyFramework.Inspector
             {
                 selector.SelectionTree.EnumerateTree().AddThumbnailIcons(true);
             }
+
             selector.SelectionChanged += types => { selector.SelectionTree.Selection.ConfirmSelection(); };
             return selector;
         }
@@ -278,15 +288,30 @@ namespace EasyFramework.Inspector
 
         #region Label
 
+        public static void BeginGUIColor(Color? color)
+        {
+            PushContext("GUIColor", GUI.color);
+            if (color != null)
+            {
+                GUI.color = (Color)color;
+            }
+        }
+
+        public static void EndGUIColor()
+        {
+            var color = PopContext<Color>("GUIColor");
+            GUI.color = color;
+        }
+
+        private static readonly LabelConfig s_emptyLabelConfig = new LabelConfig();
+
         public static Rect PrefixLabel(Rect totalRect, LabelConfig config)
         {
-            var colorTmp = GUI.color;
-            if (config.Color != null)
-            {
-                GUI.color = (Color)config.Color;
-            }
+            config ??= s_emptyLabelConfig;
+
+            BeginGUIColor(config.Color);
             var rect = EditorGUI.PrefixLabel(totalRect, config.Content, config.Style);
-            GUI.color = colorTmp;
+            EndGUIColor();
             return rect;
         }
 
@@ -306,6 +331,18 @@ namespace EasyFramework.Inspector
             var e = BeginFoldoutHeader(config, out headerRect);
             EndFoldoutHeader();
             return e;
+        }
+
+        private static readonly FoldoutGroupConfig s_tempFoldoutGroupConfig = new FoldoutGroupConfig();
+
+        public static bool FoldoutGroup(object key, GUIContent label,
+            bool expand, OnContentGUIDelegate onContentGUI)
+        {
+            s_tempFoldoutGroupConfig.Key = key;
+            s_tempFoldoutGroupConfig.Label = label;
+            s_tempFoldoutGroupConfig.Expand = expand;
+            s_tempFoldoutGroupConfig.OnContentGUI = onContentGUI;
+            return FoldoutGroup(s_tempFoldoutGroupConfig);
         }
 
         public static bool FoldoutGroup(FoldoutGroupConfig config)
@@ -374,7 +411,7 @@ namespace EasyFramework.Inspector
             {
                 var rect = headerRect;
                 // rect.x += 13;
-                EditorGUI.LabelField(rect, config.Label);
+                EditorGUI.LabelField(rect, config.Label, config.Label);
             }
 
             return config.Expand;
@@ -394,6 +431,20 @@ namespace EasyFramework.Inspector
             BoxGroup(config, out var rect);
         }
 
+        public static void BoxGroup(GUIContent label, OnContentGUIDelegate onContentGUI)
+        {
+            BoxGroup(label, onContentGUI, out _);
+        }
+
+        private static readonly BoxGroupConfig s_tempBoxGroupConfig = new BoxGroupConfig();
+
+        public static void BoxGroup(GUIContent label, OnContentGUIDelegate onContentGUI, out Rect headerRect)
+        {
+            s_tempBoxGroupConfig.Label = label;
+            s_tempBoxGroupConfig.OnContentGUI = onContentGUI;
+            BoxGroup(s_tempBoxGroupConfig, out headerRect);
+        }
+
         public static void BoxGroup(BoxGroupConfig config, out Rect headerRect)
         {
             var color = GUI.color;
@@ -410,10 +461,10 @@ namespace EasyFramework.Inspector
 
             headerRect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
 
-            if (config.RightLabel != null && config.RightLabel != GUIContent.none)
+            if (config.RightLabel != null)
             {
-                var s = SirenixGUIStyles.Label.CalcSize(config.RightLabel);
-                EditorGUI.PrefixLabel(headerRect.AlignRight(s.x), config.RightLabel);
+                var s = SirenixGUIStyles.Label.CalcSize(config.RightLabel.Content);
+                PrefixLabel(headerRect.AlignRight(s.x), config.RightLabel);
             }
 
             config.OnCoveredTitleBarGUI?.Invoke(headerRect);
@@ -434,6 +485,18 @@ namespace EasyFramework.Inspector
         #endregion
 
         #region WindowLikeToolBar
+
+        private static readonly WindowLikeToolGroupConfig s_tempWindowLikeToolGroupConfig =
+            new WindowLikeToolGroupConfig();
+
+        public static bool WindowLikeToolGroup(object key, GUIContent label, bool expand, Action onContentGUI)
+        {
+            s_tempWindowLikeToolGroupConfig.Key = key;
+            s_tempWindowLikeToolGroupConfig.Label = label;
+            s_tempWindowLikeToolGroupConfig.Expand = expand;
+            s_tempWindowLikeToolGroupConfig.OnContentGUI = onContentGUI;
+            return WindowLikeToolGroup(s_tempWindowLikeToolGroupConfig);
+        }
 
         public static bool WindowLikeToolGroup(WindowLikeToolGroupConfig config)
         {
@@ -566,28 +629,29 @@ namespace EasyFramework.Inspector
                 }
             }
 
-            var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand)
+            var expand2 = FoldoutGroup(new FoldoutGroupConfig(node, label, state.Expand, OnContentGUI)
             {
                 BoxColor = boxColor,
                 Expandable = state.Expandable ?? children.IsNotNullOrEmpty(),
                 OnTitleBarGUI = headerRect => config.OnNodeTitleBarGUI?.Invoke(node, headerRect, info),
-                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect, info),
-                OnContentGUI = headerRect =>
-                {
-                    config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect, info);
-                    if (!info.IsLastNode)
-                    {
-                        EditorGUI.indentLevel++;
-                        DrawTreeNodes(children, level + 1, config);
-                    }
-
-                    config.OnAfterChildrenContentGUI?.Invoke(node, headerRect, info);
-                }
+                OnCoveredTitleBarGUI = headerRect => config.OnNodeConveredTitleBarGUI?.Invoke(node, headerRect, info)
             });
             if (expand2 != state.Expand)
             {
                 state.Expand = expand2;
                 state.OnExpandChanged?.Invoke(expand2);
+            }
+
+            void OnContentGUI(Rect headerRect)
+            {
+                config.OnBeforeChildrenContentGUI?.Invoke(node, headerRect, info);
+                if (!info.IsLastNode)
+                {
+                    EditorGUI.indentLevel++;
+                    DrawTreeNodes(children, level + 1, config);
+                }
+
+                config.OnAfterChildrenContentGUI?.Invoke(node, headerRect, info);
             }
         }
 
@@ -624,17 +688,21 @@ namespace EasyFramework.Inspector
             }
         }
 
+        private static readonly WindowLikeToolGroupConfig s_tempWindowLikeToolGroupConfig2 =
+            new WindowLikeToolGroupConfig();
+
         public static bool TreeGroup<TElement>(IList<TElement> nodes, TreeGroupConfig<TElement> config)
         {
-            return WindowLikeToolGroup(new WindowLikeToolGroupConfig(config.Key, config.Label)
-            {
-                Expand = config.Expand,
-                OnMaximize = () => ExpandTreeNodes(nodes, true, config),
-                OnMinimize = () => ExpandTreeNodes(nodes, false, config),
-                ShowFoldout = nodes != null,
-                OnTitleBarGUI = rect => config.OnTitleBarGUI?.Invoke(rect),
-                OnContentGUI = () => DrawTreeNodes(nodes, 0, config)
-            });
+            s_tempWindowLikeToolGroupConfig2.Key = config.Key;
+            s_tempWindowLikeToolGroupConfig2.Label = config.Label;
+            s_tempWindowLikeToolGroupConfig2.Expand = config.Expand;
+            s_tempWindowLikeToolGroupConfig2.OnMaximize = () => ExpandTreeNodes(nodes, true, config);
+            s_tempWindowLikeToolGroupConfig2.OnMinimize = () => ExpandTreeNodes(nodes, false, config);
+            s_tempWindowLikeToolGroupConfig2.ShowFoldout = nodes != null;
+            s_tempWindowLikeToolGroupConfig2.OnTitleBarGUI = rect => config.OnTitleBarGUI?.Invoke(rect);
+            s_tempWindowLikeToolGroupConfig2.OnContentGUI = () => DrawTreeNodes(nodes, 0, config);
+
+            return WindowLikeToolGroup(s_tempWindowLikeToolGroupConfig2);
         }
 
         #endregion

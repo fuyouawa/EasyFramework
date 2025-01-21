@@ -1,22 +1,33 @@
 using Sirenix.OdinInspector.Editor;
+using System.Reflection.Emit;
 using UnityEngine;
 
 namespace EasyFramework.Inspector
 {
     public abstract class FoldoutValueDrawer<T> : OdinValueDrawer<T>
     {
-        protected override void DrawPropertyLayout(GUIContent label)
+        private FoldoutGroupConfig _foldoutGroupConfig;
+
+        protected override void Initialize()
         {
-            var config = new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), GetLabel(label),
-                Property.State.Expanded)
+            base.Initialize();
+
+            _foldoutGroupConfig = new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(Property, this),
+                GUIContent.none, Property.State.Expanded, OnContentGUI)
             {
                 OnTitleBarGUI = OnTitleBarGUI,
                 OnCoveredTitleBarGUI = OnCoveredTitleBarGUI,
-                OnContentGUI = OnContentGUI,
-                RightLabelConfig = GetRightLabelConfig(label),
             };
+        }
 
-            Property.State.Expanded = EasyEditorGUI.FoldoutGroup(config);
+        protected override void DrawPropertyLayout(GUIContent label)
+        {
+            _foldoutGroupConfig.Label = GetLabel(label);
+            _foldoutGroupConfig.RightLabelConfig = GetRightLabelConfig(label);
+
+            _foldoutGroupConfig.Expand = Property.State.Expanded;
+            Property.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
         }
 
         protected virtual GUIContent GetLabel(GUIContent label)
@@ -25,6 +36,7 @@ namespace EasyFramework.Inspector
         }
 
         private readonly LabelConfig _labelConfig = new LabelConfig();
+
         protected virtual LabelConfig GetRightLabelConfig(GUIContent label)
         {
             return _labelConfig;

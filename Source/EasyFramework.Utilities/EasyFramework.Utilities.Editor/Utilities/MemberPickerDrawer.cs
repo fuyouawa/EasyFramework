@@ -69,8 +69,8 @@ namespace EasyFramework.Utilities.Editor
 
             EditorGUI.BeginChangeCheck();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
-                string.Empty,
-                TargetComponentName,
+                GUIContent.none,
+                EditorHelper.TempContent(TargetComponentName),
                 _targetComponents.Keys,
                 str => TargetComponentName = str));
             if (EditorGUI.EndChangeCheck())
@@ -84,8 +84,8 @@ namespace EasyFramework.Utilities.Editor
 
             var member = GetTargetMember();
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<MemberInfo>(
-                string.Empty,
-                GetMemberName(member),
+                GUIContent.none,
+                EditorHelper.TempContent(GetMemberName(member)),
                 _targetMembers.Values,
                 str => TargetMemberName = str.GetSignature())
             {

@@ -117,6 +117,8 @@ namespace EasyFramework.Tools.Editor
             }
         }
 
+        private FoldoutGroupConfig _foldoutGroupConfig;
+
         protected override void Initialize()
         {
             base.Initialize();
@@ -135,6 +137,74 @@ namespace EasyFramework.Tools.Editor
 
                 return args.DoViewModel;
             });
+
+            _foldoutGroupConfig = new FoldoutGroupConfig(
+                UniqueDrawerKey.Create(Property, this),
+                new GUIContent("EasyControl设置"), _args.Expand,
+                OnEasyControlSettingsGUI);
+        }
+
+        private void OnEasyControlSettingsGUI(Rect headerRect)
+        {
+            EditorGUI.BeginDisabledGroup(_isBind);
+            _args.DoViewModel = EditorGUILayout.Toggle("生成视图模型", _args.DoViewModel);
+            EditorGUI.EndDisabledGroup();
+
+            bool needExitGui = false;
+            if (_args.DoViewModel)
+            {
+                if (!_args.ViewModel.IsInitialized)
+                {
+                    _args.ViewModel.ClassName = _comp.gameObject.name;
+                    _args.ViewModel.GenerateDir = _settings.ViewModelDefault.GenerateDir;
+                    _args.ViewModel.Namespace = _settings.ViewModelDefault.Namespace;
+                    _args.ViewModel.BaseClass.Value = typeof(MonoBehaviour);
+
+                    _args.ViewModel.IsInitialized = true;
+                }
+
+                EasyEditorGUI.BoxGroup(
+                    EditorHelper.TempContent("视图模型配置"),
+                    rect => OnViewModelContentGUI(rect, out needExitGui));
+            }
+
+            _args.DoBounder = EditorGUILayout.Toggle("作为被绑定者", _args.DoBounder);
+
+            if (_args.DoBounder)
+            {
+                if (!_args.Bounder.IsInitialized)
+                {
+                    var bindableTypes = _comp.GetComponents<Component>()
+                        .Where(c => c != null)
+                        .Select(c => c.GetType())
+                        .ToArray();
+
+                    _args.Bounder.TypeToBind.Value =
+                        bindableTypes.Length > 1 ? bindableTypes[1] : bindableTypes[0];
+
+                    if (_parents.IsNotNullOrEmpty())
+                    {
+                        _args.Bounder.Parent = _parents[0];
+                    }
+
+                    _args.Bounder.Name = _comp.gameObject.name;
+                    _args.Bounder.Access = _settings.BounderDefault.Access;
+                    _args.Bounder.AutoNamingNotations = _settings.BounderDefault.AutoNamingNotations;
+                    _args.Bounder.AutoAddCommentPara = _settings.BounderDefault.AutoAddCommentPara;
+                    _args.Bounder.Comment = _settings.BounderDefault.Comment;
+
+                    _args.Bounder.IsInitialized = true;
+                }
+
+                EasyEditorGUI.BoxGroup(
+                    EditorHelper.TempContent("绑定配置"),
+                    OnBounderContentGUI);
+            }
+
+            if (needExitGui)
+            {
+                GUIHelper.ExitGUI(false);
+            }
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
@@ -144,74 +214,8 @@ namespace EasyFramework.Tools.Editor
                 _args.DoViewModel = true;
             }
 
-            _args.Expand = EasyEditorGUI.FoldoutGroup(
-                new FoldoutGroupConfig(UniqueDrawerKey.Create(Property, this), "EasyControl设置", _args.Expand)
-                {
-                    OnContentGUI = rect =>
-                    {
-                        EditorGUI.BeginDisabledGroup(_isBind);
-                        _args.DoViewModel = EditorGUILayout.Toggle("生成视图模型", _args.DoViewModel);
-                        EditorGUI.EndDisabledGroup();
-
-                        bool needExitGui = false;
-                        if (_args.DoViewModel)
-                        {
-                            if (!_args.ViewModel.IsInitialized)
-                            {
-                                _args.ViewModel.ClassName = _comp.gameObject.name;
-                                _args.ViewModel.GenerateDir = _settings.ViewModelDefault.GenerateDir;
-                                _args.ViewModel.Namespace = _settings.ViewModelDefault.Namespace;
-                                _args.ViewModel.BaseClass.Value = typeof(MonoBehaviour);
-
-                                _args.ViewModel.IsInitialized = true;
-                            }
-
-                            EasyEditorGUI.BoxGroup(new BoxGroupConfig("视图模型配置")
-                            {
-                                OnContentGUI = headerRect => OnViewModelContentGUI(headerRect, out needExitGui)
-                            });
-                        }
-
-                        _args.DoBounder = EditorGUILayout.Toggle("作为被绑定者", _args.DoBounder);
-
-                        if (_args.DoBounder)
-                        {
-                            if (!_args.Bounder.IsInitialized)
-                            {
-                                var bindableTypes = _comp.GetComponents<Component>()
-                                    .Where(c => c != null)
-                                    .Select(c => c.GetType())
-                                    .ToArray();
-
-                                _args.Bounder.TypeToBind.Value =
-                                    bindableTypes.Length > 1 ? bindableTypes[1] : bindableTypes[0];
-
-                                if (_parents.IsNotNullOrEmpty())
-                                {
-                                    _args.Bounder.Parent = _parents[0];
-                                }
-
-                                _args.Bounder.Name = _comp.gameObject.name;
-                                _args.Bounder.Access = _settings.BounderDefault.Access;
-                                _args.Bounder.AutoNamingNotations = _settings.BounderDefault.AutoNamingNotations;
-                                _args.Bounder.AutoAddCommentPara = _settings.BounderDefault.AutoAddCommentPara;
-                                _args.Bounder.Comment = _settings.BounderDefault.Comment;
-
-                                _args.Bounder.IsInitialized = true;
-                            }
-
-                            EasyEditorGUI.BoxGroup(new BoxGroupConfig("绑定配置")
-                            {
-                                OnContentGUI = OnBounderContentGUI
-                            });
-                        }
-
-                        if (needExitGui)
-                        {
-                            GUIHelper.ExitGUI(false);
-                        }
-                    }
-                });
+            _foldoutGroupConfig.Expand = _args.Expand;
+            _args.Expand = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
         }
 
         private void OnViewModelContentGUI(Rect headerRect, out bool needExitGui)
@@ -248,7 +252,10 @@ namespace EasyFramework.Tools.Editor
                 ? "<None>"
                 : _args.ViewModel.BaseClass.Value.FullName;
             EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Type>("父级", lbl, BaseTypes,
+                new SelectorDropdownConfig<Type>(
+                    EditorHelper.TempContent("父级"),
+                    EditorHelper.TempContent2(lbl),
+                    BaseTypes,
                     t => _args.ViewModel.BaseClass.Value = t)
                 {
                     MenuItemNameGetter = t => t.FullName
@@ -313,7 +320,9 @@ namespace EasyFramework.Tools.Editor
                 : _args.Bounder.TypeToBind.Value.FullName;
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Type>("要绑定的组件", btnLabel,
+                new SelectorDropdownConfig<Type>(
+                    EditorHelper.TempContent("要绑定的组件"),
+                    EditorHelper.TempContent2(btnLabel),
                     bindableTypes,
                     t => _args.Bounder.TypeToBind.Value = t)
                 {
@@ -330,7 +339,9 @@ namespace EasyFramework.Tools.Editor
             }
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Transform>("父级", btnLabel,
+                new SelectorDropdownConfig<Transform>(
+                    EditorHelper.TempContent("父级"),
+                    EditorHelper.TempContent2(btnLabel),
                     _parents,
                     c => _args.Bounder.Parent = c)
                 {
