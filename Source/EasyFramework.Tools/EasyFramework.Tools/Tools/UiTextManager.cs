@@ -5,8 +5,20 @@ namespace EasyFramework.Tools
 {
     public class UiTextManager : MonoBehaviour
     {
-        public string FontAssetPresetId;
-        public string TextPropertiesPresetId;
+        [SerializeField] private string _fontAssetPresetId;
+        [SerializeField] private string _textPropertiesPresetId;
+
+        public string FontAssetPresetId
+        {
+            get => _fontAssetPresetId;
+            set => _fontAssetPresetId = value;
+        }
+
+        public string TextPropertiesPresetId
+        {
+            get => _textPropertiesPresetId;
+            set => _textPropertiesPresetId = value;
+        }
 
         private TextMeshProUGUI _text;
 
@@ -17,12 +29,12 @@ namespace EasyFramework.Tools
 
         public FontAssetPreset GetFontAssetPreset()
         {
-            return UiTextPresetsManager.Instance.FontAssetPresets[FontAssetPresetId];
+            return UiTextPresetsManager.Instance.GetFontAssetPreset(FontAssetPresetId);
         }
 
         public TextPropertiesPreset GetTextPropertiesPreset()
         {
-            return UiTextPresetsManager.Instance.TextPropertiesPresets[TextPropertiesPresetId];
+            return UiTextPresetsManager.Instance.GetTextPropertiesPreset(TextPropertiesPresetId);
         }
 
         public void ApplyPresets()

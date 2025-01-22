@@ -4,20 +4,26 @@ using Sirenix.OdinInspector;
 
 namespace EasyFramework.Utilities
 {
-    [Serializable]
-    public class SerializedList<T> : SerializedListBase<T>
+    public class SerializedListDrawerSettings<T>
     {
         public Func<T> OnAddElement;
         public Action OnAddElementVoid;
+    }
 
+
+    [Serializable]
+    public class SerializedList<T> : SerializedListBase<T>
+    {
         public override List<T> Value
         {
             get => _collection;
             set => _collection = value;
         }
 
+        public SerializedListDrawerSettings<T> DrawerSettings { get; } = new SerializedListDrawerSettings<T>();
+
         [NonSerialized, ShowInInspector]
-        [ListDrawerSettings(CustomAddFunction = "InternalOnAddElement")]
+        [ListDrawerSettings(CustomAddFunction = nameof(InternalOnAddElement))]
         private List<T> _collection;
 
         public SerializedList()
@@ -37,13 +43,13 @@ namespace EasyFramework.Utilities
 
         private void InternalOnAddElement()
         {
-            if (OnAddElementVoid != null)
+            if (DrawerSettings.OnAddElementVoid != null)
             {
-                OnAddElementVoid();
+                DrawerSettings.OnAddElementVoid();
             }
-            else if (OnAddElement != null)
+            else if (DrawerSettings.OnAddElement != null)
             {
-                _collection.Add(OnAddElement());
+                _collection.Add(DrawerSettings.OnAddElement());
             }
             else
             {

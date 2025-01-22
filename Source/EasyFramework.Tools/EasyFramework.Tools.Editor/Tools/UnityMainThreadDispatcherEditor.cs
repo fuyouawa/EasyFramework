@@ -5,7 +5,7 @@ namespace EasyFramework.Tools.Editor
 {
     public static class UnityMainThreadDispatcherEditor
     {
-        [MenuItem("GameObject/EasyGameFramework/Initialize UnityInvoker", false, 0)]
+        [MenuItem("GameObject/EasyFramework/初始化场景", false, 0)]
         private static void InitUnityInvoker(MenuCommand menuCommand)
         {
             var go = new GameObject("UnityMainThreadDispatcher");
@@ -18,7 +18,7 @@ namespace EasyFramework.Tools.Editor
             Selection.activeObject = go;
         }
 
-        [MenuItem("GameObject/EasyGameFramework/Initialize UnityInvoker", true)]
+        [MenuItem("GameObject/EasyFramework/初始化场景", true)]
         private static bool InitUnityInvokerValidation()
         {
             return Object.FindAnyObjectByType<UnityMainThreadDispatcher>() == null;

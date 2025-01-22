@@ -20,21 +20,21 @@ namespace EasyFramework.Inspector
             
             var instance = AssetDatabase.LoadAssetAtPath<T>(assetFilePath);
 
-            if (instance == null)
+            if (instance != null)
+                return instance;
+
+            var relocatedScriptableObject = AssetDatabase.FindAssets("t:" + typeof(T).Name);
+            if (relocatedScriptableObject.Length != 0)
             {
-                var relocatedScriptableObject = AssetDatabase.FindAssets("t:" + typeof(T).Name);
-                if (relocatedScriptableObject.Length != 0)
+                instance = AssetDatabase.LoadAssetAtPath<T>(
+                    AssetDatabase.GUIDToAssetPath(relocatedScriptableObject[0]));
+                if (instance != null)
                 {
-                    instance = AssetDatabase.LoadAssetAtPath<T>(
-                        AssetDatabase.GUIDToAssetPath(relocatedScriptableObject[0]));
-                    if (instance != null)
-                    {
-                        instance.OnSingletonInit(SingletonInitialModes.Load);
-                        return instance;
-                    }
+                    instance.OnSingletonInit(SingletonInitialModes.Load);
+                    return instance;
                 }
             }
-            
+                
             instance = ScriptableObject.CreateInstance<T>();
 
             if (!Directory.Exists(assetDirectory))

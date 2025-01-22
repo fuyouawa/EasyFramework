@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using EasyFramework.Inspector;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,6 +17,28 @@ namespace EasyFramework.Tools.Editor
             base.OnEnable();
             _fontAssetPresets = Tree.RootProperty.Children["_fontAssetPresets"];
             _textPropertiesPresets = Tree.RootProperty.Children["_textPropertiesPresets"];
+
+            foreach (var child in _fontAssetPresets.Children)
+            {
+                var attr = child.GetAttribute<DictionaryDrawerSettings>();
+                if (attr != null)
+                {
+                    attr.KeyLabel = "标识";
+                    attr.ValueLabel = "预设";
+                    break;
+                }
+            }
+
+            foreach (var child in _textPropertiesPresets.Children)
+            {
+                var attr = child.GetAttribute<DictionaryDrawerSettings>();
+                if (attr != null)
+                {
+                    attr.KeyLabel = "标识";
+                    attr.ValueLabel = "预设";
+                    break;
+                }
+            }
         }
 
         protected override void DrawTree()
@@ -26,12 +46,12 @@ namespace EasyFramework.Tools.Editor
             Tree.BeginDraw(true);
 
             var mgr = (UiTextPresetsManager)target;
-            
+
             EasyEditorGUI.Title("字体资产");
             _fontAssetPresets.Draw(new GUIContent("字体资产预设表"));
             EasyEditorGUI.Title("文本属性");
             _textPropertiesPresets.Draw(new GUIContent("文本属性预设表"));
-            
+
             EasyEditorGUI.Title("默认预设");
 
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
@@ -47,49 +67,6 @@ namespace EasyFramework.Tools.Editor
                 id => mgr.DefaultTextPropertiesPresetId = id));
 
             Tree.EndDraw();
-        }
-    }
-
-    public class FontAssetPresetDrawer : OdinValueDrawer<FontAssetPreset>
-    {
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
-            EditorGUI.BeginChangeCheck();
-            
-            var preset = ValueEntry.SmartValue;
-
-            var v = EasyEditorField.UnityObject(
-                EditorHelper.TempContent("字体资产"),
-                preset.FontAsset, false);
-
-            EasyEditorField.UnityObject(
-                EditorHelper.TempContent("材质"),
-                ref preset.Material);
-
-            if (v != preset.FontAsset)
-            {
-                preset.FontAsset = v;
-                if (preset.Material == null)
-                {
-                    preset.Material = v.material;
-                }
-            }
-        }
-    }
-
-    public class TextPropertiesPresetDrawer : OdinValueDrawer<TextPropertiesPreset>
-    {
-        protected override void DrawPropertyLayout(GUIContent label)
-        {
-            var preset = ValueEntry.SmartValue;
-
-            EasyEditorField.Value(
-                EditorHelper.TempContent("字体大小"),
-                ref preset.FontSize);
-            
-            EasyEditorField.Value(
-                EditorHelper.TempContent("字体颜色"),
-                ref preset.FontColor);
         }
     }
 }

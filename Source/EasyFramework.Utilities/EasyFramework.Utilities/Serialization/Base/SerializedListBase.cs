@@ -8,7 +8,7 @@ namespace EasyFramework.Utilities
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
     public abstract class SerializedListBase<T> :
-        BinarySerailizedValue<List<T>>,
+        GenericSerailizedValue<List<T>>,
         IEnumerable<T>
     {
         IEnumerator<T> IEnumerable<T>.GetEnumerator()

@@ -1,19 +1,21 @@
 using System;
 using System.Collections.Generic;
+using EasyFramework.Generic;
 using EasyFramework.Utilities;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
 namespace EasyFramework.Tools
 {
-    [Serializable]
+    [Serializable, InlineProperty, HideReferenceObjectPicker]
     public class FontAssetPreset
     {
         public TMP_FontAsset FontAsset;
         public Material Material;
     }
 
-    [Serializable]
+    [Serializable, InlineProperty, HideReferenceObjectPicker]
     public class TextPropertiesPreset
     {
         public float FontSize = 26;
@@ -31,20 +33,63 @@ namespace EasyFramework.Tools
         private SerializedDictionary<string, TextPropertiesPreset> _textPropertiesPresets =
             new SerializedDictionary<string, TextPropertiesPreset>();
 
+        [SerializeField] private string _defaultFontAssetPresetId;
+        [SerializeField] private string _defaultTextPropertiesPresetId;
+
+
         public Dictionary<string, FontAssetPreset> FontAssetPresets => _fontAssetPresets.Value;
         public Dictionary<string, TextPropertiesPreset> TextPropertiesPresets => _textPropertiesPresets.Value;
 
-        public string DefaultFontAssetPresetId;
-        public string DefaultTextPropertiesPresetId;
+        public string DefaultFontAssetPresetId
+        {
+            get => _defaultFontAssetPresetId;
+            set => _defaultFontAssetPresetId = value;
+        }
+
+        public string DefaultTextPropertiesPresetId
+        {
+            get => _defaultTextPropertiesPresetId;
+            set => _defaultTextPropertiesPresetId = value;
+        }
+
+        public FontAssetPreset GetFontAssetPreset(string id)
+        {
+            if (id.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (_fontAssetPresets.TryGetValue(id, out var value))
+            {
+                return value;
+            }
+
+            return null;
+        }
+
+        public TextPropertiesPreset GetTextPropertiesPreset(string id)
+        {
+            if (id.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            if (_textPropertiesPresets.TryGetValue(id, out var value))
+            {
+                return value;
+            }
+
+            return null;
+        }
 
         public FontAssetPreset GetDefaultFontAssetPreset()
         {
-            return _fontAssetPresets[DefaultFontAssetPresetId];
+            return GetFontAssetPreset(DefaultFontAssetPresetId);
         }
 
         public TextPropertiesPreset GetDefaultTextPropertiesPreset()
         {
-            return _textPropertiesPresets[DefaultTextPropertiesPresetId];
+            return GetTextPropertiesPreset(DefaultTextPropertiesPresetId);
         }
     }
 }

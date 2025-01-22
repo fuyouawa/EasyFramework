@@ -18,26 +18,28 @@ namespace EasyFramework.Tools.Editor
             Tree.BeginDraw(true);
             
             var mgr = (UiTextManager)target;
-
+            
             var lbl = mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO");
+            
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("字体资产预设"),
                 EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.FontAssetPresets.Keys,
                 id => mgr.FontAssetPresetId = id));
-
+            
             lbl = mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO");
+            
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("文本属性预设"),
                 EditorHelper.TempContent2(lbl),
                 UiTextPresetsManager.Instance.TextPropertiesPresets.Keys,
                 id => mgr.TextPropertiesPresetId = id));
-
+            
             mgr.ApplyPresets();
-
-            if (mgr.FontAssetPresetId.IsNotNullOrEmpty())
+            
+            var fontAssetPreset = mgr.GetFontAssetPreset();
+            if (fontAssetPreset != null)
             {
-                var fontAssetPreset = mgr.GetFontAssetPreset();
                 EasyEditorGUI.BoxGroup(
                     EditorHelper.TempContent($"字体资产预设 - {mgr.FontAssetPresetId}"),
                     rect =>
@@ -55,10 +57,10 @@ namespace EasyFramework.Tools.Editor
                         }
                     });
             }
-
-            if (mgr.TextPropertiesPresetId.IsNotNullOrEmpty())
+            
+            var textPropertiesPreset = mgr.GetTextPropertiesPreset();
+            if (textPropertiesPreset != null)
             {
-                var textPropertiesPreset = mgr.GetTextPropertiesPreset();
                 EasyEditorGUI.BoxGroup(
                     EditorHelper.TempContent($"文本属性预设 - {mgr.TextPropertiesPresetId}"),
                     rect =>
@@ -67,18 +69,18 @@ namespace EasyFramework.Tools.Editor
                         textPropertiesPreset.FontSize = EditorGUILayout.FloatField(
                             "字体资产",
                             textPropertiesPreset.FontSize);
-
+            
                         textPropertiesPreset.FontColor = SirenixEditorFields.ColorField(
                             new GUIContent("字体颜色"),
                             textPropertiesPreset.FontColor);
-
+            
                         if (EditorGUI.EndChangeCheck())
                         {
                             EditorUtility.SetDirty(mgr);
                         }
                     });
             }
-
+            
             if (SirenixEditorGUI.Button("切换预设管理器", ButtonSizes.Medium))
             {
                 Selection.activeObject = UiTextPresetsManager.Instance;

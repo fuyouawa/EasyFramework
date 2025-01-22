@@ -8,7 +8,7 @@ namespace EasyFramework.Utilities
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
     public abstract class SerializedDictionaryBase<TKey, TValue> :
-        BinarySerailizedValue<Dictionary<TKey, TValue>>,
+        GenericSerailizedValue<Dictionary<TKey, TValue>>,
         IEnumerable<KeyValuePair<TKey, TValue>>
         where TKey : notnull
     {

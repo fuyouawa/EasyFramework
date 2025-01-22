@@ -20,7 +20,7 @@ namespace EasyFramework.Tools.Editor
         {
             base.OnEnable();
             var feedbacks = (EasyFeedbacks)target;
-            feedbacks.FeedbackList.OnAddElementVoid = OnAddElement;
+            feedbacks.FeedbackList.DrawerSettings.OnAddElementVoid = OnAddElement;
 
             _feedbackListProperty = Tree.RootProperty.Children[nameof(EasyFeedbacks.FeedbackList)];
 
