@@ -9,12 +9,12 @@ namespace EasyFramework.Tools.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_SoundDrawer : AbstractEasyFeedbackDrawer<EF_Sound>
     {
-        private InspectorProperty _randomSfx;
+        private InspectorProperty _randomSfxProperty;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _randomSfx = Property.Children[nameof(EF_Sound.RandomSfx)];
+            _randomSfxProperty = Property.Children[nameof(EF_Sound.RandomSfx)];
         }
 
         protected override void PostBuildPropertiesGroups()
@@ -27,7 +27,7 @@ namespace EasyFramework.Tools.Editor
 
                 if (Feedback.Sfx == null)
                 {
-                    _randomSfx.Draw(new GUIContent("随机音效"));
+                    _randomSfxProperty.Draw(new GUIContent("随机音效"));
                 }
             }));
 

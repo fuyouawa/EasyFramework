@@ -23,7 +23,7 @@ namespace EasyFramework.Tools.Editor
 
             public GameObject Prefab { get; private set; }
 
-            public TextMeshProUGUI TextGUI { get; private set; }
+            public TextMeshProUGUI Text { get; private set; }
             public PrefabTreeNodeBase Parent { get; private set; }
             public GameObject Target { get; private set; }
             public List<PrefabTreeNodeBase> Children { get; } = new List<PrefabTreeNodeBase>();
@@ -73,12 +73,12 @@ namespace EasyFramework.Tools.Editor
                     }
                 }
 
-                TextGUI = Target.GetComponent<TextMeshProUGUI>();
+                Text = Target.GetComponent<TextMeshProUGUI>();
             }
 
             public bool IsTextNode()
             {
-                return TextGUI != null;
+                return Text != null;
             }
 
             public bool HasIncorrect()
@@ -170,10 +170,10 @@ namespace EasyFramework.Tools.Editor
                     EditorGUI.LabelField(iconRect, new GUIContent(icon));
                 }
 
-                if (node.TextGUI != null)
+                if (node.Text != null)
                 {
                     var iconRect = headerRect.AddX(14f).SetSize(Vector2.one * iconWidth);
-                    var icon = EditorGUIUtility.ObjectContent(node.TextGUI, typeof(TextMeshProUGUI)).image;
+                    var icon = EditorGUIUtility.ObjectContent(node.Text, typeof(TextMeshProUGUI)).image;
                     EditorGUI.LabelField(iconRect, new GUIContent(icon));
                 }
             }

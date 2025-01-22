@@ -1,13 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 
 namespace EasyFramework.Utilities
 {
     [Serializable]
-    public class SerializedList<T> : BinarySerailizedValue<List<T>>, IEnumerable<T>
+    public class SerializedList<T> : SerializedListBase<T>
     {
         public Func<T> OnAddElement;
         public Action OnAddElementVoid;
@@ -37,26 +35,6 @@ namespace EasyFramework.Utilities
             _collection = new List<T>(collection);
         }
 
-        public void Add([CanBeNull] T item)
-        {
-            _collection.Add(item);
-        }
-
-        public void Remove([CanBeNull] T item)
-        {
-            _collection.Remove(item);
-        }
-
-        public int IndexOf([CanBeNull] T item)
-        {
-            return _collection.IndexOf(item);
-        }
-
-        public void RemoveAt(int index)
-        {
-            _collection.RemoveAt(index);
-        }
-
         private void InternalOnAddElement()
         {
             if (OnAddElementVoid != null)
@@ -71,16 +49,6 @@ namespace EasyFramework.Utilities
             {
                 _collection.Add(default);
             }
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return _collection.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _collection.GetEnumerator();
         }
     }
 }

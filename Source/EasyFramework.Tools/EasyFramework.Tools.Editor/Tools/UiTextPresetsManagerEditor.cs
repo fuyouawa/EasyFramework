@@ -17,8 +17,8 @@ namespace EasyFramework.Tools.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            _fontAssetPresets = Tree.RootProperty.Children[nameof(UiTextPresetsManager.FontAssetPresets)];
-            _textPropertiesPresets = Tree.RootProperty.Children[nameof(UiTextPresetsManager.TextPropertiesPresets)];
+            _fontAssetPresets = Tree.RootProperty.Children["_fontAssetPresets"];
+            _textPropertiesPresets = Tree.RootProperty.Children["_textPropertiesPresets"];
         }
 
         protected override void DrawTree()
@@ -37,13 +37,13 @@ namespace EasyFramework.Tools.Editor
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("默认字体资产预设"),
                 EditorHelper.TempContent2(mgr.DefaultFontAssetPresetId),
-                mgr.FontAssetPresets.Select(p => p.Id),
+                mgr.FontAssetPresets.Keys,
                 id => mgr.DefaultFontAssetPresetId = id));
 
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("默认文本属性预设"),
                 EditorHelper.TempContent2(mgr.DefaultTextPropertiesPresetId),
-                mgr.TextPropertiesPresets.Select(p => p.Id),
+                mgr.TextPropertiesPresets.Keys,
                 id => mgr.DefaultTextPropertiesPresetId = id));
 
             Tree.EndDraw();
@@ -56,18 +56,24 @@ namespace EasyFramework.Tools.Editor
         {
             EditorGUI.BeginChangeCheck();
             
-            var id = Property.Children["Id"];
-            var fontAsset = Property.Children["FontAsset"];
-            var material = Property.Children["Material"];
+            var preset = ValueEntry.SmartValue;
 
-            id.Draw(new GUIContent("标识"));
-            fontAsset.Draw(new GUIContent("字体资产"));
-            material.Draw(new GUIContent("材质"));
+            var v = EasyEditorField.UnityObject(
+                EditorHelper.TempContent("字体资产"),
+                preset.FontAsset, false);
 
-            fontAsset.ValueEntry.OnValueChanged += i =>
+            EasyEditorField.UnityObject(
+                EditorHelper.TempContent("材质"),
+                ref preset.Material);
+
+            if (v != preset.FontAsset)
             {
-                material.SetWeakSmartValue(fontAsset.WeakSmartValue<TMP_Asset>()?.material);
-            };
+                preset.FontAsset = v;
+                if (preset.Material == null)
+                {
+                    preset.Material = v.material;
+                }
+            }
         }
     }
 
@@ -75,13 +81,15 @@ namespace EasyFramework.Tools.Editor
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            var id = Property.Children["Id"];
-            var fontSize = Property.Children["FontSize"];
-            var fontColor = Property.Children["FontColor"];
+            var preset = ValueEntry.SmartValue;
 
-            id.Draw(new GUIContent("标识"));
-            fontSize.Draw(new GUIContent("字体大小"));
-            fontColor.Draw(new GUIContent("字体颜色"));
+            EasyEditorField.Value(
+                EditorHelper.TempContent("字体大小"),
+                ref preset.FontSize);
+            
+            EasyEditorField.Value(
+                EditorHelper.TempContent("字体颜色"),
+                ref preset.FontColor);
         }
     }
 }

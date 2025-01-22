@@ -98,23 +98,25 @@ namespace EasyFramework.Tools.Editor
                 // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
                 if (mgr.FontAssetPresetId.IsNullOrEmpty())
                 {
-                    var preset = UiTextPresetsManager.Instance.MatchFontAssetPreset(
-                        node.TextGUI.font,
-                        node.TextGUI.fontSharedMaterial);
-                    if (preset != null)
+                    foreach (var preset in UiTextPresetsManager.Instance.FontAssetPresets)
                     {
-                        mgr.FontAssetPresetId = preset.Id;
+                        if (preset.Value.FontAsset == node.Text.font && preset.Value.Material == node.Text.fontSharedMaterial)
+                        {
+                            mgr.FontAssetPresetId = preset.Key;
+                            break;
+                        }
                     }
                 }
 
                 if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                 {
-                    var preset = UiTextPresetsManager.Instance.MatchTextPropertiesPreset(
-                        node.TextGUI.fontSize,
-                        node.TextGUI.color);
-                    if (preset != null)
+                    foreach (var preset in UiTextPresetsManager.Instance.TextPropertiesPresets)
                     {
-                        mgr.TextPropertiesPresetId = preset.Id;
+                        if (preset.Value.FontSize.Approximately(node.Text.fontSize) && preset.Value.FontColor == node.Text.color)
+                        {
+                            mgr.TextPropertiesPresetId = preset.Key;
+                            break;
+                        }
                     }
                 }
 

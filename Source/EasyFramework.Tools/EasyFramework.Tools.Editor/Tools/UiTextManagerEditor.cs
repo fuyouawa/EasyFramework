@@ -23,14 +23,14 @@ namespace EasyFramework.Tools.Editor
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("字体资产预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsManager.Instance.FontAssetPresets.Select(p => p.Id),
+                UiTextPresetsManager.Instance.FontAssetPresets.Keys,
                 id => mgr.FontAssetPresetId = id));
 
             lbl = mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO");
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("文本属性预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsManager.Instance.TextPropertiesPresets.Select(p => p.Id),
+                UiTextPresetsManager.Instance.TextPropertiesPresets.Keys,
                 id => mgr.TextPropertiesPresetId = id));
 
             mgr.ApplyPresets();

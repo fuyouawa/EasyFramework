@@ -17,12 +17,12 @@ namespace EasyFramework.Tools
 
         public FontAssetPreset GetFontAssetPreset()
         {
-            return UiTextPresetsManager.Instance.GetFontAssetPreset(FontAssetPresetId);
+            return UiTextPresetsManager.Instance.FontAssetPresets[FontAssetPresetId];
         }
 
         public TextPropertiesPreset GetTextPropertiesPreset()
         {
-            return UiTextPresetsManager.Instance.GetTextPropertiesPreset(TextPropertiesPresetId);
+            return UiTextPresetsManager.Instance.TextPropertiesPresets[TextPropertiesPresetId];
         }
 
         public void ApplyPresets()
