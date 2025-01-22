@@ -4,23 +4,27 @@ using UnityEditor;
 
 namespace EasyFramework.Tools.Editor
 {
-    public static class EditorAssetsPath
+    internal static class EditorAssetsPath
     {
-        public static readonly string TempDirectory;
+        public static readonly string PluginsDir;
         public static readonly string ConfigsDirectory;
+
+        public static readonly string TempDirectory;
         public static readonly string UiTextManagerWindowTempPath;
 
 
         static EditorAssetsPath()
         {
+            PluginsDir = "Plugins/EasyFramework";
+            ConfigsDirectory = PluginsDir + "/Configs/Editor";
+
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
-            ConfigsDirectory = AssetsPath.EditorConfigsDirectory;
             UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");
 
-            System.IO.Directory.CreateDirectory(TempDirectory);
+            Directory.CreateDirectory(TempDirectory);
         }
     }
-    public class EditorConfigAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    internal class EditorConfigAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
         public EditorConfigAssetPathAttribute() : base(EditorAssetsPath.ConfigsDirectory)
         {

@@ -4,12 +4,12 @@ using Sirenix.OdinInspector;
 
 namespace EasyFramework.Utilities
 {
-    public class SerializedListDrawerSettings<T>
+    public class SerializedListDrawerSettings
     {
-        public Func<T> OnAddElement;
+        public Func<object> OnAddElement;
         public Action OnAddElementVoid;
+        public bool IsReadOnly;
     }
-
 
     [Serializable]
     public class SerializedList<T> : SerializedListBase<T>
@@ -20,7 +20,7 @@ namespace EasyFramework.Utilities
             set => _collection = value;
         }
 
-        public SerializedListDrawerSettings<T> DrawerSettings { get; } = new SerializedListDrawerSettings<T>();
+        public SerializedListDrawerSettings DrawerSettings { get; } = new SerializedListDrawerSettings();
 
         [NonSerialized, ShowInInspector]
         [ListDrawerSettings(CustomAddFunction = nameof(InternalOnAddElement))]
@@ -49,7 +49,7 @@ namespace EasyFramework.Utilities
             }
             else if (DrawerSettings.OnAddElement != null)
             {
-                _collection.Add(DrawerSettings.OnAddElement());
+                _collection.Add((T)DrawerSettings.OnAddElement());
             }
             else
             {

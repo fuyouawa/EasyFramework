@@ -1,4 +1,5 @@
 using EasyFramework.Inspector;
+using EasyFramework.Utilities;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
@@ -18,27 +19,13 @@ namespace EasyFramework.Tools.Editor
             _fontAssetPresets = Tree.RootProperty.Children["_fontAssetPresets"];
             _textPropertiesPresets = Tree.RootProperty.Children["_textPropertiesPresets"];
 
-            foreach (var child in _fontAssetPresets.Children)
-            {
-                var attr = child.GetAttribute<DictionaryDrawerSettings>();
-                if (attr != null)
-                {
-                    attr.KeyLabel = "标识";
-                    attr.ValueLabel = "预设";
-                    break;
-                }
-            }
+            var p = _fontAssetPresets.WeakSmartValue<SerializedDictionary<string, FontAssetPreset>>();
+            p.DrawerSettings.KeyLabel = "标识";
+            p.DrawerSettings.ValueLabel = "预设";
 
-            foreach (var child in _textPropertiesPresets.Children)
-            {
-                var attr = child.GetAttribute<DictionaryDrawerSettings>();
-                if (attr != null)
-                {
-                    attr.KeyLabel = "标识";
-                    attr.ValueLabel = "预设";
-                    break;
-                }
-            }
+            var p2 = _textPropertiesPresets.WeakSmartValue<SerializedDictionary<string, TextPropertiesPreset>>();
+            p2.DrawerSettings.KeyLabel = "标识";
+            p2.DrawerSettings.ValueLabel = "预设";
         }
 
         protected override void DrawTree()
