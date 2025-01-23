@@ -9,11 +9,15 @@ namespace EasyFramework
         private bool _loggerCreated = false;
         private LogEventLevel _minimumLevel = LogEventLevel.Info;
 
-        public LoggerSinkConfiguration WriteTo;
+        public LoggerSinkConfiguration WriteTo { get; }
+
+        public LoggerMinimumLevelConfiguration MinimumLevel { get; }
+
 
         public LoggerConfiguration()
         {
             WriteTo = new LoggerSinkConfiguration(this, sink => _sinks.Add(sink));
+            MinimumLevel = new LoggerMinimumLevelConfiguration(this, level => _minimumLevel = level);
         }
 
         public ILogger CreateLogger()
