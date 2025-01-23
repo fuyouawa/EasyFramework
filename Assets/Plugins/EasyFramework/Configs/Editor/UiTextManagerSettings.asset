@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -426513290, guid: 390596f73bf5a7e49813b5df2cde81e8, type: 3}
+  m_Script: {fileID: 1668512738, guid: 17f57a4502d585a479c23b9aba2b2567, type: 3}
   m_Name: UiTextManagerSettings
   m_EditorClassIdentifier: 
   ManagerPosition: 1
