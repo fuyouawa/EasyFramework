@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using EasyFramework.Utilities;
+using EasyFramework;
 using UnityEngine;
 
 public partial class TestViewModel : MonoBehaviour

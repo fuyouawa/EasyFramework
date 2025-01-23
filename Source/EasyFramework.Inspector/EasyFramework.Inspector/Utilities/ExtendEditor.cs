@@ -44,7 +44,7 @@ namespace EasyFramework.Inspector
             {
                 DefaultEditor.OnInspectorGUI();
             }
-            catch (NullReferenceException e)    //TODO 可能是unity的bug，有时会有null异常
+            catch (NullReferenceException)    //TODO 可能是unity的bug，有时会有null异常
             {
                 // ignored
             }

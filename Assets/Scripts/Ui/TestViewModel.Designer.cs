@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using EasyFramework.Tools;
+using EasyFramework;
 using UnityEngine;
 
 

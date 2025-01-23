@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using EasyFramework.Generic;
 using UnityEditor;
 using UnityEngine;
 

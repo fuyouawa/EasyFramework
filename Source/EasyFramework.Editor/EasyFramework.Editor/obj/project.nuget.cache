@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "+RpBjI1sIJk=",
+  "success": true,
+  "projectFilePath": "E:\\Code\\Unity\\EasyFramework\\Source\\EasyFramework.Editor\\EasyFramework.Editor\\EasyFramework.Editor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\29071\\.nuget\\packages\\system.codedom\\9.0.1\\system.codedom.9.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,6 @@
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.csproj.AssemblyReference.cache
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.GeneratedMSBuildEditorConfig.editorconfig
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.AssemblyInfoInputs.cache
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.AssemblyInfo.cs
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.csproj.CoreCompileInputs.cache
+E:\Code\Unity\EasyFramework\Source\EasyFramework\EasyFramework\obj\Debug\netstandard2.1\EasyFramework.sourcelink.json

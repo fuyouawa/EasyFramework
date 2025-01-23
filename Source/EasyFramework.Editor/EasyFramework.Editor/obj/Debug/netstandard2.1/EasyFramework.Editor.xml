@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyFramework.Editor</name>
+    </assembly>
+    <members>
+        <member name="M:EasyFramework.Editor.BigTitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.Editor.BigTitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.Editor.InfoBoxCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.Editor.TitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.Editor.TitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+    </members>
+</doc>
