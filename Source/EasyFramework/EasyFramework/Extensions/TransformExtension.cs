@@ -52,7 +52,7 @@ namespace EasyFramework
             return true;
         }
 
-        public static List<Transform> FindParents(this Transform transform, Func<Transform, bool> condition)
+        public static IEnumerable<Transform> FindParents(this Transform transform, Func<Transform, bool> condition)
         {
             var ret = new List<Transform>();
 

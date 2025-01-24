@@ -14,7 +14,6 @@ namespace EasyFramework
             return component;
         }
         public static bool HasComponent<T>(this GameObject go)
-            where T : Component
         {
             return go.TryGetComponent<T>(out _);
         }

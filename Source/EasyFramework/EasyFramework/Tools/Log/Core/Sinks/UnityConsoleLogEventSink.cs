@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EasyFramework.LogEventSinks
+namespace EasyFramework
 {
     public class UnityConsoleLogEventSink : ILogEventSink
     {

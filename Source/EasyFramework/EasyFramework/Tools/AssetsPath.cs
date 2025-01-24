@@ -1,20 +1,25 @@
 namespace EasyFramework
 {
-    internal static class AssetsPath
+    public static class AssetsPath
     {
-        public static readonly string PluginsDir;
+        public static readonly string PluginsDirectory;
+        public static readonly string ResourcesDirectory;
+
         public static readonly string ConfigsDirectory;
+        public static readonly string DataDirectory;
 
         static AssetsPath()
         {
-            PluginsDir = "Plugins/EasyFramework";
-            ConfigsDirectory = PluginsDir + "/Configs/Resources";
+            PluginsDirectory = "Plugins/EasyFramework";
+            ResourcesDirectory = PluginsDirectory + "/Resources";
+            ConfigsDirectory = ResourcesDirectory + "/Configs";
+            DataDirectory = ResourcesDirectory + "/Data";
         }
     }
 
-    public class ConfigAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    internal class ConfigsAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public ConfigAssetPathAttribute() : base(AssetsPath.ConfigsDirectory)
+        public ConfigsAssetPathAttribute() : base(AssetsPath.ConfigsDirectory)
         {
         }
     }

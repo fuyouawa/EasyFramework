@@ -5,8 +5,8 @@ namespace EasyFramework.Editor
 {
     public static class EditorAssetsPath
     {
-        public static readonly string PluginsDir;
         public static readonly string ConfigsDirectory;
+        public static readonly string DataDirectory;
 
         public static readonly string TempDirectory;
         public static readonly string UiTextManagerWindowTempPath;
@@ -14,8 +14,8 @@ namespace EasyFramework.Editor
 
         static EditorAssetsPath()
         {
-            PluginsDir = "Plugins/EasyFramework";
-            ConfigsDirectory = PluginsDir + "/Configs/Editor";
+            ConfigsDirectory = AssetsPath.ConfigsDirectory + "/Editor";
+            DataDirectory = AssetsPath.DataDirectory + "/Editor";
 
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
             UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");
@@ -23,9 +23,17 @@ namespace EasyFramework.Editor
             Directory.CreateDirectory(TempDirectory);
         }
     }
-    public class EditorConfigAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+
+    internal class EditorConfigsAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public EditorConfigAssetPathAttribute() : base(EditorAssetsPath.ConfigsDirectory)
+        public EditorConfigsAssetPathAttribute() : base(EditorAssetsPath.ConfigsDirectory)
+        {
+        }
+    }
+
+    internal class EditorDataAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    {
+        public EditorDataAssetPathAttribute() : base(EditorAssetsPath.DataDirectory)
         {
         }
     }

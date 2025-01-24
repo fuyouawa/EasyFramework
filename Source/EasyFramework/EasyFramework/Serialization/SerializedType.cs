@@ -13,8 +13,16 @@ namespace EasyFramework
             set => _type = value;
         }
 
-        [NonSerialized, ShowInInspector]
-        private Type _type;
+        [NonSerialized, ShowInInspector] private Type _type;
+
+        public SerializedType()
+        {
+        }
+
+        public SerializedType(Type type)
+        {
+            _type = type;
+        }
 
         protected override void SerializeData(ref string serializedData)
         {

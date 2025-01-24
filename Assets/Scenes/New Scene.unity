@@ -192,6 +192,50 @@ MonoBehaviour:
       IsInitialized: 1
       Access: 1
       AutoNamingNotations: 1
+--- !u!1 &661278085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 661278087}
+  - component: {fileID: 661278086}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &661278086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661278085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -867680907, guid: 24095847c90366543b607397b548fa96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &661278087
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661278085}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.26148415, y: -0.23664236, z: 0.045484066}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778803022
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,33 +336,6 @@ MonoBehaviour:
   Test: []
   Type:
     _serializedData: 
-  GameObject: {fileID: 0}
-  _gameObject2: {fileID: 0}
-  GameObject113: {fileID: 0}
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 1
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: Scripts/Ui
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: GameObject
-      BaseClass:
-        _serializedData: 
-      IsInitialized: 1
-      AssemblyQualifiedName: 
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
-        _serializedData: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
 --- !u!4 &964301391
 Transform:
   m_ObjectHideFlags: 0
@@ -540,35 +557,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1469c134ba6f522489dcf01293b96ec2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameObject: {fileID: 1040515056}
-  _gameObject_2: {fileID: 337570791}
-  Asdgdfgh: {fileID: 1946217317}
-  Klert6hy: {fileID: 778803023}
-  _easyControlEditorArgs:
-    Expand: 1
-    DoViewModel: 1
-    DoBounder: 0
-    ViewModel:
-      GenerateDir: Scripts/Ui
-      Namespace: 
-      ClassNameSameAsGameObjectName: 1
-      ClassName: JBJB
-      BaseClass:
-        _serializedData: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
-      IsInitialized: 1
-      AssemblyQualifiedName: JBJB, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    Bounder:
-      Parent: {fileID: 0}
-      TypeToBind:
-        _serializedData: 
-      NameSameAsGameObjectName: 1
-      Name: 
-      AutoAddCommentPara: 1
-      Comment: 
-      IsInitialized: 0
-      Access: 0
-      AutoNamingNotations: 1
 --- !u!1 &1497793005
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,6 +890,7 @@ GameObject:
   - component: {fileID: 1823849415}
   - component: {fileID: 1823849414}
   - component: {fileID: 1823849413}
+  - component: {fileID: 1823849416}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1039,6 +1028,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823849411}
   m_CullTransparentMesh: 1
+--- !u!114 &1823849416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823849411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1467436607, guid: 24095847c90366543b607397b548fa96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _fontAssetPresetId: 
+  _textPropertiesPresetId: 
 --- !u!1 &1865040776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,6 +1206,50 @@ MonoBehaviour:
       IsInitialized: 1
       Access: 0
       AutoNamingNotations: 1
+--- !u!1 &2038692868
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2038692870}
+  - component: {fileID: 2038692869}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2038692869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038692868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -867680907, guid: 24095847c90366543b607397b548fa96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2038692870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038692868}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.26148415, y: -0.23664236, z: 0.045484066}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1214,3 +1261,5 @@ SceneRoots:
   - {fileID: 1521266162}
   - {fileID: 1497793008}
   - {fileID: 1128967610}
+  - {fileID: 2038692870}
+  - {fileID: 661278087}
