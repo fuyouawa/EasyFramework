@@ -8,9 +8,9 @@ namespace EasyFramework
     [Serializable, InlineProperty, HideLabel, HideReferenceObjectPicker]
     public abstract class MemberPicker
     {
-        [SerializeField, UsedImplicitly] private GameObject _targetObject;
-        [SerializeField, UsedImplicitly] private string _targetComponentName;
-        [SerializeField, UsedImplicitly] private string _targetMemberName;
+        [SerializeField] private GameObject _targetObject;
+        [SerializeField] private string _targetComponentName;
+        [SerializeField] private string _targetMemberName;
 
         public Component GetTargetComponent()
         {
