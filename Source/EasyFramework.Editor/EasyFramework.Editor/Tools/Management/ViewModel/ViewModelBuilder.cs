@@ -130,7 +130,8 @@ namespace EasyFramework.Editor
             var codeClass = new CodeTypeDeclaration(data.ClassName)
             {
                 IsPartial = true,
-                TypeAttributes = TypeAttributes.Public
+                TypeAttributes = TypeAttributes.Public,
+                BaseTypes = { nameof(IViewModel) }
             };
 
             foreach (var child in data.Children)
@@ -150,7 +151,7 @@ namespace EasyFramework.Editor
                 }
 
                 field.CustomAttributes.Add(new CodeAttributeDeclaration(
-                    "EasyBounderControl",
+                    "ByViewBinder",
                     new CodeAttributeArgument(new CodePrimitiveExpression(child.OriginName))
                 ));
 
@@ -165,29 +166,30 @@ namespace EasyFramework.Editor
                 codeClass.Members.Add(field);
             }
 
+            //TODO 代码优化
             if (data.Namespace.IsNotNullOrWhiteSpace())
             {
                 codeClass.Members.Add(new CodeSnippetTypeMember(@"
-#if UNITY_EDITOR
-        /// <summary>
-        /// <para>EasyControl的编辑器参数</para>
-        /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
-        /// </summary>
-        [SerializeField()]
-        private EasyControlEditorArgs _easyControlEditorArgs;
-#endif"));
+        [SerializeField] private ViewModelInfo _viewModelInfo;
+
+        ViewModelInfo IViewModel.Info
+        {
+            get => _viewModelInfo;
+            set => _viewModelInfo = value;
+        }"
+                ));
             }
             else
             {
                 codeClass.Members.Add(new CodeSnippetTypeMember(@"
-#if UNITY_EDITOR
-    /// <summary>
-    /// <para>EasyControl的编辑器参数</para>
-    /// <para>（不要在代码中使用，仅在编辑器中有效！）</para>
-    /// </summary>
-    [SerializeField()]
-    private EasyControlEditorArgs _easyControlEditorArgs;
-#endif"));
+    [SerializeField] private ViewModelInfo _viewModelInfo;
+
+    ViewModelInfo IViewModel.Info
+    {
+        get => _viewModelInfo;
+        set => _viewModelInfo = value;
+    }"
+                ));
             }
 
             // Add class to namespace

@@ -24,7 +24,13 @@ namespace EasyFramework.Editor
 
             _component = Property.Parent.WeakSmartValue<Component>();
             _info = ValueEntry.SmartValue;
-            _editorInfo = _info.EditorData.Get<ViewBinderEditorInfo>() ?? new ViewBinderEditorInfo();
+            _editorInfo = _info.EditorData.Get<ViewBinderEditorInfo>();
+            if (_editorInfo == null)
+            {
+                _editorInfo = new ViewBinderEditorInfo();
+                _info.EditorData.Set(_editorInfo);
+            }
+
             _settings = ViewBinderSettings.Instance;
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
@@ -74,6 +80,7 @@ namespace EasyFramework.Editor
                 _editorInfo.Comment = _settings.Comment;
 
                 _editorInfo.IsInitialized = true;
+                _info.EditorData.Set(_editorInfo);
             }
         }
 
@@ -87,7 +94,11 @@ namespace EasyFramework.Editor
         {
             if (_editorInfo.NameSameAsGameObjectName)
             {
-                _editorInfo.Name = _component.gameObject.name;
+                if (_editorInfo.Name != _component.gameObject.name)
+                {
+                    _editorInfo.Name = _component.gameObject.name;
+                    _info.EditorData.Set(_editorInfo);
+                }
             }
 
             EditorGUI.BeginChangeCheck();

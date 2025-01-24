@@ -32,6 +32,11 @@ namespace EasyFramework.Editor
 
             _info = ValueEntry.SmartValue;
             _editorInfo = _info.EditorData.Get<ViewModelEditorInfo>() ?? new ViewModelEditorInfo();
+            if (_editorInfo == null)
+            {
+                _editorInfo = new ViewModelEditorInfo();
+                _info.EditorData.Set(_editorInfo);
+            }
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
                 UniqueDrawerKey.Create(Property, this),
@@ -48,6 +53,7 @@ namespace EasyFramework.Editor
                 _editorInfo.BaseClass.Value = typeof(MonoBehaviour);
 
                 _editorInfo.IsInitialized = true;
+                _info.EditorData.Set(_editorInfo);
             }
         }
 
@@ -61,7 +67,11 @@ namespace EasyFramework.Editor
         {
             if (_editorInfo.ClassNameSameAsGameObjectName)
             {
-                _editorInfo.ClassName = _component.gameObject.name;
+                if (_editorInfo.ClassName != _component.gameObject.name)
+                {
+                    _editorInfo.ClassName = _component.gameObject.name;
+                    _info.EditorData.Set(_editorInfo);
+                }
             }
 
             EditorGUILayout.LabelField("状态", _isBuild ? "已构建" : "未构建");
@@ -95,6 +105,7 @@ namespace EasyFramework.Editor
             var lbl = _editorInfo.BaseClass.Value == null
                 ? "<None>"
                 : _editorInfo.BaseClass.Value.FullName;
+
             EasyEditorGUI.DrawSelectorDropdown(
                 new SelectorDropdownConfig<Type>(
                     EditorHelper.TempContent("父级"),
