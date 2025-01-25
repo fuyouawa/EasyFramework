@@ -6,6 +6,7 @@ namespace EasyFramework.Editor
     public static class EditorAssetsPath
     {
         public static readonly string ConfigsDirectory;
+        public static readonly string SettingsDirectory;
         public static readonly string DataDirectory;
 
         public static readonly string TempDirectory;
@@ -15,6 +16,7 @@ namespace EasyFramework.Editor
         static EditorAssetsPath()
         {
             ConfigsDirectory = AssetsPath.ConfigsDirectory + "/Editor";
+            SettingsDirectory = AssetsPath.SettingsDirectory + "/Editor";
             DataDirectory = AssetsPath.DataDirectory + "/Editor";
 
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
@@ -27,6 +29,13 @@ namespace EasyFramework.Editor
     internal class EditorConfigsAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
         public EditorConfigsAssetPathAttribute() : base(EditorAssetsPath.ConfigsDirectory)
+        {
+        }
+    }
+
+    internal class EditorSettingsAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    {
+        public EditorSettingsAssetPathAttribute() : base(EditorAssetsPath.SettingsDirectory)
         {
         }
     }

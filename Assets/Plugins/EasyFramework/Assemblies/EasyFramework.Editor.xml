@@ -4,30 +4,41 @@
         <name>EasyFramework.Editor</name>
     </assembly>
     <members>
-        <member name="M:EasyFramework.Editor.BigTitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+        <member name="M:EasyFramework.Editor.Drawer.BigTitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
             <summary>
             Draws the property.
             </summary>
         </member>
-        <member name="M:EasyFramework.Editor.BigTitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+        <member name="M:EasyFramework.Editor.Drawer.BigTitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
             <summary>
             Draws the property.
             </summary>
         </member>
-        <member name="M:EasyFramework.Editor.InfoBoxCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+        <member name="M:EasyFramework.Editor.Drawer.InfoBoxCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
             <summary>
             Draws the property.
             </summary>
         </member>
-        <member name="M:EasyFramework.Editor.TitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+        <member name="M:EasyFramework.Editor.Drawer.TitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
             <summary>
             Draws the property.
             </summary>
         </member>
-        <member name="M:EasyFramework.Editor.TitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+        <member name="M:EasyFramework.Editor.Drawer.TitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
             <summary>
             Draws the property.
             </summary>
+        </member>
+        <member name="M:EasyFramework.Editor.EasyEditorGUI.MessageBox(System.String,System.Boolean)">
+            <summary>Draws a message box.</summary>
+            <param name="message">The message.</param>
+            <param name="wide">If set to <c>true</c> the message box will be wide.</param>
+        </member>
+        <member name="M:EasyFramework.Editor.EasyEditorGUI.MessageBox(System.String,UnityEditor.MessageType,System.Boolean)">
+            <summary>Draws a message box.</summary>
+            <param name="message">The message.</param>
+            <param name="messageType">Type of the message.</param>
+            <param name="wide">If set to <c>true</c> the message box will be wide.</param>
         </member>
     </members>
 </doc>

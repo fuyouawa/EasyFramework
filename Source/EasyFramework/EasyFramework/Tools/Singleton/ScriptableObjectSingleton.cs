@@ -69,7 +69,7 @@ namespace EasyFramework
         {
             if (_getScriptableObjectSingletonInEditorMethod == null)
             {
-                var type = Type.GetType("EasyFramework.Inspector.EditorSingletonCreator, EasyFramework.Inspector")!;
+                var type = Type.GetType("EasyFramework.Editor.EditorSingletonCreator, EasyFramework.Editor")!;
                 _getScriptableObjectSingletonInEditorMethod =
                     type.GetMethod("GetScriptableObject", BindingFlags.Static | BindingFlags.Public)!;
             }
