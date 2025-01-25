@@ -53,7 +53,7 @@ namespace EasyFramework.Editor
                 _editorInfo.BaseClass.Value = typeof(MonoBehaviour);
 
                 _editorInfo.IsInitialized = true;
-                _info.EditorData.Set(_editorInfo);
+                ValueChanged();
             }
         }
 
@@ -70,7 +70,7 @@ namespace EasyFramework.Editor
                 if (_editorInfo.ClassName != _component.gameObject.name)
                 {
                     _editorInfo.ClassName = _component.gameObject.name;
-                    _info.EditorData.Set(_editorInfo);
+                    ValueChanged();
                 }
             }
 
@@ -118,8 +118,7 @@ namespace EasyFramework.Editor
 
             if (EditorGUI.EndChangeCheck())
             {
-                _info.EditorData.Set(_editorInfo);
-                EditorUtility.SetDirty(_component);
+                ValueChanged();
             }
 
             EditorGUI.EndDisabledGroup();
@@ -146,6 +145,12 @@ namespace EasyFramework.Editor
             }
         }
 
+        private void ValueChanged()
+        {
+            _info.EditorData.Set(_editorInfo);
+            EditorUtility.SetDirty(_component);
+        }
+
         private void Bind()
         {
             Debug.Assert(_classType != null);
@@ -153,6 +158,7 @@ namespace EasyFramework.Editor
             if (!_component.GetComponent(_classType))
             {
                 _component = _component.gameObject.AddComponent(_classType);
+                ((IViewModel)_component).Info = _info;
             }
 
             var c = _component.GetComponent<ViewModel>();

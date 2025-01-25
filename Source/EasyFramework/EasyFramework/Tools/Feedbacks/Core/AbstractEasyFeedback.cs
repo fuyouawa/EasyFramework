@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework
@@ -14,7 +15,7 @@ namespace EasyFramework
         }
     }
 
-    [Serializable]
+    [Serializable, InlineProperty, HideReferenceObjectPicker]
     public abstract class AbstractEasyFeedback
     {
         public string Label;
@@ -26,7 +27,6 @@ namespace EasyFramework
         public float IntervalBetweenRepeats = 0f;
 
         public virtual string Tip => string.Empty;
-        public virtual string GroupName => string.Empty;
 
         public EasyFeedbacks Owner { get; private set; }
         public bool IsPlaying { get; protected set; }

@@ -74,6 +74,7 @@ namespace EasyFramework.Editor
 
         private readonly List<InspectorProperty> _properties = new List<InspectorProperty>();
         private readonly List<FoldoutGroupConfig> _foldoutGroupConfigs = new List<FoldoutGroupConfig>();
+        private bool _autoDrawOtherProperties = false;
 
         protected List<PropertiesGroupInfo> PropertiesGroups = new List<PropertiesGroupInfo>();
 
@@ -107,27 +108,7 @@ namespace EasyFramework.Editor
 
         protected virtual void PostBuildPropertiesGroups()
         {
-            var label = new GUIContent();
-            if (Feedback.GroupName.IsNullOrEmpty())
-            {
-                var attr = Property.GetAttribute<AddEasyFeedbackMenuAttribute>();
-                label.text = attr.Path.Split('/').Last();
-            }
-            else
-            {
-                label.text = Feedback.GroupName;
-            }
-
-            PropertiesGroups.Add(new PropertiesGroupInfo(label, rect =>
-            {
-                foreach (var child in Property.Children)
-                {
-                    if (!Array.Exists(EasyFeedbackHelper.IgnoreDrawFields, f => f.Name == child.Name))
-                    {
-                        child.Draw();
-                    }
-                }
-            }));
+            _autoDrawOtherProperties = true;
         }
 
         private void OnSettingsContentGUI(Rect headerRect)
@@ -169,6 +150,10 @@ namespace EasyFramework.Editor
                 ref Feedback.Enable);
 
             DrawPropertiesGroups();
+            if (_autoDrawOtherProperties)
+            {
+                DrawOtherProperties();
+            }
 
             EditorGUI.BeginDisabledGroup(!Application.isPlaying);
             EditorGUILayout.BeginHorizontal();
@@ -190,6 +175,17 @@ namespace EasyFramework.Editor
 
             EditorGUILayout.EndHorizontal();
             EditorGUI.EndDisabledGroup();
+        }
+
+        private void DrawOtherProperties()
+        {
+            foreach (var child in Property.Children)
+            {
+                if (!Array.Exists(EasyFeedbackHelper.IgnoreDrawFields, f => f.Name == child.Name))
+                {
+                    child.Draw();
+                }
+            }
         }
 
         private void DrawPropertiesGroups()

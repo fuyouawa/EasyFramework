@@ -165,32 +165,39 @@ namespace EasyFramework.Editor
 
                 codeClass.Members.Add(field);
             }
-
-            //TODO 代码优化
-            if (data.Namespace.IsNotNullOrWhiteSpace())
+            
+            var infoField = new CodeMemberField(nameof(ViewModelInfo), "_viewModelInfo")
             {
-                codeClass.Members.Add(new CodeSnippetTypeMember(@"
-        [SerializeField] private ViewModelInfo _viewModelInfo;
+                Attributes = MemberAttributes.Private
+            };
+            infoField.CustomAttributes.Add(
+                new CodeAttributeDeclaration("SerializeField"));
+            codeClass.Members.Add(infoField);
 
-        ViewModelInfo IViewModel.Info
-        {
-            get => _viewModelInfo;
-            set => _viewModelInfo = value;
-        }"
-                ));
-            }
-            else
+            var infoProperty = new CodeMemberProperty
             {
-                codeClass.Members.Add(new CodeSnippetTypeMember(@"
-    [SerializeField] private ViewModelInfo _viewModelInfo;
+                Name = "Info",
+                Type = new CodeTypeReference(nameof(ViewModelInfo)),
+                Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                HasGet = true,
+                HasSet = true
+            };
 
-    ViewModelInfo IViewModel.Info
-    {
-        get => _viewModelInfo;
-        set => _viewModelInfo = value;
-    }"
-                ));
-            }
+            infoProperty.GetStatements.Add(
+                new CodeMethodReturnStatement(
+                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_viewModelInfo")
+                )
+            );
+
+            infoProperty.SetStatements.Add(
+                new CodeAssignStatement(
+                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_viewModelInfo"),
+                    new CodePropertySetValueReferenceExpression()
+                )
+            );
+
+            infoProperty.ImplementationTypes.Add(new CodeTypeReference(nameof(IViewModel)));
+            codeClass.Members.Add(infoProperty);
 
             // Add class to namespace
             codeNamespace.Types.Add(codeClass);

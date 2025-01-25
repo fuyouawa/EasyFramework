@@ -18,15 +18,24 @@ public partial class jhghjkjh : IViewModel
     [ByViewBinder("GameObject")]
     public Transform GameObject;
     
+    /// <summary>
+    /// <para>fsdfsdfsdr</para>
+    /// </summary>
     [ByViewBinder("dgdfgdrger")]
     public Transform Dgdfgdrger;
     
-
-    [SerializeField] private ViewModelInfo _viewModelInfo;
-
-    ViewModelInfo IViewModel.Info
+    [SerializeField()]
+    private ViewModelInfo _viewModelInfo;
+    
+    public ViewModelInfo Info
     {
-        get => _viewModelInfo;
-        set => _viewModelInfo = value;
+        get
+        {
+            return this._viewModelInfo;
+        }
+        set
+        {
+            this._viewModelInfo = value;
+        }
     }
 }

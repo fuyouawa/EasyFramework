@@ -80,7 +80,7 @@ namespace EasyFramework.Editor
                 _editorInfo.Comment = _settings.Comment;
 
                 _editorInfo.IsInitialized = true;
-                _info.EditorData.Set(_editorInfo);
+                ValueChanged();
             }
         }
 
@@ -97,7 +97,7 @@ namespace EasyFramework.Editor
                 if (_editorInfo.Name != _component.gameObject.name)
                 {
                     _editorInfo.Name = _component.gameObject.name;
-                    _info.EditorData.Set(_editorInfo);
+                    ValueChanged();
                 }
             }
 
@@ -178,9 +178,14 @@ namespace EasyFramework.Editor
 
             if (EditorGUI.EndChangeCheck())
             {
-                _info.EditorData.Set(_editorInfo);
-                EditorUtility.SetDirty(_component);
+                ValueChanged();
             }
+        }
+
+        private void ValueChanged()
+        {
+            _info.EditorData.Set(_editorInfo);
+            EditorUtility.SetDirty(_component);
         }
     }
 }
