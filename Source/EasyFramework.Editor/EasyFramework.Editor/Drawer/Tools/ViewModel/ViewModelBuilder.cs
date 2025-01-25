@@ -37,6 +37,41 @@ namespace EasyFramework.Editor.Drawer
             BuildCsDesigner(designerPath);
             AssetDatabase.Refresh();
         }
+        
+
+        public bool Check()
+        {
+            string error = ViewModelHelper.GetIdentifierError("类名", _editorInfo.ClassName);
+            if (error.IsNotNullOrEmpty())
+            {
+                EditorUtility.DisplayDialog("错误", $"类名不规范：{error}", "确认");
+                return false;
+            }
+
+            var children = ViewModelHelper.GetChildren(_component.transform);
+
+            var nameCheck = new HashSet<string>();
+            foreach (var child in children)
+            {
+                var comp = (Component)child;
+                var binderEditorInfo = child.Info.EditorData.Get<ViewBinderEditorInfo>();
+                error = ViewModelHelper.GetIdentifierError("变量名称", binderEditorInfo.Name);
+                if (error.IsNotNullOrEmpty())
+                {
+                    EditorUtility.DisplayDialog("错误", $"绑定“{comp.gameObject.name}”出现错误：{error}", "确认");
+                    return false;
+                }
+
+                if (!nameCheck.Add(binderEditorInfo.Name))
+                {
+                    EditorUtility.DisplayDialog("错误",
+                        $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{binderEditorInfo.Name}）", "确认");
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         private void BuildCs(string path)
         {

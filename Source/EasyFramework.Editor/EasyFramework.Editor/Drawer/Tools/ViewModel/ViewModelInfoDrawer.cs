@@ -8,6 +8,7 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.Editor.Drawer
 {
@@ -20,6 +21,7 @@ namespace EasyFramework.Editor.Drawer
 
         private FoldoutGroupConfig _foldoutGroupConfig;
         private readonly ViewModelBuilder _builder = new ViewModelBuilder();
+
         private Type _classType;
         private ViewModelSettings _settings;
 
@@ -126,12 +128,12 @@ namespace EasyFramework.Editor.Drawer
             if (SirenixEditorGUI.SDFIconButton("构建", EditorGUIUtility.singleLineHeight,
                     SdfIconType.PencilFill))
             {
-                if (!CheckBind())
+                _builder.Setup(_editorInfo, _component);
+                if (!_builder.Check())
                 {
                     return;
                 }
 
-                _builder.Setup(_editorInfo, _component);
                 _builder.Build();
             }
 
@@ -145,29 +147,51 @@ namespace EasyFramework.Editor.Drawer
             }
         }
 
-        private void ValueChanged()
+        private void ValueChanged(bool withUpdateEditorData = true)
         {
-            _info.EditorData.Set(_editorInfo);
+            if (withUpdateEditorData)
+            {
+                _info.EditorData.Set(_editorInfo);
+            }
             EditorUtility.SetDirty(_component);
         }
+        
 
         private void Bind()
         {
-            Debug.Assert(_classType != null);
+            var classType = _editorInfo.GetClassType();
+            Debug.Assert(classType != null);
 
-            if (!_component.GetComponent(_classType))
+            Component comp;
+            if (_component.GetType() != classType)
             {
-                _component = _component.gameObject.AddComponent(_classType);
-                ((IViewModel)_component).Info = _info;
+                comp = _component.GetComponent(classType);
+                if (comp == null)
+                {
+                    comp = _component.gameObject.AddComponent(classType);
+                    ((IViewModel)comp).Info = _info;
+                    ValueChanged(false);
+                }
+            }
+            else
+            {
+                comp = _component;
             }
 
-            var c = _component.GetComponent<ViewModel>();
-            if (c != null)
-                UnityEngine.Object.DestroyImmediate(c);
+            InternalBind(comp);
 
-            var children = ViewModelHelper.GetChildren(_component.transform);
+            if (comp != _component)
+            {
+                Object.DestroyImmediate(_component);
+                GUIHelper.ExitGUI(true);
+            }
+        }
 
-            var fields = _component.GetType()
+        private static void InternalBind(Component component)
+        {
+            var children = ViewModelHelper.GetChildren(component.transform);
+
+            var fields = component.GetType()
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<ByViewBinderAttribute>() != null)
                 .ToArray();
@@ -195,47 +219,13 @@ namespace EasyFramework.Editor.Drawer
                     return;
                 }
 
-                f.SetValue(_component, value);
+                f.SetValue(component, value);
             }
 
             return;
 
             string GetOriginName(FieldInfo field) =>
                 field.GetCustomAttribute<ByViewBinderAttribute>().OriginName;
-        }
-
-        private bool CheckBind()
-        {
-            string error = ViewModelHelper.GetIdentifierError("类名", _editorInfo.ClassName);
-            if (error.IsNotNullOrEmpty())
-            {
-                EditorUtility.DisplayDialog("错误", $"类名不规范：{error}", "确认");
-                return false;
-            }
-
-            var children = ViewModelHelper.GetChildren(_component.transform);
-
-            var nameCheck = new HashSet<string>();
-            foreach (var child in children)
-            {
-                var comp = (Component)child;
-                var binderEditorInfo = child.Info.EditorData.Get<ViewBinderEditorInfo>();
-                error = ViewModelHelper.GetIdentifierError("变量名称", binderEditorInfo.Name);
-                if (error.IsNotNullOrEmpty())
-                {
-                    EditorUtility.DisplayDialog("错误", $"绑定“{comp.gameObject.name}”出现错误：{error}", "确认");
-                    return false;
-                }
-
-                if (!nameCheck.Add(binderEditorInfo.Name))
-                {
-                    EditorUtility.DisplayDialog("错误",
-                        $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{binderEditorInfo.Name}）", "确认");
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
