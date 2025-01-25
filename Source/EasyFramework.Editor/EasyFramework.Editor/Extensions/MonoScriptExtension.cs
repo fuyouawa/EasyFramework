@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace EasyFramework.Editor
 {
-    public static class ComponentExtension
+    public static class MonoScriptExtension
     {
         private static MonoScript[] s_allScriptsCache;
-        public static MonoScript GetScript(this Component component)
+
+        public static MonoScript GetMonoScript(this Type type)
         {
             if (s_allScriptsCache.IsNullOrEmpty())
             {
@@ -17,14 +17,14 @@ namespace EasyFramework.Editor
 
             try
             {
-                return s_allScriptsCache.First(s => s.GetClass() == component.GetType());
+                return s_allScriptsCache.First(s => s.GetClass() == type);
             }
             catch (Exception)
             {
                 try
                 {
                     s_allScriptsCache = MonoImporter.GetAllRuntimeMonoScripts();
-                    return s_allScriptsCache.First(s => s.GetClass() == component.GetType());
+                    return s_allScriptsCache.First(s => s.GetClass() == type);
                 }
                 catch (Exception)
                 {

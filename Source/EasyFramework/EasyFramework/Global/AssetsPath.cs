@@ -25,4 +25,11 @@ namespace EasyFramework
         {
         }
     }
+
+    internal class SettingsAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    {
+        public SettingsAssetPathAttribute() : base(AssetsPath.SettingsDirectory)
+        {
+        }
+    }
 }

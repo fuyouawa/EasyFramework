@@ -1,14 +1,12 @@
-[assembly: Sirenix.OdinInspector.Editor.Validation.RegisterValidator(typeof(EasyFramework.Editor.Validator.InformationValidator))]
+using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor;
+using Sirenix.OdinInspector.Editor.ValueResolvers;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
+using UnityEngine;
 
 namespace EasyFramework.Editor.Drawer
 {
-    using Sirenix.OdinInspector;
-    using Sirenix.OdinInspector.Editor;
-    using Sirenix.OdinInspector.Editor.ValueResolvers;
-    using Sirenix.Utilities.Editor;
-    using UnityEditor;
-    using UnityEngine;
-
     [DrawerPriority(0.0, 10001.0, 0.0)]
     public class InfoBoxCNAttributeDrawer : OdinAttributeDrawer<InfoBoxCNAttribute>
     {

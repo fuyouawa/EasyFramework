@@ -50,9 +50,9 @@ namespace EasyFramework.Editor.Drawer
             if (!_editorInfo.IsInitialized)
             {
                 _editorInfo.ClassName = _component.gameObject.name;
-                _editorInfo.GenerateDir = _settings.GenerateDir;
-                _editorInfo.Namespace = _settings.Namespace;
-                _editorInfo.BaseClass.Value = typeof(MonoBehaviour);
+                _editorInfo.GenerateDirectory = _settings.DefaultGenerateDirectory;
+                _editorInfo.Namespace = _settings.DefaultNamespace;
+                _editorInfo.BaseClass = typeof(MonoBehaviour);
 
                 _editorInfo.IsInitialized = true;
                 ValueChanged();
@@ -82,9 +82,9 @@ namespace EasyFramework.Editor.Drawer
             EditorGUI.BeginChangeCheck();
 
             EditorGUI.BeginChangeCheck();
-            _editorInfo.GenerateDir = SirenixEditorFields.FolderPathField(
+            _editorInfo.GenerateDirectory = SirenixEditorFields.FolderPathField(
                 new GUIContent("代码生成目录"),
-                _editorInfo.GenerateDir, "Assets", false, false);
+                _editorInfo.GenerateDirectory, "Assets", false, false);
             if (EditorGUI.EndChangeCheck())
             {
                 GUIHelper.ExitGUI(false);
@@ -104,16 +104,16 @@ namespace EasyFramework.Editor.Drawer
                     EditorGUILayout.TextField("类名", _editorInfo.ClassName);
             }
 
-            var lbl = _editorInfo.BaseClass.Value == null
+            var lbl = _editorInfo.BaseClass == null
                 ? "<None>"
-                : _editorInfo.BaseClass.Value.FullName;
+                : _editorInfo.BaseClass.FullName;
 
             EasyEditorGUI.DrawSelectorDropdown(
                 new SelectorDropdownConfig<Type>(
                     EditorHelper.TempContent("父级"),
                     EditorHelper.TempContent2(lbl),
                     ViewModelHelper.BaseTypes,
-                    t => _editorInfo.BaseClass.Value = t)
+                    t => _editorInfo.BaseClass = t)
                 {
                     MenuItemNameGetter = t => t.FullName
                 });
@@ -153,6 +153,8 @@ namespace EasyFramework.Editor.Drawer
             {
                 _info.EditorData.Set(_editorInfo);
             }
+
+            _classType = _editorInfo.GetClassType();
             EditorUtility.SetDirty(_component);
         }
         

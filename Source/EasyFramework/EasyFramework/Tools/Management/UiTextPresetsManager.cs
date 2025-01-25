@@ -19,7 +19,7 @@ namespace EasyFramework
         public Color FontColor = Color.white;
     }
 
-    [ConfigsAssetPath]
+    [SettingsAssetPath]
     public class UiTextPresetsManager : ScriptableObjectSingleton<UiTextPresetsManager>
     {
         [SerializeField]

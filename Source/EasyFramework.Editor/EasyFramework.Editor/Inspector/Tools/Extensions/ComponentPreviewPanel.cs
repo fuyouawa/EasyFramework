@@ -21,8 +21,8 @@ namespace EasyFramework.Editor.Inspector
             public static readonly GUIStyle Footer = "RL FooterButton";
         }
 
-        private static readonly float s_blockWidth = EditorGUIUtility.singleLineHeight;
-        private static readonly string s_copiedComponentIdPrefsKey = "Component Tool Panel Copied Component ID";
+        private static readonly float BlockWidth = EditorGUIUtility.singleLineHeight;
+        private static readonly string CopiedComponentIdPrefsKey = "Component Tool Panel Copied Component ID";
 
         private class TargetItem
         {
@@ -59,7 +59,7 @@ namespace EasyFramework.Editor.Inspector
                 _listDrawer.OnAddDropdownCallback += buttonRect =>
                 {
                     EasyEditorHelper.ShowAddComponentWindow(
-                        new Rect(Screen.width / 2f - 230f / 2f, buttonRect.y + s_blockWidth, 230, 0),
+                        new Rect(Screen.width / 2f - 230f / 2f, buttonRect.y + BlockWidth, 230, 0),
                         _editor._targetItems.Select(i => i.Target).ToArray());
                 };
 
@@ -236,11 +236,11 @@ namespace EasyFramework.Editor.Inspector
             {
                 rect.x += 14;
                 var iconRect = new Rect(rect);
-                iconRect.width = iconRect.height = s_blockWidth;
+                iconRect.width = iconRect.height = BlockWidth;
 
                 EditorGUI.LabelField(iconRect, Icons.Warn);
 
-                rect.x += (s_blockWidth + 1) * 2;
+                rect.x += (BlockWidth + 1) * 2;
                 rect.y -= 2;
                 //Name Handler
                 GUIStyle guiStyle = new GUIStyle(EditorStyles.boldLabel);
@@ -253,22 +253,22 @@ namespace EasyFramework.Editor.Inspector
 
             var compIconRect = new Rect(rect);
             compIconRect.x += 14;
-            compIconRect.width = compIconRect.height = s_blockWidth;
+            compIconRect.width = compIconRect.height = BlockWidth;
 
             var enableToggleRect = new Rect(compIconRect);
-            enableToggleRect.x += s_blockWidth + 1;
+            enableToggleRect.x += BlockWidth + 1;
 
             var componentLabelRect = new Rect(enableToggleRect)
             {
                 width = rect.width - 125
             };
-            componentLabelRect.x += s_blockWidth + 1;
+            componentLabelRect.x += BlockWidth + 1;
 
             var editBtnRect = new Rect(rect)
             {
                 x = rect.xMax
             };
-            editBtnRect.width = editBtnRect.height = s_blockWidth;
+            editBtnRect.width = editBtnRect.height = BlockWidth;
             editBtnRect.x -= EditorGUIUtility.singleLineHeight;
             editBtnRect.x -= EditorGUIUtility.singleLineHeight - 1;
 
@@ -290,7 +290,7 @@ namespace EasyFramework.Editor.Inspector
                 }
             }
 
-            var script = component.GetScript();
+            var script = component.GetType().GetMonoScript();
             if (script != null)
             {
                 string path = AssetDatabase.GetAssetPath(script);

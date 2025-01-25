@@ -1,31 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using EasyFramework.Editor;
-using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
-using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace EasyFramework.Editor.Drawer
 {
     public static class ViewModelHelper
     {
-        private static List<Type> _baseTypes;
+        private static List<Type> s_baseTypes;
 
         public static List<Type> BaseTypes
         {
             get
             {
-                if (_baseTypes == null)
+                if (s_baseTypes == null)
                 {
-                    _baseTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+                    s_baseTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
                         .Where(t => t.IsSubclassOf(typeof(Component)) && !t.IsSealed).ToList();
                 }
 
-                return _baseTypes;
+                return s_baseTypes;
             }
         }
 

@@ -2,6 +2,8 @@ using Sirenix.OdinInspector.Editor.Validation;
 using Sirenix.OdinInspector.Editor.ValueResolvers;
 using Sirenix.OdinInspector;
 
+[assembly: RegisterValidator(typeof(EasyFramework.Editor.Validator.InformationValidator))]
+
 namespace EasyFramework.Editor.Validator
 {
     [NoValidationInInspector]
@@ -42,6 +44,7 @@ namespace EasyFramework.Editor.Validator
                             result.ResultType = ValidationResultType.Valid;
                             break;
                     }
+
                     result.Message = _messageGetter.GetValue();
                 }
             }

@@ -23,7 +23,7 @@ namespace EasyFramework.Editor.Drawer
 
         public void Build()
         {
-            var dir = Path.Combine(Application.dataPath, _editorInfo.GenerateDir);
+            var dir = Path.Combine(Application.dataPath, _editorInfo.GenerateDirectory);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -37,7 +37,7 @@ namespace EasyFramework.Editor.Drawer
             BuildCsDesigner(designerPath);
             AssetDatabase.Refresh();
         }
-        
+
 
         public bool Check()
         {
@@ -55,6 +55,7 @@ namespace EasyFramework.Editor.Drawer
             {
                 var comp = (Component)child;
                 var binderEditorInfo = child.Info.EditorData.Get<ViewBinderEditorInfo>();
+
                 error = ViewModelHelper.GetIdentifierError("变量名称", binderEditorInfo.Name);
                 if (error.IsNotNullOrEmpty())
                 {
@@ -84,11 +85,11 @@ namespace EasyFramework.Editor.Drawer
                     "System",
                     "System.Collections.Generic",
                     "UnityEngine",
-                    _editorInfo.BaseClass.Value.Namespace
+                    _editorInfo.BaseClass.Namespace
                 }.Distinct(),
                 ClassName = _editorInfo.ClassName,
                 Namespace = _editorInfo.Namespace,
-                BaseClassName = _editorInfo.BaseClass.Value.Name
+                BaseClassName = _editorInfo.BaseClass.Name
             };
 
             var compileUnit = new CodeCompileUnit();
@@ -107,6 +108,12 @@ namespace EasyFramework.Editor.Drawer
                 TypeAttributes = TypeAttributes.Public
             };
 
+            var classTemplate = ViewModelSettings.Instance.AutoIndent
+                ? ProcessCodeSnippet(ViewModelSettings.Instance.ClassTemplate)
+                : ViewModelSettings.Instance.ClassTemplate;
+
+            codeClass.Members.Add(new CodeSnippetTypeMember(classTemplate));
+
             codeClass.BaseTypes.Add(data.BaseClassName);
 
             codeNamespace.Types.Add(codeClass);
@@ -124,6 +131,13 @@ namespace EasyFramework.Editor.Drawer
             var result = writer.ToString();
             result = result[result.IndexOf("using System;", StringComparison.Ordinal)..];
             File.WriteAllText(path, result);
+        }
+
+        private string ProcessCodeSnippet(string snippet)
+        {
+            var indent = _editorInfo.Namespace.IsNullOrWhiteSpace() ? "\t" : "\t\t";
+            var splits = snippet.Split('\n').Select(s => indent + s);
+            return string.Join("\r\n", splits);
         }
 
         private void BuildCsDesigner(string path)
@@ -200,7 +214,7 @@ namespace EasyFramework.Editor.Drawer
 
                 codeClass.Members.Add(field);
             }
-            
+
             var infoField = new CodeMemberField(nameof(ViewModelInfo), "_viewModelInfo")
             {
                 Attributes = MemberAttributes.Private
