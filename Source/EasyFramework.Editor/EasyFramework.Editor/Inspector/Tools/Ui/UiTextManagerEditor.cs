@@ -24,7 +24,7 @@ namespace EasyFramework.Editor.Inspector
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("字体资产预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsManager.Instance.FontAssetPresets.Keys,
+                UiTextPresetsSettings.Instance.FontAssetPresets.Keys,
                 id => mgr.FontAssetPresetId = id));
             
             lbl = mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO");
@@ -32,7 +32,7 @@ namespace EasyFramework.Editor.Inspector
             EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
                 EditorHelper.TempContent("文本属性预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsManager.Instance.TextPropertiesPresets.Keys,
+                UiTextPresetsSettings.Instance.TextPropertiesPresets.Keys,
                 id => mgr.TextPropertiesPresetId = id));
             
             mgr.ApplyPresets();
@@ -83,8 +83,8 @@ namespace EasyFramework.Editor.Inspector
             
             if (SirenixEditorGUI.Button("切换预设管理器", ButtonSizes.Medium))
             {
-                Selection.activeObject = UiTextPresetsManager.Instance;
-                EditorGUIUtility.PingObject(UiTextPresetsManager.Instance);
+                Selection.activeObject = UiTextPresetsSettings.Instance;
+                EditorGUIUtility.PingObject(UiTextPresetsSettings.Instance);
             }
 
             Tree.EndDraw();

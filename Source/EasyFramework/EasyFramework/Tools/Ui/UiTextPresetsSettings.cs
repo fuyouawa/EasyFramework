@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 
 namespace EasyFramework
 {
-    [Serializable]
+    [Serializable, HideReferenceObjectPicker, InlineProperty]
     public class FontAssetPreset
     {
         public TMP_FontAsset FontAsset;
         public Material Material;
     }
 
-    [Serializable]
+    [Serializable, HideReferenceObjectPicker, InlineProperty]
     public class TextPropertiesPreset
     {
         public float FontSize = 26;
@@ -20,15 +21,10 @@ namespace EasyFramework
     }
 
     [SettingsAssetPath]
-    public class UiTextPresetsManager : ScriptableObjectSingleton<UiTextPresetsManager>
+    public class UiTextPresetsSettings : ScriptableObjectSingleton<UiTextPresetsSettings>
     {
-        [SerializeField]
-        private readonly SerializedDictionary<string, FontAssetPreset> _fontAssetPresets =
-            new SerializedDictionary<string, FontAssetPreset>();
-
-        [SerializeField]
-        private readonly SerializedDictionary<string, TextPropertiesPreset> _textPropertiesPresets =
-            new SerializedDictionary<string, TextPropertiesPreset>();
+        [SerializeField] private SerializedDictionary<string, FontAssetPreset> _fontAssetPresets;
+        [SerializeField] private SerializedDictionary<string, TextPropertiesPreset> _textPropertiesPresets;
 
         [SerializeField] private string _defaultFontAssetPresetId;
         [SerializeField] private string _defaultTextPropertiesPresetId;

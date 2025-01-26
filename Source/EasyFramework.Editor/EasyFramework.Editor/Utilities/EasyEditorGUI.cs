@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.Editor
 {
@@ -213,9 +214,12 @@ namespace EasyFramework.Editor
             params GUILayoutOption[] options)
         {
             var btnLabel = config.BtnLabel;
-            if (typeof(T) == typeof(Type))
+            if (config.AddThumbnailIcons && btnLabel.image == null)
             {
-                btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), false);
+                if (typeof(T) == typeof(Type) || typeof(T).IsSubclassOf(typeof(Object)))
+                {
+                    btnLabel.image = GUIHelper.GetAssetThumbnail(null, typeof(T), false);
+                }
             }
 
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
@@ -247,7 +251,7 @@ namespace EasyFramework.Editor
             };
             if (config.AddThumbnailIcons)
             {
-                selector.SelectionTree.EnumerateTree().AddThumbnailIcons(true);
+                selector.SelectionTree.EnumerateTree().AddThumbnailIcons();
             }
 
             selector.SelectionChanged += types => { selector.SelectionTree.Selection.ConfirmSelection(); };

@@ -6,13 +6,10 @@ using UnityEngine;
 namespace EasyFramework
 {
     [Conditional("UNITY_EDITOR")]
-    public class ByViewBinderAttribute : PropertyAttribute
+    public class FromViewBinderAttribute : PropertyAttribute
     {
-        public string OriginName;
-
-        public ByViewBinderAttribute(string originName)
+        public FromViewBinderAttribute()
         {
-            OriginName = originName;
         }
     }
 
@@ -20,6 +17,7 @@ namespace EasyFramework
     public class ViewBinderInfo
     {
         public Transform OwnerViewModel;
+        public bool BindGameObject = true;
         public Component BindComponent;
 
         public SerializedAny EditorData;

@@ -29,12 +29,12 @@ namespace EasyFramework
 
         public FontAssetPreset GetFontAssetPreset()
         {
-            return UiTextPresetsManager.Instance.GetFontAssetPreset(FontAssetPresetId);
+            return UiTextPresetsSettings.Instance.GetFontAssetPreset(FontAssetPresetId);
         }
 
         public TextPropertiesPreset GetTextPropertiesPreset()
         {
-            return UiTextPresetsManager.Instance.GetTextPropertiesPreset(TextPropertiesPresetId);
+            return UiTextPresetsSettings.Instance.GetTextPropertiesPreset(TextPropertiesPresetId);
         }
 
         public void ApplyPresets()

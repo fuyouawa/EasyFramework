@@ -97,7 +97,7 @@ namespace EasyFramework.Editor.Drawer
                 EditorGUILayout.Toggle("类名与游戏对象名称相同",
                     _editorInfo.ClassNameSameAsGameObjectName);
 
-            ViewModelHelper.CheckIdentifier("类名", _editorInfo.ClassName);
+            ViewModelHelper.CheckIdentifierWithMessage("类名", _editorInfo.ClassName);
             using (new EditorGUI.DisabledScope(_editorInfo.ClassNameSameAsGameObjectName))
             {
                 _editorInfo.ClassName =
@@ -157,7 +157,7 @@ namespace EasyFramework.Editor.Drawer
             _classType = _editorInfo.GetClassType();
             EditorUtility.SetDirty(_component);
         }
-        
+
 
         private void Bind()
         {
@@ -195,39 +195,41 @@ namespace EasyFramework.Editor.Drawer
 
             var fields = component.GetType()
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                .Where(f => f.GetCustomAttribute<ByViewBinderAttribute>() != null)
+                .Where(f => f.GetCustomAttribute<FromViewBinderAttribute>() != null)
                 .ToArray();
 
             foreach (var child in children)
             {
                 var comp = (Component)child;
-                var binderEditorInfo = child.Info.EditorData.Get<ViewBinderEditorInfo>();
-                var f = fields.FirstOrDefault(f => GetOriginName(f) == binderEditorInfo.Name);
+                var bindName = child.GetBindName();
+                var f = fields.FirstOrDefault(f => f.Name == bindName);
                 if (f == null)
                 {
-                    EditorUtility.DisplayDialog("错误",
-                        $"绑定GameObject（{comp.gameObject.name}）失败，" +
-                        $"视图模型中没有“{binderEditorInfo.Name}”，" +
-                        $"可能需要重新生成视图模型！", "确认");
-                    return;
+                    Debug.LogWarning($"“{comp.gameObject.name}”有ViewBinder组件，但是所属的ViewModel中没有这个变量，可能需要重新构建ViewModel");
+                    continue;
                 }
 
-                var value = comp.GetComponent(f.FieldType);
-                if (value == null)
+                var bindObject = child.GetBindObject();
+                if (bindObject == null)
                 {
                     EditorUtility.DisplayDialog("错误",
-                        $"绑定GameObject（{comp.gameObject.name}）失败，" +
-                        $"没有组件“{f.FieldType}”", "确认");
+                        $"绑定“{comp.gameObject.name}”失败，" +
+                        $"ViewBinder中没有设置绑定组件！", "确认");
                     return;
                 }
 
-                f.SetValue(component, value);
+                if (bindObject.GetType() != f.FieldType)
+                {
+                    EditorUtility.DisplayDialog("错误",
+                        $"“{comp.gameObject.name}”中ViewBinder的绑定组件与ViewModel中的类型不匹配，" +
+                        $"可能需要重新构建ViewModel！", "确认");
+                    return;
+                }
+
+                f.SetValue(component, bindObject);
             }
 
             return;
-
-            string GetOriginName(FieldInfo field) =>
-                field.GetCustomAttribute<ByViewBinderAttribute>().OriginName;
         }
     }
 }

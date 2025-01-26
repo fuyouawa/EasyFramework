@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,48 +41,7 @@ namespace EasyFramework.Editor.Drawer
             _parents = _component.transform.FindParents(p =>
                 p.gameObject.HasComponent<IViewModel>()).ToList();
 
-            if (!_editorInfo.IsInitialized)
-            {
-                var candidateComponents = _component.GetComponents<Component>()
-                    .Where(c => c != null)
-                    .ToArray();
-
-                Component initialComponent;
-                if (candidateComponents.Length > 1)
-                {
-                    var t = candidateComponents[1];
-                    if (t.GetType() == typeof(ViewBinder))
-                    {
-                        initialComponent = candidateComponents.Length > 2
-                            ? candidateComponents[2]
-                            : candidateComponents[0];
-                    }
-                    else
-                    {
-                        initialComponent = t;
-                    }
-                }
-                else
-                {
-                    initialComponent = candidateComponents[0];
-                }
-
-                _info.BindComponent = initialComponent;
-
-                if (_parents.IsNotNullOrEmpty())
-                {
-                    _info.OwnerViewModel = _parents[0];
-                }
-
-                _editorInfo.Name = _component.gameObject.name;
-                _editorInfo.Access = _settings.Access;
-                _editorInfo.AutoNamingNotations = _settings.AutoNamingNotations;
-                _editorInfo.AutoAddCommentPara = _settings.AutoAddCommentPara;
-                _editorInfo.Comment = _settings.Comment;
-
-                _editorInfo.IsInitialized = true;
-                ValueChanged();
-            }
+            ViewBinderHelper.InitializeBinder((IViewBinder)_component);
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
@@ -103,39 +63,60 @@ namespace EasyFramework.Editor.Drawer
 
             EditorGUI.BeginChangeCheck();
 
-            if (_info.BindComponent == null)
+            EasyEditorField.Value(
+                EditorHelper.TempContent("绑定游戏对象"),
+                ref _info.BindGameObject);
+
+            if (!_info.BindGameObject)
             {
-                EasyEditorGUI.MessageBox("必须得有一个要绑定的组件", MessageType.Error);
-            }
-
-            var btnLabel = _info.BindComponent == null
-                ? EditorHelper.NoneSelectorBtnLabel.text
-                : _info.BindComponent.GetType().FullName;
-
-            EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Component>(
-                    EditorHelper.TempContent("要绑定的组件"),
-                    EditorHelper.TempContent2(btnLabel),
-                    _component.GetComponents<Component>()
-                        .Where(c => c != null),
-                    t => _info.BindComponent = t)
+                if (_info.BindComponent == null)
                 {
-                    // MenuItemNameGetter = t => t.FullName
-                });
+                    EasyEditorGUI.MessageBox("必须得有一个要绑定的组件", MessageType.Error);
+                }
+
+                GUIContent bindComponentBtnLabel;
+                if (_info.BindComponent == null)
+                {
+                    bindComponentBtnLabel = EditorHelper.NoneSelectorBtnLabel;
+                }
+                else
+                {
+                    bindComponentBtnLabel = EditorHelper.TempContent2(_info.BindComponent.GetType().FullName);
+                    bindComponentBtnLabel.image =
+                        GUIHelper.GetAssetThumbnail(_info.BindComponent, _info.BindComponent.GetType(), true);
+                }
+
+                EasyEditorGUI.DrawSelectorDropdown(
+                    new SelectorDropdownConfig<Component>(
+                        EditorHelper.TempContent("要绑定的组件"),
+                        bindComponentBtnLabel,
+                        _component.GetComponents<Component>()
+                            .Where(c => c != null),
+                        t => _info.BindComponent = t)
+                    {
+                        MenuItemNameGetter = t => t.name
+                    });
+            }
 
             if (_info.OwnerViewModel == null)
             {
                 EasyEditorGUI.MessageBox("必须得有一个父级", MessageType.Error);
             }
 
-            btnLabel = _info.OwnerViewModel == null
-                ? EditorHelper.NoneSelectorBtnLabel.text
-                : _info.OwnerViewModel.gameObject.name;
+            GUIContent parentBtnLabel;
+            if (_info.OwnerViewModel == null)
+            {
+                parentBtnLabel = EditorHelper.NoneSelectorBtnLabel;
+            }
+            else
+            {
+                parentBtnLabel = EditorHelper.TempContent2(_info.OwnerViewModel.gameObject.name);
+            }
 
             EasyEditorGUI.DrawSelectorDropdown(
                 new SelectorDropdownConfig<Transform>(
                     EditorHelper.TempContent("父级"),
-                    EditorHelper.TempContent2(btnLabel),
+                    parentBtnLabel,
                     _parents,
                     c => _info.OwnerViewModel = c)
                 {
@@ -146,9 +127,9 @@ namespace EasyFramework.Editor.Drawer
                 "变量名称与游戏对象名称相同",
                 _editorInfo.NameSameAsGameObjectName);
 
-            ViewModelHelper.CheckIdentifier("变量名称", _editorInfo.Name);
-            using (new EditorGUI.DisabledScope(_editorInfo.NameSameAsGameObjectName))
+            if (!_editorInfo.NameSameAsGameObjectName)
             {
+                ViewModelHelper.CheckIdentifierWithMessage("变量名称", _editorInfo.Name);
                 _editorInfo.Name =
                     EditorGUILayout.TextField("变量名称", _editorInfo.Name);
             }
@@ -157,12 +138,9 @@ namespace EasyFramework.Editor.Drawer
                 "自动命名规范",
                 _editorInfo.AutoNamingNotations);
 
-            if (_editorInfo.AutoNamingNotations)
+            using (new EditorGUI.DisabledScope(true))
             {
-                using (new EditorGUI.DisabledScope(true))
-                {
-                    EditorGUILayout.TextField("变量名称（自动命名规范）", _editorInfo.GetName());
-                }
+                EditorGUILayout.TextField("实际变量名称", ((IViewBinder)_component).GetBindName());
             }
 
             _editorInfo.Access = EasyEditorField.Enum(

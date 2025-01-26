@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.Editor.Drawer
 {
@@ -24,7 +25,7 @@ namespace EasyFramework.Editor.Drawer
             }
         }
 
-        public static void CheckIdentifier(string name, string id)
+        public static void CheckIdentifierWithMessage(string name, string id)
         {
             var error = GetIdentifierError(name, id);
             if (error.IsNotNullOrEmpty())
@@ -61,7 +62,7 @@ namespace EasyFramework.Editor.Drawer
                 .ToArray();
         }
 
-        [MenuItem("GameObject/EasyFramework/Add ViewModel")]
+        [MenuItem("GameObject/EasyFramework/添加 ViewModel")]
         private static void AddViewModel()
         {
             foreach (var o in Selection.gameObjects)

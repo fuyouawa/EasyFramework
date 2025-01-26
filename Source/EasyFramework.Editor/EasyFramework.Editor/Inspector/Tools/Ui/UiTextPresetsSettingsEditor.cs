@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace EasyFramework.Editor.Inspector
 {
-    [CustomEditor(typeof(UiTextPresetsManager))]
-    public class UiTextPresetsManagerEditor : OdinEditor
+    [CustomEditor(typeof(UiTextPresetsSettings))]
+    public class UiTextPresetsSettingsEditor : OdinEditor
     {
         private InspectorProperty _fontAssetPresets;
         private InspectorProperty _textPropertiesPresets;
@@ -32,7 +32,7 @@ namespace EasyFramework.Editor.Inspector
         {
             Tree.BeginDraw(true);
 
-            var mgr = (UiTextPresetsManager)target;
+            var mgr = (UiTextPresetsSettings)target;
 
             EasyEditorGUI.Title("字体资产");
             _fontAssetPresets.Draw(new GUIContent("字体资产预设表"));

@@ -54,19 +54,19 @@ namespace EasyFramework.Editor.Drawer
             foreach (var child in children)
             {
                 var comp = (Component)child;
-                var binderEditorInfo = child.Info.EditorData.Get<ViewBinderEditorInfo>();
+                var bindName = child.GetBindName();
 
-                error = ViewModelHelper.GetIdentifierError("变量名称", binderEditorInfo.Name);
+                error = ViewModelHelper.GetIdentifierError("变量名称", bindName);
                 if (error.IsNotNullOrEmpty())
                 {
                     EditorUtility.DisplayDialog("错误", $"绑定“{comp.gameObject.name}”出现错误：{error}", "确认");
                     return false;
                 }
 
-                if (!nameCheck.Add(binderEditorInfo.Name))
+                if (!nameCheck.Add(bindName))
                 {
                     EditorUtility.DisplayDialog("错误",
-                        $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{binderEditorInfo.Name}）", "确认");
+                        $"绑定“{comp.gameObject.name}”出现错误：重复的变量名称（{bindName}）", "确认");
                     return false;
                 }
             }
@@ -148,18 +148,19 @@ namespace EasyFramework.Editor.Drawer
             {
                 Usings = new[] { "EasyFramework", "UnityEngine" }
                     .Concat(children
-                        .Select(c => c.Info.BindComponent.GetType().Namespace))
+                        .Select(c => c.GetBindObject().GetType().Namespace))
                     .Distinct(),
                 Namespace = _editorInfo.Namespace,
                 ClassName = _editorInfo.ClassName,
                 Children = children.Select(c =>
                 {
-                    var binderEditorInfo = c.Info.EditorData.Get<ViewBinderEditorInfo>();
+                    var binderEditorInfo = c.Info.EditorData.Get<ViewBinderEditorInfo>()!;
+                    var comp = (Component)c;
                     return new
                     {
-                        Type = c.Info.BindComponent.GetType().Name,
-                        Name = binderEditorInfo.GetName(),
-                        OriginName = binderEditorInfo.Name,
+                        Type = c.GetBindObject().GetType().Name,
+                        Name = c.GetBindName(),
+                        GameObjectName = comp.gameObject.name,
                         CommentSplits = ViewBinderHelper.GetCommentSplits(binderEditorInfo),
                         Access = binderEditorInfo.Access,
                     };
@@ -199,10 +200,7 @@ namespace EasyFramework.Editor.Drawer
                     field.CustomAttributes.Add(new CodeAttributeDeclaration("SerializeField"));
                 }
 
-                field.CustomAttributes.Add(new CodeAttributeDeclaration(
-                    "ByViewBinder",
-                    new CodeAttributeArgument(new CodePrimitiveExpression(child.OriginName))
-                ));
+                field.CustomAttributes.Add(new CodeAttributeDeclaration("FromViewBinder"));
 
                 if (child.CommentSplits.IsNotNullOrEmpty())
                 {

@@ -4,25 +4,24 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 using EasyFramework.Editor.Drawer;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace EasyFramework.Editor.Window
 {
-    internal class AssetRefSrcherWindow : OdinEditorWindow
+    internal class AssetReferenceSearcherWindow : OdinEditorWindow
     {
-        private static AssetRefSrcherWindow s_instance;
+        private static AssetReferenceSearcherWindow s_instance;
 
-        public static AssetRefSrcherWindow Instance
+        public static AssetReferenceSearcherWindow Instance
         {
             get
             {
                 if (s_instance == null)
                 {
-                    Debug.Assert(HasOpenInstances<AssetRefSrcherWindow>());
-                    s_instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
+                    Debug.Assert(HasOpenInstances<AssetReferenceSearcherWindow>());
+                    s_instance = GetWindow<AssetReferenceSearcherWindow>("Asset Reference Searcher");
                 }
 
                 Debug.Assert(s_instance != null);
@@ -31,10 +30,16 @@ namespace EasyFramework.Editor.Window
         }
 
         [MenuItem("Tools/EasyFramework/Tools/Asset Reference Searcher")]
-        [UsedImplicitly]
         public static void ShowWindow()
         {
-            s_instance = GetWindow<AssetRefSrcherWindow>("Asset Reference Searcher");
+            var isNew = HasOpenInstances<AssetReferenceSearcherWindow>();
+            var window = GetWindow<AssetReferenceSearcherWindow>("Asset Reference Searcher");
+            if (!isNew)
+            {
+                window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
+            }
+
+            s_instance = window;
         }
 
         public enum Modes
@@ -57,7 +62,6 @@ namespace EasyFramework.Editor.Window
         
         [PropertyOrder(2)]
         [Button("查找引用", Icon = SdfIconType.Search)]
-        [UsedImplicitly]
         private void FindReference()
         {
             var t = TypeToSearch;

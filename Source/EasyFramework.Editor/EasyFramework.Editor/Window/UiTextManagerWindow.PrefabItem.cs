@@ -97,7 +97,7 @@ namespace EasyFramework.Editor.Window
                 // 根据UI文本组件的字体和材质设置, 判断属于"预设管理器"中的哪个字体资产预设, 然后自动赋值
                 if (mgr.FontAssetPresetId.IsNullOrEmpty())
                 {
-                    foreach (var preset in UiTextPresetsManager.Instance.FontAssetPresets)
+                    foreach (var preset in UiTextPresetsSettings.Instance.FontAssetPresets)
                     {
                         if (preset.Value.FontAsset == node.Text.font && preset.Value.Material == node.Text.fontSharedMaterial)
                         {
@@ -109,7 +109,7 @@ namespace EasyFramework.Editor.Window
 
                 if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                 {
-                    foreach (var preset in UiTextPresetsManager.Instance.TextPropertiesPresets)
+                    foreach (var preset in UiTextPresetsSettings.Instance.TextPropertiesPresets)
                     {
                         if (preset.Value.FontSize.Approximately(node.Text.fontSize) && preset.Value.FontColor == node.Text.color)
                         {
@@ -122,12 +122,12 @@ namespace EasyFramework.Editor.Window
                 // 如果UITextManager的"字体资产预设"依然是null, 会使用"预设管理器"中定义的"默认字体资产预设"
                 if (mgr.FontAssetPresetId.IsNullOrEmpty())
                 {
-                    mgr.FontAssetPresetId = UiTextPresetsManager.Instance.DefaultFontAssetPresetId;
+                    mgr.FontAssetPresetId = UiTextPresetsSettings.Instance.DefaultFontAssetPresetId;
                 }
 
                 if (mgr.TextPropertiesPresetId.IsNullOrEmpty())
                 {
-                    mgr.TextPropertiesPresetId = UiTextPresetsManager.Instance.DefaultTextPropertiesPresetId;
+                    mgr.TextPropertiesPresetId = UiTextPresetsSettings.Instance.DefaultTextPropertiesPresetId;
                 }
 
                 AssetDatabase.Refresh();

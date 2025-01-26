@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: -172814663, guid: 17f57a4502d585a479c23b9aba2b2567, type: 3}
   m_Name: ViewModelSettings
   m_EditorClassIdentifier: 
-  DefaultGenerateDirectory: Scripts/Ui
+  DefaultGenerateDirectory: Scripts
   DefaultNamespace: 
   AutoIndent: 1
   ClassTemplate: 'void Start()

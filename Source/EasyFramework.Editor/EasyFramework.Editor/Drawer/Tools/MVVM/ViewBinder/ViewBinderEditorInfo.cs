@@ -3,6 +3,7 @@ using Sirenix.Serialization;
 using UnityEngine;
 
 [assembly: RegisterFormatter(typeof(ViewBinderEditorInfoFormatter))]
+
 namespace EasyFramework.Editor.Drawer
 {
     public enum ViewBindAccess
@@ -22,24 +23,6 @@ namespace EasyFramework.Editor.Drawer
         public string Name;
 
         public ViewBindAccess Access;
-
-        public string GetName()
-        {
-            if (Name.IsNullOrWhiteSpace())
-                return Name;
-
-            if (!AutoNamingNotations)
-                return Name;
-
-            //TODO 更多情况的处理
-            if (Access == ViewBindAccess.Public)
-            {
-                return char.ToUpper(Name[0]) + Name[1..];
-            }
-
-            var name = char.ToLower(Name[0]) + Name[1..];
-            return '_' + name;
-        }
     }
 
     public class ViewBinderEditorInfoFormatter : MinimalBaseFormatter<ViewBinderEditorInfo>
@@ -56,7 +39,11 @@ namespace EasyFramework.Editor.Drawer
             value.IsInitialized = BoolSerializer.ReadValue(reader);
 
             value.Comment = StringSerializer.ReadValue(reader);
-            value.Name = StringSerializer.ReadValue(reader);
+
+            if (!value.NameSameAsGameObjectName)
+            {
+                value.Name = StringSerializer.ReadValue(reader);
+            }
 
             value.Access = (ViewBindAccess)IntSerializer.ReadValue(reader);
         }
@@ -69,7 +56,11 @@ namespace EasyFramework.Editor.Drawer
             BoolSerializer.WriteValue(value.IsInitialized, writer);
 
             StringSerializer.WriteValue(value.Comment, writer);
-            StringSerializer.WriteValue(value.Name, writer);
+
+            if (!value.NameSameAsGameObjectName)
+            {
+                StringSerializer.WriteValue(value.Name, writer);
+            }
 
             IntSerializer.WriteValue((int)value.Access, writer);
         }
