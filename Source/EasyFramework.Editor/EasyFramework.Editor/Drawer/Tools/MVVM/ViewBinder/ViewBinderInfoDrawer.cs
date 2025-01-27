@@ -87,15 +87,32 @@ namespace EasyFramework.Editor.Drawer
                 }
 
                 EasyEditorGUI.DrawSelectorDropdown(
-                    new SelectorDropdownConfig<Component>(
-                        EditorHelper.TempContent("要绑定的组件"),
-                        bindComponentBtnLabel,
-                        _component.GetComponents<Component>()
-                            .Where(c => c != null),
-                        t => _info.BindComponent = t)
+                    _component.GetComponents<Component>()
+                        .Where(c => c != null),
+                    EditorHelper.TempContent("要绑定的组件"),
+                    bindComponentBtnLabel,
+                    t => _info.BindComponent = t,
+                    t => t.GetType().FullName);
+
+                if (_info.BindComponent != null)
+                {
+                    var baseTypes = _info.BindComponent.GetType().GetParentTypes(includeTargetType: true);
+                    if (_editorInfo.BindType == null || !Array.Exists(baseTypes, t => t == _editorInfo.BindType))
                     {
-                        MenuItemNameGetter = t => t.name
-                    });
+                        _editorInfo.BindType = _info.BindComponent.GetType();
+                        ValueChanged();
+                    }
+
+                    var btnLabel = _editorInfo.BindType == null
+                        ? EditorHelper.NoneSelectorBtnLabel
+                        : EditorHelper.TempContent2(_editorInfo.BindType.FullName);
+
+                    EasyEditorGUI.DrawSelectorDropdown(
+                        baseTypes,
+                        EditorHelper.TempContent("绑定类型"),
+                        btnLabel,
+                        t => _editorInfo.BindType = t);
+                }
             }
 
             if (_info.OwnerViewModel == null)
@@ -114,14 +131,11 @@ namespace EasyFramework.Editor.Drawer
             }
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Transform>(
-                    EditorHelper.TempContent("父级"),
-                    parentBtnLabel,
-                    _parents,
-                    c => _info.OwnerViewModel = c)
-                {
-                    MenuItemNameGetter = c => c.gameObject.name
-                });
+                _parents,
+                EditorHelper.TempContent("父级"),
+                parentBtnLabel,
+                c => _info.OwnerViewModel = c,
+                c => c.gameObject.name);
 
             _editorInfo.NameSameAsGameObjectName = EditorGUILayout.Toggle(
                 "变量名称与游戏对象名称相同",

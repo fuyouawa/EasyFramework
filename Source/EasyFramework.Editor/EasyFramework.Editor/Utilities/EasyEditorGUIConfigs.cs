@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace EasyFramework.Editor
@@ -9,6 +10,11 @@ namespace EasyFramework.Editor
     public delegate void OnTitleBarGUIDelegate(Rect headerRect);
 
     public delegate void OnContentGUIDelegate(Rect headerRect);
+
+    public delegate void OnConfirmedDelegate(object value);
+    public delegate string MenuItemNameGetterDelegate(object value);
+    public delegate void OnConfirmedDelegate<in T>(T value);
+    public delegate string MenuItemNameGetterDelegate<in T>(T value);
 
     public class LabelConfig
     {
@@ -35,11 +41,10 @@ namespace EasyFramework.Editor
         }
     }
 
-    public class PopupSelectorConfig<T>
+    public class PopupSelectorConfig
     {
-        public IEnumerable<T> Collection;
-        public Action<T> OnConfirmed;
-        public Func<T, string> MenuItemNameGetter = null;
+        public OnConfirmedDelegate OnConfirmed;
+        public MenuItemNameGetterDelegate MenuItemNameGetter = null;
         public string Title = null;
         public bool SupportsMultiSelect = false;
         public bool AddThumbnailIcons = true;
@@ -48,14 +53,14 @@ namespace EasyFramework.Editor
         {
         }
 
-        public PopupSelectorConfig(IEnumerable<T> collection, Action<T> onConfirmed)
+        public PopupSelectorConfig(OnConfirmedDelegate onConfirmed, [CanBeNull] MenuItemNameGetterDelegate menuItemNameGetter = null)
         {
-            Collection = collection;
             OnConfirmed = onConfirmed;
+            MenuItemNameGetter = menuItemNameGetter;
         }
     }
 
-    public class SelectorDropdownConfig<T> : PopupSelectorConfig<T>
+    public class SelectorDropdownConfig : PopupSelectorConfig
     {
         public GUIContent Label;
         public GUIContent BtnLabel;
@@ -66,9 +71,8 @@ namespace EasyFramework.Editor
         {
         }
 
-        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, IEnumerable<T> collection,
-            Action<T> onConfirmed)
-            : base(collection, onConfirmed)
+        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, OnConfirmedDelegate onConfirmed, [CanBeNull] MenuItemNameGetterDelegate menuItemNameGetter = null)
+            : base(onConfirmed, menuItemNameGetter)
         {
             Label = label;
             BtnLabel = btnLabel;

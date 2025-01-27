@@ -17,7 +17,7 @@ namespace EasyFramework
     public class ViewBinderInfo
     {
         public Transform OwnerViewModel;
-        public bool BindGameObject = true;
+        public bool BindGameObject;
         public Component BindComponent;
 
         public SerializedAny EditorData;

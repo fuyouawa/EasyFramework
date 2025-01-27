@@ -41,17 +41,17 @@ namespace EasyFramework.Editor.Inspector
 
             EasyEditorGUI.Title("默认预设");
 
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                mgr.FontAssetPresets.Keys,
                 EditorHelper.TempContent("默认字体资产预设"),
                 EditorHelper.TempContent2(mgr.DefaultFontAssetPresetId),
-                mgr.FontAssetPresets.Keys,
-                id => mgr.DefaultFontAssetPresetId = id));
+                id => mgr.DefaultFontAssetPresetId = id);
 
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                mgr.TextPropertiesPresets.Keys,
                 EditorHelper.TempContent("默认文本属性预设"),
                 EditorHelper.TempContent2(mgr.DefaultTextPropertiesPresetId),
-                mgr.TextPropertiesPresets.Keys,
-                id => mgr.DefaultTextPropertiesPresetId = id));
+                id => mgr.DefaultTextPropertiesPresetId = id);
 
             Tree.EndDraw();
         }

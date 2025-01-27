@@ -66,11 +66,12 @@ namespace EasyFramework.Editor.Drawer
             }
 
             EditorGUI.BeginChangeCheck();
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                _targetComponents.Keys,
                 GUIContent.none,
                 EditorHelper.TempContent(TargetComponentName),
-                _targetComponents.Keys,
-                str => TargetComponentName = str));
+                str => TargetComponentName = str);
+
             if (EditorGUI.EndChangeCheck())
             {
                 OnTargetComponentChanged();
@@ -81,14 +82,12 @@ namespace EasyFramework.Editor.Drawer
             EditorGUI.BeginChangeCheck();
 
             var member = GetTargetMember();
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<MemberInfo>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                _targetMembers.Values,
                 GUIContent.none,
                 EditorHelper.TempContent(GetMemberName(member)),
-                _targetMembers.Values,
-                str => TargetMemberName = str.GetSignature())
-            {
-                MenuItemNameGetter = GetMemberName
-            });
+                str => TargetMemberName = str.GetSignature(),
+                GetMemberName);
 
             if (EditorGUI.EndChangeCheck())
             {

@@ -21,19 +21,19 @@ namespace EasyFramework.Editor.Inspector
             
             var lbl = mgr.FontAssetPresetId.DefaultIfNullOrEmpty("TODO");
             
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                UiTextPresetsSettings.Instance.FontAssetPresets.Keys,
                 EditorHelper.TempContent("字体资产预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsSettings.Instance.FontAssetPresets.Keys,
-                id => mgr.FontAssetPresetId = id));
+                id => mgr.FontAssetPresetId = id);
             
             lbl = mgr.TextPropertiesPresetId.DefaultIfNullOrEmpty("TODO");
             
-            EasyEditorGUI.DrawSelectorDropdown(new SelectorDropdownConfig<string>(
+            EasyEditorGUI.DrawSelectorDropdown(
+                UiTextPresetsSettings.Instance.TextPropertiesPresets.Keys,
                 EditorHelper.TempContent("文本属性预设"),
                 EditorHelper.TempContent2(lbl),
-                UiTextPresetsSettings.Instance.TextPropertiesPresets.Keys,
-                id => mgr.TextPropertiesPresetId = id));
+                id => mgr.TextPropertiesPresetId = id);
             
             mgr.ApplyPresets();
             

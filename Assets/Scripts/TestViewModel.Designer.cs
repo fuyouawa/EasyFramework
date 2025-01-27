@@ -16,16 +16,16 @@ public partial class TestViewModel : IViewModel
 {
     
     [FromViewBinder()]
-    public Transform GameObject;
+    public GameObject Oooo;
     
     [FromViewBinder()]
-    public GameObject GameObject_2;
+    public GameObject Oooogfdh;
     
     [FromViewBinder()]
-    public Transform Asdgdfgh;
+    public GameObject Sadfsdf;
     
     [FromViewBinder()]
-    public Transform Klert6hy;
+    public GameObject Kkkjjj;
     
     [SerializeField()]
     private ViewModelInfo _viewModelInfo;

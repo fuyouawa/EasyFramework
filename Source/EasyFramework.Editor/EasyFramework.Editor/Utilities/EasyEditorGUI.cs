@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 
 namespace EasyFramework.Editor
@@ -83,11 +84,10 @@ namespace EasyFramework.Editor
             var w = SirenixEditorGUI.currentDrawingToolbarHeight;
 
             if (GUILayout.Button(content, selected
-                    ? SirenixGUIStyles.ToolbarButtonSelected
-                    : SirenixGUIStyles.ToolbarButton,
+                        ? SirenixGUIStyles.ToolbarButtonSelected
+                        : SirenixGUIStyles.ToolbarButton,
                     GUILayout.Height(w), GUILayout.ExpandWidth(false), GUILayout.Width(width)))
             {
-                
                 GUIHelper.RemoveFocusControl();
                 GUIHelper.RequestRepaint();
                 return true;
@@ -210,7 +210,34 @@ namespace EasyFramework.Editor
 
         #region Selector
 
-        public static IEnumerable<T> DrawSelectorDropdown<T>(SelectorDropdownConfig<T> config,
+        private static readonly SelectorDropdownConfig TempSelectorDropdownConfig = new SelectorDropdownConfig();
+
+        public static IEnumerable<T> DrawSelectorDropdown<T>(
+            IEnumerable<T> collection,
+            GUIContent label,
+            GUIContent btnLabel,
+            OnConfirmedDelegate<T> onConfirmed,
+            [CanBeNull] MenuItemNameGetterDelegate<T> menuItemNameGetter = null,
+            params GUILayoutOption[] options)
+        {
+            TempSelectorDropdownConfig.Label = label;
+            TempSelectorDropdownConfig.BtnLabel = btnLabel;
+            TempSelectorDropdownConfig.OnConfirmed = value => onConfirmed((T)value);
+            if (menuItemNameGetter != null)
+            {
+                TempSelectorDropdownConfig.MenuItemNameGetter = value => menuItemNameGetter((T)value);
+            }
+            else
+            {
+                TempSelectorDropdownConfig.MenuItemNameGetter = null;
+            }
+
+            return DrawSelectorDropdown(collection, TempSelectorDropdownConfig, options);
+        }
+
+        public static IEnumerable<T> DrawSelectorDropdown<T>(
+            IEnumerable<T> collection,
+            SelectorDropdownConfig config,
             params GUILayoutOption[] options)
         {
             var btnLabel = config.BtnLabel;
@@ -223,22 +250,24 @@ namespace EasyFramework.Editor
             }
 
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
-                rect => ShowSelectorInPopup(rect, rect.width, config),
+                rect => ShowSelectorInPopup(rect, rect.width, collection, config),
                 config.ReturnValuesOnSelectionChange, config.Style, options);
         }
 
-        private static OdinSelector<T> GetSelector<T>(PopupSelectorConfig<T> config)
+        private static OdinSelector<T> GetSelector<T>(
+            IEnumerable<T> collection,
+            PopupSelectorConfig config)
         {
             OdinSelector<T> selector;
 
             if (config.MenuItemNameGetter != null)
             {
-                selector = new GenericSelector<T>(config.Title, config.Collection, config.SupportsMultiSelect,
+                selector = new GenericSelector<T>(config.Title, collection, config.SupportsMultiSelect,
                     t => config.MenuItemNameGetter(t));
             }
             else
             {
-                selector = new GenericSelector<T>(config.Title, config.Collection, config.SupportsMultiSelect);
+                selector = new GenericSelector<T>(config.Title, collection, config.SupportsMultiSelect);
             }
 
             selector.SelectionConfirmed += types =>
@@ -259,31 +288,38 @@ namespace EasyFramework.Editor
         }
 
 
-        public static OdinSelector<T> ShowSelectorInPopup<T>(PopupSelectorConfig<T> config)
+        public static OdinSelector<T> ShowSelectorInPopup<T>(
+            IEnumerable<T> collection,
+            PopupSelectorConfig config)
         {
-            var selector = GetSelector(config);
+            var selector = GetSelector(collection, config);
             selector.ShowInPopup();
             return selector;
         }
 
-        public static OdinSelector<T> ShowSelectorInPopup<T>(Rect rect, PopupSelectorConfig<T> config)
+        public static OdinSelector<T> ShowSelectorInPopup<T>(Rect rect,
+            IEnumerable<T> collection,
+            PopupSelectorConfig config)
         {
-            var selector = GetSelector(config);
+            var selector = GetSelector(collection, config);
             selector.ShowInPopup(rect);
             return selector;
         }
 
         public static OdinSelector<T> ShowSelectorInPopup<T>(Rect btnRect, float windowWidth,
-            PopupSelectorConfig<T> config)
+            IEnumerable<T> collection,
+            PopupSelectorConfig config)
         {
-            var selector = GetSelector(config);
+            var selector = GetSelector(collection, config);
             selector.ShowInPopup(btnRect, windowWidth);
             return selector;
         }
 
-        public static OdinSelector<T> ShowSelectorInPopup<T>(float windowWidth, PopupSelectorConfig<T> config)
+        public static OdinSelector<T> ShowSelectorInPopup<T>(float windowWidth,
+            IEnumerable<T> collection,
+            PopupSelectorConfig config)
         {
-            var selector = GetSelector(config);
+            var selector = GetSelector(collection, config);
             selector.ShowInPopup(windowWidth);
             return selector;
         }

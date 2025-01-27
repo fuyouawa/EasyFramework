@@ -38,9 +38,12 @@ namespace EasyFramework.Editor.Drawer
             var parents = component.transform.FindParents(p =>
                 p.gameObject.HasComponent<IViewModel>()).ToList();
 
-            var editorInfo = binder.Info.EditorData.Get<ViewBinderEditorInfo>();
-            var settings = ViewBinderSettings.Instance;
+            binder.Info ??= new ViewBinderInfo();
+            binder.Info.EditorData ??= new SerializedAny();
 
+            var editorInfo = binder.Info.EditorData.Get<ViewBinderEditorInfo>() ?? new ViewBinderEditorInfo();
+            var settings = ViewBinderSettings.Instance;
+            
             if (!editorInfo.IsInitialized)
             {
                 var candidateComponents = component.GetComponents<Component>()

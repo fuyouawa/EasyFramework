@@ -138,9 +138,9 @@ namespace EasyFramework.Editor.Inspector
                 feedbacks.FeedbackList.Add(inst);
             }
 
-            EasyEditorGUI.ShowSelectorInPopup(new PopupSelectorConfig<Type>(AllFeedbackTypes, OnConfirm)
+            EasyEditorGUI.ShowSelectorInPopup(AllFeedbackTypes, new PopupSelectorConfig(value => OnConfirm((Type)value))
             {
-                MenuItemNameGetter = t => t.GetCustomAttribute<AddEasyFeedbackMenuAttribute>().Path,
+                MenuItemNameGetter = t => ((Type)t).GetCustomAttribute<AddEasyFeedbackMenuAttribute>().Path,
                 AddThumbnailIcons = false
             });
         }

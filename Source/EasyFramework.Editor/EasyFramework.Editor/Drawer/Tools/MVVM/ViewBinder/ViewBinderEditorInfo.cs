@@ -1,6 +1,6 @@
+using System;
 using EasyFramework.Editor.Drawer;
 using Sirenix.Serialization;
-using UnityEngine;
 
 [assembly: RegisterFormatter(typeof(ViewBinderEditorInfoFormatter))]
 
@@ -21,8 +21,9 @@ namespace EasyFramework.Editor.Drawer
 
         public string Comment;
         public string Name;
-
+        
         public ViewBindAccess Access;
+        public Type BindType;
     }
 
     public class ViewBinderEditorInfoFormatter : MinimalBaseFormatter<ViewBinderEditorInfo>
@@ -46,6 +47,12 @@ namespace EasyFramework.Editor.Drawer
             }
 
             value.Access = (ViewBindAccess)IntSerializer.ReadValue(reader);
+
+            var name = StringSerializer.ReadValue(reader);
+            if (name.IsNotNullOrEmpty())
+            {
+                value.BindType = Type.GetType(name);
+            }
         }
 
         protected override void Write(ref ViewBinderEditorInfo value, IDataWriter writer)
@@ -63,6 +70,8 @@ namespace EasyFramework.Editor.Drawer
             }
 
             IntSerializer.WriteValue((int)value.Access, writer);
+
+            StringSerializer.WriteValue(value.BindType?.AssemblyQualifiedName, writer);
         }
     }
 }

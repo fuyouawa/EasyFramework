@@ -109,14 +109,11 @@ namespace EasyFramework.Editor.Drawer
                 : _editorInfo.BaseClass.FullName;
 
             EasyEditorGUI.DrawSelectorDropdown(
-                new SelectorDropdownConfig<Type>(
-                    EditorHelper.TempContent("父级"),
-                    EditorHelper.TempContent2(lbl),
-                    ViewModelHelper.BaseTypes,
-                    t => _editorInfo.BaseClass = t)
-                {
-                    MenuItemNameGetter = t => t.FullName
-                });
+                ViewModelHelper.BaseTypes,
+                EditorHelper.TempContent("父级"),
+                EditorHelper.TempContent2(lbl),
+                t => _editorInfo.BaseClass = t,
+                t => t.FullName);
 
             if (EditorGUI.EndChangeCheck())
             {
