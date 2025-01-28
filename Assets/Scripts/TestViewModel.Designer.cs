@@ -16,16 +16,16 @@ public partial class TestViewModel : IViewModel
 {
     
     [FromViewBinder()]
-    public GameObject Oooo;
+    public UnityEngine.GameObject Oooo;
     
     [FromViewBinder()]
-    public GameObject Oooogfdh;
+    public UnityEngine.GameObject Oooogfdh;
     
     [FromViewBinder()]
-    public GameObject Sadfsdf;
+    public UnityEngine.GameObject Sadfsdf;
     
     [FromViewBinder()]
-    public GameObject Kkkjjj;
+    public UnityEngine.Component Kkkjjj;
     
     [SerializeField()]
     private ViewModelInfo _viewModelInfo;

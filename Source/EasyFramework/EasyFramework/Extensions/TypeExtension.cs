@@ -185,7 +185,7 @@ namespace EasyFramework
             {
                 throw new ArgumentException($"类型\"{type}\"中没有名为\"{eventName}\"并且\"{flags}\"的事件!");
             }
-
+            
             e.GetAddMethod().Invoke(target, new object[] { func });
         }
 

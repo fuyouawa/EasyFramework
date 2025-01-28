@@ -70,11 +70,11 @@ namespace EasyFramework.Editor.Drawer
                     initialComponent = candidateComponents[0];
                 }
 
-                binder.Info.BindComponent = initialComponent;
+                editorInfo.BindComponent = initialComponent;
 
                 if (parents.IsNotNullOrEmpty())
                 {
-                    binder.Info.OwnerViewModel = parents[0];
+                    binder.Info.Owner = parents[0];
                 }
 
                 editorInfo.Name = component.gameObject.name;

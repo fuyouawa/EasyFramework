@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.Editor.Drawer
 {
@@ -6,14 +8,30 @@ namespace EasyFramework.Editor.Drawer
     {
         public static Object GetBindObject(this IViewBinder binder)
         {
-            var comp = (Component)binder;
-            if (binder.Info.BindGameObject)
+            var editorInfo = binder.Info.EditorData.Get<ViewBinderEditorInfo>()!;
+
+            if (editorInfo.BindGameObject)
             {
+                var comp = (Component)binder;
                 return comp.gameObject;
             }
             else
             {
-                return binder.Info.BindComponent;
+                return editorInfo.BindComponent;
+            }
+        }
+
+        public static Type GetBindType(this IViewBinder binder)
+        {
+            var editorInfo = binder.Info.EditorData.Get<ViewBinderEditorInfo>()!;
+
+            if (editorInfo.BindGameObject)
+            {
+                return typeof(GameObject);
+            }
+            else
+            {
+                return editorInfo.BindType;
             }
         }
 

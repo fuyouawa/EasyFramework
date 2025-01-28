@@ -156,9 +156,10 @@ namespace EasyFramework.Editor.Drawer
                 {
                     var binderEditorInfo = c.Info.EditorData.Get<ViewBinderEditorInfo>()!;
                     var comp = (Component)c;
+                    
                     return new
                     {
-                        Type = c.GetBindObject().GetType().Name,
+                        Type = c.GetBindType(),
                         Name = c.GetBindName(),
                         GameObjectName = comp.gameObject.name,
                         CommentSplits = ViewBinderHelper.GetCommentSplits(binderEditorInfo),

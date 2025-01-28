@@ -215,10 +215,10 @@ namespace EasyFramework.Editor.Drawer
                     return;
                 }
 
-                if (bindObject.GetType() != f.FieldType)
+                if (child.GetBindType() != f.FieldType)
                 {
                     EditorUtility.DisplayDialog("错误",
-                        $"“{comp.gameObject.name}”中ViewBinder的绑定组件与ViewModel中的类型不匹配，" +
+                        $"“{comp.gameObject.name}”中ViewBinder的绑定类型与ViewModel中的类型不匹配，" +
                         $"可能需要重新构建ViewModel！", "确认");
                     return;
                 }

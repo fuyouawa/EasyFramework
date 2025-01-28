@@ -249,8 +249,15 @@ namespace EasyFramework.Editor
                 }
             }
 
+            // 这里必须得单独实例一份PopupSelectorConfig，否则有可能会冲突
+            var copyConfig = new PopupSelectorConfig(config.OnConfirmed, config.MenuItemNameGetter)
+            {
+                AddThumbnailIcons = config.AddThumbnailIcons,
+                SupportsMultiSelect = config.SupportsMultiSelect,
+                Title = config.Title
+            };
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
-                rect => ShowSelectorInPopup(rect, rect.width, collection, config),
+                rect => ShowSelectorInPopup(rect, rect.width, collection, copyConfig),
                 config.ReturnValuesOnSelectionChange, config.Style, options);
         }
 

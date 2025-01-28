@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EasyFramework.Editor;
+using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.Serialization;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace EasyFramework.Editor.Drawer
 {
@@ -65,25 +68,25 @@ namespace EasyFramework.Editor.Drawer
 
             EasyEditorField.Value(
                 EditorHelper.TempContent("绑定游戏对象"),
-                ref _info.BindGameObject);
+                ref _editorInfo.BindGameObject);
 
-            if (!_info.BindGameObject)
+            if (!_editorInfo.BindGameObject)
             {
-                if (_info.BindComponent == null)
+                if (_editorInfo.BindComponent == null)
                 {
                     EasyEditorGUI.MessageBox("必须得有一个要绑定的组件", MessageType.Error);
                 }
 
                 GUIContent bindComponentBtnLabel;
-                if (_info.BindComponent == null)
+                if (_editorInfo.BindComponent == null)
                 {
                     bindComponentBtnLabel = EditorHelper.NoneSelectorBtnLabel;
                 }
                 else
                 {
-                    bindComponentBtnLabel = EditorHelper.TempContent2(_info.BindComponent.GetType().FullName);
+                    bindComponentBtnLabel = EditorHelper.TempContent2(_editorInfo.BindComponent.GetType().FullName);
                     bindComponentBtnLabel.image =
-                        GUIHelper.GetAssetThumbnail(_info.BindComponent, _info.BindComponent.GetType(), true);
+                        GUIHelper.GetAssetThumbnail(_editorInfo.BindComponent, _editorInfo.BindComponent.GetType(), true);
                 }
 
                 EasyEditorGUI.DrawSelectorDropdown(
@@ -91,15 +94,15 @@ namespace EasyFramework.Editor.Drawer
                         .Where(c => c != null),
                     EditorHelper.TempContent("要绑定的组件"),
                     bindComponentBtnLabel,
-                    t => _info.BindComponent = t,
+                    t => _editorInfo.BindComponent = t,
                     t => t.GetType().FullName);
 
-                if (_info.BindComponent != null)
+                if (_editorInfo.BindComponent != null)
                 {
-                    var baseTypes = _info.BindComponent.GetType().GetParentTypes(includeTargetType: true);
+                    var baseTypes = _editorInfo.BindComponent.GetType().GetParentTypes(includeTargetType: true);
                     if (_editorInfo.BindType == null || !Array.Exists(baseTypes, t => t == _editorInfo.BindType))
                     {
-                        _editorInfo.BindType = _info.BindComponent.GetType();
+                        _editorInfo.BindType = _editorInfo.BindComponent.GetType();
                         ValueChanged();
                     }
 
@@ -115,26 +118,26 @@ namespace EasyFramework.Editor.Drawer
                 }
             }
 
-            if (_info.OwnerViewModel == null)
+            if (_info.Owner == null)
             {
                 EasyEditorGUI.MessageBox("必须得有一个父级", MessageType.Error);
             }
 
             GUIContent parentBtnLabel;
-            if (_info.OwnerViewModel == null)
+            if (_info.Owner == null)
             {
                 parentBtnLabel = EditorHelper.NoneSelectorBtnLabel;
             }
             else
             {
-                parentBtnLabel = EditorHelper.TempContent2(_info.OwnerViewModel.gameObject.name);
+                parentBtnLabel = EditorHelper.TempContent2(_info.Owner.gameObject.name);
             }
 
             EasyEditorGUI.DrawSelectorDropdown(
                 _parents,
                 EditorHelper.TempContent("父级"),
                 parentBtnLabel,
-                c => _info.OwnerViewModel = c,
+                c => _info.Owner = c,
                 c => c.gameObject.name);
 
             _editorInfo.NameSameAsGameObjectName = EditorGUILayout.Toggle(

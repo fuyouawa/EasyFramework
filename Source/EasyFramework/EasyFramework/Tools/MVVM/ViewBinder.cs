@@ -16,9 +16,7 @@ namespace EasyFramework
     [Serializable]
     public class ViewBinderInfo
     {
-        public Transform OwnerViewModel;
-        public bool BindGameObject;
-        public Component BindComponent;
+        public Transform Owner;
 
         public SerializedAny EditorData;
     }

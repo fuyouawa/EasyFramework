@@ -58,7 +58,7 @@ namespace EasyFramework.Editor.Drawer
         public static  IViewBinder[] GetChildren(Transform target)
         {
             return target.GetComponentsInChildren<IViewBinder>()
-                .Where(b => b.Info.OwnerViewModel == target)
+                .Where(b => b.Info.Owner == target)
                 .ToArray();
         }
 

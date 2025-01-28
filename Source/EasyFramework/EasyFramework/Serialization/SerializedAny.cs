@@ -54,8 +54,8 @@ namespace EasyFramework
                 return;
             }
 
-            _serializedData =
-                SerializationUtility.SerializeValue(value, DataFormat.Binary, out _serializedUnityObjects);
+            _serializedData = SerializationUtility.SerializeValue(
+                value, DataFormat.Binary, out _serializedUnityObjects);
         }
 
         public T Get<T>()
