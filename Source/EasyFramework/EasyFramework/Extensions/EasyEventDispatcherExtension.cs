@@ -11,7 +11,7 @@ namespace EasyFramework
         /// <param name="includeBaseClass">包含基类的事件处理器</param>
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
         /// <returns></returns>
-        public static IUnRegister RegisterEasyEventSubscriberInUnityThread<T>(this T target,
+        public static IUnRegisterConfiguration RegisterEasyEventSubscriberInUnityThread<T>(this T target,
             bool includeBaseClass = false,
             EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventDispatcher
         {
@@ -38,7 +38,7 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
-        public static IUnRegister RegisterEasyEventHandlerInUnityThread<T, TEvent>(this T target,
+        public static IUnRegisterConfiguration RegisterEasyEventHandlerInUnityThread<T, TEvent>(this T target,
             EasyEventHandlerDelegate<TEvent> handler,
             EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventDispatcher
         {

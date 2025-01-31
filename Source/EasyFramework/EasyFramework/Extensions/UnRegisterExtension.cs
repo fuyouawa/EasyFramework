@@ -5,11 +5,11 @@ namespace EasyFramework
 {
     public abstract class UnRegisterTrigger : MonoBehaviour
     {
-        private readonly HashSet<IUnRegister> _unRegisters = new HashSet<IUnRegister>();
+        private readonly HashSet<IUnRegisterConfiguration> _unRegisters = new HashSet<IUnRegisterConfiguration>();
 
-        public void AddUnRegister(IUnRegister unRegister) => _unRegisters.Add(unRegister);
+        public void AddUnRegister(IUnRegisterConfiguration unRegister) => _unRegisters.Add(unRegister);
 
-        public void RemoveUnRegister(IUnRegister unRegister) => _unRegisters.Remove(unRegister);
+        public void RemoveUnRegister(IUnRegisterConfiguration unRegister) => _unRegisters.Remove(unRegister);
 
         public void UnRegister()
         {
@@ -45,8 +45,8 @@ namespace EasyFramework
 
     public static class UnRegisterExtension
     {
-        public static IUnRegister UnRegisterWhenDestroyed(
-            this IUnRegister unRegister,
+        public static IUnRegisterConfiguration UnRegisterWhenDestroyed(
+            this IUnRegisterConfiguration unRegister,
             GameObject gameObject)
         {
             var trigger = gameObject.GetOrAddComponent<UnRegisterOnDestroyTrigger>();
@@ -54,8 +54,8 @@ namespace EasyFramework
             return unRegister;
         }
 
-        public static IUnRegister UnRegisterWhenDisabled(
-            this IUnRegister unRegister,
+        public static IUnRegisterConfiguration UnRegisterWhenDisabled(
+            this IUnRegisterConfiguration unRegister,
             GameObject gameObject)
         {
             var trigger = gameObject.GetOrAddComponent<UnRegisterOnDisableTrigger>();

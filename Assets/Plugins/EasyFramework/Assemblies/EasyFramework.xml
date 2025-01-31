@@ -806,6 +806,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="E:EasyFramework.StateMachine`1.OnStateChange">
+            <summary>
+            当有状态更改时的回调
+            </summary>
+        </member>
         <member name="M:EasyFramework.MathUtility.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             将一个在[A, B]区间的x, 映射到[C, D]区间

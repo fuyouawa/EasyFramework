@@ -54,7 +54,7 @@ namespace EasyFramework
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IUnRegister RegisterEasyEventSubscriber<T>(this T target,
+        public static IUnRegisterConfiguration RegisterEasyEventSubscriber<T>(this T target,
             bool includeBaseClass = false,
             EasyEventTriggerExtensionDelegate triggerExtension = null) where T : IEasyEventDispatcher
         {
@@ -82,7 +82,7 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <param name="triggerExtension">事件处理器的触发行为扩展</param>
-        public static IUnRegister RegisterEasyEventHandler<T, TEvent>(this T target,
+        public static IUnRegisterConfiguration RegisterEasyEventHandler<T, TEvent>(this T target,
             EasyEventHandlerDelegate<TEvent> handler,
             EasyEventTriggerExtensionDelegate triggerExtension = null)
             where T : IEasyEventDispatcher
@@ -218,7 +218,7 @@ namespace EasyFramework
             }
         }
 
-        public IUnRegister RegisterSubscriber(object target, Type targetType, bool includeBaseClass = false, EasyEventTriggerExtensionDelegate triggerExtension = null)
+        public IUnRegisterConfiguration RegisterSubscriber(object target, Type targetType, bool includeBaseClass = false, EasyEventTriggerExtensionDelegate triggerExtension = null)
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             var handlers = targetType.GetMethods(flags);
@@ -253,7 +253,7 @@ namespace EasyFramework
                 unregister += () => ret.UnRegister();
             }
 
-            return new CustomUnRegister(unregister);
+            return new UnRegisterConfiguration(unregister);
         }
 
         public bool UnRegisterSubscriber(object target, Type targetType, bool includeBaseClass = false)
@@ -279,7 +279,7 @@ namespace EasyFramework
             return has;
         }
 
-        public IUnRegister RegisterHandler(object target, Type targetType, Type eventType, Delegate handler,
+        public IUnRegisterConfiguration RegisterHandler(object target, Type targetType, Type eventType, Delegate handler,
             EasyEventTriggerExtensionDelegate triggerExtension)
         {
             TargetToHandlers handlers;
@@ -297,7 +297,7 @@ namespace EasyFramework
                 handlers.AddHandler(new TypeTarget(target, targetType), handler, triggerExtension);
             }
 
-            return new CustomUnRegister(() => UnRegisterHandler(target, targetType, eventType, handler));
+            return new UnRegisterConfiguration(() => UnRegisterHandler(target, targetType, eventType, handler));
         }
 
 

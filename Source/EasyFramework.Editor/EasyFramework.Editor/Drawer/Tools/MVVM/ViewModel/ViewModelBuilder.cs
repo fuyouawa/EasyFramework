@@ -147,8 +147,7 @@ namespace EasyFramework.Editor.Drawer
             var data = new
             {
                 Usings = new[] { "EasyFramework", "UnityEngine" }
-                    .Concat(children
-                        .Select(c => c.GetBindObject().GetType().Namespace))
+                    .Concat(children.Select(c => c.GetBindType().Namespace))
                     .Distinct(),
                 Namespace = _editorInfo.Namespace,
                 ClassName = _editorInfo.ClassName,
@@ -190,7 +189,7 @@ namespace EasyFramework.Editor.Drawer
                 var field = new CodeMemberField
                 {
                     Name = child.Name,
-                    Type = new CodeTypeReference(child.Type),
+                    Type = new CodeTypeReference(child.Type.Name),
                     Attributes = child.Access == ViewBindAccess.Public
                         ? MemberAttributes.Public
                         : MemberAttributes.Private
