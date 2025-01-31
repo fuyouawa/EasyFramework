@@ -806,6 +806,11 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="P:EasyFramework.AbstractAbility.Authorized">
+            <summary>
+            当前能力是否有权限运行(非强制性)
+            </summary>
+        </member>
         <member name="E:EasyFramework.StateMachine`1.OnStateChange">
             <summary>
             当有状态更改时的回调

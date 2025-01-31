@@ -3,45 +3,74 @@ using UnityEngine;
 
 namespace EasyFramework
 {
+    public interface IState
+    {
+        bool Condition();
+        void Enter();
+        void Update();
+        void Exit();
+    }
+
     public delegate void OnStateChangeDelegate<in T>(T previous, T current);
 
     public class StateMachine<T>
     {
-        public GameObject Target;
-        public T CurrentState { get; protected set; }
-        public T PreviousState { get; protected set; }
+        public T CurrentStateId { get; protected set; }
+        public T PreviousStateId { get; protected set; }
+
+        public IState CurrentState { get; protected set; }
+
+        public Dictionary<T, IState> States { get; } = new Dictionary<T, IState>();
 
         /// <summary>
         /// 当有状态更改时的回调
         /// </summary>
         public event OnStateChangeDelegate<T> OnStateChange;
 
-        public StateMachine(GameObject target)
+        public StateMachine()
         {
-            Target = target;
         }
 
-        public virtual void ChangeState(T newState)
+        public virtual void Update()
         {
-            if (EqualityComparer<T>.Default.Equals(newState, CurrentState))
-            {
-                return;
-            }
-
-            PreviousState = CurrentState;
-            CurrentState = newState;
-            OnStateChange?.Invoke(PreviousState, newState);
+            CurrentState?.Update();
         }
 
-        public virtual void RestorePreviousState()
+        public IState GetState(T stateId)
         {
-            if (PreviousState != null)
-            {
-                var tmp = CurrentState;
-                CurrentState = (T)PreviousState;
+            return States.GetValueOrDefault(stateId);
+        }
 
-                OnStateChange?.Invoke(tmp, (T)PreviousState);
+        public void AddState(T stateId, IState state)
+        {
+            States[stateId] = state;
+        }
+
+
+        public virtual bool ChangeState(T stateId)
+        {
+            if (EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
+            {
+                return true;
             }
+
+            if (CurrentState?.Condition() == false)
+            {
+                return false;
+            }
+
+            PreviousStateId = CurrentStateId;
+            CurrentStateId = stateId;
+
+            CurrentState?.Exit();
+            if (States.TryGetValue(stateId, out var state))
+            {
+                CurrentState = state;
+                CurrentState.Enter();
+            }
+
+            OnStateChange?.Invoke(PreviousStateId, stateId);
+            return true;
         }
     }
 }
