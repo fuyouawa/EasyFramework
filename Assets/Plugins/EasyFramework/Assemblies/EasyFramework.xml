@@ -811,7 +811,7 @@
             当前能力是否有权限运行(非强制性)
             </summary>
         </member>
-        <member name="E:EasyFramework.StateMachine`1.OnStateChange">
+        <member name="E:EasyFramework.StateMachineBase`2.OnStateChange">
             <summary>
             当有状态更改时的回调
             </summary>

@@ -2,6 +2,11 @@ using System;
 
 namespace EasyFramework
 {
+    public interface IUnRegisterConfiguration
+    {
+        void UnRegister();
+    }
+
     public class UnRegisterConfiguration : IUnRegisterConfiguration
     {
         private Action OnUnRegister { get; }

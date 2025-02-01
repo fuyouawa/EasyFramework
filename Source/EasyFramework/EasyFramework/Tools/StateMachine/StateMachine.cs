@@ -1,76 +1,52 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace EasyFramework
 {
-    public interface IState
+    public class StateMachine<T> : StateMachineBase<T, IState>
     {
-        bool Condition();
-        void Enter();
-        void Update();
-        void Exit();
     }
 
-    public delegate void OnStateChangeDelegate<in T>(T previous, T current);
-
-    public class StateMachine<T>
+    public class StateMachineDriver : MonoBehaviour
     {
-        public T CurrentStateId { get; protected set; }
-        public T PreviousStateId { get; protected set; }
+        public event Action OnUpdate;
+        public event Action OnFixedUpdate;
+        public event Action OnLateUpdate;
 
-        public IState CurrentState { get; protected set; }
-
-        public Dictionary<T, IState> States { get; } = new Dictionary<T, IState>();
-
-        /// <summary>
-        /// 当有状态更改时的回调
-        /// </summary>
-        public event OnStateChangeDelegate<T> OnStateChange;
-
-        public StateMachine()
+        void Update()
         {
+            OnUpdate?.Invoke();
         }
 
-        public virtual void Update()
+        void FixedUpdate()
         {
-            CurrentState?.Update();
+            OnFixedUpdate?.Invoke();
         }
 
-        public IState GetState(T stateId)
+        void LateUpdate()
         {
-            return States.GetValueOrDefault(stateId);
+            OnLateUpdate?.Invoke();
         }
+    }
 
-        public void AddState(T stateId, IState state)
+
+    public static class StateMachineExtension
+    {
+        public static void UnRegisterDriver<T>(this StateMachine<T> stateMachine, GameObject target)
         {
-            States[stateId] = state;
-        }
-
-
-        public virtual bool ChangeState(T stateId)
-        {
-            if (EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
+            var runner = target.GetComponent<StateMachineDriver>();
+            if (runner != null)
             {
-                return true;
+                runner.OnUpdate -= stateMachine.Update;
             }
+        }
 
-            if (CurrentState?.Condition() == false)
-            {
-                return false;
-            }
-
-            PreviousStateId = CurrentStateId;
-            CurrentStateId = stateId;
-
-            CurrentState?.Exit();
-            if (States.TryGetValue(stateId, out var state))
-            {
-                CurrentState = state;
-                CurrentState.Enter();
-            }
-
-            OnStateChange?.Invoke(PreviousStateId, stateId);
-            return true;
+        public static IUnRegisterConfiguration RegisterDriver<T>(this StateMachine<T> stateMachine,
+            GameObject target)
+        {
+            var runner = target.GetOrAddComponent<StateMachineDriver>();
+            runner.OnUpdate += stateMachine.Update;
+            return new UnRegisterConfiguration(() => stateMachine.UnRegisterDriver(target));
         }
     }
 }
