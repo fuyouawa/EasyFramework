@@ -12,14 +12,24 @@ namespace EasyFramework
         [SerializeField, HideInInspector]
         private List<Object> _serializedUnityObjects = new List<Object>();
 
-        protected override void SerializeData(ref byte[] serializedData)
+        protected override void OnSerializeData(out byte[] serializedData)
         {
-            serializedData = SerializationUtility.SerializeValue(Value, DataFormat.Binary, out _serializedUnityObjects);
+            OnSerializeData(out serializedData, out _serializedUnityObjects);
         }
 
-        protected override void DeserializeData(ref byte[] serializedData)
+        protected override void OnDeserializeData(ref byte[] serializedData)
         {
-            Value = SerializationUtility.DeserializeValue<T>(serializedData, DataFormat.Binary, _serializedUnityObjects);
+            OnDeserializeData(ref serializedData, ref _serializedUnityObjects);
+        }
+
+        protected virtual void OnSerializeData(out byte[] serializedData, out List<Object> serializedUnityObjects)
+        {
+            serializedData = SerializationUtility.SerializeValue(Value, DataFormat.Binary, out serializedUnityObjects);
+        }
+
+        protected virtual void OnDeserializeData(ref byte[] serializedData, ref List<Object> serializedUnityObjects)
+        {
+            Value = SerializationUtility.DeserializeValue<T>(serializedData, DataFormat.Binary, serializedUnityObjects);
         }
     }
 }

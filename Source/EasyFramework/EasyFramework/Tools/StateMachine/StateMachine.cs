@@ -1,52 +1,93 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace EasyFramework
 {
-    public class StateMachine<T> : StateMachineBase<T, IState>
+    public class StateMachine<T>
     {
-    }
+        public T CurrentStateId { get; protected set; }
+        public T PreviousStateId { get; protected set; }
 
-    public class StateMachineDriver : MonoBehaviour
-    {
-        public event Action OnUpdate;
-        public event Action OnFixedUpdate;
-        public event Action OnLateUpdate;
+        public IState CurrentState { get; protected set; }
+        public IState PreviousState { get; protected set; }
 
-        void Update()
+        public bool Active { get; protected set; }
+
+        protected readonly Dictionary<T, IState> States = new Dictionary<T, IState>();
+
+        /// <summary>
+        /// 当有状态更改时的回调
+        /// </summary>
+        public event OnStateChangeDelegate<T> OnStateChange;
+
+        public StateMachine()
         {
-            OnUpdate?.Invoke();
         }
 
-        void FixedUpdate()
+        public virtual void Update()
         {
-            OnFixedUpdate?.Invoke();
-        }
+            if (!Active)
+                return;
 
-        void LateUpdate()
-        {
-            OnLateUpdate?.Invoke();
-        }
-    }
-
-
-    public static class StateMachineExtension
-    {
-        public static void UnRegisterDriver<T>(this StateMachine<T> stateMachine, GameObject target)
-        {
-            var runner = target.GetComponent<StateMachineDriver>();
-            if (runner != null)
+            if (CurrentState is { Enable: true })
             {
-                runner.OnUpdate -= stateMachine.Update;
+                CurrentState.Update();
             }
         }
 
-        public static IUnRegisterConfiguration RegisterDriver<T>(this StateMachine<T> stateMachine,
-            GameObject target)
+        public void SetActive(bool active)
         {
-            var runner = target.GetOrAddComponent<StateMachineDriver>();
-            runner.OnUpdate += stateMachine.Update;
-            return new UnRegisterConfiguration(() => stateMachine.UnRegisterDriver(target));
+            if (Active == active)
+                return;
+            Active = active;
+
+            foreach (var state in States.Values)
+            {
+                state.Enable = active;
+            }
+        }
+
+        public IState GetState(T stateId)
+        {
+            return States.GetValueOrDefault(stateId);
+        }
+
+        public void AddState(T stateId, IState state)
+        {
+            States[stateId] = state;
+        }
+
+        public virtual bool ChangeState(T stateId)
+        {
+            if (EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
+            {
+                return true;
+            }
+
+            if (CurrentState?.Condition() == false)
+            {
+                return false;
+            }
+
+            PreviousStateId = CurrentStateId;
+            CurrentStateId = stateId;
+
+            CurrentState?.Exit();
+
+            PreviousState = CurrentState;
+            if (States.TryGetValue(stateId, out var state))
+            {
+                CurrentState = state;
+                CurrentState.Enter();
+            }
+            else
+            {
+                CurrentState = null;
+            }
+
+            OnStateChange?.Invoke(stateId);
+            return true;
         }
     }
 }

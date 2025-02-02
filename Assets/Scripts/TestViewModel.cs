@@ -7,7 +7,8 @@ using UnityEngine;
 
 public partial class TestViewModel : MonoBehaviour
 {
-    
+    public int? Value;
+
 	void Start()
     {
         Log.Logger = new LoggerConfiguration()

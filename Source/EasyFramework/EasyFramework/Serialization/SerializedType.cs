@@ -24,7 +24,7 @@ namespace EasyFramework
             _type = type;
         }
 
-        protected override void SerializeData(ref string serializedData)
+        protected override void OnSerializeData(out string serializedData)
         {
             if (_type == null)
             {
@@ -35,7 +35,7 @@ namespace EasyFramework
             serializedData = TwoWaySerializationBinder.Default.BindToName(_type);
         }
 
-        protected override void DeserializeData(ref string serializedData)
+        protected override void OnDeserializeData(ref string serializedData)
         {
             if (serializedData.IsNullOrEmpty())
             {

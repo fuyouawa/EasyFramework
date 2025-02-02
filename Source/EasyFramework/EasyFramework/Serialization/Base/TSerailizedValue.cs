@@ -14,15 +14,15 @@ namespace EasyFramework
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            SerializeData(ref _serializedData);
+            OnSerializeData(out _serializedData);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            DeserializeData(ref _serializedData);
+            OnDeserializeData(ref _serializedData);
         }
 
-        protected abstract void SerializeData(ref TSerializedData serializedData);
-        protected abstract void DeserializeData(ref TSerializedData serializedData);
+        protected abstract void OnSerializeData(out TSerializedData serializedData);
+        protected abstract void OnDeserializeData(ref TSerializedData serializedData);
     }
 }
