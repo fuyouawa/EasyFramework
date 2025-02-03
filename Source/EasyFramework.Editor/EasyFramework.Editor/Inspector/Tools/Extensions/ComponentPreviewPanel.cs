@@ -94,7 +94,7 @@ namespace EasyFramework.Editor.Inspector
                     }
                     else
                     {
-                        _foldout = SirenixEditorGUI.Foldout(foldoutRect, _foldout, "组件预览面板");
+                        _foldout = SirenixEditorGUI.Foldout(foldoutRect, _foldout, "组件预览面板（测试版）");
                     }
                 };
 

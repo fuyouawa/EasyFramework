@@ -49,6 +49,11 @@ namespace EasyFramework
             OnStateExit();
         }
 
+        protected virtual void Update()
+        {
+            //TODO
+        }
+
         protected virtual void FixedUpdate()
         {
             if (IsCurrentState)

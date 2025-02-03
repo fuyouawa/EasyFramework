@@ -40,6 +40,7 @@ namespace EasyFramework
                 inst.OnSingletonInit(SingletonInitialModes.Create);
             }
 
+
             return inst;
         }
     }
@@ -47,28 +48,30 @@ namespace EasyFramework
     public class MonoSingleton<T> : MonoBehaviour, IUnitySingleton
         where T : MonoSingleton<T>
     {
-        private static T _instance;
+        private static T s_instance;
+        private static bool s_loadBySelf;
 
         public static T Instance
         {
             get
             {
-                if (_instance == null)
+                if (s_instance == null)
                 {
-                    _instance = SingletonCreator.CreateMonoSingleton<T>();
+                    s_instance = SingletonCreator.CreateMonoSingleton<T>();
                 }
-                return _instance;
+                return s_instance;
             }
         }
 
         protected virtual void Awake()
         {
-            if (_instance != null)
+            if (s_instance != null && s_loadBySelf)
             {
-                Destroy(_instance.gameObject);
+                Destroy(s_instance.gameObject);
             }
 
-            _instance = (T)this;
+            s_instance = (T)this;
+            s_loadBySelf = true;
             DontDestroyOnLoad(gameObject);
         }
 
@@ -78,18 +81,24 @@ namespace EasyFramework
 
         protected virtual void OnApplicationQuit()
         {
-            if (_instance == null) return;
-            Destroy(_instance.gameObject);
-            _instance = null;
+            if (s_instance == null) return;
+            Destroy(s_instance.gameObject);
+            s_instance = null;
         }
 
         protected virtual void OnDestroy()
         {
-            _instance = null;
+            s_instance = null;
         }
 
-        public virtual void OnSingletonInit(SingletonInitialModes mode)
+        void IUnitySingleton.OnSingletonInit(SingletonInitialModes mode)
         {
+            OnSingletonInit(mode);
+        }
+
+        protected virtual void OnSingletonInit(SingletonInitialModes mode)
+        {
+
         }
     }
 }

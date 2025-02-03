@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace EasyFramework
@@ -25,6 +26,11 @@ namespace EasyFramework
         {
         }
 
+        public IState[] GetStates()
+        {
+            return States.Values.ToArray();
+        }
+
         public virtual void Update()
         {
             if (!Active)
@@ -36,7 +42,7 @@ namespace EasyFramework
             }
         }
 
-        public void SetActive(bool active)
+        public virtual void SetActive(bool active)
         {
             if (Active == active)
                 return;
@@ -48,12 +54,12 @@ namespace EasyFramework
             }
         }
 
-        public IState GetState(T stateId)
+        public virtual IState GetState(T stateId)
         {
             return States.GetValueOrDefault(stateId);
         }
 
-        public void AddState(T stateId, IState state)
+        public virtual void AddState(T stateId, IState state)
         {
             States[stateId] = state;
         }
