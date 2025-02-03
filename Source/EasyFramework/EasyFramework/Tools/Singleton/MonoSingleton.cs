@@ -50,24 +50,28 @@ namespace EasyFramework
     {
         private static T s_instance;
         private static bool s_loadBySelf;
+        private static bool s_destroyed;
 
         public static T Instance
         {
             get
             {
+                if (s_destroyed)
+                    throw new InvalidOperationException($"Use a singleton:\"{typeof(T)}\" that is already destroyed!");
                 if (s_instance == null)
-                {
                     s_instance = SingletonCreator.CreateMonoSingleton<T>();
-                }
                 return s_instance;
             }
         }
 
         protected virtual void Awake()
         {
-            if (s_instance != null && s_loadBySelf)
+            if (s_instance != null)
             {
-                Destroy(s_instance.gameObject);
+                if (s_loadBySelf)
+                    Destroy(s_instance.gameObject);
+                else
+                    return;
             }
 
             s_instance = (T)this;
@@ -89,6 +93,7 @@ namespace EasyFramework
         protected virtual void OnDestroy()
         {
             s_instance = null;
+            s_destroyed = true;
         }
 
         void IUnitySingleton.OnSingletonInit(SingletonInitialModes mode)
