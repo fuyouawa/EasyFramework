@@ -8,33 +8,33 @@ namespace EasyFramework
     {
     }
 
-    public class UnityMainThreadDispatcher : MonoSingleton<UnityMainThreadDispatcher>, IUnityInvoker, IEasyEventDispatcher
+    public class UnityMainThreadDispatcher : MonoSingleton<UnityMainThreadDispatcher>, IUnityInvoker
     {
-        private static readonly Queue<Action> s_executionQueue = new Queue<Action>();
+        private static readonly Queue<Action> ExecutionQueue = new Queue<Action>();
 
         public void Update()
         {
-            lock (s_executionQueue)
+            lock (ExecutionQueue)
             {
-                while (s_executionQueue.Count > 0)
+                while (ExecutionQueue.Count > 0)
                 {
-                    s_executionQueue.Dequeue().Invoke();
+                    ExecutionQueue.Dequeue().Invoke();
                 }
             }
         }
 
         public void Enqueue(IEnumerator action)
         {
-            lock (s_executionQueue)
+            lock (ExecutionQueue)
             {
-                s_executionQueue.Enqueue(() => { StartCoroutine(action); });
+                ExecutionQueue.Enqueue(() => { StartCoroutine(action); });
             }
         }
 
         protected override void OnApplicationQuit()
         {
             base.OnApplicationQuit();
-            this.TriggerEasyEvent(new ApplicationQuitEvent());
+            EasyEventManager.Instance.TriggerEvent(this, new ApplicationQuitEvent());
         }
     }
 }

@@ -242,28 +242,6 @@
             <param name="maxValue"></param>
             <returns>[minValue-maxValue]区间的数值</returns>
         </member>
-        <member name="M:EasyFramework.EasyEventDispatcherExtension.RegisterEasyEventSubscriberInUnityThread``1(``0,System.Boolean,EasyFramework.EasyEventTriggerExtensionDelegate)">
-            <summary>
-            <para>注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）</para>
-            <para>确保会在Unity线程触发</para>
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="target"></param>
-            <param name="includeBaseClass">包含基类的事件处理器</param>
-            <param name="triggerExtension">事件处理器的触发行为扩展</param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.EasyEventDispatcherExtension.RegisterEasyEventHandlerInUnityThread``2(``0,EasyFramework.EasyEventHandlerDelegate{``1},EasyFramework.EasyEventTriggerExtensionDelegate)">
-            <summary>
-            <para>注册事件处理器</para>
-            <para>确保会在Unity线程触发</para>
-            </summary>
-            <typeparam name="TEvent"></typeparam>
-            <typeparam name="T"></typeparam>
-            <param name="target"></param>
-            <param name="handler"></param>
-            <param name="triggerExtension">事件处理器的触发行为扩展</param>
-        </member>
         <member name="M:EasyFramework.GradientExtension.EvaluateWithRemap(UnityEngine.Gradient,System.Single,System.Single)">
             <summary>
             <para>将给定的time从[0-maxTime]映射到[0-1]</para>
@@ -719,48 +697,53 @@
             <para>当RegisterEasyEventSubscriber时会使用该特性</para>
             </summary>
         </member>
-        <member name="T:EasyFramework.IEasyEventDispatcher">
+        <member name="M:EasyFramework.EasyEventManager.RegisterSubscriberInUnityThread(System.Object,EasyFramework.EasyEventTriggerExtensionDelegate)">
             <summary>
-            <para>事件发派者</para>
-            <para>继承此接口后便可以使用this.xxx进行注册/取消注册/触发事件等</para>
-            </summary>
-        </member>
-        <member name="T:EasyFramework.EasyEventSubscriberExtension">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:EasyFramework.EasyEventSubscriberExtension.RegisterEasyEventSubscriber``1(``0,System.Boolean,EasyFramework.EasyEventTriggerExtensionDelegate)">
-            <summary>
-            注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
+            <para>注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）</para>
+            <para>确保会在Unity线程触发</para>
             </summary>
             <typeparam name="T"></typeparam>
             <param name="target"></param>
-            <param name="includeBaseClass">包含基类的事件处理器</param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.EasyEventManager.RegisterSubscriber(System.Object,EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
+            </summary>
+            <param name="target"></param>
             <param name="triggerExtension">事件处理器的触发行为扩展</param>
             <returns></returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:EasyFramework.EasyEventSubscriberExtension.UnRegisterEasyEventSubscriber``1(``0,System.Boolean)">
+        <member name="M:EasyFramework.EasyEventManager.RegisterHandlerInUnityThread``1(System.Object,EasyFramework.EasyEventHandlerDelegate{``0},EasyFramework.EasyEventTriggerExtensionDelegate)">
             <summary>
-            取消注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="target"></param>
-            <param name="includeBaseClass">包含基类的事件处理器</param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.EasyEventSubscriberExtension.RegisterEasyEventHandler``2(``0,EasyFramework.EasyEventHandlerDelegate{``1},EasyFramework.EasyEventTriggerExtensionDelegate)">
-            <summary>
-            注册事件处理器
+            <para>注册事件处理器</para>
+            <para>确保会在Unity线程触发</para>
             </summary>
             <typeparam name="TEvent"></typeparam>
-            <typeparam name="T"></typeparam>
             <param name="target"></param>
             <param name="handler"></param>
             <param name="triggerExtension">事件处理器的触发行为扩展</param>
         </member>
-        <member name="M:EasyFramework.EasyEventSubscriberExtension.UnRegisterEasyEventHandler``2(``0,EasyFramework.EasyEventHandlerDelegate{``1})">
+        <member name="M:EasyFramework.EasyEventManager.RegisterHandler``1(System.Object,EasyFramework.EasyEventHandlerDelegate{``0},EasyFramework.EasyEventTriggerExtensionDelegate)">
+            <summary>
+            注册事件处理器
+            </summary>
+            <typeparam name="TEvent"></typeparam>
+            <param name="target"></param>
+            <param name="handler"></param>
+            <param name="triggerExtension">事件处理器的触发行为扩展</param>
+        </member>
+        <member name="M:EasyFramework.EasyEventManager.UnRegisterSubscriber(System.Object,System.Boolean)">
+            <summary>
+            取消注册target中所有事件处理器
+            </summary>
+            <param name="target"></param>
+            <param name="includeBaseClass">包含基类的事件处理器</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.EasyEventManager.UnRegisterHandler``1(System.Object,EasyFramework.EasyEventHandlerDelegate{``0})">
             <summary>
             取消注册事件处理器
             </summary>
@@ -770,7 +753,7 @@
             <param name="handler"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EasyEventSubscriberExtension.TriggerEasyEvent``2(``0,``1)">
+        <member name="M:EasyFramework.EasyEventManager.TriggerEvent``1(System.Object,``0)">
             <summary>
             <para>触发事件</para>
             <para>注意：在事件处理器中触发事件要谨慎，处理不当可能会死锁</para>
@@ -778,10 +761,9 @@
             <para>1、是否事件处理器中再次触发处理的事件（包括整个触发栈）</para>
             <para>2、待补充。。。。。。</para>
             </summary>
-            <typeparam name="T"></typeparam>
             <typeparam name="TEvent"></typeparam>
             <param name="target"></param>
-            <param name="e">事件</param>
+            <param name="eventArg">事件</param>
             <returns></returns>
         </member>
         <member name="M:EasyFramework.EF_Sound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">

@@ -25,7 +25,7 @@ namespace EasyFramework
             var instances = UnityEngine.Object.FindObjectsOfType<T>();
             if (instances.Length > 1)
             {
-                throw new Exception($"Mono单例({typeof(T).Name})在场景中存在的实例只能有1个!");
+                throw new Exception($"MonoSingleton:\"{typeof(T).Name}\" can only have one instance that exists in the scene");
             }
             if (instances.Length == 1)
             {
