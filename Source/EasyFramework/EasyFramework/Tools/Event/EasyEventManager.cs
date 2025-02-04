@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
-using JetBrains.Annotations;
 
 namespace EasyFramework
 {
+    #region Define
+
     /// <summary>
     /// <para>事件处理器的触发行为扩展</para>
     /// <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
@@ -26,94 +27,105 @@ namespace EasyFramework
     /// <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
     /// <para>当RegisterEasyEventSubscriber时会使用该特性</para>
     /// </summary>
-    [MeansImplicitUse(ImplicitUseKindFlags.Access, ImplicitUseTargetFlags.Itself)]
     [AttributeUsage(AttributeTargets.Method)]
     public class EasyEventHandlerAttribute : Attribute
     {
     }
 
-
-    internal class EventHandlerItem
-    {
-        public Delegate Handler;
-        public EasyEventTriggerExtensionDelegate TriggerExtension;
-
-        public void Invoke(object sender, object eventArg)
-        {
-            void Call() => Handler.DynamicInvoke(sender, eventArg);
-            if (TriggerExtension != null)
-            {
-                TriggerExtension(Call);
-            }
-            else
-            {
-                Call();
-            }
-        }
-    }
-
-    internal class EventHandlers : Dictionary<object, List<EventHandlerItem>>
-    {
-        public void AddHandler(object target, Delegate handler,
-            EasyEventTriggerExtensionDelegate triggerExtension)
-        {
-            if (!TryGetValue(target, out var handlers))
-            {
-                handlers = new List<EventHandlerItem>();
-                this[target] = handlers;
-            }
-
-            if (handlers.FirstOrDefault(h => h.Handler == handler) != null)
-            {
-                throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
-            }
-
-            handlers.Add(new EventHandlerItem() { Handler = handler, TriggerExtension = triggerExtension });
-        }
-
-        public bool RemoveHandler(object target, Delegate handler)
-        {
-            if (TryGetValue(target, out var handlers))
-            {
-                int i = 0;
-                for (; i < Count; i++)
-                {
-                    if (handlers[i].Handler == handler)
-                    {
-                        break;
-                    }
-                }
-
-                if (i < Count)
-                {
-                    handlers.RemoveAt(i);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public void Invoke(object sender, object eventArg)
-        {
-            foreach (var handlers in this.Values)
-            {
-                foreach (var handler in handlers)
-                {
-                    handler.Invoke(sender, eventArg);
-                }
-            }
-        }
-    }
+    #endregion
 
     public class EasyEventManager : Singleton<EasyEventManager>
     {
-        private readonly Dictionary<Type, EventHandlers> _handlesDict;
+        #region Internal
+
+        private class HandlerItem
+        {
+            public Delegate Handler;
+            public EasyEventTriggerExtensionDelegate TriggerExtension;
+
+            public void Invoke(object sender, object eventArg)
+            {
+                void Call() => Handler.DynamicInvoke(sender, eventArg);
+                if (TriggerExtension != null)
+                {
+                    TriggerExtension(Call);
+                }
+                else
+                {
+                    Call();
+                }
+            }
+        }
+
+        private class Handlers
+        {
+            private Dictionary<object, List<HandlerItem>> _handlesDict;
+
+            public void AddHandler(object target, Delegate handler,
+                EasyEventTriggerExtensionDelegate triggerExtension)
+            {
+                if (!_handlesDict.TryGetValue(target, out var handlers))
+                {
+                    handlers = new List<HandlerItem>();
+                    _handlesDict[target] = handlers;
+                }
+
+                if (handlers.FirstOrDefault(h => h.Handler == handler) != null)
+                {
+                    throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
+                }
+
+                handlers.Add(new HandlerItem() { Handler = handler, TriggerExtension = triggerExtension });
+            }
+
+            public bool RemoveHandler(object target, Delegate handler)
+            {
+                if (_handlesDict.TryGetValue(target, out var handlers))
+                {
+                    int i = 0;
+                    for (; i < _handlesDict.Count; i++)
+                    {
+                        if (handlers[i].Handler == handler)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (i < _handlesDict.Count)
+                    {
+                        handlers.RemoveAt(i);
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public bool RemoveSubscriber(object target)
+            {
+                return _handlesDict.Remove(target);
+            }
+
+            public void Invoke(object sender, object eventArg)
+            {
+                foreach (var handlers in _handlesDict.Values)
+                {
+                    foreach (var handler in handlers)
+                    {
+                        handler.Invoke(sender, eventArg);
+                    }
+                }
+            }
+        }
+
+        private readonly Dictionary<Type, Handlers> _handlesDict;
 
         EasyEventManager()
         {
-            _handlesDict = new Dictionary<Type, EventHandlers>();
+            _handlesDict = new Dictionary<Type, Handlers>();
         }
+
+        #endregion
 
         #region Register
 
@@ -220,12 +232,12 @@ namespace EasyFramework
             Delegate handler,
             EasyEventTriggerExtensionDelegate triggerExtension = null)
         {
-            EventHandlers handlers;
+            Handlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))
                 {
-                    handlers = new EventHandlers();
+                    handlers = new Handlers();
                     _handlesDict[eventType] = handlers;
                 }
             }
@@ -256,7 +268,7 @@ namespace EasyFramework
             {
                 foreach (var handlers in _handlesDict.Values)
                 {
-                    var suc = handlers.Remove(target);
+                    var suc = handlers.RemoveSubscriber(target);
                     if (!has) has = suc;
                 }
             }
@@ -279,7 +291,7 @@ namespace EasyFramework
 
         public bool UnRegisterHandler(object target, Type eventType, Delegate handler)
         {
-            EventHandlers handlers;
+            Handlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))
@@ -316,7 +328,7 @@ namespace EasyFramework
 
         public bool TriggerEvent(object target, object eventArg, Type eventType)
         {
-            EventHandlers handlers;
+            Handlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))
