@@ -21,7 +21,7 @@ namespace EasyFramework
                     if (!Application.isEditor)
                     {
                         throw new ArgumentException(
-                            $"The editor asserts:\"{assetDirectory + '/' + assetName}\" can only be loaded in edit mode!");
+                            $"The editor asserts of \"{assetDirectory + '/' + assetName}\" can only be loaded in edit mode!");
                     }
                 }
             }
@@ -55,7 +55,7 @@ namespace EasyFramework
 
             if (instance == null)
             {
-                throw new Exception($"Load ScriptableObject:{typeof(T).Name} failed！");
+                throw new Exception($"Load ScriptableObject of {typeof(T).Name} failed！");
             }
             instance.OnSingletonInit(SingletonInitialModes.Load);
 
@@ -116,7 +116,7 @@ namespace EasyFramework
                     s_assetPathAttribute = typeof(T).GetCustomAttribute<ScriptableObjectSingletonAssetPathAttribute>();
                     if (s_assetPathAttribute == null)
                     {
-                        throw new Exception($"The class:\"{typeof(T).Name}\" must define a \"ScriptableObjectSingletonAssetPath\" Attribute!");
+                        throw new Exception($"The class of {typeof(T).Name} must define a \"ScriptableObjectSingletonAssetPath\" Attribute!");
                     }
                 }
 

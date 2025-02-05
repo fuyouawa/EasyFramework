@@ -765,9 +765,8 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.IFromEventRegister.InUnityThread">
+        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
             <summary>
-            <para>注册事件处理器</para>
             <para>确保会在Unity线程触发</para>
             </summary>
         </member>

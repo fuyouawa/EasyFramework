@@ -39,14 +39,14 @@ namespace EasyFramework
 
         void SendEvent<T>(T e);
 
-        IFromEventRegister RegisterEvent<T>(EventHandlerDelegate<T> onEvent);
+        IFromRegisterEvent RegisterEvent<T>(EventHandlerDelegate<T> onEvent);
         void UnRegisterEvent<T>(EventHandlerDelegate<T> onEvent);
         
-        IFromEventRegister RegisterEventSubscriber(object target);
-        void UnRegisterEventSubscriber(object target);
+        IFromRegisterEvent RegisterEventSubscriber();
+        void UnRegisterEventSubscriber();
     }
 
-    public abstract class Architecture<T> : Singleton<Architecture<T>>, IArchitecture
+    public abstract class Architecture<T> : Singleton<T>, IArchitecture
         where T : Architecture<T>, new()
     {
         private readonly DiContainer _container = new DiContainer();
@@ -146,7 +146,7 @@ namespace EasyFramework
             EventManager.Instance.SendEvent(this, e);
         }
 
-        public IFromEventRegister RegisterEvent<TEvent>(EventHandlerDelegate<TEvent> onEvent)
+        public IFromRegisterEvent RegisterEvent<TEvent>(EventHandlerDelegate<TEvent> onEvent)
         {
             return EventManager.Instance.Register(this, onEvent);
         }
@@ -156,12 +156,12 @@ namespace EasyFramework
             EventManager.Instance.UnRegister(this, onEvent);
         }
 
-        public IFromEventRegister RegisterEventSubscriber(object target)
+        public IFromRegisterEvent RegisterEventSubscriber()
         {
             return EventManager.Instance.RegisterSubscriber(this);
         }
 
-        public void UnRegisterEventSubscriber(object target)
+        public void UnRegisterEventSubscriber()
         {
             EventManager.Instance.UnRegisterSubscriber(this);
         }

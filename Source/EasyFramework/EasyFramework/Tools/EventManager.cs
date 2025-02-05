@@ -126,8 +126,7 @@ namespace EasyFramework
             {
                 void Call() => handler.DynamicInvoke(sender, eventArg);
 
-                var extension = _handlerExtensionDict[handler];
-                if (extension != null)
+                if (_handlerExtensionDict.TryGetValue(handler, out var extension))
                 {
                     if (extension.TriggerExtension != null)
                     {
@@ -157,7 +156,7 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public IFromEventRegister RegisterSubscriber(object target)
+        public IFromRegisterEvent RegisterSubscriber(object target)
         {
             var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             var targetType = target.GetType();
@@ -182,7 +181,7 @@ namespace EasyFramework
                 inUnityThreadSetter += () => ret.InUnityThread();
             }
 
-            return new FromEventRegisterGeneric(() => UnRegisterSubscriber(target), inUnityThreadSetter);
+            return new FromRegisterEventGeneric(() => UnRegisterSubscriber(target), inUnityThreadSetter);
         }
 
         /// <summary>
@@ -191,12 +190,12 @@ namespace EasyFramework
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="target"></param>
         /// <param name="handler"></param>
-        public IFromEventRegister Register<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
+        public IFromRegisterEvent Register<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
         {
             return Register(target, typeof(TEvent), handler);
         }
 
-        public IFromEventRegister Register(object target, Type eventType, Delegate handler)
+        public IFromRegisterEvent Register(object target, Type eventType, Delegate handler)
         {
             Handlers handlers;
             lock (_handlesDict)
@@ -213,7 +212,7 @@ namespace EasyFramework
                 handlers.AddHandler(target, handler);
             }
 
-            return new FromEventRegisterGeneric(
+            return new FromRegisterEventGeneric(
                 () => UnRegister(target, eventType, handler),
                 () =>
                 {

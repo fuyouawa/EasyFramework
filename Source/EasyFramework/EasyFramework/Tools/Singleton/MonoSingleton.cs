@@ -45,7 +45,7 @@ namespace EasyFramework
         }
     }
 
-    public class MonoSingleton<T> : MonoBehaviour, IUnitySingleton
+    public abstract class MonoSingleton<T> : MonoBehaviour, IUnitySingleton
         where T : MonoSingleton<T>
     {
         private static T s_instance;

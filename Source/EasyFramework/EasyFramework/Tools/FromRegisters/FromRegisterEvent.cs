@@ -2,20 +2,19 @@ using System;
 
 namespace EasyFramework
 {
-    public interface IFromEventRegister : IFromRegister
+    public interface IFromRegisterEvent : IFromRegister
     {
         /// <summary>
-        /// <para>注册事件处理器</para>
         /// <para>确保会在Unity线程触发</para>
         /// </summary>
         IFromRegister InUnityThread();
     }
 
-    public class FromEventRegisterGeneric : FromRegisterGeneric, IFromEventRegister
+    public class FromRegisterEventGeneric : FromRegisterGeneric, IFromRegisterEvent
     {
         private readonly Action _inUnityThreadSetter;
 
-        public FromEventRegisterGeneric(Action onUnRegister, Action inUnityThreadSetter) : base(onUnRegister)
+        public FromRegisterEventGeneric(Action onUnRegister, Action inUnityThreadSetter) : base(onUnRegister)
         {
             _inUnityThreadSetter = inUnityThreadSetter;
         }
