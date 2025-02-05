@@ -21,7 +21,7 @@ namespace EasyFramework
                     if (!Application.isEditor)
                     {
                         throw new ArgumentException(
-                            $"editor asserts({assetDirectory + '/' + assetName}) can only be loaded in edit mode!");
+                            $"The editor asserts:\"{assetDirectory + '/' + assetName}\" can only be loaded in edit mode!");
                     }
                 }
             }
@@ -41,7 +41,7 @@ namespace EasyFramework
         {
             if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException($"{assetName}的资源路径必须在Resources目录下！");
+                throw new ArgumentException($"\"{assetName}\"'s resource path must be under the Resources directory！");
             }
 
             string resourcesPath = assetDirectory;
@@ -55,7 +55,7 @@ namespace EasyFramework
 
             if (instance == null)
             {
-                throw new Exception($"加载ScriptableObject：{typeof(T).Name}失败！");
+                throw new Exception($"Load ScriptableObject:{typeof(T).Name} failed！");
             }
             instance.OnSingletonInit(SingletonInitialModes.Load);
 
@@ -116,7 +116,7 @@ namespace EasyFramework
                     s_assetPathAttribute = typeof(T).GetCustomAttribute<ScriptableObjectSingletonAssetPathAttribute>();
                     if (s_assetPathAttribute == null)
                     {
-                        throw new Exception($"{typeof(T).Name}必须定义一个[ScriptableObjectSingletonAssetPath]的Attribute!");
+                        throw new Exception($"The class:\"{typeof(T).Name}\" must define a \"ScriptableObjectSingletonAssetPath\" Attribute!");
                     }
                 }
 

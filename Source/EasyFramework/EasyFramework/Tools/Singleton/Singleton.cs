@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
+using UnityEngine;
 
 namespace EasyFramework
 {
@@ -13,31 +13,46 @@ namespace EasyFramework
 
     internal partial class SingletonCreator
     {
-        public static readonly List<ISingleton> Singletons = new List<ISingleton>();
+        public static readonly HashSet<ISingleton> Singletons = new HashSet<ISingleton>();
 
         public static T CreateSingleton<T>() where T : class, ISingleton
         {
             var type = typeof(T);
 
             if (type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length != 0)
-                throw new Exception($"The singleton({type}) cannot have a public constructor!");
+                throw new Exception($"The singleton:\"{type}\" cannot have a public constructor!");
 
             var ctorInfos = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic);
 
             var ctor = Array.Find(ctorInfos, c => c.GetParameters().Length == 0)
                        ?? throw new Exception(
-                           $"The singleton({type}) must have a nonpublic, parameterless constructor!");
+                           $"The singleton:\"{type}\" must have a nonpublic, parameterless constructor!");
 
             var inst = ctor.Invoke(null) as T;
             if (inst == null)
             {
-                throw new Exception($"Instance({type}) construct failed!");
+                throw new Exception($"The instance:\"{type}\" construct failed!");
             }
 
             inst.OnSingletonInit();
-            Singletons.Add(inst);
+            var suc = Singletons.Add(inst);
+            if (!suc)
+            {
+                throw new Exception($"The singleton:\"{type}\" is not unique!");
+            }
 
             return inst;
+        }
+        
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void RegisterQuitEvent()
+        {
+            Application.quitting += OnApplicationQuit;
+        }
+
+        private static void OnApplicationQuit()
+        {
+
         }
     }
 

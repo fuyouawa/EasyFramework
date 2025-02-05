@@ -47,7 +47,7 @@ namespace EasyFramework
         public IFromRegister Register(Action<T> onValueChanged)
         {
             _onValueChanged += onValueChanged;
-            return new FromRegister(() => UnRegister(onValueChanged));
+            return new FromRegisterGeneric(() => UnRegister(onValueChanged));
         }
 
         public void UnRegister(Action<T> onValueChanged)

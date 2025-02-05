@@ -153,7 +153,7 @@ namespace EasyFramework
 
         public void UnRegisterEvent<TEvent>(EventHandlerDelegate<TEvent> onEvent)
         {
-            EventManager.Instance.UnRegisterHandler(this, onEvent);
+            EventManager.Instance.UnRegister(this, onEvent);
         }
 
         public IFromEventRegister RegisterEventSubscriber(object target)

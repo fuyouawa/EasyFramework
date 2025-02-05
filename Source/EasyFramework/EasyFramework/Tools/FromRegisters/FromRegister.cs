@@ -8,9 +8,9 @@ namespace EasyFramework
     {
     }
 
-    public class FromRegister : CustomUnRegister, IFromRegister
+    public class FromRegisterGeneric : UnRegisterGeneric, IFromRegister
     {
-        public FromRegister(Action onUnRegister) : base(onUnRegister)
+        public FromRegisterGeneric(Action onUnRegister) : base(onUnRegister)
         {
         }
     }

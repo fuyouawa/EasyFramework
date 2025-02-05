@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 namespace EasyFramework
 {
     [Serializable]
-    public class SerializedNullable<T> : GenericSerailizedValue<T>
+    public class SerializedNullable<T> : SerailizedValueGeneric<T>
     {
         [Serializable]
         private struct ValueStore

@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 namespace EasyFramework
 {
     [Serializable]
-    public abstract class GenericSerailizedValue<T> : TSerailizedValue<T, byte[]>
+    public abstract class SerailizedValueGeneric<T> : TSerailizedValue<T, byte[]>
     {
         [SerializeField, HideInInspector]
         private List<Object> _serializedUnityObjects = new List<Object>();

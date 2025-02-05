@@ -22,8 +22,8 @@ namespace EasyFramework.Editor.Window
             var tree = new OdinMenuTree(false)
             {
                 { "Ui/UiTextPresets", UiTextPresetsSettings.Instance },
-                { "MVVM/ViewModel (Editor)", ViewModelSettings.Instance },
-                { "MVVM/ViewBinder (Editor)", ViewBinderSettings.Instance }
+                { "Editor/ViewModel", ViewModelSettings.Instance },
+                { "Editor/ViewBinder", ViewBinderSettings.Instance }
             };
             return tree;
         }

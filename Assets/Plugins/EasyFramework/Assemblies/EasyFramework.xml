@@ -721,12 +721,11 @@
             <param name="includeBaseClass">包含基类的事件处理器</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EventManager.UnRegisterHandler``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
+        <member name="M:EasyFramework.EventManager.UnRegister``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
             <summary>
             取消注册事件处理器
             </summary>
             <typeparam name="TEvent"></typeparam>
-            <typeparam name="T"></typeparam>
             <param name="target"></param>
             <param name="handler"></param>
             <returns></returns>

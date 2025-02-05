@@ -22,7 +22,7 @@ namespace EasyFramework
                 return null;
 
             T inst;
-            var instances = UnityEngine.Object.FindObjectsOfType<T>();
+            var instances = UnityEngine.Object.FindObjectsOfType<T>(true);
             if (instances.Length > 1)
             {
                 throw new Exception($"MonoSingleton:\"{typeof(T).Name}\" can only have one instance that exists in the scene");
@@ -103,7 +103,6 @@ namespace EasyFramework
 
         protected virtual void OnSingletonInit(SingletonInitialModes mode)
         {
-
         }
     }
 }

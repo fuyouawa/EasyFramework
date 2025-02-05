@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 namespace EasyFramework
 {
-    public struct ApplicationQuitEvent
-    {
-    }
-
     public class UnityMainThreadDispatcher : MonoSingleton<UnityMainThreadDispatcher>, IUnityInvoker
     {
         private static readonly Queue<Action> ExecutionQueue = new Queue<Action>();
@@ -29,12 +25,6 @@ namespace EasyFramework
             {
                 ExecutionQueue.Enqueue(() => { StartCoroutine(action); });
             }
-        }
-
-        protected override void OnApplicationQuit()
-        {
-            base.OnApplicationQuit();
-            EventManager.Instance.SendEvent(this, new ApplicationQuitEvent());
         }
     }
 }

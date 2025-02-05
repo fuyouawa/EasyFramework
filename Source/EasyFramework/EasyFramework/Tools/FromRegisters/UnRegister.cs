@@ -7,11 +7,11 @@ namespace EasyFramework
         void UnRegister();
     }
     
-    public class CustomUnRegister : IUnRegister
+    public class UnRegisterGeneric : IUnRegister
     {
         private readonly Action _onUnRegister;
 
-        public CustomUnRegister(Action onUnRegister)
+        public UnRegisterGeneric(Action onUnRegister)
         {
             _onUnRegister = onUnRegister;
         }

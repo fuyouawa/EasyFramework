@@ -11,11 +11,11 @@ namespace EasyFramework
         IFromRegister InUnityThread();
     }
 
-    public class FromEventRegister : FromRegister, IFromEventRegister
+    public class FromEventRegisterGeneric : FromRegisterGeneric, IFromEventRegister
     {
         private readonly Action _inUnityThreadSetter;
 
-        public FromEventRegister(Action onUnRegister, Action inUnityThreadSetter) : base(onUnRegister)
+        public FromEventRegisterGeneric(Action onUnRegister, Action inUnityThreadSetter) : base(onUnRegister)
         {
             _inUnityThreadSetter = inUnityThreadSetter;
         }

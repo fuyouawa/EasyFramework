@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
-using System.Runtime.InteropServices;
 
 namespace EasyFramework
 {
@@ -183,7 +182,7 @@ namespace EasyFramework
                 inUnityThreadSetter += () => ret.InUnityThread();
             }
 
-            return new FromEventRegister(() => UnRegisterSubscriber(target), inUnityThreadSetter);
+            return new FromEventRegisterGeneric(() => UnRegisterSubscriber(target), inUnityThreadSetter);
         }
 
         /// <summary>
@@ -214,8 +213,8 @@ namespace EasyFramework
                 handlers.AddHandler(target, handler);
             }
 
-            return new FromEventRegister(
-                () => UnRegisterHandler(target, eventType, handler),
+            return new FromEventRegisterGeneric(
+                () => UnRegister(target, eventType, handler),
                 () =>
                 {
                     lock (handlers)
@@ -272,16 +271,15 @@ namespace EasyFramework
         /// 取消注册事件处理器
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
-        /// <typeparam name="T"></typeparam>
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public bool UnRegisterHandler<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
+        public bool UnRegister<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
         {
-            return UnRegisterHandler(target, typeof(TEvent), handler);
+            return UnRegister(target, typeof(TEvent), handler);
         }
 
-        public bool UnRegisterHandler(object target, Type eventType, Delegate handler)
+        public bool UnRegister(object target, Type eventType, Delegate handler)
         {
             Handlers handlers;
             lock (_handlesDict)
