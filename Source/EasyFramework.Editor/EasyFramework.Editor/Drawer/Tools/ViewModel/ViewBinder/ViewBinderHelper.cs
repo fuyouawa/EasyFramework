@@ -35,8 +35,6 @@ namespace EasyFramework.Editor.Drawer
         public static void InitializeBinder(IViewBinder binder)
         {
             var component = (Component)binder;
-            var parents = component.transform.FindParents(p =>
-                p.gameObject.HasComponent<IViewModel>()).ToList();
 
             binder.Info ??= new ViewBinderInfo();
             binder.Info.EditorData ??= new SerializedAny();
@@ -71,10 +69,12 @@ namespace EasyFramework.Editor.Drawer
                 }
 
                 editorInfo.BindComponent = initialComponent;
-
+                
+                var parents = component.transform.FindObjectsByTypeInParents<IViewModel>();
                 if (parents.IsNotNullOrEmpty())
                 {
-                    binder.Info.Owner = parents[0];
+                    var comp = (Component)parents[0];
+                    binder.Info.Owner = comp.transform;
                 }
 
                 editorInfo.Name = component.gameObject.name;

@@ -13,19 +13,7 @@ namespace EasyFramework
             return C + (x - A) / (B - A) * (D - C);
         }
 
-        public static bool Approximately(Quaternion a, Quaternion b, float similarityThreshold = 0.99f)
-        {
-            var dot = Quaternion.Dot(a, b);
-            var threshold = Mathf.Clamp(similarityThreshold, 0f, 1f);
-            return dot >= threshold;
-        }
-
-        public static bool Approximately(Vector3 a, Vector3 b, float similarityThreshold = 0.99f)
-        {
-            var distance = Vector3.Distance(a, b);
-            var threshold = Mathf.Clamp(similarityThreshold, 0f, 1f);
-            return distance <= 1 - threshold;
-        }
+        #region Random
 
         public static Vector2 GetRandomPointInRectangle(Rect rect)
         {
@@ -41,7 +29,7 @@ namespace EasyFramework
         {
             return GetRandomPointInRotatedRectangle(rect.center, rect.size, angle);
         }
-        
+
 
         public static Vector3 GetRandomBetweenTwoVector2(Vector2 min, Vector2 max)
         {
@@ -82,6 +70,23 @@ namespace EasyFramework
             return randomPoint;
         }
 
+        public static Vector2 GetRandomPointInCircle(Vector2 center, float radius, float radiusThickness = 1f)
+        {
+            var invalidR = radius * (1f - radiusThickness);
+
+            float angle = Random.Range(0f, Mathf.PI * 2);
+            float r = Random.Range(invalidR, radius);
+
+            float x = r * Mathf.Cos(angle);
+            float y = r * Mathf.Sin(angle);
+
+            return new Vector2(center.x + x, center.y + y);
+        }
+
+        #endregion
+
+        #region Rectangle
+        
         /// <summary>
         /// 获取旋转后矩形的四个顶点
         /// </summary>
@@ -100,9 +105,9 @@ namespace EasyFramework
             // 计算矩形的四个顶点（未旋转的情况）
             Vector2[] vertices = new Vector2[4];
             vertices[0] = new Vector2(-size.x / 2, -size.y / 2); // 左下角
-            vertices[1] = new Vector2(-size.x / 2, size.y / 2);  // 左上角
-            vertices[2] = new Vector2(size.x / 2, size.y / 2);   // 右上角
-            vertices[3] = new Vector2(size.x / 2, -size.y / 2);  // 右下角
+            vertices[1] = new Vector2(-size.x / 2, size.y / 2); // 左上角
+            vertices[2] = new Vector2(size.x / 2, size.y / 2); // 右上角
+            vertices[3] = new Vector2(size.x / 2, -size.y / 2); // 右下角
 
             if (!Mathf.Approximately(angle, 0))
             {
@@ -139,25 +144,13 @@ namespace EasyFramework
             return vertices;
         }
 
-        public static Vector2 GetRandomPointInCircle(Vector2 center, float radius, float radiusThickness = 1f)
-        {
-            var invalidR = radius * (1f - radiusThickness);
-                    
-            float angle = Random.Range(0f, Mathf.PI * 2);
-            float r = Random.Range(invalidR, radius);
-
-            float x = r * Mathf.Cos(angle);
-            float y = r * Mathf.Sin(angle);
-
-            return new Vector2(center.x + x, center.y + y);
-        }
+        #endregion
 
         public static Vector2 QuadraticBezierCurve(Vector2 startPoint, Vector2 endPoint, Vector2 controlPoint, float t)
         {
             return Mathf.Pow(1 - t, 2) * startPoint +
-                    2 * (1 - t) * t * controlPoint +
-                    Mathf.Pow(t, 2) * endPoint;
+                   2 * (1 - t) * t * controlPoint +
+                   Mathf.Pow(t, 2) * endPoint;
         }
-        
     }
 }

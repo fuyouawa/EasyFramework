@@ -49,36 +49,56 @@ namespace EasyFramework
                     return false;
                 p = p.parent;
             }
+
             return true;
         }
 
-        public static IEnumerable<Transform> FindParents(this Transform transform, Func<Transform, bool> condition)
+        public static T[] FindObjectsByTypeInParents<T>(this Transform transform, bool includeSelf = false)
         {
-            var ret = new List<Transform>();
+            var total = new List<T>();
 
-            var p = transform.parent;
+            var p = includeSelf ? transform : transform.parent;
             while (p != null)
             {
-                if (condition(p))
+                var c = p.GetComponent<T>();
+                if (c != null)
                 {
-                    ret.Add(p);
+                    total.Add(c);
                 }
+
                 p = p.parent;
             }
 
-            return ret;
+            return total.ToArray();
         }
 
-        public static void ForEachParentRecursive(this Transform transform, Func<Transform, bool> predicate)
-        {
-            var p = transform.parent;
-            while (p != null)
-            {
-                if (!predicate(p))
-                    return;
-                p = p.parent;
-            }
-        }
+        // public static IEnumerable<Transform> FindParents(this Transform transform, Func<Transform, bool> condition)
+        // {
+        //     var ret = new List<Transform>();
+        //
+        //     var p = transform.parent;
+        //     while (p != null)
+        //     {
+        //         if (condition(p))
+        //         {
+        //             ret.Add(p);
+        //         }
+        //         p = p.parent;
+        //     }
+        //
+        //     return ret;
+        // }
+        //
+        // public static void ForEachParentRecursive(this Transform transform, Func<Transform, bool> predicate)
+        // {
+        //     var p = transform.parent;
+        //     while (p != null)
+        //     {
+        //         if (!predicate(p))
+        //             return;
+        //         p = p.parent;
+        //     }
+        // }
 
         public static float ScaleSquare(this Transform transform)
         {
@@ -99,8 +119,8 @@ namespace EasyFramework
         {
             transform.position = position.ToVec3(transform.position.z);
         }
-        
-        
+
+
         public static string GetRelativePath(this Transform transform, Transform parent, bool includeParent = true)
         {
             if (transform == null)
@@ -113,7 +133,7 @@ namespace EasyFramework
                 hierarchy.Push(p.gameObject.name);
                 p = p.parent;
             }
-            
+
             if (includeParent && parent != null)
             {
                 hierarchy.Push(parent.gameObject.name);

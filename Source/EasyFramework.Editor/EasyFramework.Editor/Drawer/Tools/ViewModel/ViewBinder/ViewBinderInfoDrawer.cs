@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using EasyFramework.Editor;
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.Serialization;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace EasyFramework.Editor.Drawer
 {
@@ -17,7 +12,7 @@ namespace EasyFramework.Editor.Drawer
         private Component _component;
         private ViewBinderEditorInfo _editorInfo;
         private ViewBinderInfo _info;
-        private List<Transform> _parents;
+        private Transform[] _parents;
         private FoldoutGroupConfig _foldoutGroupConfig;
 
         private ViewBinderSettings _settings;
@@ -41,8 +36,8 @@ namespace EasyFramework.Editor.Drawer
                 UniqueDrawerKey.Create(Property, this),
                 new GUIContent("ViewBinder"), true, OnContentGUI);
 
-            _parents = _component.transform.FindParents(p =>
-                p.gameObject.HasComponent<IViewModel>()).ToList();
+            _parents = _component.transform.FindObjectsByTypeInParents<IViewModel>()
+                .Select(x => ((Component)x).transform).ToArray();
 
             ViewBinderHelper.InitializeBinder((IViewBinder)_component);
         }
@@ -86,7 +81,8 @@ namespace EasyFramework.Editor.Drawer
                 {
                     bindComponentBtnLabel = EditorHelper.TempContent2(_editorInfo.BindComponent.GetType().FullName);
                     bindComponentBtnLabel.image =
-                        GUIHelper.GetAssetThumbnail(_editorInfo.BindComponent, _editorInfo.BindComponent.GetType(), true);
+                        GUIHelper.GetAssetThumbnail(_editorInfo.BindComponent, _editorInfo.BindComponent.GetType(),
+                            true);
                 }
 
                 EasyEditorGUI.DrawSelectorDropdown(
