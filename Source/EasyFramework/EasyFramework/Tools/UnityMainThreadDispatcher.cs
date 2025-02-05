@@ -34,7 +34,7 @@ namespace EasyFramework
         protected override void OnApplicationQuit()
         {
             base.OnApplicationQuit();
-            EasyEventManager.Instance.TriggerEvent(this, new ApplicationQuitEvent());
+            EventManager.Instance.SendEvent(this, new ApplicationQuitEvent());
         }
     }
 }

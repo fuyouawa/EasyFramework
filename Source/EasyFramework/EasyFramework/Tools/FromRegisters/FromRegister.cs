@@ -1,15 +1,27 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace EasyFramework
 {
+    public interface IFromRegister : IUnRegister
+    {
+    }
+
+    public class FromRegister : CustomUnRegister, IFromRegister
+    {
+        public FromRegister(Action onUnRegister) : base(onUnRegister)
+        {
+        }
+    }
+
     public abstract class UnRegisterTrigger : MonoBehaviour
     {
-        private readonly HashSet<IUnRegisterConfiguration> _unRegisters = new HashSet<IUnRegisterConfiguration>();
+        private readonly HashSet<IUnRegister> _unRegisters = new HashSet<IUnRegister>();
 
-        public void AddUnRegister(IUnRegisterConfiguration unRegister) => _unRegisters.Add(unRegister);
+        public void AddUnRegister(IUnRegister unRegister) => _unRegisters.Add(unRegister);
 
-        public void RemoveUnRegister(IUnRegisterConfiguration unRegister) => _unRegisters.Remove(unRegister);
+        public void RemoveUnRegister(IUnRegister unRegister) => _unRegisters.Remove(unRegister);
 
         public void UnRegister()
         {
@@ -43,10 +55,10 @@ namespace EasyFramework
         }
     }
 
-    public static class UnRegisterExtension
+    public static class IFromRegisterExtension
     {
-        public static IUnRegisterConfiguration UnRegisterWhenDestroyed(
-            this IUnRegisterConfiguration unRegister,
+        public static IUnRegister UnRegisterWhenDestroyed(
+            this IFromRegister unRegister,
             GameObject gameObject)
         {
             var trigger = gameObject.GetOrAddComponent<UnRegisterOnDestroyTrigger>();
@@ -54,8 +66,8 @@ namespace EasyFramework
             return unRegister;
         }
 
-        public static IUnRegisterConfiguration UnRegisterWhenDisabled(
-            this IUnRegisterConfiguration unRegister,
+        public static IUnRegister UnRegisterWhenDisabled(
+            this IFromRegister unRegister,
             GameObject gameObject)
         {
             var trigger = gameObject.GetOrAddComponent<UnRegisterOnDisableTrigger>();

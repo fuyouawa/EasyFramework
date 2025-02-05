@@ -7,7 +7,7 @@ namespace EasyFramework
     {
         T GetValue();
         void UnRegister(Action<T> onValueChanged);
-        IUnRegisterConfiguration Register(Action<T> onValueChanged);
+        IFromRegister Register(Action<T> onValueChanged);
     }
 
     public interface IBindableValue<T> : IReadonlyBindableValue<T>
@@ -44,10 +44,10 @@ namespace EasyFramework
             return IntervalGetValue();
         }
 
-        public IUnRegisterConfiguration Register(Action<T> onValueChanged)
+        public IFromRegister Register(Action<T> onValueChanged)
         {
             _onValueChanged += onValueChanged;
-            return new UnRegisterConfiguration(() => UnRegister(onValueChanged));
+            return new FromRegister(() => UnRegister(onValueChanged));
         }
 
         public void UnRegister(Action<T> onValueChanged)
