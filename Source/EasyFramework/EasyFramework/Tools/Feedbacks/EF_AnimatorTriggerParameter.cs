@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("动画控制器/触发参数")]
     public class EF_AnimatorTriggerParameter : AbstractEasyFeedback

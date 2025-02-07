@@ -14,6 +14,11 @@ namespace EasyFramework
             return member.GetCustomAttributes<T>().Any();
         }
 
+        public static bool HasCustomAttribute<T>(this MemberInfo member, bool inherit) where T : Attribute
+        {
+            return member.GetCustomAttributes<T>(inherit).Any();
+        }
+
         public static IEnumerable<Type> GetAllTypes(this IEnumerable<Assembly> assemblies)
         {
             return assemblies.SelectMany(a => a.GetTypes());

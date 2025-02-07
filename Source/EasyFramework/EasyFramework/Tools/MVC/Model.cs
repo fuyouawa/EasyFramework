@@ -12,7 +12,7 @@ namespace EasyFramework
             self.GetArchitecture().GetModel<T>();
     }
 
-    public interface IModel : IBelongToArchitecture, ICanSetArchitecture, ICanSendEvent, ICanInitialize, ICanDispose
+    public interface IModel : IBelongToArchitecture, ICanSetArchitecture, ICanSendEvent, ICanInitialize, ICanDispose, ICanGetUtility
     {
     }
 

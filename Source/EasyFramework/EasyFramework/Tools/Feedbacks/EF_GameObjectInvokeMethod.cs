@@ -1,4 +1,4 @@
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("游戏物体/调用函数")]
     public class EF_GameObjectInvokeMethod : AbstractEasyFeedback

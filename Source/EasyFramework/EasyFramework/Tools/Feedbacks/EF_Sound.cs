@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("音效/播放声音")]
     public class EF_Sound : AbstractEasyFeedback

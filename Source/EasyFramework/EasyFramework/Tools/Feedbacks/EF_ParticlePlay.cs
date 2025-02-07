@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("粒子/播放粒子")]
     public class EF_ParticlePlay : AbstractEasyFeedback

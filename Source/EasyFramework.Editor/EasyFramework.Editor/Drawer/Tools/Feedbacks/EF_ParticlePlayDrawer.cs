@@ -1,5 +1,4 @@
-using EasyFramework;
-using EasyFramework.Editor;
+using EasyFramework.Feedbacks;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("游戏物体/设置启用状态")]
     public class EF_GameObjectSetActive : AbstractEasyFeedback

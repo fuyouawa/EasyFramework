@@ -1,9 +1,7 @@
-using EasyFramework;
-using EasyFramework.Editor;
+using EasyFramework.Feedbacks;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
-using UnityEngine;
 
 namespace EasyFramework.Editor.Drawer
 {

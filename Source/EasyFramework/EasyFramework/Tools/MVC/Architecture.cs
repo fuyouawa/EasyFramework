@@ -30,8 +30,11 @@ namespace EasyFramework
 
         void RegisterModel<T>(T model) where T : IModel;
 
+        void RegisterUtility<T>(T utility) where T : IUtility;
+
         T GetSystem<T>() where T : class, ISystem;
         T GetModel<T>() where T : class, IModel;
+        T GetUtility<T>() where T : class, IUtility;
 
         void SendCommand<T>(T command) where T : ICommand;
 
@@ -108,6 +111,11 @@ namespace EasyFramework
             }
         }
 
+        public void RegisterUtility<TUtility>(TUtility utility) where TUtility : IUtility
+        {
+            _container.Bind(utility);
+        }
+
         public TSystem GetSystem<TSystem>() where TSystem : class, ISystem
         {
             return _container.Resolve<TSystem>();
@@ -116,6 +124,11 @@ namespace EasyFramework
         public TModel GetModel<TModel>() where TModel : class, IModel
         {
             return _container.Resolve<TModel>();
+        }
+
+        public TUtility GetUtility<TUtility>() where TUtility : class, IUtility
+        {
+            return _container.Resolve<TUtility>();
         }
 
         public TResult SendCommand<TResult>(ICommand<TResult> command)

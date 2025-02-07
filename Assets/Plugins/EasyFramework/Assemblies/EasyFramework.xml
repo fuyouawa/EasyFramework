@@ -743,14 +743,14 @@
             <param name="eventArg">事件</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EF_Sound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
+        <member name="M:EasyFramework.Feedbacks.EF_Sound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
             <summary>
             Plays a sound differently based on the selected play method
             </summary>
             <param name="sfx"></param>
             <param name="position"></param>
         </member>
-        <member name="M:EasyFramework.EF_Sound.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
+        <member name="M:EasyFramework.Feedbacks.EF_Sound.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
             <summary>
             Plays the audio source with the specified volume and pitch
             </summary>
@@ -759,7 +759,7 @@
             <param name="volume"></param>
             <param name="pitch"></param>
         </member>
-        <member name="M:EasyFramework.EF_Sound.GetAudioSourceFromPool">
+        <member name="M:EasyFramework.Feedbacks.EF_Sound.GetAudioSourceFromPool">
             <summary>
             Gets an audio source from the pool if possible
             </summary>

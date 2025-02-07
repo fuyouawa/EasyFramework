@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("动画控制器/设置参数")]
     public class EF_AnimatorSetParameter : AbstractEasyFeedback

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("游戏物体/实例化")]
     public class EF_GameObjectInstantiate : AbstractEasyFeedback

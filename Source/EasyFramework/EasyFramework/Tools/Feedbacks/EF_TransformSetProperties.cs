@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("变换/设置属性")]
     public class EF_TransformSetProperties : AbstractEasyFeedback

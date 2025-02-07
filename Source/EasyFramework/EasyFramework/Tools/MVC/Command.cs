@@ -17,13 +17,13 @@ namespace EasyFramework
     }
 
     public interface ICommand : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
-        ICanSendEvent, ICanSendCommand
+        ICanSendEvent, ICanSendCommand, ICanGetUtility
     {
         void Execute();
     }
 
     public interface ICommand<TResult> : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
-        ICanSendEvent, ICanSendCommand
+        ICanSendEvent, ICanSendCommand, ICanGetUtility
     {
         TResult Execute();
     }

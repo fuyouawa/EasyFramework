@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("调试/打印")]
     public class EF_DebugLog : AbstractEasyFeedback

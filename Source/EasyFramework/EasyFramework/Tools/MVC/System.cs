@@ -13,7 +13,7 @@ namespace EasyFramework
     }
 
     public interface ISystem : IBelongToArchitecture, ICanSetArchitecture, ICanGetModel,
-        ICanRegisterEvent, ICanSendEvent, ICanGetSystem, ICanInitialize, ICanDispose
+        ICanRegisterEvent, ICanSendEvent, ICanGetSystem, ICanInitialize, ICanDispose, ICanGetUtility
     {
     }
 

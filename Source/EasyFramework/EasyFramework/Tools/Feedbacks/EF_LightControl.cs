@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("光照/光照控制")]
     public class EF_LightControl : AbstractEasyFeedback

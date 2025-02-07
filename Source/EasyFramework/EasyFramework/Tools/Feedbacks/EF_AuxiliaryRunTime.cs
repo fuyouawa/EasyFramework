@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace EasyFramework
+namespace EasyFramework.Feedbacks
 {
     [AddEasyFeedbackMenu("辅助/运行指定时间")]
     public class EF_AuxiliaryRunTime : AbstractEasyFeedback

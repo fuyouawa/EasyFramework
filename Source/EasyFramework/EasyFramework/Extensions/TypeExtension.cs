@@ -85,10 +85,21 @@ namespace EasyFramework
             return type.GetCustomAttributes<T>().FirstOrDefault();
         }
 
+        public static T GetCustomAttribute<T>(this Type type, bool inherit) where T : Attribute
+        {
+            return type.GetCustomAttributes<T>(inherit).FirstOrDefault();
+        }
+
 
         public static bool HasCustomAttribute<T>(this Type type) where T : Attribute
         {
             return type.GetCustomAttributes<T>().Any();
+        }
+
+
+        public static bool HasCustomAttribute<T>(this Type type, bool inherit) where T : Attribute
+        {
+            return type.GetCustomAttributes<T>(inherit).Any();
         }
 
         public static bool IsIntegerType(this Type type)

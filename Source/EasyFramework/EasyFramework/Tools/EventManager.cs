@@ -64,18 +64,18 @@ namespace EasyFramework
 
         private class Handlers
         {
-            private readonly Dictionary<object, HashSet<Delegate>> _handlesDict =
+            private readonly Dictionary<object, HashSet<Delegate>> _handlesMap =
                 new Dictionary<object, HashSet<Delegate>>();
 
-            private readonly Dictionary<Delegate, HandleExtension> _handlerExtensionDict =
+            private readonly Dictionary<Delegate, HandleExtension> _handlerExtensionMap =
                 new Dictionary<Delegate, HandleExtension>();
 
             public void AddHandler(object target, Delegate handler)
             {
-                if (!_handlesDict.TryGetValue(target, out var handlers))
+                if (!_handlesMap.TryGetValue(target, out var handlers))
                 {
                     handlers = new HashSet<Delegate>();
-                    _handlesDict[target] = handlers;
+                    _handlesMap[target] = handlers;
                 }
 
                 var suc = handlers.Add(handler);
@@ -87,10 +87,10 @@ namespace EasyFramework
 
             public HandleExtension GetHandleExtension(Delegate handler)
             {
-                if (!_handlerExtensionDict.TryGetValue(handler, out var extension))
+                if (!_handlerExtensionMap.TryGetValue(handler, out var extension))
                 {
                     extension = new HandleExtension();
-                    _handlerExtensionDict[handler] = extension;
+                    _handlerExtensionMap[handler] = extension;
                 }
 
                 return extension;
@@ -98,7 +98,7 @@ namespace EasyFramework
 
             public bool RemoveHandler(object target, Delegate handler)
             {
-                if (_handlesDict.TryGetValue(target, out var handlers))
+                if (_handlesMap.TryGetValue(target, out var handlers))
                 {
                     return handlers.Remove(handler);
                 }
@@ -108,12 +108,12 @@ namespace EasyFramework
 
             public bool RemoveSubscriber(object target)
             {
-                return _handlesDict.Remove(target);
+                return _handlesMap.Remove(target);
             }
 
             public void Invoke(object sender, object eventArg)
             {
-                foreach (var handlers in _handlesDict.Values)
+                foreach (var handlers in _handlesMap.Values)
                 {
                     foreach (var handler in handlers)
                     {
@@ -126,7 +126,7 @@ namespace EasyFramework
             {
                 void Call() => handler.DynamicInvoke(sender, eventArg);
 
-                if (_handlerExtensionDict.TryGetValue(handler, out var extension))
+                if (_handlerExtensionMap.TryGetValue(handler, out var extension))
                 {
                     if (extension.TriggerExtension != null)
                     {
