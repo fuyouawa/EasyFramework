@@ -3,7 +3,9 @@ namespace EasyFramework
     public interface IState
     {
         bool Enable { get; set; }
+        bool IsInitialized { get; }
 
+        void Initialize();
         bool Condition();
         void Enter();
         void Update();
@@ -37,6 +39,16 @@ namespace EasyFramework
             }
         }
 
+        public bool IsInitialized { get; protected set; }
+
+        void IState.Initialize()
+        {
+            if (IsInitialized)
+                return;
+            OnStateInit();
+            IsInitialized = true;
+        }
+
         bool IState.Condition()
         {
             return OnStateCondition();
@@ -57,6 +69,10 @@ namespace EasyFramework
         {
             IsCurrentState = false;
             OnStateExit();
+        }
+
+        protected virtual void OnStateInit()
+        {
         }
 
         protected virtual bool OnStateCondition()

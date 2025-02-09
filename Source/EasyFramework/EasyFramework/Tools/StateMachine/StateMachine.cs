@@ -14,6 +14,7 @@ namespace EasyFramework
         public IState PreviousState { get; protected set; }
 
         public bool Active { get; protected set; }
+        public bool IsInitialized { get; protected set; }
 
         protected readonly Dictionary<T, IState> States = new Dictionary<T, IState>();
 
@@ -24,6 +25,17 @@ namespace EasyFramework
 
         public StateMachine()
         {
+        }
+
+        public void Initialize()
+        {
+            if (IsInitialized)
+                return;
+
+            foreach (var state in States.Values)
+            {
+                state.Initialize();
+            }
         }
 
         public IState[] GetStates()
@@ -62,6 +74,10 @@ namespace EasyFramework
         public virtual void AddState(T stateId, IState state)
         {
             States[stateId] = state;
+            if (IsInitialized && state.IsInitialized)
+            {
+                state.Initialize();
+            }
         }
 
         public virtual bool ChangeState(T stateId)
