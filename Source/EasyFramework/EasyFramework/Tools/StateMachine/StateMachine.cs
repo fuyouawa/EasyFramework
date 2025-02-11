@@ -19,9 +19,9 @@ namespace EasyFramework
         protected readonly Dictionary<T, IState> States = new Dictionary<T, IState>();
 
         /// <summary>
-        /// 当有状态更改时的回调
+        /// 当状态更改完的的回调
         /// </summary>
-        public event OnStateChangeDelegate<T> OnStateChange;
+        public event OnStateChangeDelegate<T> OnStateChanged;
 
         public StateMachine()
         {
@@ -48,6 +48,13 @@ namespace EasyFramework
             if (!Active)
                 return;
 
+            if (CurrentState == null)
+            {
+                throw new InvalidOperationException(
+                    $"The current state in the state machine '{GetType().Name}' is null, " +
+                    $"you must first call the 'StartState' method to set a starting state");
+            }
+
             if (CurrentState is { Enable: true })
             {
                 CurrentState.Update();
@@ -71,8 +78,13 @@ namespace EasyFramework
             return States.GetValueOrDefault(stateId);
         }
 
-        public virtual void AddState(T stateId, IState state)
+        public virtual void SetState(T stateId, IState state)
         {
+            // if (!States.TryAdd(stateId, state))
+            // {
+            //     throw new InvalidOperationException(
+            //         $"The state id '{stateId}' already has a corresponding state '{state.GetType().Name}'");
+            // }
             States[stateId] = state;
             if (IsInitialized && state.IsInitialized)
             {
@@ -80,9 +92,39 @@ namespace EasyFramework
             }
         }
 
+
+        public virtual IFluentState FluentState(T stateId)
+        {
+            if (States.TryGetValue(stateId, out var state))
+            {
+                if (state.GetType().HasInterface(typeof(IFluentState)))
+                {
+                    return (IFluentState)state;
+                }
+
+                throw new InvalidOperationException(
+                    $"The state id '{stateId}' already has a corresponding state '{state.GetType().Name}', " +
+                    $"and it's not a fluent state.");
+            }
+
+            var fluentState = new FluentState();
+            SetState(stateId, fluentState);
+            return fluentState;
+        }
+
+        public virtual bool StartState(T stateId)
+        {
+            return InternalChangeState(stateId, false);
+        }
+
         public virtual bool ChangeState(T stateId)
         {
-            if (EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
+            return InternalChangeState(stateId, true);
+        }
+
+        protected virtual bool InternalChangeState(T stateId, bool notifyChangedEvent)
+        {
+            if (CurrentState != null && EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
             {
                 return true;
             }
@@ -101,14 +143,20 @@ namespace EasyFramework
             if (States.TryGetValue(stateId, out var state))
             {
                 CurrentState = state;
+
+                if (notifyChangedEvent)
+                    OnStateChanged?.Invoke(stateId);
+
                 CurrentState.Enter();
             }
             else
             {
+                if (notifyChangedEvent)
+                    OnStateChanged?.Invoke(stateId);
+
                 CurrentState = null;
             }
 
-            OnStateChange?.Invoke(stateId);
             return true;
         }
     }

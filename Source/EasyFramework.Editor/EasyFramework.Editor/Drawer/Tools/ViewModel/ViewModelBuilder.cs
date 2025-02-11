@@ -142,7 +142,7 @@ namespace EasyFramework.Editor.Drawer
 
         private void BuildCsDesigner(string path)
         {
-            var children = _component.GetComponentsInChildren<IViewBinder>();
+            var children = ViewModelHelper.GetChildren(_component.transform);
 
             var data = new
             {

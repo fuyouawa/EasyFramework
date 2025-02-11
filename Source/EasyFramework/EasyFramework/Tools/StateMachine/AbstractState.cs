@@ -1,3 +1,5 @@
+using System;
+
 namespace EasyFramework
 {
     public interface IState
@@ -12,6 +14,11 @@ namespace EasyFramework
         void Exit();
     }
 
+    /// <summary>
+    /// 当状态更改完成的回调
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="stateId">当前状态</param>
     public delegate void OnStateChangeDelegate<in T>(T stateId);
 
     public abstract class AbstractState : IState
