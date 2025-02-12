@@ -53,7 +53,7 @@ namespace EasyFramework
             return true;
         }
 
-        public static T[] FindObjectsByTypeInParents<T>(this Transform transform, bool includeSelf = false)
+        public static T[] FindObjectsByTypeInParents<T>(this Transform transform, bool includeInactive = false, bool includeSelf = false)
         {
             var total = new List<T>();
 

@@ -94,13 +94,17 @@ namespace EasyFramework.Editor.Drawer
 
             var compileUnit = new CodeCompileUnit();
 
-            var codeNamespace = new CodeNamespace(data.Namespace);
-            compileUnit.Namespaces.Add(codeNamespace);
-
+            compileUnit.Namespaces.Add(new CodeNamespace());
+            compileUnit.UserData["Usings"] = new CodeNamespace();
+            var usings = new CodeNamespace();
             foreach (var u in data.Usings)
             {
-                codeNamespace.Imports.Add(new CodeNamespaceImport(u));
+                usings.Imports.Add(new CodeNamespaceImport(u));
             }
+            compileUnit.Namespaces.Add(usings);
+
+            var codeNamespace = new CodeNamespace(data.Namespace);
+            compileUnit.Namespaces.Add(codeNamespace);
 
             var codeClass = new CodeTypeDeclaration(data.ClassName)
             {
@@ -155,7 +159,7 @@ namespace EasyFramework.Editor.Drawer
                 {
                     var binderEditorInfo = c.Info.EditorData.Get<ViewBinderEditorInfo>()!;
                     var comp = (Component)c;
-                    
+
                     return new
                     {
                         Type = c.GetBindType(),
@@ -166,16 +170,20 @@ namespace EasyFramework.Editor.Drawer
                     };
                 })
             };
-
+            
             var compileUnit = new CodeCompileUnit();
+
+            compileUnit.Namespaces.Add(new CodeNamespace());
+            compileUnit.UserData["Usings"] = new CodeNamespace();
+            var usings = new CodeNamespace();
+            foreach (var u in data.Usings)
+            {
+                usings.Imports.Add(new CodeNamespaceImport(u));
+            }
+            compileUnit.Namespaces.Add(usings);
 
             var codeNamespace = new CodeNamespace(data.Namespace);
             compileUnit.Namespaces.Add(codeNamespace);
-
-            foreach (var u in data.Usings)
-            {
-                codeNamespace.Imports.Add(new CodeNamespaceImport(u));
-            }
 
             var codeClass = new CodeTypeDeclaration(data.ClassName)
             {

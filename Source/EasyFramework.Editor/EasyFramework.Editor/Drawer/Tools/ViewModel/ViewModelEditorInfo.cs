@@ -46,7 +46,7 @@ namespace EasyFramework.Editor.Drawer
                 var baseClassName = StringSerializer.ReadValue(reader);
                 if (baseClassName.IsNotNullOrEmpty())
                 {
-                    value.BaseClass = Type.GetType(baseClassName);
+                    value.BaseClass = TwoWaySerializationBinder.Default.BindToType(baseClassName);
                 }
             }
             else
@@ -77,7 +77,10 @@ namespace EasyFramework.Editor.Drawer
             if (classType == null)
             {
                 StringSerializer.WriteValue(value.GenerateDirectory, writer);
-                StringSerializer.WriteValue(value.BaseClass?.AssemblyQualifiedName, writer);
+                if (value.BaseClass != null)
+                {
+                    StringSerializer.WriteValue(TwoWaySerializationBinder.Default.BindToName(value.BaseClass), writer);
+                }
             }
         }
     }

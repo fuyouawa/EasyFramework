@@ -87,6 +87,7 @@ namespace EasyFramework.Editor.Drawer
                 _editorInfo.GenerateDirectory, "Assets", false, false);
             if (EditorGUI.EndChangeCheck())
             {
+                ValueChanged();
                 GUIHelper.ExitGUI(false);
             }
 

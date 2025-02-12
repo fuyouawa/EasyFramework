@@ -1,12 +1,44 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace EasyFramework
 {
-    public class CompressionUtility
+    public static class CompressionUtility
     {
-        public static int DecodeVarint32(Stream stream)
+        
+        public static async Task<int> ReadVarint32Async(this Stream stream)
+        {
+            int result = 0;
+            int shift = 0;
+
+            while (true)
+            {
+                var buf = new byte[1];
+                int i = await stream.ReadAsync(buf, 0, 1);
+                if (i <= 0)
+                    throw new EndOfStreamException("Unexpected end of stream while reading varint.");
+
+                byte b = buf[0];
+
+                // 将低7位累加到结果中
+                result |= (b & 0x7F) << shift;
+
+                // 检查最高位是否为0
+                if ((b & 0x80) == 0)
+                    break;
+
+                shift += 7;
+
+                if (shift >= 32)
+                    throw new FormatException("Malformed Varint32 value.");
+            }
+
+            return result;
+        }
+
+        public static int ReadVarint32(this Stream stream)
         {
             int result = 0;
             int shift = 0;
@@ -35,20 +67,20 @@ namespace EasyFramework
             return result;
         }
 
-        public static int DecodeVarint32(byte[] data)
+        public static int DecodeVarint32(this byte[] data)
         {
             return DecodeVarint32(data, out _);
         }
 
-        public static int DecodeVarint32(byte[] data, out long position)
+        public static int DecodeVarint32(this byte[] data, out long position)
         {
             using var stream = new MemoryStream(data);
-            var ret = DecodeVarint32(stream);
+            var ret = ReadVarint32(stream);
             position = stream.Position;
             return ret;
         }
 
-        public static byte[] EncodeVarint32(int value)
+        public static byte[] EncodeVarint32(this int value)
         {
             var result = new List<byte>();
 

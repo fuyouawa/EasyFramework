@@ -70,7 +70,7 @@ namespace EasyFramework.Editor.Drawer
 
                 editorInfo.BindComponent = initialComponent;
                 
-                var parents = component.transform.FindObjectsByTypeInParents<IViewModel>();
+                var parents = component.transform.FindObjectsByTypeInParents<IViewModel>(true);
                 if (parents.IsNotNullOrEmpty())
                 {
                     var comp = (Component)parents[0];

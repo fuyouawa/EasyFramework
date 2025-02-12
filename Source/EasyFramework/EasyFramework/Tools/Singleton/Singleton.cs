@@ -71,12 +71,12 @@ namespace EasyFramework
 
         private static void OnApplicationQuit()
         {
-            foreach (var singleton in Singletons)
-            {
-                singleton.Dispose();
-            }
-
-            Singletons.Clear();
+            // foreach (var singleton in Singletons)
+            // {
+            //     singleton.Dispose();
+            // }
+            //
+            // Singletons.Clear();
         }
     }
 

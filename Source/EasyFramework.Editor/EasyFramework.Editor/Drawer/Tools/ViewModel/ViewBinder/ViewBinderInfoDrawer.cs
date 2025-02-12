@@ -36,7 +36,7 @@ namespace EasyFramework.Editor.Drawer
                 UniqueDrawerKey.Create(Property, this),
                 new GUIContent("ViewBinder"), true, OnContentGUI);
 
-            _parents = _component.transform.FindObjectsByTypeInParents<IViewModel>()
+            _parents = _component.transform.FindObjectsByTypeInParents<IViewModel>(true)
                 .Select(x => ((Component)x).transform).ToArray();
 
             ViewBinderHelper.InitializeBinder((IViewBinder)_component);
@@ -55,7 +55,7 @@ namespace EasyFramework.Editor.Drawer
                 if (_editorInfo.Name != _component.gameObject.name)
                 {
                     _editorInfo.Name = _component.gameObject.name;
-                    ValueChanged();
+                    ValueChanged(false);
                 }
             }
 
@@ -173,10 +173,14 @@ namespace EasyFramework.Editor.Drawer
             }
         }
 
-        private void ValueChanged()
+        private void ValueChanged(bool withDirty = true)
         {
             _info.EditorData.Set(_editorInfo);
-            EditorUtility.SetDirty(_component);
+
+            if (withDirty)
+            {
+                EditorUtility.SetDirty(_component);
+            }
         }
     }
 }
