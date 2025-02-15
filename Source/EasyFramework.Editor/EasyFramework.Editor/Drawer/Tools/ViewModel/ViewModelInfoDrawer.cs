@@ -178,7 +178,10 @@ namespace EasyFramework.Editor.Drawer
                 comp = _component;
             }
 
-            InternalBind(comp);
+            if (InternalBind(comp))
+            {
+                ValueChanged();
+            }
 
             if (comp != _component)
             {
@@ -187,7 +190,7 @@ namespace EasyFramework.Editor.Drawer
             }
         }
 
-        private static void InternalBind(Component component)
+        private static bool InternalBind(Component component)
         {
             var children = ViewModelHelper.GetChildren(component.transform);
 
@@ -195,6 +198,8 @@ namespace EasyFramework.Editor.Drawer
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<FromViewBinderAttribute>() != null)
                 .ToArray();
+
+            bool hasChange = false;
 
             foreach (var child in children)
             {
@@ -213,7 +218,7 @@ namespace EasyFramework.Editor.Drawer
                     EditorUtility.DisplayDialog("错误",
                         $"绑定“{comp.gameObject.name}”失败，" +
                         $"ViewBinder中没有设置绑定组件！", "确认");
-                    return;
+                    return hasChange;
                 }
 
                 if (child.GetBindType() != f.FieldType)
@@ -221,13 +226,19 @@ namespace EasyFramework.Editor.Drawer
                     EditorUtility.DisplayDialog("错误",
                         $"“{comp.gameObject.name}”中ViewBinder的绑定类型与ViewModel中的类型不匹配，" +
                         $"可能需要重新构建ViewModel！", "确认");
-                    return;
+                    return hasChange;
+                }
+
+                var origin = f.GetValue(component) as Object;
+                if (origin != bindObject)
+                {
+                    hasChange = true;
                 }
 
                 f.SetValue(component, bindObject);
             }
 
-            return;
+            return hasChange;
         }
     }
 }

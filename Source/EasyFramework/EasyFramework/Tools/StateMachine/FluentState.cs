@@ -8,9 +8,8 @@ namespace EasyFramework
         IFluentState OnCondition(Func<bool> on);
         IFluentState OnEnter(Action on);
         IFluentState OnUpdate(Action on);
+        IFluentState OnFixedUpdate(Action on);
         IFluentState OnExit(Action on);
-        IFluentState OnEnable(Action on);
-        IFluentState OnDisable(Action on);
     }
 
     public class FluentState : AbstractState, IFluentState
@@ -21,8 +20,7 @@ namespace EasyFramework
         public Action OnEnter;
         public Action OnExit;
         public Action OnUpdate;
-        public Action OnEnable;
-        public Action OnDisable;
+        public Action OnFixedUpdate;
 
         protected override void OnStateInit()
         {
@@ -53,16 +51,6 @@ namespace EasyFramework
             OnUpdate?.Invoke();
         }
 
-        protected override void OnStateEnable()
-        {
-            OnEnable?.Invoke();
-        }
-
-        protected override void OnStateDisable()
-        {
-            OnDisable?.Invoke();
-        }
-
         IFluentState IFluentState.OnInitialize(Action on)
         {
             OnInit += on;
@@ -87,21 +75,15 @@ namespace EasyFramework
             return this;
         }
 
+        IFluentState IFluentState.OnFixedUpdate(Action on)
+        {
+            OnFixedUpdate += on;
+            return this;
+        }
+
         IFluentState IFluentState.OnExit(Action on)
         {
             OnExit += on;
-            return this;
-        }
-
-        IFluentState IFluentState.OnEnable(Action on)
-        {
-            OnEnable += on;
-            return this;
-        }
-
-        IFluentState IFluentState.OnDisable(Action on)
-        {
-            OnDisable += on;
             return this;
         }
     }

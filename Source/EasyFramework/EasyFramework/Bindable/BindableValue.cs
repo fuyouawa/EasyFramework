@@ -5,14 +5,14 @@ namespace EasyFramework
 {
     public interface IReadonlyBindableValue<T>
     {
-        T GetValue();
+        T Value { get; }
         void UnRegister(Action<T> onValueChanged);
         IFromRegister Register(Action<T> onValueChanged);
     }
 
     public interface IBindableValue<T> : IReadonlyBindableValue<T>
     {
-        void SetValue(T value);
+        T Value { get; set; }
         void SetValueWithoutEvent(T value);
     }
 
@@ -25,13 +25,17 @@ namespace EasyFramework
 
         private T _value;
 
-        public void SetValue(T value)
+        public T Value
         {
-            if (value == null && _value == null) return;
-            if (value != null && EqualityComparer<T>.Default.Equals(_value, value)) return;
+            get { return IntervalGetValue(); }
+            set
+            {
+                if (value == null && _value == null) return;
+                if (value != null && EqualityComparer<T>.Default.Equals(_value, value)) return;
 
-            IntervalSetValue(value);
-            _onValueChanged?.Invoke(value);
+                IntervalSetValue(value);
+                _onValueChanged?.Invoke(value);
+            }
         }
 
         public void SetValueWithoutEvent(T value)
@@ -39,16 +43,12 @@ namespace EasyFramework
             IntervalSetValue(value);
         }
 
-        public T GetValue()
-        {
-            return IntervalGetValue();
-        }
-
         public IFromRegister Register(Action<T> onValueChanged)
         {
             _onValueChanged += onValueChanged;
             return new FromRegisterGeneric(() => UnRegister(onValueChanged));
         }
+
 
         public void UnRegister(Action<T> onValueChanged)
         {

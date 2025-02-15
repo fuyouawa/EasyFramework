@@ -6,27 +6,6 @@ namespace EasyFramework
     {
         public bool IsCurrentState { get; protected set; }
 
-        protected bool IsStateEnabled { get; set; }
-
-        bool IState.Enable
-        {
-            get { return IsStateEnabled; }
-            set
-            {
-                if (IsStateEnabled == value)
-                    return;
-                IsStateEnabled = value;
-                if (IsStateEnabled)
-                {
-                    OnStateEnable();
-                }
-                else
-                {
-                    OnStateDisable();
-                }
-            }
-        }
-
         public bool IsInitialized { get; protected set; }
 
         void IState.Initialize()
@@ -50,7 +29,10 @@ namespace EasyFramework
 
         void IState.Update()
         {
-            OnStateUpdate();
+            if (gameObject.activeSelf)
+            {
+                OnStateUpdate();
+            }
         }
 
         void IState.Exit()
@@ -59,25 +41,9 @@ namespace EasyFramework
             OnStateExit();
         }
 
-        protected virtual void Update()
+        void IState.FixedUpdate()
         {
-            //TODO
-        }
-
-        protected virtual void FixedUpdate()
-        {
-            if (IsCurrentState)
-            {
-                OnStateFixedUpdate();
-            }
-        }
-
-        protected virtual void LateUpdate()
-        {
-            if (IsCurrentState)
-            {
-                OnStateLateUpdate();
-            }
+            OnStateFixedUpdate();
         }
 
         protected virtual void OnStateInit()
@@ -102,18 +68,6 @@ namespace EasyFramework
         }
 
         protected virtual void OnStateFixedUpdate()
-        {
-        }
-
-        protected virtual void OnStateLateUpdate()
-        {
-        }
-
-        protected virtual void OnStateEnable()
-        {
-        }
-
-        protected virtual void OnStateDisable()
         {
         }
     }

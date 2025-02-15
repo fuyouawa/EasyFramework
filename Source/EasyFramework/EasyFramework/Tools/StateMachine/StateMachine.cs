@@ -1,11 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace EasyFramework
 {
-    public class StateMachine<T>
+    public class StateMachine<T> : IEnumerable<KeyValuePair<T, IState>>
     {
         public T CurrentStateId { get; protected set; }
         public T PreviousStateId { get; protected set; }
@@ -47,18 +48,18 @@ namespace EasyFramework
         {
             if (!Active)
                 return;
+            CheckCurrentState();
 
-            if (CurrentState == null)
-            {
-                throw new InvalidOperationException(
-                    $"The current state in the state machine '{GetType().Name}' is null, " +
-                    $"you must first call the 'StartState' method to set a starting state");
-            }
+            CurrentState.Update();
+        }
 
-            if (CurrentState is { Enable: true })
-            {
-                CurrentState.Update();
-            }
+        public virtual void FixedUpdate()
+        {
+            if (!Active)
+                return;
+            CheckCurrentState();
+
+            CurrentState.FixedUpdate();
         }
 
         public virtual void SetActive(bool active)
@@ -66,11 +67,6 @@ namespace EasyFramework
             if (Active == active)
                 return;
             Active = active;
-
-            foreach (var state in States.Values)
-            {
-                state.Enable = active;
-            }
         }
 
         public virtual IState GetState(T stateId)
@@ -114,15 +110,10 @@ namespace EasyFramework
 
         public virtual bool StartState(T stateId)
         {
-            return InternalChangeState(stateId, false);
+            return ChangeState(stateId, false);
         }
 
-        public virtual bool ChangeState(T stateId)
-        {
-            return InternalChangeState(stateId, true);
-        }
-
-        protected virtual bool InternalChangeState(T stateId, bool notifyChangedEvent)
+        public virtual bool ChangeState(T stateId, bool withEvent = true)
         {
             if (CurrentState != null && EqualityComparer<T>.Default.Equals(stateId, CurrentStateId))
             {
@@ -144,20 +135,40 @@ namespace EasyFramework
             {
                 CurrentState = state;
 
-                if (notifyChangedEvent)
+                if (withEvent)
                     OnStateChanged?.Invoke(stateId);
 
                 CurrentState.Enter();
             }
             else
             {
-                if (notifyChangedEvent)
+                if (withEvent)
                     OnStateChanged?.Invoke(stateId);
 
                 CurrentState = null;
             }
 
             return true;
+        }
+
+        private void CheckCurrentState()
+        {
+            if (CurrentState == null)
+            {
+                throw new InvalidOperationException(
+                    $"The current state in the state machine '{GetType().Name}' is null, " +
+                    $"you must first call the 'StartState' method to set a starting state");
+            }
+        }
+
+        public IEnumerator<KeyValuePair<T, IState>> GetEnumerator()
+        {
+            return States.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

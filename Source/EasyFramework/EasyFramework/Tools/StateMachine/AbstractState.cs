@@ -4,13 +4,13 @@ namespace EasyFramework
 {
     public interface IState
     {
-        bool Enable { get; set; }
         bool IsInitialized { get; }
 
         void Initialize();
         bool Condition();
         void Enter();
         void Update();
+        void FixedUpdate();
         void Exit();
     }
 
@@ -24,27 +24,6 @@ namespace EasyFramework
     public abstract class AbstractState : IState
     {
         public bool IsCurrentState { get; protected set; }
-
-        protected bool IsStateEnabled { get; set; }
-
-        bool IState.Enable
-        {
-            get { return IsStateEnabled; }
-            set
-            {
-                if (IsStateEnabled == value)
-                    return;
-                IsStateEnabled = value;
-                if (IsStateEnabled)
-                {
-                    OnStateEnable();
-                }
-                else
-                {
-                    OnStateDisable();
-                }
-            }
-        }
 
         public bool IsInitialized { get; protected set; }
 
@@ -70,6 +49,11 @@ namespace EasyFramework
         void IState.Update()
         {
             OnStateUpdate();
+        }
+
+        void IState.FixedUpdate()
+        {
+            OnStateFixedUpdate();
         }
 
         void IState.Exit()
@@ -99,11 +83,7 @@ namespace EasyFramework
         {
         }
 
-        protected virtual void OnStateEnable()
-        {
-        }
-
-        protected virtual void OnStateDisable()
+        protected virtual void OnStateFixedUpdate()
         {
         }
     }

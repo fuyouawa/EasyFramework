@@ -8,6 +8,11 @@ namespace EasyFramework
     {
         private static readonly Queue<Action> ExecutionQueue = new Queue<Action>();
 
+        void Awake()
+        {
+            UnityInvoke.Invoker = this;
+        }
+
         public void Update()
         {
             lock (ExecutionQueue)
