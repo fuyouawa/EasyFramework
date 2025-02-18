@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -401,7 +402,7 @@ namespace EasyFramework.Editor.Inspector
             {
                 // 获取自己在GameObject中重复项的索引
                 var ct = component.GetType();
-                var ci = component.GetComponents(ct).IndexOf(component);
+                var ci = Array.IndexOf(component.GetComponents(ct), component);
 
                 foreach (var comps in _targetItems.Where(i => i.Target != component.gameObject)
                              .Select(i => i.Components))
@@ -414,7 +415,7 @@ namespace EasyFramework.Editor.Inspector
                         if (ct1 == ct)
                         {
                             // 获取重复项索引，如果要对比的和当前的都相同，说明是匹配项
-                            var ci2 = c.GetComponents(ct1).IndexOf(c);
+                            var ci2 = Array.IndexOf(c.GetComponents(ct1), c);
                             if (ci == ci2)
                             {
                                 total.Add(c);
@@ -432,7 +433,7 @@ namespace EasyFramework.Editor.Inspector
             var comps = component.gameObject.GetComponents<Component>();
             if (comps.Length > 1)
             {
-                var i = comps.IndexOf(component);
+                var i = Array.IndexOf(comps, component);
                 return i != 0;
             }
 

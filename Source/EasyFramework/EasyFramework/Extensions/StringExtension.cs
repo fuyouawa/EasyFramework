@@ -69,9 +69,15 @@ namespace EasyFramework
             return IsNullOrEmpty(val) ? defaultValue : val;
         }
 
-        public static bool Contains(this string source, string toCheck, StringComparison comparisonType)
+        public static bool Contains(this string str, string toCheck, StringComparison comparisonType)
         {
-            return source.IndexOf(toCheck, comparisonType) >= 0;
+            return str.IndexOf(toCheck, comparisonType) >= 0;
+        }
+
+
+        public static int ToInt(this string str)
+        {
+            return int.Parse(str);
         }
 
         public static bool IsValidIdentifier(this string identifier, bool throwIfInvalid = false)

@@ -21,7 +21,7 @@ namespace EasyFramework
 
         public static BindingFlags Static()
         {
-            return BindingFlags.Instance;
+            return BindingFlags.Static;
         }
 
         public static BindingFlags PublicInstance()

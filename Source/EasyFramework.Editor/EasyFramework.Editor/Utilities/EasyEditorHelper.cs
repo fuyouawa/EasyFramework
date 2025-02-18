@@ -7,30 +7,30 @@ namespace EasyFramework.Editor
 {
     public static class EasyEditorHelper
     {
-        private static MethodInfo s_forceRebuildInspectors;
+        private static MethodInfo s_methodOfForceRebuildInspectors;
 
         public static void ForceRebuildInspectors()
         {
-            if (s_forceRebuildInspectors == null)
+            if (s_methodOfForceRebuildInspectors == null)
             {
-                s_forceRebuildInspectors = typeof(EditorUtility).GetMethod("ForceRebuildInspectors",
-                    BindingFlags.NonPublic | BindingFlags.Static);
+                s_methodOfForceRebuildInspectors = typeof(EditorUtility).GetMethod("ForceRebuildInspectors",
+                    BindingFlagsHelper.NonPublicStatic());
             }
 
-            s_forceRebuildInspectors!.Invoke(null, null);
+            s_methodOfForceRebuildInspectors!.Invoke(null, null);
         }
 
-        private static MethodInfo s_findTexture;
+        private static MethodInfo s_methodOfFindTexture;
 
         public static Texture2D FindTexture(Type type)
         {
-            if (s_findTexture == null)
+            if (s_methodOfFindTexture == null)
             {
-                s_findTexture = typeof(EditorGUIUtility).GetMethodEx("FindTexture",
-                    BindingFlags.NonPublic | BindingFlags.Static, new[] { typeof(Type) });
+                s_methodOfFindTexture = typeof(EditorGUIUtility).GetMethodEx("FindTexture",
+                    BindingFlagsHelper.NonPublicStatic(), new[] { typeof(Type) });
             }
 
-            return (Texture2D)s_findTexture.Invoke(null, null);
+            return (Texture2D)s_methodOfFindTexture.Invoke(null, null);
         }
 
         private static Type s_typeOfAddComponentWindow;
@@ -49,10 +49,45 @@ namespace EasyFramework.Editor
             }
         }
 
+        private static MethodInfo s_methodOfShowAddComponentWindow;
+
         public static void ShowAddComponentWindow(Rect rect, GameObject[] gos)
         {
-            TypeOfAddComponentWindow.InvokeMethod("Show", null, rect, gos);
+            if (s_methodOfShowAddComponentWindow == null)
+            {
+                s_methodOfShowAddComponentWindow = typeof(EditorGUI).GetMethod("Show",
+                    BindingFlagsHelper.NonPublicStatic())!;
+            }
+
+            s_methodOfShowAddComponentWindow.Invoke(null, new object[] { rect, gos });
         }
+
+        private static MethodInfo s_methodOfHasKeyboardFocus;
+
+        public static bool HasKeyboardFocus(int controlId)
+        {
+            if (s_methodOfHasKeyboardFocus == null)
+            {
+                s_methodOfHasKeyboardFocus = typeof(EditorGUI).GetMethod("HasKeyboardFocus",
+                    BindingFlagsHelper.NonPublicStatic())!;
+            }
+
+            return (bool)s_methodOfHasKeyboardFocus.Invoke(null, new object[] { controlId });
+        }
+
+        private static MethodInfo s_methodOfEndEditingActiveTextField;
+
+        public static void EndEditingActiveTextField()
+        {
+            if (s_methodOfEndEditingActiveTextField == null)
+            {
+                s_methodOfEndEditingActiveTextField = typeof(EditorGUI).GetMethod("EndEditingActiveTextField",
+                    BindingFlagsHelper.NonPublicStatic())!;
+            }
+
+            s_methodOfEndEditingActiveTextField.Invoke(null, null);
+        }
+
 
         private static readonly GUIContent s_tempContent = new GUIContent();
 

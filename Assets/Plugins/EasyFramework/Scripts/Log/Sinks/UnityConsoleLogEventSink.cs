@@ -2,9 +2,12 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor.Callbacks;
 using UnityEditor;
-using UnityEngine;
+#endif
 
 namespace EasyFramework
 {
@@ -98,18 +101,21 @@ namespace EasyFramework
         }
 
         private static Type s_consoleWindowType;
-        
+
         private static Type ConsoleWindowType =>
             s_consoleWindowType ??= typeof(EditorWindow).Assembly.GetType("UnityEditor.ConsoleWindow");
-        
+
         private static FieldInfo s_consoleWindowInstanceField;
-        
+
         private static FieldInfo ConsoleWindowInstanceField =>
-            s_consoleWindowInstanceField ??= ConsoleWindowType.GetField("ms_ConsoleWindow", BindingFlags.Static | BindingFlags.NonPublic);
-        
+            s_consoleWindowInstanceField ??=
+                ConsoleWindowType.GetField("ms_ConsoleWindow", BindingFlags.Static | BindingFlags.NonPublic);
+
         private static FieldInfo s_consoleWindowActiveTextField;
+
         private static FieldInfo ConsoleWindowActiveTextField =>
-            s_consoleWindowActiveTextField ??= ConsoleWindowType.GetField("m_ActiveText", BindingFlags.Instance | BindingFlags.NonPublic);
+            s_consoleWindowActiveTextField ??=
+                ConsoleWindowType.GetField("m_ActiveText", BindingFlags.Instance | BindingFlags.NonPublic);
 
         static string GetStackTrace()
         {
@@ -122,7 +128,7 @@ namespace EasyFramework
                     return activeText;
                 }
             }
-        
+
             return null;
         }
     }

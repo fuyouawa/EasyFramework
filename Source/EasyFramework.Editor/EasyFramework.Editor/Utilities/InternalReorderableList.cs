@@ -547,6 +547,7 @@ namespace EasyFramework.Editor
                                     elementRect.y += ElementHeightCallback(m_ActiveElement);
                                 }
                             }
+
                             elementRect = (Rect)m_SlideGroup.GetType().InvokeMethod("GetRect", m_SlideGroup, m_NonDragTargetIndices[i], elementRect);
 
                             // actually draw the element
@@ -729,7 +730,7 @@ namespace EasyFramework.Editor
                         break;
 
                     // clicking on the list should end editing any existing edits
-                    EasyEditorGUI.EndEditingActiveTextField();
+                    EasyEditorHelper.EndEditingActiveTextField();
                     // pick the active element based on click position
                     m_ActiveElement = GetRowIndex(Event.current.mousePosition.y - listRect.y);
 
@@ -913,7 +914,7 @@ namespace EasyFramework.Editor
 
         public bool HasKeyboardControl()
         {
-            return EasyEditorGUI.HasKeyboardFocus(id);
+            return EasyEditorHelper.HasKeyboardFocus(id);
         }
     }
 }

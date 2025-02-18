@@ -12,7 +12,11 @@ namespace EasyFramework
         {
             return (float)System.Math.Round(value);
         }
-        
+
+        public static float Abs(this float value)
+        {
+            return Mathf.Abs(value);
+        }
 
         public static bool Approximately(this Quaternion a, Quaternion b, float similarityThreshold = 0.99f)
         {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
+using System.Reflection;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 
@@ -68,17 +69,6 @@ namespace EasyFramework.Editor
         #endregion
 
         #region Extension
-
-        public static bool HasKeyboardFocus(int controlId)
-        {
-            return (bool)typeof(EditorGUI).InvokeMethod("HasKeyboardFocus", null, controlId);
-        }
-
-        public static void EndEditingActiveTextField()
-        {
-            typeof(EditorGUI).InvokeMethod("EndEditingActiveTextField", null);
-        }
-
         public static bool ToolbarButton(GUIContent content, float width, bool selected = false)
         {
             var w = SirenixEditorGUI.currentDrawingToolbarHeight;

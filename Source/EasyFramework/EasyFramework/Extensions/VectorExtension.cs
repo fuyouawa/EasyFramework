@@ -4,47 +4,53 @@ namespace EasyFramework
 {
     public static class VectorExtension
     {
-        public static Vector2 ToCrossDirection(this Vector2 v)
+        public static Vector2Int ToCrossDirection(this Vector2 v, float zeroThreshold = 0.01f)
         {
             v = v.normalized;
 
             var absX = Mathf.Abs(v.x);
             var absY = Mathf.Abs(v.y);
 
+            if (absX <= zeroThreshold && absY <= zeroThreshold)
+            {
+                return Vector2Int.zero;
+            }
+
             if (v.x > 0f)
             {
                 if (v.y > 0f)
                 {
-                    return v.x > v.y ? Vector2.right : Vector2.up;
+                    return v.x > v.y ? Vector2Int.right : Vector2Int.up;
                 }
                 else
                 {
-                    return v.x > absY ? Vector2.right : Vector2.down;
+                    return v.x > absY ? Vector2Int.right : Vector2Int.down;
                 }
             }
             else
             {
                 if (v.y > 0f)
                 {
-                    return absX > v.y ? Vector2.left : Vector2.up;
+                    return absX > v.y ? Vector2Int.left : Vector2Int.up;
                 }
                 else
                 {
-                    return absX > absY ? Vector2.left : Vector2.down;
+                    return absX > absY ? Vector2Int.left : Vector2Int.down;
                 }
             }
         }
 
         public static bool IsVertical(this Vector2 v)
         {
-            v = ToCrossDirection(v);
-            return v == Vector2.up || v == Vector2.down;
+            var v1 = ToCrossDirection(v);
+            return v1 == Vector2Int.up || v1 == Vector2Int.down;
         }
-        
+
         public static Vector3 ToVec3(this Vector2 v, float z = 0f)
         {
             return new Vector3(v.x, v.y, z);
         }
+
         public static Vector2 ToVec2(this Vector3 v)
         {
             return new Vector2(v.x, v.y);
@@ -106,7 +112,7 @@ namespace EasyFramework
         {
             return new Vector2(v.x, v.y);
         }
-        
+
         public static Vector3Int ToVec3Int(this Vector2Int v)
         {
             return new Vector3Int(v.x, v.y);
