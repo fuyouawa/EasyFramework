@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -41,35 +42,15 @@ namespace EasyFramework.Editor.Drawer
 
             var editorInfo = binder.Info.EditorData.Get<ViewBinderEditorInfo>() ?? new ViewBinderEditorInfo();
             var settings = ViewBinderSettings.Instance;
-            
+
             if (!editorInfo.IsInitialized)
             {
-                var candidateComponents = component.GetComponents<Component>()
-                    .Where(c => c != null)
-                    .ToArray();
+                var candidateComponents = GetCandidateComponents(component);
 
-                Component initialComponent;
-                if (candidateComponents.Length > 1)
-                {
-                    var t = candidateComponents[1];
-                    if (t.GetType() == typeof(ViewBinder))
-                    {
-                        initialComponent = candidateComponents.Length > 2
-                            ? candidateComponents[2]
-                            : candidateComponents[0];
-                    }
-                    else
-                    {
-                        initialComponent = t;
-                    }
-                }
-                else
-                {
-                    initialComponent = candidateComponents[0];
-                }
+                var initialComponent = candidateComponents[0];
 
                 editorInfo.BindComponent = initialComponent;
-                
+
                 var parents = component.transform.FindObjectsByTypeInParents<IViewModel>(true);
                 if (parents.IsNotNullOrEmpty())
                 {
@@ -88,6 +69,34 @@ namespace EasyFramework.Editor.Drawer
                 binder.Info.EditorData.Set(editorInfo);
                 EditorUtility.SetDirty(component);
             }
+        }
+
+        public static Component[] GetCandidateComponents(Component component)
+        {
+            var priorityList = ViewBinderSettings.Instance.Priority;
+
+            var components = component.GetComponents<Component>()
+                .Where(c => c != null)
+                .ToList();
+
+            components.Sort((a, b) =>
+            {
+                var indexA = priorityList.IndexOf(a.GetType(), false, true);
+                var indexB = priorityList.IndexOf(b.GetType(), false, true);
+
+                if (indexA < 0 && indexB >= 0)
+                {
+                    return 1;
+                }
+
+                if (indexB < 0 && indexA >= 0)
+                {
+                    return -1;
+                }
+
+                return indexA.CompareTo(indexB);
+            });
+            return components.ToArray();
         }
 
         [MenuItem("GameObject/EasyFramework/添加 ViewBinder")]

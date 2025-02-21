@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace EasyFramework.Editor.Drawer
 {
+    //TODO 多组件处理
     public class ViewBinderInfoDrawer : OdinValueDrawer<ViewBinderInfo>
     {
         private Component _component;
@@ -50,6 +51,8 @@ namespace EasyFramework.Editor.Drawer
 
         private void OnContentGUI(Rect headerRect)
         {
+            ViewBinderHelper.InitializeBinder((IViewBinder)_component);
+
             if (_editorInfo.NameSameAsGameObjectName)
             {
                 if (_editorInfo.Name != _component.gameObject.name)
@@ -86,8 +89,7 @@ namespace EasyFramework.Editor.Drawer
                 }
 
                 EasyEditorGUI.DrawSelectorDropdown(
-                    _component.GetComponents<Component>()
-                        .Where(c => c != null),
+                    ViewBinderHelper.GetCandidateComponents(_component),
                     EditorHelper.TempContent("要绑定的组件"),
                     bindComponentBtnLabel,
                     t => _editorInfo.BindComponent = t,
