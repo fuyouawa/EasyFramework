@@ -18,6 +18,16 @@ namespace EasyFramework
             return Mathf.Abs(value);
         }
 
+        public static int FloorToInt(this float value)
+        {
+            return Mathf.FloorToInt(value);
+        }
+
+        public static bool Approximately(this float a, float b)
+        {
+            return Mathf.Approximately(a, b);
+        }
+
         public static bool Approximately(this Quaternion a, Quaternion b, float similarityThreshold = 0.99f)
         {
             var dot = Quaternion.Dot(a, b);

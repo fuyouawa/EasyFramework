@@ -6,6 +6,33 @@ namespace EasyFramework
 {
     public static class CollectionExtension
     {
+        public static void ForEach<T>(this IEnumerable<T> enumerator, Action<T> callback)
+        {
+            foreach (var elem in enumerator)
+            {
+                callback(elem);
+            }
+        }
+
+        public static bool HasDuplicate<T, E>(this IEnumerable<T> enumerator, Func<T, E> selector)
+        {
+            var set = new HashSet<E>();
+
+            foreach (var e in enumerator)
+            {
+                if (!set.Add(selector(e)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool HasDuplicate<T>(this IEnumerable<T> enumerator)
+        {
+            return enumerator.HasDuplicate(e => e);
+        }
+
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
         {
             return source == null || !source.Any();
@@ -68,6 +95,23 @@ namespace EasyFramework
             }
 
             return result;
+        }
+
+        public static T[] Kick<T>(this T[] array, int index)
+        {
+            if (index < 0 || index >= array.Length)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            // 创建新的数组
+            T[] newArray = new T[array.Length - 1];
+
+            // 复制原数组中的元素到新数组
+            Array.Copy(array, 0, newArray, 0, index);  // 复制索引之前的元素
+            Array.Copy(array, index + 1, newArray, index, array.Length - index - 1);
+
+            return newArray;
         }
     }
 }

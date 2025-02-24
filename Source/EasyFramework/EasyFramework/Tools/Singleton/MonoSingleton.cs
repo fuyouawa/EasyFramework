@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework
 {
@@ -25,8 +26,10 @@ namespace EasyFramework
             var instances = UnityEngine.Object.FindObjectsOfType<T>(true);
             if (instances.Length > 1)
             {
-                throw new Exception($"MonoSingleton:\"{typeof(T).Name}\" can only have one instance that exists in the scene");
+                throw new Exception(
+                    $"MonoSingleton:\"{typeof(T).Name}\" can only have one instance that exists in the scene");
             }
+
             if (instances.Length == 1)
             {
                 inst = instances[0];
@@ -35,13 +38,42 @@ namespace EasyFramework
             else
             {
                 var obj = new GameObject(typeof(T).Name);
-                UnityEngine.Object.DontDestroyOnLoad(obj);
+                ProcessTarget(obj);
                 inst = obj.AddComponent<T>();
                 inst.OnSingletonInit(SingletonInitialModes.Create);
             }
 
 
             return inst;
+        }
+
+        internal static void ProcessTarget(Object target)
+        {
+            var cfg = target.GetType().GetCustomAttribute<MonoSingletonConfigAttribute>();
+            if (cfg != null)
+            {
+                if (cfg.Flags.HasFlag(MonoSingletonFlags.DontDestroyOnLoad))
+                {
+                    Object.DontDestroyOnLoad(target);
+                }
+            }
+        }
+    }
+
+    [Flags]
+    public enum MonoSingletonFlags
+    {
+        None = 0,
+        DontDestroyOnLoad = 1 << 0
+    }
+
+    public class MonoSingletonConfigAttribute : Attribute
+    {
+        public MonoSingletonFlags Flags;
+
+        public MonoSingletonConfigAttribute(MonoSingletonFlags flags)
+        {
+            Flags = flags;
         }
     }
 
@@ -76,7 +108,7 @@ namespace EasyFramework
 
             s_instance = (T)this;
             s_loadBySelf = true;
-            DontDestroyOnLoad(gameObject);
+            SingletonCreator.ProcessTarget(this);
         }
 
         public virtual void OnSingletonInit()
