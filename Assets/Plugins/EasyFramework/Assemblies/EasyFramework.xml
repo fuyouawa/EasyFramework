@@ -675,6 +675,11 @@
             <param name="rect">The original <see cref="T:UnityEngine.Rect" />.</param>
             <returns><c>true</c> if the <see cref="T:UnityEngine.Rect" /> is equal to (0, 0, 0, 0) or (0, 0, 1, 1); otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
+            <summary>
+            <para>确保会在Unity线程触发</para>
+            </summary>
+        </member>
         <member name="T:EasyFramework.EventTriggerExtensionDelegate">
             <summary>
             <para>事件处理器的触发行为扩展</para>
@@ -764,11 +769,6 @@
             Gets an audio source from the pool if possible
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
-            <summary>
-            <para>确保会在Unity线程触发</para>
-            </summary>
         </member>
         <member name="T:EasyFramework.OnStateChangeDelegate`1">
             <summary>
