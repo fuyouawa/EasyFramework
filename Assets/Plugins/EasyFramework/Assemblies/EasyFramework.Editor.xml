@@ -4,31 +4,6 @@
         <name>EasyFramework.Editor</name>
     </assembly>
     <members>
-        <member name="M:EasyFramework.Editor.Drawer.BigTitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
-            <summary>
-            Draws the property.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Editor.Drawer.BigTitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
-            <summary>
-            Draws the property.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Editor.Drawer.InfoBoxCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
-            <summary>
-            Draws the property.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Editor.Drawer.TitleCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
-            <summary>
-            Draws the property.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Editor.Drawer.TitleGroupCNAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
-            <summary>
-            Draws the property.
-            </summary>
-        </member>
         <member name="M:EasyFramework.Editor.EasyEditorGUI.MessageBox(System.String,System.Boolean)">
             <summary>Draws a message box.</summary>
             <param name="message">The message.</param>

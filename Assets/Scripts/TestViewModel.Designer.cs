@@ -8,11 +8,12 @@
 //------------------------------------------------------------------------------
 
 using EasyFramework;
+using EasyFramework.ToolKit;
 using UnityEngine;
 
 
 
-public partial class TestViewModel : IViewModel
+public partial class TestViewModel : IViewController
 {
     
     [FromViewBinder()]
@@ -28,9 +29,9 @@ public partial class TestViewModel : IViewModel
     public Component Kkkjjj;
     
     [SerializeField()]
-    private ViewModelInfo _viewModelInfo;
+    private ViewControllerConfig _viewModelInfo;
     
-    public ViewModelInfo Info
+    public ViewControllerConfig Config
     {
         get
         {

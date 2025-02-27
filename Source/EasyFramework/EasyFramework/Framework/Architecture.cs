@@ -44,7 +44,7 @@ namespace EasyFramework
 
         IFromRegisterEvent RegisterEvent<T>(EventHandlerDelegate<T> onEvent);
         void UnRegisterEvent<T>(EventHandlerDelegate<T> onEvent);
-        
+
         IFromRegisterEvent RegisterEventSubscriber();
         void UnRegisterEventSubscriber();
     }

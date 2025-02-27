@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyFramework.ToolKit.Editor</name>
+    </assembly>
+    <members>
+        <member name="M:EasyFramework.ToolKit.Editor.InfoBoxExAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.Editor.TitleExAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.Editor.TitleGroupExAttributeDrawer.DrawPropertyLayout(UnityEngine.GUIContent)">
+            <summary>
+            Draws the property.
+            </summary>
+        </member>
+    </members>
+</doc>

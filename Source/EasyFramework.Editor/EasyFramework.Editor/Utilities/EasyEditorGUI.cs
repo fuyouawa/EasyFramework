@@ -69,6 +69,7 @@ namespace EasyFramework.Editor
         #endregion
 
         #region Extension
+
         public static bool ToolbarButton(GUIContent content, float width, bool selected = false)
         {
             var w = SirenixEditorGUI.currentDrawingToolbarHeight;
@@ -115,82 +116,129 @@ namespace EasyFramework.Editor
             return EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(hasLabel, height, style, options));
         }
 
+        public static void BeginGUIColor(Color? color)
+        {
+            PushContext("GUIColor", GUI.color);
+            if (color != null)
+            {
+                GUI.color = (Color)color;
+            }
+        }
+
+        public static void EndGUIColor()
+        {
+            var color = PopContext<Color>("GUIColor");
+            GUI.color = color;
+        }
+
+        public static void BeginGUIContentColor(Color? color)
+        {
+            PushContext("GUIContentColor", GUI.color);
+            if (color != null)
+            {
+                GUI.contentColor = (Color)color;
+            }
+        }
+
+        public static void EndGUIContentColor()
+        {
+            var color = PopContext<Color>("GUIContentColor");
+            GUI.contentColor = color;
+        }
+
         #endregion
 
         #region Title
 
-        public static void BigTitle(string title, string subtitle = null,
-            TextAlignment textAlignment = TextAlignment.Left, bool horizontalLine = true,
-            bool boldLabel = true)
+        private static readonly TitleConfig TempTitleConfig = new TitleConfig();
+
+        public static void Title(
+            string title, string subtitle = null,
+            TextAlignment titleAlignment = TextAlignment.Left,
+            float titleFontSize = 13f,
+            Color? titleColor = null)
         {
-            Title(title, subtitle, textAlignment, horizontalLine, boldLabel,
-                16, null);
+            TempTitleConfig.Title = title;
+            TempTitleConfig.Subtitle = subtitle;
+            TempTitleConfig.TitleFontSize = titleFontSize;
+            TempTitleConfig.TitleColor = titleColor;
+            TempTitleConfig.TitleAlignment = titleAlignment;
+
+            Title(TempTitleConfig);
         }
 
-        public static void Title(string title, string subtitle = null, TextAlignment textAlignment = TextAlignment.Left,
-            bool horizontalLine = true,
-            bool boldLabel = true)
+        public static void Title(TitleConfig config)
         {
-            Title(title, subtitle, textAlignment, horizontalLine, boldLabel, 13,
-                null);
-        }
-
-        public static void Title(string title, string subtitle, TextAlignment textAlignment, bool horizontalLine,
-            bool boldLabel, int fontSize, Font font)
-        {
-            GUIStyle titleStyle = null;
-            GUIStyle subtitleStyle = null;
-            switch ((int)textAlignment)
+            GUIStyle style1;
+            GUIStyle style2;
+            switch (config.TitleAlignment)
             {
-                case 0:
-                    titleStyle = (boldLabel ? SirenixGUIStyles.BoldTitle : SirenixGUIStyles.Title);
-                    subtitleStyle = SirenixGUIStyles.Subtitle;
+                case TextAlignment.Left:
+                    style1 = config.BoldTitle ? SirenixGUIStyles.BoldTitle : SirenixGUIStyles.Title;
+                    style2 = SirenixGUIStyles.Subtitle;
                     break;
-                case 1:
-                    titleStyle = (boldLabel ? SirenixGUIStyles.BoldTitleCentered : SirenixGUIStyles.TitleCentered);
-                    subtitleStyle = SirenixGUIStyles.SubtitleCentered;
+                case TextAlignment.Center:
+                    style1 = config.BoldTitle ? SirenixGUIStyles.BoldTitleCentered : SirenixGUIStyles.TitleCentered;
+                    style2 = SirenixGUIStyles.SubtitleCentered;
                     break;
-                case 2:
-                    titleStyle = (boldLabel ? SirenixGUIStyles.BoldTitleRight : SirenixGUIStyles.TitleRight);
-                    subtitleStyle = SirenixGUIStyles.SubtitleRight;
+                case TextAlignment.Right:
+                    style1 = config.BoldTitle ? SirenixGUIStyles.BoldTitleRight : SirenixGUIStyles.TitleRight;
+                    style2 = SirenixGUIStyles.SubtitleRight;
                     break;
                 default:
-                    titleStyle = (boldLabel ? SirenixGUIStyles.BoldTitle : SirenixGUIStyles.Title);
-                    subtitleStyle = SirenixGUIStyles.SubtitleRight;
+                    style1 = config.BoldTitle ? SirenixGUIStyles.BoldTitle : SirenixGUIStyles.Title;
+                    style2 = SirenixGUIStyles.SubtitleRight;
                     break;
             }
 
-            titleStyle = new GUIStyle(titleStyle)
+            if (config.TitleFontSize != null)
+                style1.fontSize = (int)config.TitleFontSize;
+
+            if (config.SubtitleFontSize != null)
+                style2.fontSize = (int)config.SubtitleFontSize;
+
+            config.TitleStyleProcessor?.Invoke(style1);
+            config.SubtitleStyleProcessor?.Invoke(style2);
+
+            if (config.TitleAlignment > TextAlignment.Right)
             {
-                font = font,
-                fontSize = fontSize
-            };
-            Rect rect;
-            if ((int)textAlignment > 2)
-            {
-                rect = GUILayoutUtility.GetRect(0f, 18f, titleStyle, GUILayout.ExpandWidth(true));
-                GUI.Label(rect, title, titleStyle);
+                Rect rect = GUILayoutUtility.GetRect(0.0f, 18f, style1, GUILayout.ExpandWidth(true));
+
+                BeginGUIContentColor(config.TitleColor);
+                GUI.Label(rect, config.Title, style1);
+                EndGUIContentColor();
+
                 rect.y += 3f;
-                GUI.Label(rect, subtitle, subtitleStyle);
-                if (horizontalLine)
+
+                BeginGUIContentColor(config.SubtitleColor);
+                GUI.Label(rect, config.Subtitle, style2);
+                EndGUIContentColor();
+
+                if (!config.HorizontalLine)
+                    return;
+                SirenixEditorGUI.HorizontalLineSeparator(SirenixGUIStyles.LightBorderColor);
+                GUILayout.Space(3f);
+            }
+            else
+            {
+                Rect rect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
+
+                BeginGUIContentColor(config.TitleColor);
+                GUI.Label(rect, config.Title, style1);
+                EndGUIContentColor();
+
+                if (config.Subtitle.IsNotNullOrWhiteSpace())
                 {
-                    SirenixEditorGUI.HorizontalLineSeparator(SirenixGUIStyles.LightBorderColor);
-                    GUILayout.Space(3f);
+                    rect = EditorGUI.IndentedRect(GUILayoutUtility.GetRect(GUIHelper.TempContent(config.Subtitle),
+                        style2));
+
+                    BeginGUIContentColor(config.SubtitleColor);
+                    GUI.Label(rect, config.Subtitle, style2);
+                    EndGUIContentColor();
                 }
 
-                return;
-            }
-
-            rect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false));
-            GUI.Label(rect, title, titleStyle);
-            if (subtitle != null && !subtitle.IsNullOrWhiteSpace())
-            {
-                rect = EditorGUI.IndentedRect(GUILayoutUtility.GetRect(GUIHelper.TempContent(subtitle), subtitleStyle));
-                GUI.Label(rect, subtitle, subtitleStyle);
-            }
-
-            if (horizontalLine)
-            {
+                if (!config.HorizontalLine)
+                    return;
                 SirenixEditorGUI.DrawSolidRect(rect.AlignBottom(1f), SirenixGUIStyles.LightBorderColor);
                 GUILayout.Space(3f);
             }
@@ -324,21 +372,6 @@ namespace EasyFramework.Editor
         #endregion
 
         #region Label
-
-        public static void BeginGUIColor(Color? color)
-        {
-            PushContext("GUIColor", GUI.color);
-            if (color != null)
-            {
-                GUI.color = (Color)color;
-            }
-        }
-
-        public static void EndGUIColor()
-        {
-            var color = PopContext<Color>("GUIColor");
-            GUI.color = color;
-        }
 
         private static readonly LabelConfig s_emptyLabelConfig = new LabelConfig();
 

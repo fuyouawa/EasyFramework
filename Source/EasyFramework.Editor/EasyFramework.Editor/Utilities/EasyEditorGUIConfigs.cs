@@ -16,6 +16,41 @@ namespace EasyFramework.Editor
     public delegate void OnConfirmedDelegate<in T>(T value);
     public delegate string MenuItemNameGetterDelegate<in T>(T value);
 
+    public delegate void TitleStyleProcessorDelegate(GUIStyle style);
+    public delegate void SubTitleStyleProcessorDelegate(GUIStyle style);
+
+
+    public class TitleConfig
+    {
+        public string Title;
+        public string Subtitle;
+        public TextAlignment TitleAlignment;
+        public bool HorizontalLine;
+        public bool BoldTitle;
+
+        public Color? TitleColor;
+        public Color? SubtitleColor;
+        public float? TitleFontSize;
+        public float? SubtitleFontSize;
+
+        public TitleStyleProcessorDelegate TitleStyleProcessor;
+        public SubTitleStyleProcessorDelegate SubtitleStyleProcessor;
+
+        public TitleConfig()
+            : this(null)
+        {
+        }
+
+        public TitleConfig(string title)
+        {
+            Title = title;
+            Subtitle = string.Empty;
+            TitleAlignment = TextAlignment.Left;
+            HorizontalLine = true;
+            BoldTitle = true;
+        }
+    }
+
     public class LabelConfig
     {
         public GUIContent Content;

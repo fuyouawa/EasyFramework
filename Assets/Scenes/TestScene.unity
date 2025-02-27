@@ -273,7 +273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1000912421}
-  - component: {fileID: 1000912420}
+  - component: {fileID: 1000912422}
   m_Layer: 0
   m_Name: sfdsdf
   m_TagString: Untagged
@@ -281,22 +281,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1000912420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000912419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -867680907, guid: 24095847c90366543b607397b548fa96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _viewModelInfo:
-    EditorData:
-      _serializedData: 022f00000000014500000045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072002e004400720061007700650072002e0056006900650077004d006f00640065006c0045006400690074006f00720049006e0066006f002c00200045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f007200000000002801000000002801060000007300660064007300640066002c012c01280107000000530063007200690070007400730028016800000055006e0069007400790045006e00670069006e0065002e004d006f006e006f004200650068006100760069006f00750072002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c0065002c002000560065007200730069006f006e003d0030002e0030002e0030002e0030002c002000430075006c0074007500720065003d006e00650075007400720061006c002c0020005000750062006c00690063004b006500790054006f006b0065006e003d006e0075006c006c0005
-      _serializedUnityObjects: []
 --- !u!4 &1000912421
 Transform:
   m_ObjectHideFlags: 0
@@ -313,6 +297,26 @@ Transform:
   - {fileID: 1166249102}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1000912422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000912419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 987200766, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewControllerConfig:
+    _editorConfig:
+      IsInitialized: 0
+      GenerateDirectory: 
+      Namespace: 
+      AutoName: 1
+      ClassName: sfdsdf
+    _otherBinderConfigs: []
 --- !u!1 &1043417715
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,9 +418,13 @@ MonoBehaviour:
   Sadfsdf: {fileID: 1921682778}
   Kkkjjj: {fileID: 505184100}
   _viewModelInfo:
-    EditorData:
-      _serializedData: 022f00000000014500000045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072002e004400720061007700650072002e0056006900650077004d006f00640065006c0045006400690074006f00720049006e0066006f002c00200045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072000000000028010000000028010d000000540065007300740056006900650077004d006f00640065006c002c012c0105
-      _serializedUnityObjects: []
+    _editorConfig:
+      IsInitialized: 0
+      GenerateDirectory: 
+      Namespace: 
+      AutoName: 1
+      ClassName: 
+    _otherBinderConfigs: []
 --- !u!1 &1637753062
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,9 +562,13 @@ MonoBehaviour:
   Sadfsdf: {fileID: 0}
   Kkkjjj: {fileID: 0}
   _viewModelInfo:
-    EditorData:
-      _serializedData: 022f00000000014500000045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072002e004400720061007700650072002e0056006900650077004d006f00640065006c0045006400690074006f00720049006e0066006f002c00200045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072000000000028010000000028010e000000470061006d0065004f0062006a0065006300740020002800310029002c012c01280107000000530063007200690070007400730028013100000055006e0069007400790045006e00670069006e0065002e004d006f006e006f004200650068006100760069006f00750072002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c00650005
-      _serializedUnityObjects: []
+    _editorConfig:
+      IsInitialized: 0
+      GenerateDirectory: 
+      Namespace: 
+      AutoName: 1
+      ClassName: 
+    _otherBinderConfigs: []
 --- !u!4 &1888331993
 Transform:
   m_ObjectHideFlags: 0
@@ -798,7 +810,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1921682783}
   m_TextComponent: {fileID: 0}
   m_Placeholder: {fileID: 0}
   m_ContentType: 0

@@ -4,220 +4,6 @@
         <name>EasyFramework</name>
     </assembly>
     <members>
-        <member name="F:EasyFramework.BigTitleCNAttribute.Title">
-            <summary>
-            The title displayed above the property in the inspector.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleCNAttribute.Subtitle">
-            <summary>
-            Optional subtitle.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleCNAttribute.Bold">
-            <summary>
-            If <c>true</c> the title will be displayed with a bold font.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleCNAttribute.HorizontalLine">
-            <summary>
-            Gets a value indicating whether or not to draw a horizontal line below the title.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleCNAttribute.TitleAlignment">
-            <summary>
-            Title alignment.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.BigTitleCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean)">
-            <summary>
-            Creates a title above any property in the inspector.
-            </summary>
-            <param name="title">The title displayed above the property in the inspector.</param>
-            <param name="subtitle">Optional subtitle</param>
-            <param name="titleAlignment">Title alignment</param>
-            <param name="horizontalLine">Horizontal line</param>
-            <param name="bold">If <c>true</c> the title will be drawn with a bold font.</param>
-        </member>
-        <member name="F:EasyFramework.BigTitleGroupCNAttribute.Subtitle">
-            <summary>
-            Optional subtitle.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleGroupCNAttribute.Alignment">
-            <summary>
-            Title alignment.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleGroupCNAttribute.HorizontalLine">
-            <summary>
-            Gets a value indicating whether or not to draw a horizontal line below the title.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleGroupCNAttribute.BoldTitle">
-            <summary>
-            If <c>true</c> the title will be displayed with a bold font.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.BigTitleGroupCNAttribute.Indent">
-            <summary>
-            Gets a value indicating whether or not to indent all group members.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.BigTitleGroupCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean,System.Boolean,System.Single)">
-            <summary>
-            Groups properties vertically together with a title, an optional subtitle, and an optional horizontal line. 
-            </summary>
-            <param name="title">The title-</param>
-            <param name="subtitle">Optional subtitle.</param>
-            <param name="alignment">The text alignment.</param>
-            <param name="horizontalLine">Horizontal line.</param>
-            <param name="boldTitle">Bold text.</param>
-            <param name="indent">Whether or not to indent all group members.</param>
-            <param name="order">The group order.</param>
-        </member>
-        <member name="M:EasyFramework.BigTitleGroupCNAttribute.CombineValuesWith(Sirenix.OdinInspector.PropertyGroupAttribute)">
-            <summary>
-            Combines TitleGroup attributes.
-            </summary>
-            <param name="other">The other group attribute to combine with.</param>
-        </member>
-        <member name="T:EasyFramework.InfoBoxCNAttribute">
-            <summary>
-            扩展自Sirenix.OdinInspector.InfoBoxAttribute
-            优化中文字体的显示
-            使用方法和Sirenix.OdinInspector.InfoBoxAttribute一样
-            </summary>
-        </member>
-        <member name="F:EasyFramework.InfoBoxCNAttribute.Message">
-            <summary>
-            The message to display in the info box.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.InfoBoxCNAttribute.InfoMessageType">
-            <summary>
-            The type of the message box.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.InfoBoxCNAttribute.VisibleIf">
-            <summary>
-            Optional member field, property or function to show and hide the info box.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.InfoBoxCNAttribute.GUIAlwaysEnabled">
-            <summary>
-            When <c>true</c> the InfoBox will ignore the GUI.enable flag and always draw as enabled.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.InfoBoxCNAttribute.IconColor">
-            <summary>Supports a variety of color formats, including named colors (e.g. "red", "orange", "green", "blue"), hex codes (e.g. "#FF0000" and "#FF0000FF"), and RGBA (e.g. "RGBA(1,1,1,1)") or RGB (e.g. "RGB(1,1,1)"), including Odin attribute expressions (e.g "@this.MyColor"). Here are the available named colors: black, blue, clear, cyan, gray, green, grey, magenta, orange, purple, red, transparent, transparentBlack, transparentWhite, white, yellow, lightblue, lightcyan, lightgray, lightgreen, lightgrey, lightmagenta, lightorange, lightpurple, lightred, lightyellow, darkblue, darkcyan, darkgray, darkgreen, darkgrey, darkmagenta, darkorange, darkpurple, darkred, darkyellow.</summary>
-        </member>
-        <member name="P:EasyFramework.InfoBoxCNAttribute.Icon">
-            <summary>
-            The icon to be displayed next to the message.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.InfoBoxCNAttribute.#ctor(System.String,Sirenix.OdinInspector.InfoMessageType,System.String)">
-            <summary>
-            Displays an info box above the property.
-            </summary>
-            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
-            <param name="infoMessageType">The type of the message box.</param>
-            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
-        </member>
-        <member name="M:EasyFramework.InfoBoxCNAttribute.#ctor(System.String,System.String)">
-            <summary>
-            Displays an info box above the property.
-            </summary>
-            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
-            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
-        </member>
-        <member name="M:EasyFramework.InfoBoxCNAttribute.#ctor(System.String,Sirenix.OdinInspector.SdfIconType,System.String)">
-            <summary>
-            Displays an info box above the property.
-            </summary>
-            <param name="message">The message for the message box. Supports referencing a member string field, property or method by using $.</param>
-            <param name="icon">The icon to be displayed next to the message.</param>
-            <param name="visibleIfMemberName">Name of member bool to show or hide the message box.</param>
-        </member>
-        <member name="F:EasyFramework.TitleCNAttribute.Title">
-            <summary>
-            The title displayed above the property in the inspector.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleCNAttribute.Subtitle">
-            <summary>
-            Optional subtitle.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleCNAttribute.Bold">
-            <summary>
-            If <c>true</c> the title will be displayed with a bold font.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleCNAttribute.HorizontalLine">
-            <summary>
-            Gets a value indicating whether or not to draw a horizontal line below the title.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleCNAttribute.TitleAlignment">
-            <summary>
-            Title alignment.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.TitleCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean)">
-            <summary>
-            Creates a title above any property in the inspector.
-            </summary>
-            <param name="title">The title displayed above the property in the inspector.</param>
-            <param name="subtitle">Optional subtitle</param>
-            <param name="titleAlignment">Title alignment</param>
-            <param name="horizontalLine">Horizontal line</param>
-            <param name="bold">If <c>true</c> the title will be drawn with a bold font.</param>
-        </member>
-        <member name="F:EasyFramework.TitleGroupCNAttribute.Subtitle">
-            <summary>
-            Optional subtitle.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleGroupCNAttribute.Alignment">
-            <summary>
-            Title alignment.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleGroupCNAttribute.HorizontalLine">
-            <summary>
-            Gets a value indicating whether or not to draw a horizontal line below the title.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleGroupCNAttribute.BoldTitle">
-            <summary>
-            If <c>true</c> the title will be displayed with a bold font.
-            </summary>
-        </member>
-        <member name="F:EasyFramework.TitleGroupCNAttribute.Indent">
-            <summary>
-            Gets a value indicating whether or not to indent all group members.
-            </summary>
-        </member>
-        <member name="M:EasyFramework.TitleGroupCNAttribute.#ctor(System.String,System.String,Sirenix.OdinInspector.TitleAlignments,System.Boolean,System.Boolean,System.Boolean,System.Single)">
-            <summary>
-            Groups properties vertically together with a title, an optional subtitle, and an optional horizontal line. 
-            </summary>
-            <param name="title">The title-</param>
-            <param name="subtitle">Optional subtitle.</param>
-            <param name="alignment">The text alignment.</param>
-            <param name="horizontalLine">Horizontal line.</param>
-            <param name="boldTitle">Bold text.</param>
-            <param name="indent">Whether or not to indent all group members.</param>
-            <param name="order">The group order.</param>
-        </member>
-        <member name="M:EasyFramework.TitleGroupCNAttribute.CombineValuesWith(Sirenix.OdinInspector.PropertyGroupAttribute)">
-            <summary>
-            Combines TitleGroup attributes.
-            </summary>
-            <param name="other">The other group attribute to combine with.</param>
-        </member>
         <member name="M:EasyFramework.AnimationCurveExtension.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single)">
             <summary>
             <para>将给定的time从[0-maxTime]映射到[0-1]</para>
@@ -675,18 +461,6 @@
             <param name="rect">The original <see cref="T:UnityEngine.Rect" />.</param>
             <returns><c>true</c> if the <see cref="T:UnityEngine.Rect" /> is equal to (0, 0, 0, 0) or (0, 0, 1, 1); otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
-            <summary>
-            <para>确保会在Unity线程触发</para>
-            </summary>
-        </member>
-        <member name="T:EasyFramework.EventTriggerExtensionDelegate">
-            <summary>
-            <para>事件处理器的触发行为扩展</para>
-            <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
-            </summary>
-            <param name="triggerInvoker">事件处理器的触发调用对象</param>
-        </member>
         <member name="T:EasyFramework.EventHandlerDelegate`1">
             <summary>
             事件处理器
@@ -694,6 +468,13 @@
             <typeparam name="TEvent"></typeparam>
             <param name="sender">发送者</param>
             <param name="e">事件参数</param>
+        </member>
+        <member name="T:EasyFramework.EventTriggerExtensionDelegate">
+            <summary>
+            <para>事件处理器的触发行为扩展</para>
+            <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
+            </summary>
+            <param name="triggerInvoker">事件处理器的触发调用对象</param>
         </member>
         <member name="T:EasyFramework.EasyEventHandlerAttribute">
             <summary>
@@ -748,38 +529,9 @@
             <param name="eventArg">事件</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.Feedbacks.EF_Sound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
+        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
             <summary>
-            Plays a sound differently based on the selected play method
-            </summary>
-            <param name="sfx"></param>
-            <param name="position"></param>
-        </member>
-        <member name="M:EasyFramework.Feedbacks.EF_Sound.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
-            <summary>
-            Plays the audio source with the specified volume and pitch
-            </summary>
-            <param name="audioSource"></param>
-            <param name="sfx"></param>
-            <param name="volume"></param>
-            <param name="pitch"></param>
-        </member>
-        <member name="M:EasyFramework.Feedbacks.EF_Sound.GetAudioSourceFromPool">
-            <summary>
-            Gets an audio source from the pool if possible
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:EasyFramework.OnStateChangeDelegate`1">
-            <summary>
-            当状态更改完成的回调
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="stateId">当前状态</param>
-        </member>
-        <member name="E:EasyFramework.StateMachine`1.OnStateChanged">
-            <summary>
-            当状态更改完的的回调
+            <para>确保会在Unity线程触发</para>
             </summary>
         </member>
         <member name="M:EasyFramework.MathUtility.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)">

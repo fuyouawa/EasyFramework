@@ -205,7 +205,7 @@ namespace EasyFramework
             type.AddEvent(eventName, BindingFlagsHelper.All(), target, func);
         }
 
-        public static Type[] GetParentTypes(this Type type, bool includeInterface = true, bool includeTargetType = false)
+        public static Type[] GetAllBaseTypes(this Type type, bool includeInterface = true, bool includeTargetType = false)
         {
             var parentTypes = new List<Type>();
 

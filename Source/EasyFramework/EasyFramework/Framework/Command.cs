@@ -30,7 +30,7 @@ namespace EasyFramework
 
     public abstract class AbstractCommand : ICommand
     {
-        private IArchitecture _arch;
+        private IArchitecture _arch = null!;
 
         IArchitecture IBelongToArchitecture.GetArchitecture() => _arch;
 
