@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Sirenix.OdinInspector;
@@ -70,10 +71,7 @@ namespace EasyFramework.ToolKit
             if (_targetComponent == null)
                 return Enumerable.Empty<Component>();
 
-            return _targetComponent.GetComponents<Component>()
-                .Where(c => c != null)
-                .Select(c => c.GetType())
-                .Distinct();
+            return ViewBinderUtility.GetBindableComponentTypes((IViewBinder)_targetComponent);
         }
 
         private IEnumerable GetSpecificBindTypeDropdown()
@@ -81,7 +79,7 @@ namespace EasyFramework.ToolKit
             if (BindComponentType == null)
                 return Enumerable.Empty<Type>();
 
-            return BindComponentType.GetAllBaseTypes(true, true);
+            return ViewBinderUtility.GetSpecficableBindTypes(BindComponentType);
         }
     }
 

@@ -1,8 +1,9 @@
-using System.Collections.Generic;
+using System;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -18,6 +19,7 @@ namespace EasyFramework.ToolKit.Editor
         private InspectorProperty _propertyOfUseDocumentComment;
         private InspectorProperty _propertyOfAutoAddParaToComment;
         private InspectorProperty _propertyOfComment;
+        private ViewBinderSettings _settings;
 
         protected override void Initialize()
         {
@@ -32,6 +34,8 @@ namespace EasyFramework.ToolKit.Editor
             _propertyOfUseDocumentComment = Property.Children[nameof(ViewBinderEditorConfig.UseDocumentComment)];
             _propertyOfAutoAddParaToComment = Property.Children[nameof(ViewBinderEditorConfig.AutoAddParaToComment)];
             _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
+
+            _settings = ViewBinderSettings.Instance;
         }
 
         protected override GUIContent GetLabel(GUIContent label)
@@ -48,11 +52,11 @@ namespace EasyFramework.ToolKit.Editor
 
             var val = ValueEntry.SmartValue;
             var comp = GetTargetComponent(Property);
-            
+
             _propertyOfBindGameObject.Draw(EditorHelper.TempContent("绑定游戏对象"));
             _propertyOfBindComponentType.Draw(EditorHelper.TempContent("绑定组件"));
             _propertyOfSpecificBindType.Draw(EditorHelper.TempContent("指定要绑定的类型"));
-            _propertyOfBindAccess.Draw(EditorHelper.TempContent("绑定访问权限"));
+            _propertyOfBindAccess.Draw(EditorHelper.TempContent("绑定权限"));
             _propertyOfAutoBindName.Draw(EditorHelper.TempContent("自动绑定名称", "绑定名称与游戏对象名称相同"));
             _propertyOfBindName.Draw(EditorHelper.TempContent("绑定名称"));
 
@@ -61,7 +65,7 @@ namespace EasyFramework.ToolKit.Editor
             if (val.ProcessBindName)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.TextField("实际变量名称", ViewBinderHelper.GetBindName((IViewBinder)comp));
+                EditorGUILayout.TextField("实际变量名称", ViewBinderEditorUtility.GetBindName((IViewBinder)comp));
                 EditorGUI.EndDisabledGroup();
             }
             
@@ -69,21 +73,62 @@ namespace EasyFramework.ToolKit.Editor
             _propertyOfUseDocumentComment.Draw(EditorHelper.TempContent("使用文档注释"));
             _propertyOfAutoAddParaToComment.Draw(EditorHelper.TempContent("自动添加注释段落"));
             _propertyOfComment.Draw(EditorHelper.TempContent("注释"));
+
+            if (GUILayout.Button("恢复默认值"))
+            {
+                UseDefault(Property);
+            }
+            
+            _propertyOfBindComponentType.ValueEntry.OnValueChanged += i =>
+            {
+                if (_propertyOfBindComponentType.ValueEntry.WeakSmartValue is Type type)
+                {
+                    var specialType = ViewBinderEditorUtility.GetDefaultSpecialType(
+                        ViewBinderUtility.GetSpecficableBindTypes(type));
+                    _propertyOfSpecificBindType.ValueEntry.WeakSmartValue = specialType;
+                }
+                else
+                {
+                    _propertyOfSpecificBindType.ValueEntry.WeakSmartValue = null;
+                }
+            };
+
         }
 
         private void EnsureInitialize(InspectorProperty property)
         {
+            var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
-            cfg.SetTargetComponent(GetTargetComponent(property));
+            cfg.SetTargetComponent(comp);
 
             if (!cfg.IsInitialized)
             {
                 UseDefault(property);
+                cfg.IsInitialized = true;
+
+                ValueChanged(comp);
             }
         }
 
         private void UseDefault(InspectorProperty property)
         {
+            var comp = GetTargetComponent(property);
+            var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
+
+            cfg.BindName = comp.gameObject.name;
+            var bindableComps = ViewBinderEditorUtility.GetBindableComponentTypes((IViewBinder)comp);
+            cfg.BindComponentType = bindableComps[0];
+
+            cfg.SpecificBindType = ViewBinderEditorUtility.GetDefaultSpecialType(
+                    ViewBinderUtility.GetSpecficableBindTypes(cfg.BindComponentType));
+
+            cfg.BindGameObject = _settings.Default.BindGameObject;
+            cfg.BindAccess = _settings.Default.BindAccess;
+            cfg.AutoBindName = _settings.Default.AutoBindName;
+            cfg.ProcessBindName = _settings.Default.ProcessBindName;
+            cfg.UseDocumentComment = _settings.Default.UseDocumentComment;
+            cfg.AutoAddParaToComment = _settings.Default.AutoAddParaToComment;
+            cfg.Comment = _settings.Default.Comment;
         }
 
         private void ValueChanged(Object target)
@@ -93,11 +138,6 @@ namespace EasyFramework.ToolKit.Editor
 
         private static Component GetTargetComponent(InspectorProperty property)
         {
-            if (property.Parent.ValueEntry.WeakSmartValue is OtherViewBinderConfig config)
-            {
-                return config.Target?.transform;
-            }
-
             return property.Parent.Parent.WeakSmartValue<Component>();
         }
     }

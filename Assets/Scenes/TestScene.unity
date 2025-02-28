@@ -274,6 +274,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1000912421}
   - component: {fileID: 1000912422}
+  - component: {fileID: 1000912423}
   m_Layer: 0
   m_Name: sfdsdf
   m_TagString: Untagged
@@ -310,13 +311,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewControllerConfig:
-    _editorConfig:
-      IsInitialized: 0
-      GenerateDirectory: 
+    EditorConfig:
+      IsInitialized: 1
+      GenerateDir: Scripts
       Namespace: 
-      AutoName: 1
-      ClassName: sfdsdf
-    _otherBinderConfigs: []
+      AutoScriptName: 1
+      ScriptName: sfdsdf
+      OtherBindersList: []
+--- !u!114 &1000912423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000912419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1184883113, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Targets:
+    Collection:
+    - {fileID: 1888331991}
+    - {fileID: 0}
 --- !u!1 &1043417715
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,13 +435,13 @@ MonoBehaviour:
   Sadfsdf: {fileID: 1921682778}
   Kkkjjj: {fileID: 505184100}
   _viewModelInfo:
-    _editorConfig:
-      IsInitialized: 0
-      GenerateDirectory: 
+    EditorConfig:
+      IsInitialized: 1
+      GenerateDir: Scripts
       Namespace: 
-      AutoName: 1
-      ClassName: 
-    _otherBinderConfigs: []
+      AutoScriptName: 1
+      ScriptName: TestViewModel
+      OtherBindersList: []
 --- !u!1 &1637753062
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,6 +506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1737443030}
   - component: {fileID: 1737443031}
+  - component: {fileID: 1737443032}
   m_Layer: 0
   m_Name: oooo
   m_TagString: Untagged
@@ -528,6 +546,30 @@ MonoBehaviour:
     EditorData:
       _serializedData: 022f00000000014600000045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f0072002e004400720061007700650072002e005600690065007700420069006e0064006500720045006400690074006f00720049006e0066006f002c00200045006100730079004600720061006d00650077006f0072006b002e0045006400690074006f007200000000002c012c012c012c002c012e18000000002e2e05
       _serializedUnityObjects: []
+--- !u!114 &1737443032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737443029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    _ownerController: {fileID: 0}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 0
+      AutoBindName: 1
+      BindName: oooo
+      ProcessBindName: 1
+      UseDocumentComment: 1
+      AutoAddParaToComment: 1
+      Comment: 
 --- !u!1 &1888331991
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,13 +604,13 @@ MonoBehaviour:
   Sadfsdf: {fileID: 0}
   Kkkjjj: {fileID: 0}
   _viewModelInfo:
-    _editorConfig:
-      IsInitialized: 0
-      GenerateDirectory: 
+    EditorConfig:
+      IsInitialized: 1
+      GenerateDir: Scripts
       Namespace: 
-      AutoName: 1
-      ClassName: 
-    _otherBinderConfigs: []
+      AutoScriptName: 0
+      ScriptName: TestViewModel
+      OtherBindersList: []
 --- !u!4 &1888331993
 Transform:
   m_ObjectHideFlags: 0

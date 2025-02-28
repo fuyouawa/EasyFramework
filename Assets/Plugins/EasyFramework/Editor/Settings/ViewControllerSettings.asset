@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: -591875126, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
   m_Name: ViewControllerSettings
   m_EditorClassIdentifier: 
-  DefaultGenerateDirectory: Scripts
-  DefaultNamespace: 
-  DefaultBaseType:
-    _serializedData: 
+  Default:
+    GenerateDir: Scripts
+    Namespace: 
   AutoIndent: 1
   ClassTemplate: 

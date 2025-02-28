@@ -1,0 +1,8 @@
+{
+    "dependencies" : [
+        {
+            "name": "cereal",
+            "platform": "(windows & x64 & static)"
+        }
+    ]
+}

@@ -41,26 +41,14 @@ namespace EasyFramework.ToolKit.Editor
             var isBuildAndBind = comp as ViewController == null;
 
             var classType = ReflectionUtility.FindType(val.Namespace, val.ScriptName);
+            var isBuild = classType != null && classType != typeof(ViewController);
 
-            bool hasChange = false;
             if (isBuildAndBind)
             {
                 val.ScriptName = comp.GetType().Name;
                 val.AutoScriptName = val.ScriptName == comp.gameObject.name;
             }
-            else
-            {
-                if (val.AutoScriptName)
-                {
-                    if (val.ScriptName != comp.gameObject.name)
-                    {
-                        val.ScriptName = comp.gameObject.name;
-                        hasChange = true;
-                    }
-                }
-            }
 
-            
             EasyEditorGUI.Title("代码生成设置");
 
             EditorGUI.BeginDisabledGroup(isBuildAndBind);
@@ -68,11 +56,14 @@ namespace EasyFramework.ToolKit.Editor
             _propertyOfGenerateDir.Draw(EditorHelper.TempContent("代码生成目录"));
             _propertyOfNamespace.Draw(EditorHelper.TempContent("命名空间"));
             _propertyOfAutoScriptName.Draw(EditorHelper.TempContent("自动命名", "类名与游戏对象的名称相同"));
-
-            EditorGUI.BeginDisabledGroup(val.AutoScriptName);
             _propertyOfScriptName.Draw(EditorHelper.TempContent("生成脚本名"));
-            EditorGUI.EndDisabledGroup();
 
+            if (!isBuild && val.AutoScriptName)
+            {
+                EditorGUI.BeginDisabledGroup(true);
+                EditorGUILayout.TextField("实际生成脚本名", ViewControllerEditorUtility.GetScriptName((IViewController)comp));
+                EditorGUI.EndDisabledGroup();
+            }
             _propertyOfBaseClass.Draw(EditorHelper.TempContent("脚本基类"));
 
             if (GUILayout.Button("恢复默认值"))
@@ -93,9 +84,12 @@ namespace EasyFramework.ToolKit.Editor
             EasyEditorGUI.Title("代码生成操作");
             
             var lbl = isBuildAndBind ? "已构建" : "未构建";
-            if (classType != null && classType != typeof(ViewController))
+            if (!isBuildAndBind)
             {
-                lbl = "已构建但未绑定";
+                if (isBuild)
+                {
+                    lbl = "已构建但未绑定";
+                }
             }
 
             EditorGUILayout.LabelField("状态", lbl);
@@ -115,12 +109,16 @@ namespace EasyFramework.ToolKit.Editor
 
         private void EnsureInitialize(InspectorProperty property)
         {
+            var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-            cfg.SetTargetComponent(GetTargetComponent(property));
+            cfg.SetTargetComponent(comp);
 
             if (!cfg.IsInitialized)
             {
                 UseDefault(property);
+                cfg.IsInitialized = true;
+
+                ValueChanged(comp);
             }
         }
 
@@ -128,42 +126,11 @@ namespace EasyFramework.ToolKit.Editor
         {
             var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-
-            bool hasChange = false;
-            if (cfg.ScriptName != comp.gameObject.name)
-            {
-                cfg.ScriptName = comp.gameObject.name;
-                hasChange = true;
-            }
-
-            if (cfg.GenerateDir != _settings.Default.GenerateDir)
-            {
-                cfg.GenerateDir = _settings.Default.GenerateDir;
-                hasChange = true;
-            }
-
-            if (cfg.Namespace != _settings.Default.Namespace)
-            {
-                cfg.Namespace = _settings.Default.Namespace;
-                hasChange = true;
-            }
-
-            if (cfg.BaseClass != _settings.Default.BaseType)
-            {
-                cfg.BaseClass = _settings.Default.BaseType;
-                hasChange = true;
-            }
-
-            if (!cfg.IsInitialized)
-            {
-                cfg.IsInitialized = true;
-                hasChange = true;
-            }
-
-            if (hasChange)
-            {
-                ValueChanged(comp);
-            }
+            
+            cfg.ScriptName = comp.gameObject.name;
+            cfg.GenerateDir = _settings.Default.GenerateDir;
+            cfg.Namespace = _settings.Default.Namespace;
+            cfg.BaseClass = _settings.Default.BaseType;
         }
 
         private void ValueChanged(Object target)

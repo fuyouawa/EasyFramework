@@ -1,28 +1,28 @@
-using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public class ViewBinderGameObjectCheckAttribute : PropertyAttribute
+    {
+    }
+
     [Serializable]
-    public class OtherViewBinderConfig
+    public class OtherViewBinderTarget
     {
         public GameObject Target;
-        [ShowIf(nameof(ShowConfig))]
-        public ViewBinderEditorConfig EditorConfig;
-
-        private bool ShowConfig => Target != null;
     }
     
     [Serializable]
-    public class OtherViewBinderConfigs
+    public class OtherViewBinderTargets
     {
-        public List<OtherViewBinderConfig> Collection;
+        [ViewBinderGameObjectCheck]
+        public List<GameObject> Collection;
     }
 
     public sealed class OtherViewBinders : MonoBehaviour
     {
-        public OtherViewBinderConfigs Configs;
+        public OtherViewBinderTargets Targets;
     }
 }

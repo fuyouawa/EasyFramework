@@ -17,9 +17,9 @@ namespace EasyFramework.ToolKit.Editor
         static EditorAssetsPath()
         {
             PluginsDirectory = "Plugins/EasyFramework";
-            ConfigsDirectory = PluginsDirectory + "Configs/Editor";
-            SettingsDirectory = PluginsDirectory + "Settings/Editor";
-            DataDirectory = PluginsDirectory + "Data/Editor";
+            ConfigsDirectory = PluginsDirectory + "/Editor/Configs";
+            SettingsDirectory = PluginsDirectory + "/Editor/Settings";
+            DataDirectory = PluginsDirectory + "/Editor/Data";
 
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
             UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");

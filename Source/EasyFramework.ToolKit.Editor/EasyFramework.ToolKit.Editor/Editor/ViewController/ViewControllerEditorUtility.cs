@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EasyFramework.Editor;
-using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -12,36 +10,8 @@ using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    public class GenericViewBinderConfig
+    public static class ViewControllerEditorUtility
     {
-        public GameObject Target { get; }
-        public ViewBinderEditorConfig EditorConfig { get; }
-
-        public GenericViewBinderConfig(GameObject target, ViewBinderEditorConfig editorConfig)
-        {
-            Target = target;
-            EditorConfig = editorConfig;
-        }
-    }
-
-    public static class ViewControllerHelper
-    {
-        private static List<Type> s_baseTypes;
-
-        public static List<Type> BaseTypes
-        {
-            get
-            {
-                if (s_baseTypes == null)
-                {
-                    s_baseTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
-                        .Where(t => t.IsSubclassOf(typeof(Component)) && !t.IsSealed).ToList();
-                }
-
-                return s_baseTypes;
-            }
-        }
-
         public static void CheckIdentifierWithMessage(string name, string id)
         {
             var error = GetIdentifierError(name, id);
@@ -70,34 +40,6 @@ namespace EasyFramework.ToolKit.Editor
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
-        }
-
-        public static List<GenericViewBinderConfig> GetOtherBinderConfigs(IViewController controller)
-        {
-            return controller.Config.EditorConfig.OtherBindersList
-                .SelectMany(b => b.Configs.Collection)
-                .Select(c => new GenericViewBinderConfig(c.Target, c.EditorConfig))
-                .ToList();
-        }
-
-        public static List<GenericViewBinderConfig> GetAllBinderConfigs(IViewController controller)
-        {
-            var total = new List<GenericViewBinderConfig>();
-            var children = GetChildren(controller);
-            total.AddRange(children.Select(c =>
-                new GenericViewBinderConfig(((Component)c).gameObject, c.Config.EditorConfig)));
-
-            total.AddRange(GetOtherBinderConfigs(controller));
-
-            return total;
-        }
-
-        public static  IViewBinder[] GetChildren(IViewController controller)
-        {
-            var comp = (Component)controller;
-            return comp.transform.GetComponentsInChildren<IViewBinder>(true)
-                .Where(b => b.Config.OwnerController == controller)
-                .ToArray();
         }
 
         public static void Bind(IViewController controller)
@@ -132,25 +74,31 @@ namespace EasyFramework.ToolKit.Editor
 
         private static void InternalBind(IViewController controller)
         {
-            var children = GetChildren(controller);
+            var binders = ViewControllerUtility.GetAllBinders(controller);
 
             var fields = controller.GetType()
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
                 .Where(f => f.GetCustomAttribute<FromViewBinderAttribute>() != null)
                 .ToArray();
 
-            foreach (var child in children)
+            foreach (var binder in binders)
             {
-                var comp = (Component)child;
-                var bindName = ViewBinderHelper.GetBindName(child);
+                var comp = (Component)binder;
+                if (binder.Config.OwnerController != null)
+                {
+                    Debug.Assert(binder.Config.OwnerController == controller);
+                }
+
+                var bindName = ViewBinderEditorUtility.GetBindName(binder);
                 var f = fields.FirstOrDefault(f => f.Name == bindName);
                 if (f == null)
                 {
-                    Debug.LogWarning($"绑定器 '{comp.gameObject.name}' 未在控制器中绑定，需要重新生成代码");
-                    continue;
+                    EditorUtility.DisplayDialog("错误",
+                        $"绑定失败：绑定器 '{comp.gameObject.name}' 未在控制器中绑定，需要重新生成代码", "确认");
+                    return;
                 }
 
-                var bindObject = ViewBinderHelper.GetBindObject(child);
+                var bindObject = ViewBinderEditorUtility.GetBindObject(binder);
                 if (bindObject == null)
                 {
                     EditorUtility.DisplayDialog("错误",
@@ -158,7 +106,7 @@ namespace EasyFramework.ToolKit.Editor
                     return;
                 }
 
-                if (ViewBinderHelper.GetBindType(child.Config.EditorConfig) != f.FieldType)
+                if (ViewBinderEditorUtility.GetBindType(binder.Config.EditorConfig) != f.FieldType)
                 {
                     EditorUtility.DisplayDialog("错误",
                         $"绑定失败：绑定器 '{comp.gameObject.name}' 的绑定类型与控制器中实际的类型不相同，需要重新生成代码", "确认");
@@ -167,8 +115,20 @@ namespace EasyFramework.ToolKit.Editor
 
                 f.SetValue(controller, bindObject);
             }
+        }
 
+        public static string GetScriptName(IViewController controller)
+        {
+            var cfg = controller.Config.EditorConfig;
+            var comp = (Component)controller;
+            var name = cfg.ScriptName;
 
+            if (cfg.AutoScriptName)
+            {
+                name = comp.gameObject.name;
+            }
+
+            return name;
         }
 
         [MenuItem("GameObject/EasyFramework/Add ViewController")]

@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    public static class ViewBinderHelper
+    public static class ViewBinderEditorUtility
     {
         public static List<string> GetCommentSplits(ViewBinderEditorConfig config)
         {
@@ -33,18 +33,14 @@ namespace EasyFramework.ToolKit.Editor
             return commentSplits;
         }
 
-        public static Component[] GetCandidateComponents(Component component)
+        public static void SortTypesByPriorities(Type[] types)
         {
-            var priorityList = ViewBinderSettings.Instance.Priority;
+            var priorities = ViewBinderSettings.Instance.Priorities;
 
-            var components = component.GetComponents<Component>()
-                .Where(c => c != null)
-                .ToList();
-
-            components.Sort((a, b) =>
+            Array.Sort(types, (a, b) =>
             {
-                var indexA = priorityList.IndexOf(a.GetType(), false, true);
-                var indexB = priorityList.IndexOf(b.GetType(), false, true);
+                var indexA = priorities.MatchIndexOf(a, false, true);
+                var indexB = priorities.MatchIndexOf(b, false, true);
 
                 if (indexA < 0 && indexB >= 0)
                 {
@@ -58,7 +54,27 @@ namespace EasyFramework.ToolKit.Editor
 
                 return indexA.CompareTo(indexB);
             });
-            return components.ToArray();
+        }
+
+        public static Type GetDefaultSpecialType(Type[] types)
+        {
+            var priorities = ViewBinderSettings.Instance.Priorities;
+
+            foreach (var type in types)
+            {
+                if (priorities.Collection.Any(priority => priority.Value == type))
+                {
+                    return type;
+                }
+            }
+            return types[0];
+        }
+
+        public static Type[] GetBindableComponentTypes(IViewBinder binder)
+        {
+            var types = ViewBinderUtility.GetBindableComponentTypes(binder);
+            SortTypesByPriorities(types);
+            return types;
         }
         
         public static Object GetBindObject(IViewBinder binder)
@@ -102,20 +118,23 @@ namespace EasyFramework.ToolKit.Editor
         {
             var cfg = binder.Config.EditorConfig;
             var comp = (Component)binder;
+
+            var name = cfg.BindName;
+
             if (cfg.AutoBindName)
             {
-                cfg.BindName = comp.gameObject.name;
+                name = comp.gameObject.name;
             }
 
             if (cfg.ProcessBindName)
             {
-                return ProcessName(cfg.BindName, cfg.BindAccess);
+                return ProcessName(name, cfg.BindAccess);
             }
 
-            return cfg.BindName;
+            return name;
         }
 
-        [MenuItem("GameObject/EasyFramework/添加 ViewBinder")]
+        [MenuItem("GameObject/EasyFramework/Add ViewBinder")]
         private static void AddViewBinder()
         {
             foreach (var o in Selection.gameObjects)
