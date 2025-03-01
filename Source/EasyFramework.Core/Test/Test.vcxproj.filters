@@ -15,25 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="serializer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="serializer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="global.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="stream_wrapper.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="archive_wrapper.hpp">
-      <Filter>源文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

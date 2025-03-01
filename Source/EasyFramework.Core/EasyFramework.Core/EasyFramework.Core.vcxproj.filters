@@ -21,6 +21,9 @@
     <ClInclude Include="stream_wrapper.hpp">
       <Filter>源文件</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm.hpp">
+      <Filter>源文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="源文件">

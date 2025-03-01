@@ -4,63 +4,40 @@
 class StreamWrapper
 {
 public:
-    StreamWrapper() {}
-    virtual ~StreamWrapper() {}
+    StreamWrapper() = default;
+    virtual ~StreamWrapper() = default;
 };
 
-class OutputStreamWrapper : StreamWrapper
+class IoStreamWrapper : StreamWrapper
 {
 public:
-    OutputStreamWrapper() {}
-    virtual ~OutputStreamWrapper() {}
-
-    virtual std::ostream* stream() = 0;
-};
-
-class InputStreamWrapper : StreamWrapper
-{
-public:
-    InputStreamWrapper() {}
-    virtual ~InputStreamWrapper() {}
+    IoStreamWrapper() = default;
+    ~IoStreamWrapper() override = default;
 
     virtual size_t size() = 0;
-    virtual std::string str() = 0;
-    virtual std::istream* stream() = 0;
-};
-
-class StringOutputStreamWrapper : OutputStreamWrapper
-{
-public:
-    StringOutputStreamWrapper() {}
-    ~StringOutputStreamWrapper() override {}
-
-    std::ostream* stream() override {
-        return &sstream_;
-    }
-
-private:
-    std::ostringstream sstream_;
+    virtual std::string buffer() = 0;
+    virtual std::iostream* stream() = 0;
 };
 
 
-class StringInputStreamWrapper : InputStreamWrapper
+class StringIoStreamWrapper : IoStreamWrapper
 {
 public:
-    StringInputStreamWrapper() {}
-    ~StringInputStreamWrapper() override {}
+    StringIoStreamWrapper(const std::string& str) : sstream_(str) {}
+    ~StringIoStreamWrapper() override = default;
 
     size_t size() override {
         return sstream_.str().size();
     }
 
-    std::string str() override {
+    std::string buffer() override {
         return sstream_.str();
     }
 
-    std::istream* stream() override {
+    std::iostream* stream() override {
         return &sstream_;
     }
 
 private:
-    std::istringstream sstream_;
+    std::stringstream sstream_;
 };

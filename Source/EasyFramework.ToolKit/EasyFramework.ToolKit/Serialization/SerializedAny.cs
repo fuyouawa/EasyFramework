@@ -62,7 +62,6 @@ namespace EasyFramework.ToolKit
         {
             if (_serializedData == null && _serializedUnityObjects.IsNullOrEmpty())
                 return default;
-
             return SerializationUtility.DeserializeValue<T>(_serializedData, DataFormat.Binary,
                 _serializedUnityObjects);
         }
