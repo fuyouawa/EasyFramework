@@ -39,32 +39,6 @@ struct Varint32 {
     }
 };
 
-namespace cereal {
-template<class Archive, class CharT, class Traits, class Alloc>
-void CEREAL_SAVE_FUNCTION_NAME(Archive& ar, std::basic_string<CharT, Traits, Alloc> const& str)
-    requires traits::is_output_serializable<BinaryData<CharT>, Archive>::value
-{
-    ar(Varint32(static_cast<uint32_t>(str.size())));
-    ar(binary_data(str.data(), str.size() * sizeof(CharT)));
-}
-
-template<class Archive, class CharT, class Traits, class Alloc>
-void CEREAL_LOAD_FUNCTION_NAME(Archive& ar, std::basic_string<CharT, Traits, Alloc>& str)
-    requires traits::is_input_serializable<BinaryData<CharT>, Archive>::value
-{
-    auto size = Varint32();
-    ar(size);
-    str.resize(size.value);
-    ar(binary_data(const_cast<CharT*>(str.data()), size.value * sizeof(CharT)));
-}
-}
-
-#define ARCHIVE_PROCESS_DECL(type) virtual void ProcessImpl(type value) = 0
-#define ARCHIVE_PROCESS_IMPL(type) void ProcessImpl(type value) override { archive_(value); }
-
-#define ARCHIVE_PROCESS_NVP_DECL(type) ARCHIVE_PROCESS_DECL(cereal::NameValuePair<type>)
-#define ARCHIVE_PROCESS_NVP_IMPL(type) ARCHIVE_PROCESS_IMPL(cereal::NameValuePair<type>)
-
 enum class ArchiveType {
     Binary,
     Json,
@@ -78,62 +52,53 @@ public:
 
     ArchiveType type() const { return type_; }
 
+    void set_next_name(std::string&& str) {
+        if (type() == ArchiveType::Binary)
+            return;
+        next_name_ = std::move(str);
+    }
+
     template<class T>
-    void Process(const char* name, T& value) {
-        if (name == nullptr || *name == '\0') {
-            ProcessImpl(value);
-        }
-        else {
-            ProcessImpl(cereal::make_nvp(name, value));
-        }
+    void Process(T& value) {
+        ProcessImpl(value);
     }
 
     void Process(cereal::SizeTag<size_t&> tag) {
         ProcessImpl(tag);
     }
 
-    void Process(const char* name, cereal::BinaryData<char*&>& data) {
-        if (name == nullptr || *name == '\0') {
-            ProcessImpl(data);
-        }
-        else {
-            ProcessImpl(cereal::make_nvp(name, data));
-        }
-    }
+    virtual void StartNode() {}
+    virtual void FinishNode() {}
 
 protected:
-    ARCHIVE_PROCESS_DECL(cereal::SizeTag<size_t&>);
+    std::string PeekName() {
+        if (next_name_.empty()) {
+            return {};
+        }
+        auto tmp = std::string();
+        tmp.swap(next_name_);
+        return tmp;
+    }
 
-    ARCHIVE_PROCESS_DECL(int64_t&);
-    ARCHIVE_PROCESS_DECL(int32_t&);
-    ARCHIVE_PROCESS_DECL(int16_t&);
-    ARCHIVE_PROCESS_DECL(int8_t&);
-    ARCHIVE_PROCESS_DECL(uint64_t&);
-    ARCHIVE_PROCESS_DECL(uint32_t&);
-    ARCHIVE_PROCESS_DECL(uint16_t&);
-    ARCHIVE_PROCESS_DECL(uint8_t&);
-    ARCHIVE_PROCESS_DECL(float&);
-    ARCHIVE_PROCESS_DECL(double&);
-    ARCHIVE_PROCESS_DECL(Varint32&);
-    ARCHIVE_PROCESS_DECL(std::string&);
-    ARCHIVE_PROCESS_DECL(cereal::BinaryData<char*&>&);
+    virtual void ProcessImpl(cereal::SizeTag<size_t&> value) = 0;
 
-    ARCHIVE_PROCESS_NVP_DECL(int64_t&);
-    ARCHIVE_PROCESS_NVP_DECL(int32_t&);
-    ARCHIVE_PROCESS_NVP_DECL(int16_t&);
-    ARCHIVE_PROCESS_NVP_DECL(int8_t&);
-    ARCHIVE_PROCESS_NVP_DECL(uint64_t&);
-    ARCHIVE_PROCESS_NVP_DECL(uint32_t&);
-    ARCHIVE_PROCESS_NVP_DECL(uint16_t&);
-    ARCHIVE_PROCESS_NVP_DECL(uint8_t&);
-    ARCHIVE_PROCESS_NVP_DECL(float&);
-    ARCHIVE_PROCESS_NVP_DECL(double&);
-    ARCHIVE_PROCESS_NVP_DECL(Varint32&);
-    ARCHIVE_PROCESS_NVP_DECL(std::string&);
-    ARCHIVE_PROCESS_NVP_DECL(cereal::BinaryData<char*&>&);
+    virtual void ProcessImpl(int64_t& value) = 0;
+    virtual void ProcessImpl(int32_t& value) = 0;
+    virtual void ProcessImpl(int16_t& value) = 0;
+    virtual void ProcessImpl(int8_t& value) = 0;
+    virtual void ProcessImpl(uint64_t& value) = 0;
+    virtual void ProcessImpl(uint32_t& value) = 0;
+    virtual void ProcessImpl(uint16_t& value) = 0;
+    virtual void ProcessImpl(uint8_t& value) = 0;
+    virtual void ProcessImpl(float& value) = 0;
+    virtual void ProcessImpl(double& value) = 0;
+    virtual void ProcessImpl(Varint32& value) = 0;
+    virtual void ProcessImpl(std::string& str) = 0;
+    virtual void ProcessImpl(std::vector<uint8_t>& data) = 0;
 
 private:
     const ArchiveType type_;
+    std::string next_name_;
 };
 
 class OutputArchiveWrapper : public ArchiveWrapper {
@@ -159,35 +124,34 @@ public:
     ~TemplateOutputArchiveWrapper() override = default;
 
 protected:
-    ARCHIVE_PROCESS_IMPL(cereal::SizeTag<size_t&>);
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override { archive_(value); }
 
-    ARCHIVE_PROCESS_IMPL(int64_t&);
-    ARCHIVE_PROCESS_IMPL(int32_t&);
-    ARCHIVE_PROCESS_IMPL(int16_t&);
-    ARCHIVE_PROCESS_IMPL(int8_t&);
-    ARCHIVE_PROCESS_IMPL(uint64_t&);
-    ARCHIVE_PROCESS_IMPL(uint32_t&);
-    ARCHIVE_PROCESS_IMPL(uint16_t&);
-    ARCHIVE_PROCESS_IMPL(uint8_t&);
-    ARCHIVE_PROCESS_IMPL(float&);
-    ARCHIVE_PROCESS_IMPL(double&);
-    ARCHIVE_PROCESS_IMPL(Varint32&);
-    ARCHIVE_PROCESS_IMPL(std::string&);
-    ARCHIVE_PROCESS_IMPL(cereal::BinaryData<char*&>&);
+    void ProcessImpl(int64_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int32_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int16_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int8_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint64_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint32_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint16_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint8_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(float& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(double& value) override { AutoProcessImpl(value); }
 
-    ARCHIVE_PROCESS_NVP_IMPL(int64_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int32_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int16_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int8_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint64_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint32_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint16_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint8_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(float&);
-    ARCHIVE_PROCESS_NVP_IMPL(double&);
-    ARCHIVE_PROCESS_NVP_IMPL(Varint32&);
-    ARCHIVE_PROCESS_NVP_IMPL(std::string&);
-    ARCHIVE_PROCESS_NVP_IMPL(cereal::BinaryData<char*&>&);
+    template<class T>
+    void AutoProcessImpl(T& value) {
+        if (type() == ArchiveType::Binary) {
+            archive_(value);
+            return;
+        }
+
+        auto name = PeekName();
+        if (name.empty()) {
+            archive_(value);
+        }
+        else {
+            archive_(cereal::make_nvp(name, value));
+        }
+    }
 
 private:
     OutputArchive& archive_;
@@ -205,58 +169,156 @@ public:
     ~TemplateInputArchiveWrapper() override = default;
 
 protected:
-    ARCHIVE_PROCESS_IMPL(cereal::SizeTag<size_t&>);
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override { archive_(value); }
 
-    ARCHIVE_PROCESS_IMPL(int64_t&);
-    ARCHIVE_PROCESS_IMPL(int32_t&);
-    ARCHIVE_PROCESS_IMPL(int16_t&);
-    ARCHIVE_PROCESS_IMPL(int8_t&);
-    ARCHIVE_PROCESS_IMPL(uint64_t&);
-    ARCHIVE_PROCESS_IMPL(uint32_t&);
-    ARCHIVE_PROCESS_IMPL(uint16_t&);
-    ARCHIVE_PROCESS_IMPL(uint8_t&);
-    ARCHIVE_PROCESS_IMPL(float&);
-    ARCHIVE_PROCESS_IMPL(double&);
-    ARCHIVE_PROCESS_IMPL(Varint32&);
-    ARCHIVE_PROCESS_IMPL(std::string&);
-    ARCHIVE_PROCESS_IMPL(cereal::BinaryData<char*&>&);
+    void ProcessImpl(int64_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int32_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int16_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(int8_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint64_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint32_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint16_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(uint8_t& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(float& value) override { AutoProcessImpl(value); }
+    void ProcessImpl(double& value) override { AutoProcessImpl(value); }
 
-    ARCHIVE_PROCESS_NVP_IMPL(int64_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int32_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int16_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(int8_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint64_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint32_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint16_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(uint8_t&);
-    ARCHIVE_PROCESS_NVP_IMPL(float&);
-    ARCHIVE_PROCESS_NVP_IMPL(double&);
-    ARCHIVE_PROCESS_NVP_IMPL(Varint32&);
-    ARCHIVE_PROCESS_NVP_IMPL(std::string&);
-    ARCHIVE_PROCESS_NVP_IMPL(cereal::BinaryData<char*&>&);
+    template<class T>
+    void AutoProcessImpl(T& value) {
+        auto name = PeekName();
+        if (name.empty()) {
+            archive_(value);
+        }
+        else {
+            archive_(cereal::make_nvp(name, value));
+        }
+    }
 
 private:
     InputArchive& archive_;
 };
 
-class BinaryOutputArchiveWrapper : TemplateOutputArchiveWrapper<cereal::BinaryOutputArchive, cereal::AllowEmptyClassElision> {
+class BinaryOutputArchiveWrapper : public TemplateOutputArchiveWrapper<cereal::BinaryOutputArchive, cereal::AllowEmptyClassElision> {
 public:
     BinaryOutputArchiveWrapper(std::ostream& stream)
         : TemplateOutputArchiveWrapper(ArchiveType::Binary, archive_),
         archive_(stream)
     {}
 
+protected:
+    void ProcessImpl(Varint32& value) override { AutoProcessImpl(value); }
+
+    void ProcessImpl(std::string& str) override {
+        auto size = Varint32();
+        archive_(size);
+        str.resize(size.value);
+        archive_(cereal::binary_data(str.data(), size.value));
+    }
+
+    void ProcessImpl(std::vector<uint8_t>& data) override {
+        auto size = Varint32();
+        archive_(size);
+        data.resize(size.value);
+        archive_(cereal::binary_data(data.data(), size.value));
+    }
+
 private:
     cereal::BinaryOutputArchive archive_;
 };
 
-class BinaryInputArchiveWrapper : TemplateInputArchiveWrapper<cereal::BinaryInputArchive, cereal::AllowEmptyClassElision> {
+class BinaryInputArchiveWrapper : public TemplateInputArchiveWrapper<cereal::BinaryInputArchive, cereal::AllowEmptyClassElision> {
 public:
     BinaryInputArchiveWrapper(std::istream& stream)
         : TemplateInputArchiveWrapper(ArchiveType::Binary, archive_),
         archive_(stream)
     {}
 
+protected:
+    void ProcessImpl(Varint32& value) override { AutoProcessImpl(value); }
+
+    void ProcessImpl(std::string& str) override {
+        archive_(Varint32(static_cast<uint32_t>(str.size())));
+        archive_(cereal::binary_data(str.data(), str.size()));
+    }
+
+    void ProcessImpl(std::vector<uint8_t>& data) override {
+        archive_(Varint32(static_cast<uint32_t>(data.size())));
+        archive_(cereal::binary_data(data.data(), data.size()));
+    }
+
 private:
     cereal::BinaryInputArchive archive_;
+};
+
+
+class JsonOutputArchiveWrapper : public TemplateOutputArchiveWrapper<cereal::JSONOutputArchive> {
+public:
+    JsonOutputArchiveWrapper(std::ostream& stream)
+        : TemplateOutputArchiveWrapper(ArchiveType::Json, archive_),
+        archive_(stream)
+    {
+    }
+
+    void StartNode() override {
+        auto name = PeekName();
+        if (!name.empty()) {
+            archive_.setNextName(name.c_str());
+        }
+        archive_.startNode();
+    }
+
+    void FinishNode() override {
+        archive_.finishNode();
+    }
+
+protected:
+    void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
+
+    void ProcessImpl(std::string& str) override {
+        AutoProcessImpl(str);
+    }
+
+    void ProcessImpl(std::vector<uint8_t>& value) override {
+        auto str = EncodeBase64(value.data(), value.size());
+        AutoProcessImpl(str);
+    }
+
+private:
+    cereal::JSONOutputArchive archive_;
+};
+
+class JsonInputArchiveWrapper : public TemplateInputArchiveWrapper<cereal::JSONInputArchive> {
+public:
+    JsonInputArchiveWrapper(std::istream& stream)
+        : TemplateInputArchiveWrapper(ArchiveType::Json, archive_),
+        archive_(stream)
+    {
+    }
+
+    void StartNode() override {
+        auto name = PeekName();
+        if (!name.empty()) {
+            archive_.setNextName(name.c_str());
+        }
+        archive_.startNode();
+    }
+
+    void FinishNode() override {
+        archive_.finishNode();
+    }
+
+protected:
+    void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
+
+    void ProcessImpl(std::string& str) override {
+        AutoProcessImpl(str);
+    }
+
+    void ProcessImpl(std::vector<uint8_t>& value) override {
+        std::string str;
+        AutoProcessImpl(str);
+        value = DecodeBase64(str);
+    }
+
+private:
+    cereal::JSONInputArchive archive_;
 };

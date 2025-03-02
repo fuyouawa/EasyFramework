@@ -3,17 +3,40 @@
 
 int main() {
     auto ios = AllocStringIoStream();
-    auto oarch = AllocBinaryOutputArchive(ios);
-    WriteInt32ToOutputArchive(oarch, "num", 123);
+    auto oarch = AllocJsonOutputArchive(ios);
 
-    WriteStringToOutputArchive(oarch, "str", "777");
+    OutputArchiveSetNextName(oarch, "num");
+    WriteInt32ToOutputArchive(oarch, 123);
+
+    OutputArchiveSetNextName(oarch, "test");
+    OutputArchiveStartNode(oarch);
+
+    OutputArchiveSetNextName(oarch, "str");
+    WriteStringToOutputArchive(oarch, "777");
+
+    OutputArchiveSetNextName(oarch, "float");
+    WriteFloatToOutputArchive(oarch, 1.234f);
+
+    OutputArchiveSetNextName(oarch, "float");
+    auto bbb = AllocBuffer(6);
+    memcpy_s(bbb.ptr, bbb.size, "\x23\x33\x45\x6D\xAB", 6);
+    WriteBinaryToOutputArchive(oarch, bbb);
+
+    OutputArchiveFinishNode(oarch);
+
+    FreeOutputArchive(oarch);
 
     auto rrr = GetIoStreamBuffer(ios);
+    auto strr = std::string(rrr.ptr, rrr.size);
+    std::cout << strr << std::endl;
 
-    auto iarch = AllocBinaryInputArchive(ios);
-    auto val = ReadInt32FromInputArchive(iarch, "num");
+    auto iarch = AllocJsonInputArchive(ios);
 
-    auto str = ReadStringFromInputArchive(iarch, "str");
+    InputArchiveSetNextName(iarch, "num");
+    auto val = ReadInt32FromInputArchive(iarch);
+
+    InputArchiveSetNextName(iarch, "str");
+    auto str = ReadStringFromInputArchive(iarch);
 
     std::cout << val << std::endl;
 }

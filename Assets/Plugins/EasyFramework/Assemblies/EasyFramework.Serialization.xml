@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyFramework.Serialization</name>
+    </assembly>
+    <members>
+        <member name="F:EasyFramework.Serialization.EasySerializerUtility.ConcreteSerializersDict">
+            <summary>
+            具体类型的序列化
+            </summary>
+        </member>
+        <member name="F:EasyFramework.Serialization.EasySerializerUtility.UnconstrainedGenericSerializers">
+            <summary>
+            无约束泛型序列化
+            </summary>
+        </member>
+    </members>
+</doc>

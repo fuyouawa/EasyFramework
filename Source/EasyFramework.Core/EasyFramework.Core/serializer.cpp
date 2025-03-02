@@ -45,6 +45,11 @@ void FreeIoStream(IoStream stream) {
     delete GetStream(stream);
 }
 
+void WriteToIoStreamBuffer(IoStream stream, Buffer buffer) {
+    auto s = GetStream(stream);
+    s->stream()->write(buffer.ptr, buffer.size);
+}
+
 Buffer GetIoStreamBuffer(IoStream stream) {
     auto buf = GetStream(stream)->buffer();
 
@@ -64,17 +69,55 @@ InputArchive AllocBinaryInputArchive(IoStream stream) {
     return ret;
 }
 
+OutputArchive AllocJsonOutputArchive(IoStream stream) {
+    auto archive = new JsonOutputArchiveWrapper(*GetStream(stream)->stream());
+    auto ret = OutputArchive();
+    ret.ptr = archive;
+    return ret;
+}
+
+InputArchive AllocJsonInputArchive(IoStream stream) {
+    auto archive = new JsonInputArchiveWrapper(*GetStream(stream)->stream());
+    auto ret = InputArchive();
+    ret.ptr = archive;
+    return ret;
+}
+
 void FreeInputArchive(InputArchive archive) {
     delete GetArchive(archive);
 }
 
+void OutputArchiveSetNextName(OutputArchive archive, const char* name) {
+    GetArchive(archive)->set_next_name(name);
+}
+
+void InputArchiveSetNextName(InputArchive archive, const char* name) {
+    GetArchive(archive)->set_next_name(name);
+}
+
+void OutputArchiveStartNode(OutputArchive archive) {
+    GetArchive(archive)->StartNode();
+}
+
+void OutputArchiveFinishNode(OutputArchive archive) {
+    GetArchive(archive)->FinishNode();
+}
+
+void InputArchiveStartNode(InputArchive archive) {
+    GetArchive(archive)->StartNode();
+}
+
+void InputArchiveFinishNode(InputArchive archive) {
+    GetArchive(archive)->FinishNode();
+}
+
 #define NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(type_name, type) \
-void Write##type_name##ToOutputArchive(OutputArchive archive, const char* name, type value) { \
-    GetArchive(archive)->Process(name, value); \
+void Write##type_name##ToOutputArchive(OutputArchive archive, type value) { \
+    GetArchive(archive)->Process(value); \
 } \
-type Read##type_name##FromInputArchive(InputArchive archive, const char* name) { \
+type Read##type_name##FromInputArchive(InputArchive archive) { \
     auto ret = type(); \
-    GetArchive(archive)->Process(name, ret); \
+    GetArchive(archive)->Process(ret); \
     return ret; \
 }
 
@@ -91,32 +134,32 @@ NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(UInt8, uint8_t)
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Float, float)
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Double, double)
 
-void WriteVarint32ToOutputArchive(OutputArchive archive, const char* name, uint32_t value) {
+void WriteVarint32ToOutputArchive(OutputArchive archive, uint32_t value) {
     auto arch = GetArchive(archive);
     if (arch->type() != ArchiveType::Binary) {
-        arch->Process(name, value);
+        arch->Process(value);
     }
     else {
         auto v = Varint32(value);
-        arch->Process(name, v);
+        arch->Process(v);
     }
 }
 
-uint32_t ReadVarint32FromInputArchive(InputArchive archive, const char* name) {
+uint32_t ReadVarint32FromInputArchive(InputArchive archive) {
     auto arch = GetArchive(archive);
     if (arch->type() != ArchiveType::Binary) {
         uint32_t ret;
-        arch->Process(name, ret);
+        arch->Process(ret);
         return ret;
     }
     else {
         auto ret = Varint32();
-        arch->Process(name, ret);
+        arch->Process(ret);
         return ret.value;
     }
 }
 
-void WriteBinaryToOutputArchive(OutputArchive archive, const char* name, Buffer buffer) {
+void WriteBinaryToOutputArchive(OutputArchive archive, Buffer buffer) {
     auto arch = GetArchive(archive);
     if (arch->type() != ArchiveType::Binary) {
         auto s = static_cast<size_t>(buffer.size);
@@ -124,13 +167,13 @@ void WriteBinaryToOutputArchive(OutputArchive archive, const char* name, Buffer 
     }
     else {
         auto v = Varint32(buffer.size);
-        arch->Process(name, v);
+        arch->Process(v);
     }
-    auto data = cereal::binary_data(buffer.ptr, buffer.size);
-    arch->Process(name, data);
+    auto data = std::vector<uint8_t>(buffer.ptr, buffer.ptr + buffer.size);
+    arch->Process(data);
 }
 
-Buffer ReadBinaryFromInputArchive(InputArchive archive, const char* name) {
+Buffer ReadBinaryFromInputArchive(InputArchive archive) {
     auto size = size_t();
     auto arch = GetArchive(archive);
     if (arch->type() != ArchiveType::Binary) {
@@ -138,23 +181,24 @@ Buffer ReadBinaryFromInputArchive(InputArchive archive, const char* name) {
     }
     else {
         auto v = Varint32();
-        arch->Process(name, v);
+        arch->Process(v);
         size = v.value;
     }
     auto buf = AllocBuffer(static_cast<uint32_t>(size));
-    auto data = cereal::binary_data(buf.ptr, buf.size);
-    GetArchive(archive)->Process(name, data);
+    auto data = std::vector<uint8_t>(size);
+    GetArchive(archive)->Process(data);
+    memcpy_s(buf.ptr, buf.size, data.data(), data.size());
     return buf;
 }
 
-void WriteStringToOutputArchive(OutputArchive archive, const char* name, const char* str) {
+void WriteStringToOutputArchive(OutputArchive archive, const char* str) {
     auto s = std::string(str);
-    GetArchive(archive)->Process(name, s);
+    GetArchive(archive)->Process(s);
 }
 
-Buffer ReadStringFromInputArchive(InputArchive archive, const char* name) {
+Buffer ReadStringFromInputArchive(InputArchive archive) {
     auto s = std::string();
-    GetArchive(archive)->Process(name, s);
+    GetArchive(archive)->Process(s);
 
     auto ret = AllocBuffer(static_cast<uint32_t>(s.size()));
     memcpy_s(ret.ptr, ret.size, s.c_str(), s.size());
