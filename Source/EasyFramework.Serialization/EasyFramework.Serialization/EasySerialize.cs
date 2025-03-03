@@ -59,7 +59,7 @@ namespace EasyFramework.Serialization
 
         private static IEasySerializer<T> GetSerializerWithThrow<T>()
         {
-            var serializer = EasySerializerUtility.Get<T>();
+            var serializer = EasySerializerUtility.GetSerializer<T>();
             if (serializer == null)
             {
                 throw new ArgumentException(
@@ -103,7 +103,7 @@ namespace EasyFramework.Serialization
             {
                 using (var arch = GetOutputArchive(format, ios))
                 {
-                    serializer.Process(arch, ref value);
+                    serializer.Process(ref value, arch);
                     referencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
 
@@ -131,7 +131,7 @@ namespace EasyFramework.Serialization
                 using (var arch = GetInputArchive(format, ios))
                 {
                     arch.SetupReferencedUnityObjects(referencedUnityObjects);
-                    serializer.Process(arch, ref ret);
+                    serializer.Process(ref ret, arch);
                 }
 
                 return ret;

@@ -6,30 +6,34 @@ using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
-    [EasySerializerConfig(EasySerializerProiority.Core)]
+    [EasySerializerConfig(EasySerializerProiority.GenericCore)]
     public class GenericSerializer<T> : EasySerializer<T>
     {
-        protected override void Process(IArchive archive, ref T value)
+        public override void Process(string name, ref T value, IArchive archive)
         {
             if (value == null)
             {
                 value = Activator.CreateInstance<T>();
             }
 
-            var serializeFields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+            var serializeFields = typeof(T)
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null)
                 .ToArray();
 
             foreach (var field in serializeFields)
             {
-                archive.SetNextName(field.Name);
-                var isNode = field.FieldType.IsClass && field.FieldType != typeof(string);
+                var fieldType = field.FieldType;
+
+                var isNode = (fieldType.IsClass && fieldType != typeof(string)) ||
+                             (fieldType.IsValueType && !fieldType.IsPrimitive && !fieldType.IsEnum);
                 if (isNode)
                 {
+                    archive.SetNextName(field.Name);
                     archive.StartNode();
                 }
 
-                var ser = EasySerializerUtility.Get(field.FieldType);
+                var serializer = EasySerializerUtility.GetSerializer(fieldType);
 
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
@@ -37,7 +41,14 @@ namespace EasyFramework.Serialization
                     obj = field.GetValue(value);
                 }
 
-                EasySerializerUtility.ProcessSerializer(ser, archive, ref obj, field.FieldType);
+                if (isNode)
+                {
+                    serializer.Process(ref obj, fieldType, archive);
+                }
+                else
+                {
+                    serializer.Process(field.Name, ref obj, fieldType, archive);
+                }
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {

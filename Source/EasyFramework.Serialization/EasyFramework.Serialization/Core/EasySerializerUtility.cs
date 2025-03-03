@@ -182,31 +182,21 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        internal static void ProcessSerializer(IEasySerializer serializer, IArchive archive, ref object value,
-            Type valueType)
-        {
-            var interfaceType = serializer.GetType().GetInterface("IEasySerializer`1")!;
-            var method = interfaceType.GetMethod("Process")!;
-            var parameters = new object[] { archive, value };
-            method.Invoke(serializer, parameters);
-            value = parameters[1];
-        }
-
-        internal static IEasySerializer Get(Type valueType)
+        internal static EasySerializer GetSerializer(Type valueType)
         {
             var info = InternalGetSerializer(valueType);
             if (info.HasValue)
             {
-                return info.Value.Instance;
+                return (EasySerializer)info.Value.Instance;
             }
 
             return null;
         }
 
-        public static IEasySerializer<T> Get<T>()
+        public static EasySerializer<T> GetSerializer<T>()
         {
-            var serializer = Get(typeof(T));
-            return (IEasySerializer<T>)serializer;
+            var serializer = GetSerializer(typeof(T));
+            return (EasySerializer<T>)serializer;
         }
     }
 }

@@ -12,6 +12,8 @@ public class Test
 {
     public int Intt = 1122;
     public string Strr = "234234";
+    public bool Bool = false;
+    public Color Color = Color.cyan;
     public Inner Inner = new Inner();
 
     [SerializeField]
