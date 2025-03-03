@@ -23,7 +23,8 @@ namespace EasyFramework.Serialization
             foreach (var field in serializeFields)
             {
                 archive.SetNextName(field.Name);
-                if (field.FieldType.IsClass)
+                var isNode = field.FieldType.IsClass && field.FieldType != typeof(string);
+                if (isNode)
                 {
                     archive.StartNode();
                 }
@@ -43,7 +44,7 @@ namespace EasyFramework.Serialization
                     field.SetValue(value, obj);
                 }
 
-                if (field.FieldType.IsClass)
+                if (isNode)
                 {
                     archive.FinishNode();
                 }

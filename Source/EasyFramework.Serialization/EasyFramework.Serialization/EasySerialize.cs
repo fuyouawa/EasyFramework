@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Object = UnityEngine.Object;
 
 namespace EasyFramework.Serialization
@@ -8,12 +9,12 @@ namespace EasyFramework.Serialization
     {
         public static byte[] ToBinary<T>(T value)
         {
-            return To(value, out _, Format.Binary);
+            return ToBinary(value, out _);
         }
 
         public static T FromBinary<T>(byte[] data)
         {
-            return From<T>(data, new List<Object>(), Format.Binary);
+            return FromBinary<T>(data, new List<Object>());
         }
 
         public static byte[] ToBinary<T>(T value, out List<Object> referencedUnityObjects)
@@ -24,6 +25,28 @@ namespace EasyFramework.Serialization
         public static T FromBinary<T>(byte[] data, List<Object> referencedUnityObjects)
         {
             return From<T>(data, referencedUnityObjects, Format.Binary);
+        }
+        
+        public static string ToJson<T>(T value)
+        {
+            return ToJson(value, out _);
+        }
+
+        public static T FromJson<T>(string json)
+        {
+            return FromJson<T>(json, new List<Object>());
+        }
+
+        public static string ToJson<T>(T value, out List<Object> referencedUnityObjects)
+        {
+            var data = To(value, out referencedUnityObjects, Format.Json);
+            return Encoding.UTF8.GetString(data);
+        }
+
+        public static T FromJson<T>(string json, List<Object> referencedUnityObjects)
+        {
+            var data = Encoding.UTF8.GetBytes(json);
+            return From<T>(data, referencedUnityObjects, Format.Json);
         }
 
         private enum Format
@@ -47,6 +70,30 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
+        private static OutputArchive GetOutputArchive(Format format, EasySerializeNative.IoStream stream)
+        {
+            return format switch
+            {
+                Format.Binary => new BinaryOutputArchive(stream),
+                Format.Json => new JsonOutputArchive(stream),
+                Format.Xml => throw new NotImplementedException(),
+                Format.Yaml => throw new NotImplementedException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+            };
+        }
+
+        private static InputArchive GetInputArchive(Format format, EasySerializeNative.IoStream stream)
+        {
+            return format switch
+            {
+                Format.Binary => new BinaryInputArchive(stream),
+                Format.Json => new JsonInputArchive(stream),
+                Format.Xml => throw new NotImplementedException(),
+                Format.Yaml => throw new NotImplementedException(),
+                _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+            };
+        }
+
         private static byte[] To<T>(T value, out List<Object> referencedUnityObjects, Format format)
         {
             var serializer = GetSerializerWithThrow<T>();
@@ -54,7 +101,7 @@ namespace EasyFramework.Serialization
             var ios = EasySerializeNative.AllocStringIoStream();
             using (new EasySerializeNative.IoStreamWrapper(ios))
             {
-                using (var arch = new BinaryOutputArchive(ios))
+                using (var arch = GetOutputArchive(format, ios))
                 {
                     serializer.Process(arch, ref value);
                     referencedUnityObjects = arch.GetReferencedUnityObjects();
@@ -81,7 +128,7 @@ namespace EasyFramework.Serialization
                 }
 
                 var ret = default(T);
-                using (var arch = new BinaryInputArchive(ios))
+                using (var arch = GetInputArchive(format, ios))
                 {
                     arch.SetupReferencedUnityObjects(referencedUnityObjects);
                     serializer.Process(arch, ref ret);

@@ -29,14 +29,4 @@ int main() {
     auto rrr = GetIoStreamBuffer(ios);
     auto strr = std::string(rrr.ptr, rrr.size);
     std::cout << strr << std::endl;
-
-    auto iarch = AllocJsonInputArchive(ios);
-
-    InputArchiveSetNextName(iarch, "num");
-    auto val = ReadInt32FromInputArchive(iarch);
-
-    InputArchiveSetNextName(iarch, "str");
-    auto str = ReadStringFromInputArchive(iarch);
-
-    std::cout << val << std::endl;
 }
