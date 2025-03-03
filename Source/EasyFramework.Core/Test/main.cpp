@@ -11,11 +11,11 @@ int main() {
     OutputArchiveSetNextName(oarch, "test");
     OutputArchiveStartNode(oarch);
 
-    OutputArchiveSetNextName(oarch, "str");
-    WriteStringToOutputArchive(oarch, "777");
-
     OutputArchiveSetNextName(oarch, "float");
     WriteFloatToOutputArchive(oarch, 1.234f);
+
+    OutputArchiveSetNextName(oarch, "str");
+    WriteStringToOutputArchive(oarch, "777");
 
     OutputArchiveSetNextName(oarch, "float");
     auto bbb = AllocBuffer(6);

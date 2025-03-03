@@ -1,26 +1,51 @@
+using System;
 using System.Linq;
 using System.Reflection;
+using EasyFramework.Serialization;
 using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
+    [EasySerializerPriority(EasySerializerProiority.Generic)]
     public class GenericSerializer<T> : EasySerializerBase<T>
     {
         protected override void Process(IArchive archive, ref T value)
         {
-            if (value is Object unityObject)
+            if (value == null)
             {
-                archive.Process(ref unityObject);
+                value = Activator.CreateInstance<T>();
             }
-            else
+
+            var serializeFields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+                .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null)
+                .ToArray();
+
+            foreach (var field in serializeFields)
             {
-                var type = typeof(T);
-                var serializeFields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                    .Where(f => f.GetCustomAttribute<SerializeField>() != null)
-                    .ToArray();
-                foreach (var field in serializeFields)
+                archive.SetNextName(field.Name);
+                if (field.FieldType.IsClass)
                 {
-                    archive.SetNextName(field.Name);
+                    archive.StartNode();
+                }
+
+                var ser = EasySerializerUtility.GetSerializer(field.FieldType);
+
+                object obj = null;
+                if (archive.ArchiveIoType == ArchiveIoTypes.Output)
+                {
+                    obj = field.GetValue(value);
+                }
+
+                EasySerializerUtility.ProcessSerializer(ser, archive, ref obj, field.FieldType);
+
+                if (archive.ArchiveIoType == ArchiveIoTypes.Input)
+                {
+                    field.SetValue(value, obj);
+                }
+
+                if (field.FieldType.IsClass)
+                {
+                    archive.FinishNode();
                 }
             }
         }

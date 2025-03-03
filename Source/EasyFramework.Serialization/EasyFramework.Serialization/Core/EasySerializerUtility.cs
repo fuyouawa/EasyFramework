@@ -3,183 +3,193 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
     public static class EasySerializerUtility
     {
-        private static RegisterEasySerializerAttribute[] s_registerSerializerAttributes;
-
-        private static RegisterEasySerializerAttribute[] GetRegisterSerializerAttributes()
-        {
-            if (s_registerSerializerAttributes == null)
-            {
-                s_registerSerializerAttributes = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(asm => asm.GetCustomAttributes(typeof(RegisterEasySerializerAttribute), true))
-                    .Select(attr => (RegisterEasySerializerAttribute)attr)
-                    .ToArray();
-            }
-
-            return s_registerSerializerAttributes;
-        }
-
-        private struct ImplementationType
-        {
-            public struct ConstraintDefine
-            {
-                public Type[] Types;
-                public bool HasClass;
-                public bool HasStruct;
-                public bool HasNew;
-            }
-
-            public Type Type;
-            public ConstraintDefine Constraint;
-
-            public bool IsUnconstrainedGeneric()
-            {
-                return !Constraint.Types.Any()
-                       && Constraint is { HasClass: false, HasStruct: false, HasNew: false };
-            }
-        }
-
-        private static ImplementationType GetSerializerImplementationType(Type serializerType)
-        {
-            // 获取接口类型
-            var interfaceType = serializerType.GetInterfaces()
-                .First(i => i.IsGenericType
-                            && i.GetGenericTypeDefinition() == typeof(IEasySerializer<>));
-            // 获取接口的泛型参数
-            var implArg = interfaceType.GetGenericArguments()[0];
-            var argAttr = implArg.GenericParameterAttributes;
-            return new ImplementationType()
-            {
-                Type = implArg,
-                Constraint = new ImplementationType.ConstraintDefine()
-                {
-                    Types = implArg.GetGenericParameterConstraints(),
-                    HasClass = argAttr.HasFlag(GenericParameterAttributes.ReferenceTypeConstraint),
-                    HasNew = argAttr.HasFlag(GenericParameterAttributes.DefaultConstructorConstraint),
-                    HasStruct = argAttr.HasFlag(GenericParameterAttributes.NotNullableValueTypeConstraint)
-                }
-            };
-        }
-
         private static bool s_initializedSerializers = false;
 
-        private struct SerializerInfo
+        private struct SerializerStore
         {
-            public RegisterEasySerializerAttribute Attribute;
-            public IEasySerializer Instance;
+            public EasySerializerPriorityAttribute Attribute { get; }
+            public IEasySerializer Instance { get; }
+
+            public SerializerStore(EasySerializerPriorityAttribute attribute, IEasySerializer instance)
+            {
+                Attribute = attribute;
+                Instance = instance;
+            }
+        }
+
+        private struct GenericSerializerInfo
+        {
+            public EasySerializerPriorityAttribute Attribute { get; }
+            public Type SerializerType { get; }
+
+            public GenericSerializerInfo(EasySerializerPriorityAttribute attribute, Type serializerType)
+            {
+                Attribute = attribute;
+                SerializerType = serializerType;
+            }
         }
 
         /// <summary>
         /// 具体类型的序列化
         /// </summary>
-        private static readonly Dictionary<Type, List<SerializerInfo>> ConcreteSerializersDict =
-            new Dictionary<Type, List<SerializerInfo>>();
+        private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializersDict =
+            new Dictionary<Type, List<SerializerStore>>();
 
         /// <summary>
-        /// 无约束泛型序列化
+        /// 泛型序列化的信息存储
         /// </summary>
-        private static readonly List<SerializerInfo> UnconstrainedGenericSerializers = new List<SerializerInfo>();
+        private static readonly List<GenericSerializerInfo> GenericSerializerInfos = new List<GenericSerializerInfo>();
 
-        private static void RegisterSerializer(IEasySerializer serializer, RegisterEasySerializerAttribute attribute)
+        private static void RegisterSerializerType(Type serializerType)
         {
-            var info = new SerializerInfo()
+            var interfaceType = serializerType.GetInterface("IEasySerializer`1");
+            var argType = interfaceType.GetGenericArguments()[0];
+            var attr = serializerType.GetCustomAttribute<EasySerializerPriorityAttribute>();
+            if (attr == null)
             {
-                Attribute = attribute,
-                Instance = serializer,
-            };
+                attr = new EasySerializerPriorityAttribute();
+            }
 
-            var implType = GetSerializerImplementationType(serializer.GetType());
-
-            if (!implType.Type.IsGenericType)
+            if (!argType.IsGenericParameter)
             {
-                if (!ConcreteSerializersDict.TryGetValue(implType.Type, out var list))
+                if (!ConcreteSerializersDict.TryGetValue(argType, out var list))
                 {
-                    list = new List<SerializerInfo>();
-                    ConcreteSerializersDict[implType.Type] = list;
+                    list = new List<SerializerStore>();
+                    ConcreteSerializersDict[argType] = list;
                 }
 
-                list.Add(info);
+                var inst = (IEasySerializer)Activator.CreateInstance(serializerType);
+                list.Add(new SerializerStore(attr, inst));
             }
             else
             {
-                if (implType.IsUnconstrainedGeneric())
-                {
-                    UnconstrainedGenericSerializers.Add(info);
-                }
-                else
-                {
-                    throw new NotImplementedException(
-                        $"The constrained generic serializer '{implType.Type.FullName}' is not implemented!");
-                }
+                GenericSerializerInfos.Add(new GenericSerializerInfo(attr, serializerType));
             }
         }
 
-        private static void PostProcessSerializers()
+        private static void ProcessSerializers()
         {
             foreach (var infos in ConcreteSerializersDict.Values)
             {
                 infos.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
             }
-
-            UnconstrainedGenericSerializers.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
         }
 
         private static void EnsureInitializeSerializers()
         {
             if (!s_initializedSerializers)
             {
-                var attrs = GetRegisterSerializerAttributes();
-                foreach (var attr in attrs)
+                var types = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(asm => asm.GetTypes())
+                    .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract &&
+                                t.GetInterface("IEasySerializer`1") != null)
+                    .ToArray();
+
+                foreach (var type in types)
                 {
-                    var inst = (IEasySerializer)Activator.CreateInstance(attr.SerializerType);
-                    RegisterSerializer(inst, attr);
+                    RegisterSerializerType(type);
                 }
 
-                PostProcessSerializers();
+                ProcessSerializers();
 
                 s_initializedSerializers = true;
             }
         }
 
-        private static SerializerInfo? InternalGetSerializer(Type valueType)
+        private static SerializerStore? FindSerializerInSerializersDict(Type valueType)
         {
-            EnsureInitializeSerializers();
-
-            SerializerInfo? ret = null;
-
-            // 先从具体类型中查找序列化器
             if (ConcreteSerializersDict.TryGetValue(valueType, out var infos))
             {
                 foreach (var info in infos)
                 {
                     if (info.Instance.CanSerialize(valueType))
                     {
-                        ret = info;
-                        break;
+                        return info;
                     }
                 }
             }
 
-            // 然后从无约束泛型中查找序列化器
-            foreach (var info in UnconstrainedGenericSerializers)
+            return null;
+        }
+
+        private static SerializerStore? FindSerializerInGenericSerializers(Type valueType)
+        {
+            var serializes = new List<SerializerStore>();
+            foreach (var info in GenericSerializerInfos)
             {
-                if (info.Instance.CanSerialize(valueType))
+                try
                 {
-                    // 如果优先级大于先前找到的序列化器，则更新
-                    if (ret.HasValue && info.Attribute.Priority > ret.Value.Attribute.Priority)
-                    {
-                        ret = info;
-                    }
-
-                    break;
+                    var type = info.SerializerType.MakeGenericType(valueType);
+                    var inst = (IEasySerializer)Activator.CreateInstance(type);
+                    serializes.Add(new SerializerStore(info.Attribute, inst));
+                }
+                catch (Exception e)
+                {
+                    continue;
                 }
             }
 
-            return ret;
+            if (serializes.Count == 0)
+            {
+                return null;
+            }
+
+            serializes.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
+            return serializes[0];
+        }
+
+
+        private static readonly Dictionary<Type, SerializerStore> SerializerCache =
+            new Dictionary<Type, SerializerStore>();
+
+        private static SerializerStore? InternalGetSerializer(Type valueType)
+        {
+            EnsureInitializeSerializers();
+
+            if (SerializerCache.TryGetValue(valueType, out var serializer))
+            {
+                return serializer;
+            }
+
+            var sortList = new List<SerializerStore>();
+            var tmp = FindSerializerInSerializersDict(valueType);
+            if (tmp.HasValue)
+            {
+                sortList.Add(tmp.Value);
+            }
+
+            tmp = FindSerializerInGenericSerializers(valueType);
+            if (tmp.HasValue)
+            {
+                sortList.Add(tmp.Value);
+            }
+
+            if (sortList.Count == 0)
+            {
+                return null;
+            }
+
+            sortList.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
+
+            serializer = sortList[0];
+            SerializerCache[valueType] = serializer;
+            return serializer;
+        }
+
+        internal static void ProcessSerializer(IEasySerializer serializer, IArchive archive, ref object value,
+            Type valueType)
+        {
+            var interfaceType = serializer.GetType().GetInterface("IEasySerializer`1")!;
+            var method = interfaceType.GetMethod("Process")!;
+            var parameters = new object[] { archive, value };
+            method.Invoke(serializer, parameters);
+            value = parameters[1];
         }
 
         internal static IEasySerializer GetSerializer(Type valueType)

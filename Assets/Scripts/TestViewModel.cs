@@ -1,11 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using EasyFramework;
+using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using UnityEngine;
 
+public class Test
+{
+    public int Intt = 1122;
+    public string Strr = "234234";
 
+    [SerializeField]
+    private float ssss = 234.55f;
+}
 
 public partial class TestViewModel : MonoBehaviour
 {
@@ -18,21 +23,9 @@ public partial class TestViewModel : MonoBehaviour
             .MinimumLevel.Debug()
             .CreateLogger();
 
-        Log.Debug("114514");
-
-        var ios = EasySerializerNative.AllocStringIoStream();
-        var oarch = EasySerializerNative.AllocBinaryOutputArchive(ios);
-        EasySerializerNative.WriteInt32ToOutputArchive(oarch, "int32", 134);
-        EasySerializerNative.WriteStringToOutputArchive(oarch, "str", "66666");
-        var cbuf = EasySerializerNative.GetIoStreamBuffer(ios);
-        byte[] buf = new byte[cbuf.size];
-        Marshal.Copy(cbuf.ptr, buf, 0, (int)cbuf.size);
-
-        var iarch = EasySerializerNative.AllocBinaryInputArchive(ios);
-        var val = EasySerializerNative.ReadInt32FromInputArchive(iarch, "int32");
-        var str = EasySerializerNative.ReadStringFromInputArchive(iarch, "str");
-
-        Debug.Log(val);
+        var t = new Test();
+        var b = EasySerialize.ToBinary(t);
+        var ss = EasySerialize.FromBinary<Test>(b);
     }
 	
 	void Update()

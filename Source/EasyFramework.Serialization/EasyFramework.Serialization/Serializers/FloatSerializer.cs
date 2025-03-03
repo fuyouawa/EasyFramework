@@ -1,9 +1,9 @@
 namespace EasyFramework.Serialization
 {
     [EasySerializerPriority(EasySerializerProiority.System)]
-    public class IntSerializer : EasySerializerBase<int>
+    public class FloatSerializer : EasySerializerBase<float>
     {
-        protected override void Process(IArchive archive, ref int value)
+        protected override void Process(IArchive archive, ref float value)
         {
             archive.Process(ref value);
         }

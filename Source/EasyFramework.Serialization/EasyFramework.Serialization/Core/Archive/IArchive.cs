@@ -2,8 +2,25 @@ using System;
 
 namespace EasyFramework.Serialization
 {
+    public enum ArchiveIoTypes
+    {
+        Input,
+        Output
+    }
+
+    public enum ArchiveTypes
+    {
+        Binary,
+        Json,
+        Xml,
+        Yaml
+    }
+
     public interface IArchive : IDisposable
     {
+        ArchiveIoTypes ArchiveIoType { get; }
+        ArchiveTypes ArchiveType { get; }
+
         void SetNextName(string name);
         void StartNode();
         void FinishNode();

@@ -15,6 +15,9 @@ namespace EasyFramework.Serialization
             _archive = archive;
         }
 
+        public ArchiveIoTypes ArchiveIoType => ArchiveIoTypes.Output;
+        public abstract ArchiveTypes ArchiveType { get; }
+
         public List<Object> GetReferencedUnityObjects()
         {
             return _referencedUnityObjects;

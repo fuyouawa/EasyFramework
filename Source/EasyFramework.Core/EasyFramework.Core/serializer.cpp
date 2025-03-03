@@ -161,11 +161,7 @@ uint32_t ReadVarint32FromInputArchive(InputArchive archive) {
 
 void WriteBinaryToOutputArchive(OutputArchive archive, Buffer buffer) {
     auto arch = GetArchive(archive);
-    if (arch->type() != ArchiveType::Binary) {
-        auto s = static_cast<size_t>(buffer.size);
-        arch->Process(cereal::make_size_tag(s));
-    }
-    else {
+    if (arch->type() == ArchiveType::Binary) {
         auto v = Varint32(buffer.size);
         arch->Process(v);
     }
@@ -176,10 +172,7 @@ void WriteBinaryToOutputArchive(OutputArchive archive, Buffer buffer) {
 Buffer ReadBinaryFromInputArchive(InputArchive archive) {
     auto size = size_t();
     auto arch = GetArchive(archive);
-    if (arch->type() != ArchiveType::Binary) {
-        arch->Process(cereal::make_size_tag(size));
-    }
-    else {
+    if (arch->type() == ArchiveType::Binary) {
         auto v = Varint32();
         arch->Process(v);
         size = v.value;

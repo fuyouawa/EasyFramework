@@ -4,14 +4,24 @@ using Object = UnityEngine.Object;
 
 namespace EasyFramework.Serialization
 {
-    public class EasySerialize
+    public static class EasySerialize
     {
-        public byte[] ToBinary<T>(T value, out List<Object> referencedUnityObjects)
+        public static byte[] ToBinary<T>(T value)
+        {
+            return To(value, out _, Format.Binary);
+        }
+
+        public static T FromBinary<T>(byte[] data)
+        {
+            return From<T>(data, new List<Object>(), Format.Binary);
+        }
+
+        public static byte[] ToBinary<T>(T value, out List<Object> referencedUnityObjects)
         {
             return To(value, out referencedUnityObjects, Format.Binary);
         }
 
-        public T FromBinary<T>(byte[] data, List<Object> referencedUnityObjects)
+        public static T FromBinary<T>(byte[] data, List<Object> referencedUnityObjects)
         {
             return From<T>(data, referencedUnityObjects, Format.Binary);
         }
@@ -24,7 +34,7 @@ namespace EasyFramework.Serialization
             Yaml
         }
 
-        private IEasySerializer<T> GetSerializerWithThrow<T>()
+        private static IEasySerializer<T> GetSerializerWithThrow<T>()
         {
             var serializer = EasySerializerUtility.GetSerializer<T>();
             if (serializer == null)
@@ -37,25 +47,27 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        private byte[] To<T>(T value, out List<Object> referencedUnityObjects, Format format)
+        private static byte[] To<T>(T value, out List<Object> referencedUnityObjects, Format format)
         {
             var serializer = GetSerializerWithThrow<T>();
 
             var ios = EasySerializeNative.AllocStringIoStream();
             using (new EasySerializeNative.IoStreamWrapper(ios))
             {
-                using var arch = new BinaryOutputArchive(ios);
-                serializer.Process(arch, null, ref value);
+                using (var arch = new BinaryOutputArchive(ios))
+                {
+                    serializer.Process(arch, ref value);
+                    referencedUnityObjects = arch.GetReferencedUnityObjects();
+                }
 
                 var cBuf = EasySerializeNative.GetIoStreamBuffer(ios);
                 var buf = EasySerializeNative.ConvertBufferToBytesWithFree(cBuf);
 
-                referencedUnityObjects = arch.GetReferencedUnityObjects();
                 return buf;
             }
         }
 
-        private T From<T>(byte[] data, List<Object> referencedUnityObjects, Format format)
+        private static T From<T>(byte[] data, List<Object> referencedUnityObjects, Format format)
         {
             var serializer = GetSerializerWithThrow<T>();
 
@@ -68,11 +80,13 @@ namespace EasyFramework.Serialization
                     EasySerializeNative.WriteToIoStreamBuffer(ios, cBuf);
                 }
 
-                using var arch = new BinaryInputArchive(ios);
-                arch.SetupReferencedUnityObjects(referencedUnityObjects);
-
                 var ret = default(T);
-                serializer.Process(arch, null, ref ret);
+                using (var arch = new BinaryInputArchive(ios))
+                {
+                    arch.SetupReferencedUnityObjects(referencedUnityObjects);
+                    serializer.Process(arch, ref ret);
+                }
+
                 return ret;
             }
         }

@@ -9,7 +9,7 @@ namespace EasyFramework.Serialization
 
     public interface IEasySerializer<T> : IEasySerializer
     {
-        void Process(IArchive archive, string name, ref T value);
+        void Process(IArchive archive, ref T value);
     }
 
     public abstract class EasySerializerBase<T> : IEasySerializer<T>
@@ -19,22 +19,12 @@ namespace EasyFramework.Serialization
             return CanSerialize(valueType);
         }
 
-        void IEasySerializer<T>.Process(IArchive archive, string name, ref T value)
+        void IEasySerializer<T>.Process(IArchive archive, ref T value)
         {
-            Process(archive, name, ref value);
-        }
-
-        protected virtual bool CanSerialize(Type valueType) => true;
-
-        protected virtual void Process(IArchive archive, string name, ref T value)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                archive.SetNextName(name);
-            }
             Process(archive, ref value);
         }
 
+        protected virtual bool CanSerialize(Type valueType) => true;
         protected abstract void Process(IArchive archive, ref T value);
     }
 }

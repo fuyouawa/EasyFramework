@@ -14,10 +14,14 @@ namespace EasyFramework.Serialization
             _archive = archive;
         }
 
+        public ArchiveIoTypes ArchiveIoType => ArchiveIoTypes.Input;
+        public abstract ArchiveTypes ArchiveType { get; }
+
         public void SetupReferencedUnityObjects(List<UnityEngine.Object> referencedUnityObjects)
         {
             _referencedUnityObjects = referencedUnityObjects;
         }
+
 
         public void SetNextName(string name)
         {

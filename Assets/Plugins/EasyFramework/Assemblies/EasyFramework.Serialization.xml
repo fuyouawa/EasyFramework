@@ -9,9 +9,9 @@
             具体类型的序列化
             </summary>
         </member>
-        <member name="F:EasyFramework.Serialization.EasySerializerUtility.UnconstrainedGenericSerializers">
+        <member name="F:EasyFramework.Serialization.EasySerializerUtility.GenericSerializerInfos">
             <summary>
-            无约束泛型序列化
+            泛型序列化的信息存储
             </summary>
         </member>
     </members>

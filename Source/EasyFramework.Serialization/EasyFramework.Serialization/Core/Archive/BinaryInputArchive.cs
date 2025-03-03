@@ -6,5 +6,7 @@ namespace EasyFramework.Serialization
             : base(EasySerializeNative.AllocBinaryInputArchive(stream))
         {
         }
+
+        public override ArchiveTypes ArchiveType => ArchiveTypes.Binary;
     }
 }
