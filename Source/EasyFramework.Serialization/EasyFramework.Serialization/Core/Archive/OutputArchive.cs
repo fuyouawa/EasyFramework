@@ -44,6 +44,13 @@ namespace EasyFramework.Serialization
             return true;
         }
 
+        public bool Process(ref bool value)
+        {
+            int val = value ? 1 : 0;
+            EasySerializeNative.WriteBoolToOutputArchive(_archive, (byte)val);
+            return true;
+        }
+
         public bool Process(ref float value)
         {
             EasySerializeNative.WriteFloatToOutputArchive(_archive, value);

@@ -78,7 +78,8 @@ EXPORT uint16_t ReadUInt16FromInputArchive(InputArchive archive);
 EXPORT void WriteUInt8ToOutputArchive(OutputArchive archive, uint8_t value);
 EXPORT uint8_t ReadUInt8FromInputArchive(InputArchive archive);
 
-
+EXPORT void WriteBoolToOutputArchive(OutputArchive archive, uint8_t value);
+EXPORT uint8_t ReadBoolFromInputArchive(InputArchive archive);
 
 EXPORT void WriteVarint32ToOutputArchive(OutputArchive archive, uint32_t value);
 EXPORT uint32_t ReadVarint32FromInputArchive(InputArchive archive);

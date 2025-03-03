@@ -1,9 +1,9 @@
 namespace EasyFramework.Serialization
 {
     [EasySerializerConfig(EasySerializerProiority.Value)]
-    public class FloatSerializer : EasySerializer<float>
+    public class BoolSerializer : EasySerializer<bool>
     {
-        protected override void Process(IArchive archive, ref float value)
+        protected override void Process(IArchive archive, ref bool value)
         {
             archive.Process(ref value);
         }

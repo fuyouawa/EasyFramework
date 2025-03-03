@@ -44,6 +44,13 @@ namespace EasyFramework.Serialization
             return true;
         }
 
+        public bool Process(ref bool value)
+        {
+            byte val = EasySerializeNative.ReadBoolFromInputArchive(_archive);
+            value = val != 0;
+            return true;
+        }
+
         public bool Process(ref float value)
         {
             value = EasySerializeNative.ReadFloatFromInputArchive(_archive);

@@ -12,7 +12,7 @@ namespace EasyFramework.Serialization
         void Process(IArchive archive, ref T value);
     }
 
-    public abstract class EasySerializerBase<T> : IEasySerializer<T>
+    public abstract class EasySerializer<T> : IEasySerializer<T>
     {
         bool IEasySerializer.CanSerialize(Type valueType)
         {

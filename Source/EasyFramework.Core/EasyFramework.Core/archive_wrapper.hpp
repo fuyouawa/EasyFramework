@@ -84,6 +84,7 @@ protected:
     virtual void ProcessImpl(uint32_t& value) = 0;
     virtual void ProcessImpl(uint16_t& value) = 0;
     virtual void ProcessImpl(uint8_t& value) = 0;
+    virtual void ProcessImpl(bool& value) = 0;
     virtual void ProcessImpl(float& value) = 0;
     virtual void ProcessImpl(double& value) = 0;
     virtual void ProcessImpl(Varint32& value) = 0;
@@ -196,6 +197,7 @@ public:
 
 protected:
     void ProcessImpl(Varint32& value) override { archive_(value); }
+    void ProcessImpl(bool& value) override { archive_(static_cast<uint8_t>(value ? 1 : 0)); }
 
     void ProcessImpl(std::string& str) override {
         archive_(Varint32(static_cast<uint32_t>(str.size())));
@@ -220,6 +222,11 @@ public:
 
 protected:
     void ProcessImpl(Varint32& value) override { archive_(value); }
+    void ProcessImpl(bool& value) override {
+        auto u8 = uint8_t();
+        archive_(u8);
+        value = u8 != 0;
+    }
 
     void ProcessImpl(std::string& str) override {
         auto size = Varint32();
@@ -262,6 +269,7 @@ public:
 
 protected:
     void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
+    void ProcessImpl(bool& value) override { AutoProcessImpl(value); }
 
     void ProcessImpl(std::string& str) override {
         AutoProcessImpl(str);
@@ -298,6 +306,7 @@ public:
 
 protected:
     void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
+    void ProcessImpl(bool& value) override { AutoProcessImpl(value); }
 
     void ProcessImpl(std::string& str) override {
         AutoProcessImpl(str);

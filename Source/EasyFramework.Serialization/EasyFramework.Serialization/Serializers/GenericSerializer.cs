@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
-    [EasySerializerPriority(EasySerializerProiority.Generic)]
-    public class GenericSerializer<T> : EasySerializerBase<T>
+    [EasySerializerConfig(EasySerializerProiority.Core)]
+    public class GenericSerializer<T> : EasySerializer<T>
     {
         protected override void Process(IArchive archive, ref T value)
         {
@@ -29,7 +29,7 @@ namespace EasyFramework.Serialization
                     archive.StartNode();
                 }
 
-                var ser = EasySerializerUtility.GetSerializer(field.FieldType);
+                var ser = EasySerializerUtility.Get(field.FieldType);
 
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)

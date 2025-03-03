@@ -26,6 +26,7 @@ namespace EasyFramework.Serialization
         void FinishNode();
 
         bool Process(ref int value);
+        bool Process(ref bool value);
         bool Process(ref float value);
         bool Process(ref double value);
         bool Process(ref string str);

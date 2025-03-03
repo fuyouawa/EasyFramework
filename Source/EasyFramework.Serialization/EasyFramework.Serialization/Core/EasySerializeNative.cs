@@ -138,6 +138,13 @@ namespace EasyFramework.Serialization
         public static extern byte ReadUInt8FromInputArchive(InputArchive archive);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void WriteBoolToOutputArchive(OutputArchive archive, byte value);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern byte ReadBoolFromInputArchive(InputArchive archive);
+
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void WriteVarint32ToOutputArchive(OutputArchive archive, uint value);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]

@@ -1,10 +1,10 @@
 namespace EasyFramework.Serialization
 {
-    public static class EasySerializerProiority
+    public enum EasySerializerProiority
     {
-        public const int Generic = -10000;
-        public const int System = -1000;
-
-        public const int Default = 0;
+        Core = -10000,
+        Value = -1000,
+        UnityStructs = -100,
+        Custom = 0,
     }
 }

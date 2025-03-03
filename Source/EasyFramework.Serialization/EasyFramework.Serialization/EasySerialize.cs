@@ -59,7 +59,7 @@ namespace EasyFramework.Serialization
 
         private static IEasySerializer<T> GetSerializerWithThrow<T>()
         {
-            var serializer = EasySerializerUtility.GetSerializer<T>();
+            var serializer = EasySerializerUtility.Get<T>();
             if (serializer == null)
             {
                 throw new ArgumentException(

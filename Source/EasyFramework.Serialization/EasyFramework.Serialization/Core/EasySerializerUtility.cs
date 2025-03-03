@@ -13,10 +13,10 @@ namespace EasyFramework.Serialization
 
         private struct SerializerStore
         {
-            public EasySerializerPriorityAttribute Attribute { get; }
+            public EasySerializerConfigAttribute Attribute { get; }
             public IEasySerializer Instance { get; }
 
-            public SerializerStore(EasySerializerPriorityAttribute attribute, IEasySerializer instance)
+            public SerializerStore(EasySerializerConfigAttribute attribute, IEasySerializer instance)
             {
                 Attribute = attribute;
                 Instance = instance;
@@ -25,10 +25,10 @@ namespace EasyFramework.Serialization
 
         private struct GenericSerializerInfo
         {
-            public EasySerializerPriorityAttribute Attribute { get; }
+            public EasySerializerConfigAttribute Attribute { get; }
             public Type SerializerType { get; }
 
-            public GenericSerializerInfo(EasySerializerPriorityAttribute attribute, Type serializerType)
+            public GenericSerializerInfo(EasySerializerConfigAttribute attribute, Type serializerType)
             {
                 Attribute = attribute;
                 SerializerType = serializerType;
@@ -50,10 +50,10 @@ namespace EasyFramework.Serialization
         {
             var interfaceType = serializerType.GetInterface("IEasySerializer`1");
             var argType = interfaceType.GetGenericArguments()[0];
-            var attr = serializerType.GetCustomAttribute<EasySerializerPriorityAttribute>();
+            var attr = serializerType.GetCustomAttribute<EasySerializerConfigAttribute>();
             if (attr == null)
             {
-                attr = new EasySerializerPriorityAttribute();
+                attr = new EasySerializerConfigAttribute();
             }
 
             if (!argType.IsGenericParameter)
@@ -192,7 +192,7 @@ namespace EasyFramework.Serialization
             value = parameters[1];
         }
 
-        internal static IEasySerializer GetSerializer(Type valueType)
+        internal static IEasySerializer Get(Type valueType)
         {
             var info = InternalGetSerializer(valueType);
             if (info.HasValue)
@@ -203,9 +203,9 @@ namespace EasyFramework.Serialization
             return null;
         }
 
-        public static IEasySerializer<T> GetSerializer<T>()
+        public static IEasySerializer<T> Get<T>()
         {
-            var serializer = GetSerializer(typeof(T));
+            var serializer = Get(typeof(T));
             return (IEasySerializer<T>)serializer;
         }
     }

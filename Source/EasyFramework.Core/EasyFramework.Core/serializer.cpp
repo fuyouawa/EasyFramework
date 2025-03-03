@@ -131,6 +131,17 @@ NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(UInt32, uint32_t)
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(UInt16, uint16_t)
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(UInt8, uint8_t)
 
+void WriteBoolToOutputArchive(OutputArchive archive, uint8_t value) {
+    auto b = value != 0;
+    GetArchive(archive)->Process(b);
+}
+
+uint8_t ReadBoolFromInputArchive(InputArchive archive) {
+    auto b = bool();
+    GetArchive(archive)->Process(b);
+    return b ? 1 : 0;
+}
+
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Float, float)
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Double, double)
 
