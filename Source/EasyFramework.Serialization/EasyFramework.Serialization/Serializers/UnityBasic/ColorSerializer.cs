@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
-    [EasySerializerConfig(EasySerializerProiority.UnityStructs)]
+    [EasySerializerConfig(EasySerializerProiority.UnityBasic)]
     public class ColorSerializer : EasySerializer<Color>
     {
         private static readonly EasySerializer<float> FloatSerializer = GetSerializer<float>();

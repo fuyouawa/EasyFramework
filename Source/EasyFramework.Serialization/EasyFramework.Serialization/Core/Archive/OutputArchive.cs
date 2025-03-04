@@ -79,7 +79,13 @@ namespace EasyFramework.Serialization
 
         public bool Process(ref Object unityObject)
         {
-            var idx = _referencedUnityObjects.Count;
+            if (unityObject == null)
+            {
+                EasySerializeNative.WriteVarint32ToOutputArchive(_archive, 0);
+                return true;
+            }
+
+            var idx = _referencedUnityObjects.Count + 1;
             EasySerializeNative.WriteVarint32ToOutputArchive(_archive, (uint)idx);
             _referencedUnityObjects.Add(unityObject);
             return true;

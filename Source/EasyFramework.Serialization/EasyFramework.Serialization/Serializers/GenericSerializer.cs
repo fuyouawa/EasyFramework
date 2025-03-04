@@ -1,16 +1,18 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using EasyFramework.Serialization;
-using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
-    [EasySerializerConfig(EasySerializerProiority.GenericCore)]
+    [EasySerializerConfig(EasySerializerProiority.Generic)]
     public class GenericSerializer<T> : EasySerializer<T>
     {
         public override void Process(string name, ref T value, IArchive archive)
         {
+            Debug.Assert(!typeof(T).IsSubclassOf(typeof(UnityEngine.Object)));
+
             if (value == null)
             {
                 value = Activator.CreateInstance<T>();
@@ -18,7 +20,7 @@ namespace EasyFramework.Serialization
 
             var serializeFields = typeof(T)
                 .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                .Where(f => f.IsPublic || f.GetCustomAttribute<SerializeField>() != null)
+                .Where(f => f.IsPublic || f.GetCustomAttribute<UnityEngine.SerializeField>() != null)
                 .ToArray();
 
             foreach (var field in serializeFields)
@@ -33,22 +35,17 @@ namespace EasyFramework.Serialization
                     archive.StartNode();
                 }
 
-                var serializer = EasySerializerUtility.GetSerializer(fieldType);
-
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
                 {
                     obj = field.GetValue(value);
                 }
-
+                
+                var serializer = EasySerializerUtility.GetSerializer(fieldType);
                 if (isNode)
-                {
                     serializer.Process(ref obj, fieldType, archive);
-                }
                 else
-                {
                     serializer.Process(field.Name, ref obj, fieldType, archive);
-                }
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {

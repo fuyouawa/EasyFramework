@@ -82,13 +82,19 @@ namespace EasyFramework.Serialization
         public bool Process(ref UnityEngine.Object unityObject)
         {
             var idx = EasySerializeNative.ReadVarint32FromInputArchive(_archive);
-            if (idx >= _referencedUnityObjects.Count)
+            if (idx == 0)
+            {
+                unityObject = null;
+                return true;
+            }
+
+            if (idx > _referencedUnityObjects.Count)
             {
                 unityObject = null;
                 return false;
             }
 
-            unityObject = _referencedUnityObjects[(int)idx];
+            unityObject = _referencedUnityObjects[(int)idx - 1];
             return true;
         }
 

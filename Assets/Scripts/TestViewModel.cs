@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EasyFramework;
 using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
@@ -8,8 +9,9 @@ public class Inner
     public string JJ = "2344534asdfsd";
 }
 
-public class Test
+public class TestData
 {
+    public Test TestMono;
     public int Intt = 1122;
     public string Strr = "234234";
     public bool Bool = false;
@@ -23,6 +25,7 @@ public class Test
 public partial class TestViewModel : MonoBehaviour
 {
     public int? Value;
+    public Test TestMono;
 
 	void Start()
     {
@@ -31,10 +34,12 @@ public partial class TestViewModel : MonoBehaviour
             .MinimumLevel.Debug()
             .CreateLogger();
 
-        var t = new Test();
-        var b = EasySerialize.ToJson(t);
+        var t = new TestData();
+        t.TestMono = TestMono;
+
+        var b = EasySerialize.ToJson(t, out var list);
         Debug.Log(b);
-        var ss = EasySerialize.FromJson<Test>(b);
+        var ss = EasySerialize.FromJson<TestData>(b, list);
     }
 	
 	void Update()

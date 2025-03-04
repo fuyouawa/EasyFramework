@@ -88,11 +88,19 @@ void FreeInputArchive(InputArchive archive) {
 }
 
 void OutputArchiveSetNextName(OutputArchive archive, const char* name) {
-    GetArchive(archive)->set_next_name(name);
+    auto str = std::string();
+    if (name != nullptr) {
+        str = name;
+    }
+    GetArchive(archive)->set_next_name(std::move(str));
 }
 
 void InputArchiveSetNextName(InputArchive archive, const char* name) {
-    GetArchive(archive)->set_next_name(name);
+    auto str = std::string();
+    if (name != nullptr) {
+        str = name;
+    }
+    GetArchive(archive)->set_next_name(std::move(str));
 }
 
 void OutputArchiveStartNode(OutputArchive archive) {

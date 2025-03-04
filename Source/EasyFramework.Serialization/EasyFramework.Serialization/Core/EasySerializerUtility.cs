@@ -2,12 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
-using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
-    public static class EasySerializerUtility
+    internal static class EasySerializerUtility
     {
         private static bool s_initializedSerializers = false;
 
@@ -182,7 +180,7 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        internal static EasySerializer GetSerializer(Type valueType)
+        public static EasySerializer GetSerializer(Type valueType)
         {
             var info = InternalGetSerializer(valueType);
             if (info.HasValue)

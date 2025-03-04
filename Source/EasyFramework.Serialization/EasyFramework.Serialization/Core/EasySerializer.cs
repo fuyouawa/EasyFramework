@@ -3,12 +3,13 @@ using System.Diagnostics;
 
 namespace EasyFramework.Serialization
 {
-    public interface IEasySerializer
+    internal interface IEasySerializer
     {
         bool CanSerialize(Type valueType);
+        bool IsRoot { get; set; }
     }
 
-    public interface IEasySerializer<T> : IEasySerializer
+    internal interface IEasySerializer<T> : IEasySerializer
     {
         void Process(ref T value, IArchive archive);
         void Process(string name, ref T value, IArchive archive);
@@ -17,6 +18,9 @@ namespace EasyFramework.Serialization
     public abstract class EasySerializer : IEasySerializer
     {
         public virtual bool CanSerialize(Type valueType) => true;
+
+        protected bool IsRoot { get; private set; }
+        bool IEasySerializer.IsRoot { get => IsRoot; set => IsRoot = value; }
 
         internal void Process(ref object value, Type valueType, IArchive archive)
         {
