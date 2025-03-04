@@ -119,6 +119,32 @@ void InputArchiveFinishNode(InputArchive archive) {
     GetArchive(archive)->FinishNode();
 }
 
+void WriteSizeToOutputArchive(OutputArchive archive, uint32_t size) {
+    auto arch = GetArchive(archive);
+    if (arch->type() == ArchiveType::Binary) {
+        auto v = Varint32(size);
+        arch->Process(v);
+    }
+    else {
+        auto s = static_cast<uint64_t>(size);
+        arch->Process(cereal::make_size_tag(s));
+    }
+}
+
+uint32_t ReadSizeFromInputArchive(InputArchive archive) {
+    auto arch = GetArchive(archive);
+    if (arch->type() == ArchiveType::Binary) {
+        auto v = Varint32();
+        arch->Process(v);
+        return v.value;
+    }
+    else {
+        auto size = uint64_t();
+        arch->Process(cereal::make_size_tag(size));
+        return static_cast<uint32_t>(size);
+    }
+}
+
 #define NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(type_name, type) \
 void Write##type_name##ToOutputArchive(OutputArchive archive, type value) { \
     GetArchive(archive)->Process(value); \
@@ -216,3 +242,52 @@ Buffer ReadStringFromInputArchive(InputArchive archive) {
     memcpy_s(ret.ptr, ret.size, s.c_str(), s.size());
     return ret;
 }
+
+// #include <cereal/types/vector.hpp>
+//
+// struct Testt {
+// public:
+//     int JJ;
+//
+//     Testt() {}
+//     Testt(int i) : JJ(i) {  }
+//
+//     template <class Archive>
+//     void serialize(Archive& ar) {
+//         ar(CEREAL_NVP(JJ));
+//     }
+// };
+//
+// struct Data {
+//     std::vector<Testt> vec = { 1, 2, 3, 4, 5 };
+//
+//     template <class Archive>
+//     void serialize(Archive& ar) {
+//         ar(vec);
+//     }
+// };
+//
+//
+// void Test() {
+//     std::stringstream ss;
+//
+//     // 序列化
+//     {
+//         cereal::JSONOutputArchive oarchive(ss);
+//         Data data;
+//         oarchive(data);
+//     }
+//
+//     std::cout << ss.str() << std::endl;
+//
+//     // 反序列化
+//     {
+//         cereal::JSONInputArchive iarchive(ss);
+//         Data data;
+//         iarchive(data);
+//         for (auto i : data.vec) {
+//             std::cout << i.JJ << " ";
+//         }
+//         std::cout << std::endl;
+//     }
+// }

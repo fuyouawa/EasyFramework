@@ -89,6 +89,12 @@ namespace EasyFramework.Serialization
 
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void WriteSizeToOutputArchive(OutputArchive archive, uint size);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern uint ReadSizeFromInputArchive(InputArchive archive);
+
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void WriteInt64ToOutputArchive(OutputArchive archive, long value);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]

@@ -304,14 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 987200766, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _viewControllerConfig:
-    EditorConfig:
-      IsInitialized: 1
-      GenerateDir: Scripts
-      Namespace: 
-      AutoScriptName: 1
-      ScriptName: sfdsdf
-      OtherBindersList: []
 --- !u!114 &1000912423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -561,7 +553,14 @@ MonoBehaviour:
       Namespace: 
       AutoScriptName: 0
       ScriptName: TestViewModel
-      OtherBindersList: []
+      OtherBindersList:
+      - {fileID: 1000912423}
+      _serializedData:
+        Format: 0
+        BinaryData: 01075363726970747300000d54657374566965774d6f64656c010100
+        StringData: 
+        ReferencedUnityObjects:
+        - {fileID: 1000912423}
 --- !u!4 &1888331993
 Transform:
   m_ObjectHideFlags: 0
@@ -590,6 +589,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   JJ: 10
+  OO: 1.34
 --- !u!1 &1921682778
 GameObject:
   m_ObjectHideFlags: 0

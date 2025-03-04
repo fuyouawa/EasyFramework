@@ -53,6 +53,9 @@ EXPORT void OutputArchiveFinishNode(OutputArchive archive);
 EXPORT void InputArchiveStartNode(InputArchive archive);
 EXPORT void InputArchiveFinishNode(InputArchive archive);
 
+EXPORT void WriteSizeToOutputArchive(OutputArchive archive, uint32_t size);
+EXPORT uint32_t ReadSizeFromInputArchive(InputArchive archive);
+
 EXPORT void WriteInt64ToOutputArchive(OutputArchive archive, int64_t value);
 EXPORT int64_t ReadInt64FromInputArchive(InputArchive archive);
 
@@ -95,3 +98,6 @@ EXPORT Buffer ReadBinaryFromInputArchive(InputArchive archive);
 
 EXPORT void WriteStringToOutputArchive(OutputArchive archive, const char* str);
 EXPORT Buffer ReadStringFromInputArchive(InputArchive archive);
+
+
+// EXPORT void Test();

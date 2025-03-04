@@ -3,10 +3,10 @@ namespace EasyFramework.Serialization
     public enum EasySerializerProiority
     {
         Generic = -5000,
-        Primitive = -4000,
-        SystemBasic = -3000,
-        UnityObject = -2000,
-        UnityBasic = -1000,
+        SystemBasic = -4000,
+        UnityObject = -3000,
+        UnityBasic = -2000,
+        Primitive = -1000,
         Custom = 0,
     }
 }

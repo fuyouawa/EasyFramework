@@ -16,6 +16,26 @@ namespace EasyFramework.Serialization
         Yaml
     }
 
+    public struct Varint32
+    {
+        public uint Value { get; set; }
+
+        public Varint32(uint value)
+        {
+            Value = value;
+        }
+    }
+
+    public struct SizeTag
+    {
+        public uint Size { get; set; }
+
+        public SizeTag(uint size)
+        {
+            Size = size;
+        }
+    }
+
     public interface IArchive : IDisposable
     {
         ArchiveIoTypes ArchiveIoType { get; }
@@ -26,6 +46,8 @@ namespace EasyFramework.Serialization
         void FinishNode();
 
         bool Process(ref int value);
+        bool Process(ref Varint32 value);
+        bool Process(ref SizeTag sizeTag);
         bool Process(ref bool value);
         bool Process(ref float value);
         bool Process(ref double value);

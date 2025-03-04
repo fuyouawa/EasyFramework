@@ -2,8 +2,19 @@
 #include <iostream>
 
 int main() {
+    // Test();
+
     auto ios = AllocStringIoStream();
-    auto oarch = AllocBinaryOutputArchive(ios);
+    auto oarch = AllocJsonOutputArchive(ios);
+
+    OutputArchiveStartNode(oarch);
+    WriteSizeToOutputArchive(oarch, 3);
+
+    WriteInt32ToOutputArchive(oarch, 134);
+    WriteInt32ToOutputArchive(oarch, 35434);
+    WriteInt32ToOutputArchive(oarch, 1356747);
+
+    OutputArchiveFinishNode(oarch);
 
     // OutputArchiveSetNextName(oarch, "num");
     // WriteInt32ToOutputArchive(oarch, 123);

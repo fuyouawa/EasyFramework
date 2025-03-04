@@ -63,6 +63,10 @@ public:
         ProcessImpl(value);
     }
 
+    void Process(cereal::SizeTag<size_t&> size) {
+        ProcessImpl(size);
+    }
+
     virtual void StartNode() {}
     virtual void FinishNode() {}
 
@@ -75,6 +79,8 @@ protected:
         tmp.swap(next_name_);
         return tmp;
     }
+
+    virtual void ProcessImpl(cereal::SizeTag<size_t&> data) = 0;
 
     virtual void ProcessImpl(int64_t& value) = 0;
     virtual void ProcessImpl(int32_t& value) = 0;
@@ -196,6 +202,10 @@ public:
     {}
 
 protected:
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override {
+        auto v = Varint32(static_cast<uint32_t>(value.size));
+        archive_(v);
+    }
     void ProcessImpl(Varint32& value) override { archive_(value); }
     void ProcessImpl(bool& value) override { archive_(static_cast<uint8_t>(value ? 1 : 0)); }
 
@@ -221,6 +231,11 @@ public:
     {}
 
 protected:
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override {
+        auto v = Varint32();
+        archive_(v);
+        value.size = v.value;
+    }
     void ProcessImpl(Varint32& value) override { archive_(value); }
     void ProcessImpl(bool& value) override {
         auto u8 = uint8_t();
@@ -268,6 +283,7 @@ public:
     }
 
 protected:
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override { archive_(value); }
     void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
     void ProcessImpl(bool& value) override { AutoProcessImpl(value); }
 
@@ -305,6 +321,7 @@ public:
     }
 
 protected:
+    void ProcessImpl(cereal::SizeTag<size_t&> value) override { archive_(value); }
     void ProcessImpl(Varint32& value) override { AutoProcessImpl(value.value); }
     void ProcessImpl(bool& value) override { AutoProcessImpl(value); }
 

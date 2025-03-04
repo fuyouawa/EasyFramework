@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using EasyFramework.Serialization;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
     [Serializable]
-    public class ViewControllerEditorConfig : Internal.IValueDrawerHelper
+    public class ViewControllerEditorConfig : Internal.IValueDrawerHelper, ISerializationCallbackReceiver
     {
         public bool IsInitialized;
 
@@ -28,6 +29,24 @@ namespace EasyFramework.ToolKit
 
         private const TypeInclusionFilter TYPE_FILTER =
             TypeInclusionFilter.IncludeConcreteTypes | TypeInclusionFilter.IncludeAbstracts;
+
+        [SerializeField, HideInInspector]
+        private EasySerializationData _serializedData;
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            _serializedData = EasySerialize.To(this, EasyDataFormat.Binary);
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            _serializedData ??= new EasySerializationData(EasyDataFormat.Binary);
+            var obj = EasySerialize.From<ViewControllerEditorConfig>(_serializedData);
+            if (obj != null)
+            {
+                EasySerializationUtility.AutoCopy(obj, this);
+            }
+        }
     }
 
     [Serializable]
@@ -41,7 +60,7 @@ namespace EasyFramework.ToolKit
         ViewControllerConfig Config { get; set; }
     }
 
-    public sealed class ViewController : MonoBehaviour, IViewController
+    public sealed class ViewController : SerializedBehaviour, IViewController
     {
         [SerializeField] private ViewControllerConfig _viewControllerConfig;
 

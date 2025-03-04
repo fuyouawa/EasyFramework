@@ -28,7 +28,7 @@ namespace EasyFramework.Serialization
         }
         internal abstract void Process(string name, ref object value, Type valueType, IArchive archive);
 
-        public static EasySerializer<T> GetSerializer<T>() => EasySerializerUtility.GetSerializer<T>();
+        public static EasySerializer<T> GetSerializer<T>() => EasySerializationUtility.GetSerializer<T>();
     }
 
     public abstract class EasySerializer<T> : EasySerializer, IEasySerializer<T>

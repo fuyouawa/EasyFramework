@@ -4,12 +4,12 @@
         <name>EasyFramework.Serialization</name>
     </assembly>
     <members>
-        <member name="F:EasyFramework.Serialization.EasySerializerUtility.ConcreteSerializersDict">
+        <member name="F:EasyFramework.Serialization.EasySerializationUtility.ConcreteSerializerTypesDict">
             <summary>
             具体类型的序列化
             </summary>
         </member>
-        <member name="F:EasyFramework.Serialization.EasySerializerUtility.GenericSerializerInfos">
+        <member name="F:EasyFramework.Serialization.EasySerializationUtility.GenericSerializerInfos">
             <summary>
             泛型序列化的信息存储
             </summary>

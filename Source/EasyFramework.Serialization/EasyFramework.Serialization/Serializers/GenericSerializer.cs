@@ -18,10 +18,7 @@ namespace EasyFramework.Serialization
                 value = Activator.CreateInstance<T>();
             }
 
-            var serializeFields = typeof(T)
-                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                .Where(f => f.IsPublic || f.GetCustomAttribute<UnityEngine.SerializeField>() != null)
-                .ToArray();
+            var serializeFields = EasySerializationUtility.GetSerializableFields(typeof(T));
 
             foreach (var field in serializeFields)
             {
@@ -41,7 +38,7 @@ namespace EasyFramework.Serialization
                     obj = field.GetValue(value);
                 }
                 
-                var serializer = EasySerializerUtility.GetSerializer(fieldType);
+                var serializer = EasySerializationUtility.GetSerializer(fieldType);
                 if (isNode)
                     serializer.Process(ref obj, fieldType, archive);
                 else

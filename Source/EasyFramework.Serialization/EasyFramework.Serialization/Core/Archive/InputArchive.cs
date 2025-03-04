@@ -44,6 +44,18 @@ namespace EasyFramework.Serialization
             return true;
         }
 
+        public bool Process(ref Varint32 value)
+        {
+            value.Value = EasySerializeNative.ReadVarint32FromInputArchive(_archive);
+            return true;
+        }
+
+        public bool Process(ref SizeTag sizeTag)
+        {
+            sizeTag.Size = EasySerializeNative.ReadSizeFromInputArchive(_archive);
+            return true;
+        }
+
         public bool Process(ref bool value)
         {
             byte val = EasySerializeNative.ReadBoolFromInputArchive(_archive);

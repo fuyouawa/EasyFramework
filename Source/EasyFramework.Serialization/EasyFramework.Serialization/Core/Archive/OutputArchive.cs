@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace EasyFramework.Serialization
@@ -41,6 +40,18 @@ namespace EasyFramework.Serialization
         public bool Process(ref int value)
         {
             EasySerializeNative.WriteInt32ToOutputArchive(_archive, value);
+            return true;
+        }
+
+        public bool Process(ref Varint32 value)
+        {
+            EasySerializeNative.WriteVarint32ToOutputArchive(_archive, value.Value);
+            return true;
+        }
+
+        public bool Process(ref SizeTag sizeTag)
+        {
+            EasySerializeNative.WriteSizeToOutputArchive(_archive, sizeTag.Size);
             return true;
         }
 
