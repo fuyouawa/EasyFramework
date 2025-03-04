@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using EasyFramework.Serialization;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ namespace EasyFramework.ToolKit
     }
 
     [Serializable]
-    public class ViewBinderEditorConfig : Internal.IValueDrawerHelper
+    public class ViewBinderEditorConfig : Internal.IValueDrawerHelper, ISerializationCallbackReceiver
     {
         public bool IsInitialized;
 
@@ -80,6 +81,21 @@ namespace EasyFramework.ToolKit
                 return Enumerable.Empty<Type>();
 
             return ViewBinderUtility.GetSpecficableBindTypes(BindComponentType);
+        }
+
+        [SerializeField, HideInInspector]
+        private EasySerializationData _serializationData;
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            EasySerialize.To(this, ref _serializationData);
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            var obj = EasySerialize.From<ViewBinderEditorConfig>(ref _serializationData);
+            if (obj != null)
+                EasySerializationUtility.AutoCopy(obj, this);
         }
     }
 

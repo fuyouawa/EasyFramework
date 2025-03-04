@@ -511,6 +511,11 @@ MonoBehaviour:
       UseDocumentComment: 1
       AutoAddParaToComment: 1
       Comment: 
+      _serializedData:
+        Format: 0
+        BinaryData: 01002d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c652d556e697479456e67696e652e436f6d706f6e656e742c20556e697479456e67696e652e436f72654d6f64756c650000000001046f6f6f6f01010100
+        StringData: 
+        ReferencedUnityObjects: []
 --- !u!1 &1888331991
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +546,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50d9105a2e9ea1c46a197ea45afa6e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestMono: {fileID: 1888331994}
   Oooo: {fileID: 0}
   Oooogfdh: {fileID: 0}
   Sadfsdf: {fileID: 0}

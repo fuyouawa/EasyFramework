@@ -31,21 +31,18 @@ namespace EasyFramework.ToolKit
             TypeInclusionFilter.IncludeConcreteTypes | TypeInclusionFilter.IncludeAbstracts;
 
         [SerializeField, HideInInspector]
-        private EasySerializationData _serializedData;
+        private EasySerializationData _serializationData;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            _serializedData = EasySerialize.To(this, EasyDataFormat.Binary);
+            EasySerialize.To(this, ref _serializationData);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            _serializedData ??= new EasySerializationData(EasyDataFormat.Binary);
-            var obj = EasySerialize.From<ViewControllerEditorConfig>(_serializedData);
+            var obj = EasySerialize.From<ViewControllerEditorConfig>(ref _serializationData);
             if (obj != null)
-            {
                 EasySerializationUtility.AutoCopy(obj, this);
-            }
         }
     }
 

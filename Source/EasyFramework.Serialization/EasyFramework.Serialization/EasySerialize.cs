@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Object = UnityEngine.Object;
 
 namespace EasyFramework.Serialization
 {
@@ -9,64 +6,54 @@ namespace EasyFramework.Serialization
     {
         public static byte[] ToBinary<T>(T value)
         {
-            return To(value, EasyDataFormat.Binary).BinaryData;
+            var data = new EasySerializationData(EasyDataFormat.Binary);
+            To(value, ref data);
+            return data.BinaryData;
         }
 
         public static T FromBinary<T>(byte[] data)
         {
-            return From<T>(new EasySerializationData(data, EasyDataFormat.Binary));
+            var d = new EasySerializationData(data, EasyDataFormat.Binary);
+            return From<T>(ref d);
         }
 
         public static string ToJson<T>(T value)
         {
-            return To(value, EasyDataFormat.Json).StringData;
+            var data = new EasySerializationData(EasyDataFormat.Json);
+            To(value, ref data);
+            return data.StringData;
         }
 
         public static T FromJson<T>(string json)
         {
-            return From<T>(new EasySerializationData(json, EasyDataFormat.Json));
+            var d = new EasySerializationData(json, EasyDataFormat.Json);
+            return From<T>(ref d);
         }
 
-        public static EasySerializationData To<T>(T value, EasyDataFormat format)
+        public static void To<T>(T value, ref EasySerializationData serializationData)
         {
-            var data = new EasySerializationData(format);
-
             var ios = EasySerializeNative.AllocStringIoStream();
             using (new EasySerializeNative.IoStreamWrapper(ios))
             {
-                using (var arch = GetOutputArchive(format, ios))
+                using (var arch = GetOutputArchive(serializationData.Format, ios))
                 {
                     var serializer = GetSerializerWithThrow<T>();
                     ((IEasySerializer<T>)serializer).IsRoot = true;
                     serializer.Process(ref value, arch);
-                    data.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
+                    serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
 
                 var cBuf = EasySerializeNative.GetIoStreamBuffer(ios);
-                data.SetData(EasySerializeNative.ConvertBufferToBytesWithFree(cBuf));
+                serializationData.SetData(EasySerializeNative.ConvertBufferToBytesWithFree(cBuf));
             }
-
-            return data;
         }
 
-        public static T From<T>(EasySerializationData data)
+        public static T From<T>(ref EasySerializationData serializationData)
         {
-            T ret = default;
-            From(ref ret, data);
-            return ret;
-        }
-
-        public static void From<T>(ref T referencedValue, EasySerializationData data)
-        {
-            if (data == null)
-            {
-                return;
-            }
-            var buf = data.GetData();
+            T res = default;
+            var buf = serializationData.GetData();
             if (buf.Length == 0)
-            {
-                return;
-            }
+                return default;
 
             var ios = EasySerializeNative.AllocStringIoStream();
             using (new EasySerializeNative.IoStreamWrapper(ios))
@@ -77,15 +64,17 @@ namespace EasyFramework.Serialization
                     EasySerializeNative.WriteToIoStreamBuffer(ios, cBuf);
                 }
 
-                using (var arch = GetInputArchive(data.Format, ios))
+                using (var arch = GetInputArchive(serializationData.Format, ios))
                 {
-                    arch.SetupReferencedUnityObjects(data.ReferencedUnityObjects);
+                    arch.SetupReferencedUnityObjects(serializationData.ReferencedUnityObjects);
 
                     var serializer = GetSerializerWithThrow<T>();
                     ((IEasySerializer<T>)serializer).IsRoot = true;
-                    serializer.Process(ref referencedValue, arch);
+                    serializer.Process(ref res, arch);
                 }
             }
+
+            return res;
         }
 
         private static EasySerializer<T> GetSerializerWithThrow<T>()

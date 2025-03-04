@@ -7,21 +7,22 @@ using UnityEngine;
 namespace EasyFramework.ToolKit.Editor
 {
     [EditorSettingsAssetPath]
-    public class ViewBinderSettings : ScriptableObjectSingleton<ViewBinderSettings>
+    [ShowOdinSerializedPropertiesInInspector]
+    public class ViewBinderSettings : ScriptableObjectSingleton<ViewBinderSettings>, ISerializationCallbackReceiver
     {
-        [Serializable, HideLabel, InlineProperty, HideReferenceObjectPicker]
+        [HideLabel, InlineProperty, HideReferenceObjectPicker]
         public struct FilteredType
         {
-            [HideLabel, ShowInInspector, NonSerialized]
+            [HideLabel, ShowInInspector]
             [TypeDrawerSettings(BaseType = typeof(Component), Filter = TypeInclusionFilter.IncludeConcreteTypes)]
             public Type Value;
         }
 
-        [Serializable, HideLabel, InlineProperty, HideReferenceObjectPicker]
-        public class PriorityList : ISerializationCallbackReceiver
+        [HideLabel, InlineProperty, HideReferenceObjectPicker]
+        public struct PriorityList
         {
-            [ShowInInspector, NonSerialized] [LabelText("优先级列表")]
-            public List<FilteredType> Collection = new List<FilteredType>();
+            [LabelText("优先级列表")]
+            public List<FilteredType> Collection;
 
             public int MatchIndexOf(Type type, bool checkDerive, bool checkBase)
             {
@@ -29,9 +30,7 @@ namespace EasyFramework.ToolKit.Editor
                 foreach (var t in Collection)
                 {
                     if (t.Value == type)
-                    {
                         return i;
-                    }
 
                     i++;
                 }
@@ -42,17 +41,13 @@ namespace EasyFramework.ToolKit.Editor
                     if (checkDerive)
                     {
                         if (type.IsAssignableFrom(t.Value))
-                        {
                             return i;
-                        }
                     }
 
                     if (checkBase)
                     {
                         if (type.IsSubclassOf(t.Value))
-                        {
                             return i;
-                        }
                     }
 
                     i++;
@@ -60,57 +55,49 @@ namespace EasyFramework.ToolKit.Editor
 
                 return -1;
             }
-
-            [HideInInspector, SerializeField]
-            private List<string> _serializedCollection = new List<string>();
-
-            public void OnBeforeSerialize()
-            {
-                _serializedCollection.Clear();
-
-                foreach (var type in Collection)
-                {
-                    var t = type.Value == null
-                        ? string.Empty
-                        : TwoWaySerializationBinder.Default.BindToName(type.Value);
-                    _serializedCollection.Add(t);
-                }
-            }
-
-            public void OnAfterDeserialize()
-            {
-                if (Collection.IsNotNullOrEmpty())
-                    return;
-
-                foreach (var type in _serializedCollection)
-                {
-                    var t = type.IsNullOrWhiteSpace()
-                        ? null
-                        : TwoWaySerializationBinder.Default.BindToType(type);
-                    Collection.Add(new FilteredType() { Value = t });
-                }
-            }
         }
 
-        [Serializable, HideLabel, InlineProperty, HideReferenceObjectPicker]
-        public class DefaultSettings
+        [HideLabel, InlineProperty, HideReferenceObjectPicker]
+        public struct DefaultSettings
         {
-            [LabelText("绑定游戏对象")] public bool BindGameObject = false;
-            [LabelText("绑定权限")] public ViewBindAccess BindAccess;
-            [LabelText("自动绑定名称")] public bool AutoBindName = true;
-            [LabelText("处理绑定命名")] public bool ProcessBindName = true;
-            [LabelText("使用文档注释")] public bool UseDocumentComment = true;
+            [LabelText("绑定游戏对象")]
+            public bool BindGameObject;
+            [LabelText("绑定权限")]
+            public ViewBindAccess BindAccess;
+            [LabelText("自动绑定名称")]
+            public bool AutoBindName;
+            [LabelText("处理绑定命名")]
+            public bool ProcessBindName;
+            [LabelText("使用文档注释")]
+            public bool UseDocumentComment;
 
-            [LabelText("自动添加注释段落")] [ShowIf(nameof(ShowAutoAddParaToComment))]
-            public bool AutoAddParaToComment = true;
+            [LabelText("自动添加注释段落")]
+            [ShowIf(nameof(ShowAutoAddParaToComment))]
+            public bool AutoAddParaToComment;
 
-            [LabelText("注释")] public string Comment;
+            [LabelText("注释")]
+            public string Comment;
 
             private bool ShowAutoAddParaToComment => UseDocumentComment;
         }
 
-        [TitleEx("默认值设置")] public DefaultSettings Default;
+        [TitleEx("默认值设置")]
+        public DefaultSettings Default;
 
-        [TitleEx("优先级设置")] public PriorityList Priorities;
+        [TitleEx("优先级设置")]
+        public PriorityList Priorities;
+        
+        [SerializeField, HideInInspector]
+        private SerializationData _serializationData;
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            UnitySerializationUtility.DeserializeUnityObject(this, ref _serializationData);
+        }
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            UnitySerializationUtility.SerializeUnityObject(this, ref _serializationData);
+        }
     }
 }

@@ -15,22 +15,27 @@ namespace EasyFramework.Serialization
 
 
     [Serializable]
-    public class EasySerializationData
+    public struct EasySerializationData
     {
         [SerializeField] public EasyDataFormat Format;
         [SerializeField] public byte[] BinaryData;
         [SerializeField] public string StringData;
         [SerializeField] public List<UnityEngine.Object> ReferencedUnityObjects;
 
+        public bool ContainsData => BinaryData != null || StringData != null || ReferencedUnityObjects != null;
+
         public EasySerializationData(EasyDataFormat format)
         {
+            Format = format;
             if (format == EasyDataFormat.Binary)
             {
                 BinaryData = Array.Empty<byte>();
+                StringData = null;
             }
             else
             {
                 StringData = string.Empty;
+                BinaryData = null;
             }
             ReferencedUnityObjects = new List<UnityEngine.Object>();
         }
@@ -52,6 +57,7 @@ namespace EasyFramework.Serialization
                 throw new ArgumentException("Binary data can only be serialized by the EasyDataFormat.Binary mode");
             }
             BinaryData = binaryData;
+            StringData = null;
             ReferencedUnityObjects = referencedUnityObjects;
             Format = format;
         }
@@ -63,12 +69,18 @@ namespace EasyFramework.Serialization
                 throw new ArgumentException("String data can not be serialized by the EasyDataFormat.Binary mode");
             }
             StringData = stringData;
+            BinaryData = null;
             ReferencedUnityObjects = referencedUnityObjects;
             Format = format;
         }
 
         public byte[] GetData()
         {
+            if (!ContainsData)
+            {
+                return Array.Empty<byte>();
+            }
+
             if (Format == EasyDataFormat.Binary)
             {
                 return BinaryData;

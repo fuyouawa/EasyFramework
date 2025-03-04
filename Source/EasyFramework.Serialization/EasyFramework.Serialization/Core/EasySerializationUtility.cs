@@ -65,7 +65,7 @@ namespace EasyFramework.Serialization
         }
 
         #region Initialization
-        
+
         /// <summary>
         /// 具体类型的序列化
         /// </summary>
@@ -75,7 +75,8 @@ namespace EasyFramework.Serialization
         /// <summary>
         /// 泛型序列化的信息存储
         /// </summary>
-        private static readonly HashSet<GenericSerializerInfo> GenericSerializerInfos = new HashSet<GenericSerializerInfo>();
+        private static readonly HashSet<GenericSerializerInfo> GenericSerializerInfos =
+            new HashSet<GenericSerializerInfo>();
 
         private static void RegisterConcreteSerializerType(Type serializerType, Type argType)
         {
@@ -113,6 +114,7 @@ namespace EasyFramework.Serialization
         }
 
         private static bool s_initializedSerializers = false;
+
         private static void EnsureInitializeSerializers()
         {
             if (!s_initializedSerializers)
@@ -136,6 +138,7 @@ namespace EasyFramework.Serialization
 
         private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesDict =
             new Dictionary<Type, List<SerializerStore>>();
+
         private static SerializerStore? FindSerializerInSerializersDict(Type valueType)
         {
             if (!ConcreteSerializerCachesDict.TryGetValue(valueType, out var list))
@@ -171,29 +174,32 @@ namespace EasyFramework.Serialization
             return null;
         }
 
-        private static Type[] GetNeededGenericTypes(Type valueType, Type serializerArgType)
+        private static Type[] GetNeededGenericTypes(Type srcType, Type destType, bool allocInherit)
         {
             var typeArgs = Array.Empty<Type>();
-            if (serializerArgType.IsGenericType && valueType.IsGenericType)
+            if (srcType.IsGenericType && destType.IsGenericType)
             {
-                var args1 = serializerArgType.GenericTypeArguments;
-                var args2 = valueType.GenericTypeArguments;
-                if (args2.Length != args1.Length)
+                var srcArg = srcType.GenericTypeArguments;
+                var destArg = destType.GenericTypeArguments;
+                if (destArg.Length != srcArg.Length)
                     return typeArgs;
 
-                var def1 = serializerArgType.GetGenericTypeDefinition();
-                var def2 = valueType.GetGenericTypeDefinition();
-                if (def1 != def2)
-                    return typeArgs;
+                var srcDef = srcType.GetGenericTypeDefinition();
+                var destDef = destType.GetGenericTypeDefinition();
+                if (srcDef != destDef)
+                {
+                    if (!allocInherit || !TypeUtility.IsDerivedOrImplementsGeneric(destDef, srcType))
+                        return Array.Empty<Type>();
+                }
 
-                typeArgs = args1.Select((t, i) => (t, i))
+                typeArgs = srcArg.Select((t, i) => (t, i))
                     .Where(x => x.t.IsGenericParameter)
-                    .Select(x => args2[x.i])
+                    .Select(x => destArg[x.i])
                     .ToArray();
             }
             else
             {
-                typeArgs = new[] { valueType };
+                typeArgs = new[] { destType };
             }
 
             return typeArgs;
@@ -214,8 +220,8 @@ namespace EasyFramework.Serialization
                 {
                     continue;
                 }
-                
-                var needTypes = GetNeededGenericTypes(valueType, info.ArgType);
+
+                var needTypes = GetNeededGenericTypes(info.ArgType, valueType, info.Attribute.AllowInherit);
                 if (needTypes.Length == 0)
                     continue;
 
@@ -228,6 +234,7 @@ namespace EasyFramework.Serialization
                 {
                     continue;
                 }
+
                 var inst = (IEasySerializer)Activator.CreateInstance(type);
                 serializes.Add(new SerializerStore(info.Attribute, inst));
             }

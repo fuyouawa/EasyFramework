@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace EasyFramework.Serialization
 {
-    [EasySerializerConfig(EasySerializerProiority.SystemBasic)]
-    public class ListSerializer<T> : EasySerializer<List<T>>
+    [EasySerializerConfig(EasySerializerProiority.SystemBasic, true)]
+    public class IListSerializer<T> : EasySerializer<IList<T>>
     {
         private static readonly EasySerializer<T> Serializer = GetSerializer<T>();
 
-        public override void Process(string name, ref List<T> value, IArchive archive)
+        public override void Process(string name, ref IList<T> value, IArchive archive)
         {
             var sizeTag = new SizeTag(value == null ? 0 : (uint)value.Count);
             archive.Process(ref sizeTag);
