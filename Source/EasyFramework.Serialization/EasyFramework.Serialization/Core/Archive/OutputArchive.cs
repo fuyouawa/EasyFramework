@@ -82,9 +82,9 @@ namespace EasyFramework.Serialization
 
         public bool Process(ref byte[] data)
         {
-            var cBuf = EasySerializeNative.ConvertBytesToBuffer(data);
+            var cBuf = GenericNative.ConvertBytesToBuffer(data);
             EasySerializeNative.WriteBinaryToOutputArchive(_archive, cBuf);
-            EasySerializeNative.FreeBuffer(cBuf);
+            GenericNative.FreeBuffer(cBuf);
             return true;
         }
 

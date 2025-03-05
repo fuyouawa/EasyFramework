@@ -78,7 +78,7 @@ namespace EasyFramework.Serialization
         public bool Process(ref string str)
         {
             var cBuf = EasySerializeNative.ReadStringFromInputArchive(_archive);
-            var buf = EasySerializeNative.ConvertBufferToBytesWithFree(cBuf);
+            var buf = GenericNative.ConvertBufferToBytesWithFree(cBuf);
 
             str = Encoding.UTF8.GetString(buf);
             return true;
@@ -87,7 +87,7 @@ namespace EasyFramework.Serialization
         public bool Process(ref byte[] data)
         {
             var cBuf = EasySerializeNative.ReadBinaryFromInputArchive(_archive);
-            data = EasySerializeNative.ConvertBufferToBytesWithFree(cBuf);
+            data = GenericNative.ConvertBufferToBytesWithFree(cBuf);
             return true;
         }
 

@@ -5,13 +5,7 @@ namespace EasyFramework.Serialization
 {
     internal static class EasySerializeNative
     {
-        private const string DllName = "EasyFramework.Core.dll";
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct IoStream
-        {
-            public IntPtr Ptr;
-        }
+        internal const string DllName = "EasyFramework.Core.dll";
 
         [StructLayout(LayoutKind.Sequential)]
         public struct OutputArchive
@@ -25,43 +19,17 @@ namespace EasyFramework.Serialization
             public IntPtr Ptr;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Buffer
-        {
-            public IntPtr Ptr;
-            public uint Size;
-        }
-
+        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+        public static extern OutputArchive AllocBinaryOutputArchive(GenericNative.IoStream stream);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Buffer AllocBuffer(uint size);
+        public static extern InputArchive AllocBinaryInputArchive(GenericNative.IoStream stream);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void FreeBuffer(Buffer buffer);
+        public static extern OutputArchive AllocJsonOutputArchive(GenericNative.IoStream stream);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern IoStream AllocStringIoStream();
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void FreeIoStream(IoStream stream);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void WriteToIoStreamBuffer(IoStream stream, Buffer buffer);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Buffer GetIoStreamBuffer(IoStream stream);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern OutputArchive AllocBinaryOutputArchive(IoStream stream);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern InputArchive AllocBinaryInputArchive(IoStream stream);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern OutputArchive AllocJsonOutputArchive(IoStream stream);
-
-        [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern InputArchive AllocJsonInputArchive(IoStream stream);
+        public static extern InputArchive AllocJsonInputArchive(GenericNative.IoStream stream);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void FreeOutputArchive(OutputArchive archive);
@@ -161,13 +129,13 @@ namespace EasyFramework.Serialization
         public static extern void WriteStringToOutputArchive(OutputArchive archive, string str);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Buffer ReadStringFromInputArchive(InputArchive archive);
+        public static extern GenericNative.Buffer ReadStringFromInputArchive(InputArchive archive);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void WriteBinaryToOutputArchive(OutputArchive archive, Buffer buffer);
+        public static extern void WriteBinaryToOutputArchive(OutputArchive archive, GenericNative.Buffer buffer);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
-        public static extern Buffer ReadBinaryFromInputArchive(InputArchive archive);
+        public static extern GenericNative.Buffer ReadBinaryFromInputArchive(InputArchive archive);
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern void WriteFloatToOutputArchive(OutputArchive archive, float value);
@@ -181,18 +149,6 @@ namespace EasyFramework.Serialization
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         public static extern double ReadDoubleFromInputArchive(InputArchive archive);
 
-
-        public class IoStreamWrapper : IDisposable
-        {
-            public IoStream Stream;
-
-            public IoStreamWrapper(IoStream stream)
-            {
-                Stream = stream;
-            }
-
-            public void Dispose() => FreeIoStream(Stream);
-        }
 
         public class OutputArchiveWrapper : IDisposable
         {
@@ -216,44 +172,6 @@ namespace EasyFramework.Serialization
             }
 
             public void Dispose() => FreeInputArchive(Archive);
-        }
-
-        public class BufferWrapper : IDisposable
-        {
-            public Buffer Buffer;
-
-            public BufferWrapper(Buffer buffer)
-            {
-                Buffer = buffer;
-            }
-
-            public void Dispose() => FreeBuffer(Buffer);
-        }
-
-        public static byte[] ConvertBufferToBytesWithFree(Buffer buffer)
-        {
-            using (new BufferWrapper(buffer))
-            {
-                var data = new byte[buffer.Size];
-                Marshal.Copy(buffer.Ptr, data, 0, data.Length);
-                return data;
-            }
-        }
-
-        public static Buffer ConvertBytesToBuffer(byte[] data)
-        {
-            var buffer = AllocBuffer((uint)data.Length);
-            try
-            {
-                Marshal.Copy(data, 0, buffer.Ptr, data.Length);
-            }
-            catch (Exception)
-            {
-                FreeBuffer(buffer);
-                throw;
-            }
-
-            return buffer;
         }
     }
 }

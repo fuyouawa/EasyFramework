@@ -4,6 +4,9 @@ namespace EasyFramework.Serialization
 {
     public static class EasySerialize
     {
+        public static EasySerializeSettings DefaultSettings { get; set; } = new EasySerializeSettings();
+        internal static EasySerializeSettings CurrentSettings { get; private set; }
+
         public static byte[] ToBinary<T>(T value)
         {
             var data = new EasySerializationData(EasyDataFormat.Binary);
@@ -30,10 +33,12 @@ namespace EasyFramework.Serialization
             return From<T>(ref d);
         }
 
-        public static void To<T>(T value, ref EasySerializationData serializationData)
+        public static void To<T>(T value, ref EasySerializationData serializationData, EasySerializeSettings settings = null)
         {
-            var ios = EasySerializeNative.AllocStringIoStream();
-            using (new EasySerializeNative.IoStreamWrapper(ios))
+            CurrentSettings = settings ?? DefaultSettings;
+
+            var ios = GenericNative.AllocStringIoStream();
+            using (new GenericNative.IoStreamWrapper(ios))
             {
                 using (var arch = GetOutputArchive(serializationData.Format, ios))
                 {
@@ -43,25 +48,27 @@ namespace EasyFramework.Serialization
                     serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
 
-                var cBuf = EasySerializeNative.GetIoStreamBuffer(ios);
-                serializationData.SetData(EasySerializeNative.ConvertBufferToBytesWithFree(cBuf));
+                var cBuf = GenericNative.GetIoStreamBuffer(ios);
+                serializationData.SetData(GenericNative.ConvertBufferToBytesWithFree(cBuf));
             }
         }
 
-        public static T From<T>(ref EasySerializationData serializationData)
+        public static T From<T>(ref EasySerializationData serializationData, EasySerializeSettings settings = null)
         {
+            CurrentSettings = settings ?? DefaultSettings;
+
             T res = default;
             var buf = serializationData.GetData();
             if (buf.Length == 0)
                 return default;
 
-            var ios = EasySerializeNative.AllocStringIoStream();
-            using (new EasySerializeNative.IoStreamWrapper(ios))
+            var ios = GenericNative.AllocStringIoStream();
+            using (new GenericNative.IoStreamWrapper(ios))
             {
-                var cBuf = EasySerializeNative.ConvertBytesToBuffer(buf);
-                using (new EasySerializeNative.BufferWrapper(cBuf))
+                var cBuf = GenericNative.ConvertBytesToBuffer(buf);
+                using (new GenericNative.BufferWrapper(cBuf))
                 {
-                    EasySerializeNative.WriteToIoStreamBuffer(ios, cBuf);
+                    GenericNative.WriteToIoStreamBuffer(ios, cBuf);
                 }
 
                 using (var arch = GetInputArchive(serializationData.Format, ios))
@@ -90,7 +97,7 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        private static OutputArchive GetOutputArchive(EasyDataFormat format, EasySerializeNative.IoStream stream)
+        private static OutputArchive GetOutputArchive(EasyDataFormat format, GenericNative.IoStream stream)
         {
             return format switch
             {
@@ -102,7 +109,7 @@ namespace EasyFramework.Serialization
             };
         }
 
-        private static InputArchive GetInputArchive(EasyDataFormat format, EasySerializeNative.IoStream stream)
+        private static InputArchive GetInputArchive(EasyDataFormat format, GenericNative.IoStream stream)
         {
             return format switch
             {

@@ -6,64 +6,64 @@ using System.Reflection;
 
 namespace EasyFramework.Serialization
 {
+    internal readonly struct SerializerStore : IEquatable<SerializerStore>
+    {
+        public EasySerializerConfigAttribute Attribute { get; }
+        public IEasySerializer Instance { get; }
+
+        public SerializerStore(EasySerializerConfigAttribute attribute, IEasySerializer instance)
+        {
+            Attribute = attribute;
+            Instance = instance;
+        }
+
+        public bool Equals(SerializerStore other)
+        {
+            return Equals(Instance, other.Instance);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is SerializerStore other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Instance != null ? Instance.GetHashCode() : 0);
+        }
+    }
+
+    internal readonly struct GenericSerializerInfo : IEquatable<GenericSerializerInfo>
+    {
+        public EasySerializerConfigAttribute Attribute { get; }
+        public Type SerializerType { get; }
+        public Type ArgType { get; }
+
+        public GenericSerializerInfo(EasySerializerConfigAttribute attribute, Type serializerType, Type argType)
+        {
+            Attribute = attribute;
+            SerializerType = serializerType;
+            ArgType = argType;
+        }
+
+        public bool Equals(GenericSerializerInfo other)
+        {
+            return SerializerType == other.SerializerType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is GenericSerializerInfo other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return (SerializerType != null ? SerializerType.GetHashCode() : 0);
+        }
+    }
+
     public static class EasySerializationUtility
     {
-        private readonly struct SerializerStore : IEquatable<SerializerStore>
-        {
-            public EasySerializerConfigAttribute Attribute { get; }
-            public IEasySerializer Instance { get; }
-
-            public SerializerStore(EasySerializerConfigAttribute attribute, IEasySerializer instance)
-            {
-                Attribute = attribute;
-                Instance = instance;
-            }
-
-            public bool Equals(SerializerStore other)
-            {
-                return Equals(Instance, other.Instance);
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is SerializerStore other && Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return (Instance != null ? Instance.GetHashCode() : 0);
-            }
-        }
-
-        private readonly struct GenericSerializerInfo : IEquatable<GenericSerializerInfo>
-        {
-            public EasySerializerConfigAttribute Attribute { get; }
-            public Type SerializerType { get; }
-            public Type ArgType { get; }
-
-            public GenericSerializerInfo(EasySerializerConfigAttribute attribute, Type serializerType, Type argType)
-            {
-                Attribute = attribute;
-                SerializerType = serializerType;
-                ArgType = argType;
-            }
-
-            public bool Equals(GenericSerializerInfo other)
-            {
-                return SerializerType == other.SerializerType;
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is GenericSerializerInfo other && Equals(other);
-            }
-
-            public override int GetHashCode()
-            {
-                return (SerializerType != null ? SerializerType.GetHashCode() : 0);
-            }
-        }
-
         #region Initialization
 
         /// <summary>
@@ -136,6 +136,8 @@ namespace EasyFramework.Serialization
 
         #endregion
 
+        #region FindSerializer
+        
         private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesDict =
             new Dictionary<Type, List<SerializerStore>>();
 
@@ -249,6 +251,8 @@ namespace EasyFramework.Serialization
         }
 
 
+        #endregion
+
         private static readonly Dictionary<Type, SerializerStore> SerializerCache =
             new Dictionary<Type, SerializerStore>();
 
@@ -303,18 +307,6 @@ namespace EasyFramework.Serialization
             return (EasySerializer<T>)serializer;
         }
 
-        public static FieldInfo[] GetSerializableFields(Type valueType)
-        {
-            return valueType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                .Where(f =>
-                {
-                    if (f.FieldType == typeof(EasySerializationData))
-                        return false;
-                    return f.IsPublic || f.GetCustomAttribute<UnityEngine.SerializeField>() != null;
-                })
-                .ToArray();
-        }
-
         public static void AutoCopy(object source, object destination)
         {
             var type = source.GetType();
@@ -325,11 +317,11 @@ namespace EasyFramework.Serialization
                     $"Source is '{type.FullName}', but destination is '{destination.GetType().FullName}')");
             }
 
-            var fields = GetSerializableFields(type);
-            foreach (var field in fields)
+            var members = MembersGetterPresets.Default(type);
+            foreach (var member in members)
             {
-                var sourceValue = field.GetValue(source);
-                field.SetValue(destination, sourceValue);
+                var sourceValue = ReflectionUtility.GetMemberValue(member, source);
+                ReflectionUtility.SetMemberValue(member, destination, sourceValue);
             }
         }
     }

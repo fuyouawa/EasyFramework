@@ -18,35 +18,35 @@ namespace EasyFramework.Serialization
                 value = Activator.CreateInstance<T>();
             }
 
-            var serializeFields = EasySerializationUtility.GetSerializableFields(typeof(T));
+            var members = EasySerialize.CurrentSettings.MembersGetterOfGeneric(typeof(T));
 
-            foreach (var field in serializeFields)
+            foreach (var member in members)
             {
-                var fieldType = field.FieldType;
+                var memberType = ReflectionUtility.GetMemberType(member);
 
-                var isNode = (fieldType.IsClass && fieldType != typeof(string)) ||
-                             (fieldType.IsValueType && !fieldType.IsPrimitive && !fieldType.IsEnum);
+                var isNode = (memberType.IsClass && memberType != typeof(string)) ||
+                             (memberType.IsValueType && !memberType.IsPrimitive && !memberType.IsEnum);
                 if (isNode)
                 {
-                    archive.SetNextName(field.Name);
+                    archive.SetNextName(member.Name);
                     archive.StartNode();
                 }
 
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
                 {
-                    obj = field.GetValue(value);
+                    obj = ReflectionUtility.GetMemberValue(member, value);
                 }
                 
-                var serializer = EasySerializationUtility.GetSerializer(fieldType);
+                var serializer = EasySerializationUtility.GetSerializer(memberType);
                 if (isNode)
-                    serializer.Process(ref obj, fieldType, archive);
+                    serializer.Process(ref obj, memberType, archive);
                 else
-                    serializer.Process(field.Name, ref obj, fieldType, archive);
+                    serializer.Process(member.Name, ref obj, memberType, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {
-                    field.SetValue(value, obj);
+                    ReflectionUtility.SetMemberValue(member, value, obj);
                 }
 
                 if (isNode)

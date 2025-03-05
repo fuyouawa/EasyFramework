@@ -2,7 +2,7 @@ namespace EasyFramework.Serialization
 {
     internal class JsonOutputArchive : OutputArchive
     {
-        public JsonOutputArchive(EasySerializeNative.IoStream stream)
+        public JsonOutputArchive(GenericNative.IoStream stream)
             : base(EasySerializeNative.AllocJsonOutputArchive(stream))
         {
         }

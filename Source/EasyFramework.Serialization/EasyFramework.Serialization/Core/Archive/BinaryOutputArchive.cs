@@ -2,7 +2,7 @@ namespace EasyFramework.Serialization
 {
     internal class BinaryOutputArchive : OutputArchive
     {
-        public BinaryOutputArchive(EasySerializeNative.IoStream stream)
+        public BinaryOutputArchive(GenericNative.IoStream stream)
             : base(EasySerializeNative.AllocBinaryOutputArchive(stream))
         {
         }
