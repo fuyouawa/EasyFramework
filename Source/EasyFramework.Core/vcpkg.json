@@ -1,12 +1,7 @@
 {
     "dependencies" : [
-        {
-            "name": "cereal",
-            "platform": "(windows & x64 & static)"
-        },
-        {
-            "name": "cryptopp",
-            "platform": "(windows & x64 & static)"
-        }
+        "cereal",
+        "cryptopp",
+        "inja"
     ]
 }

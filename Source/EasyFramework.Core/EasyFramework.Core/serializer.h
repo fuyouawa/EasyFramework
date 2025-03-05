@@ -1,12 +1,9 @@
 #pragma once
 #include "global.h"
+#include "generic.h"
 
 #include <cstdint>
 
-struct IoStream
-{
-    void* ptr;
-};
 
 struct OutputArchive
 {
@@ -17,22 +14,6 @@ struct InputArchive
 {
     void* ptr;
 };
-
-struct Buffer {
-    char* ptr;
-    uint32_t size;
-};
-
-
-EXPORT Buffer AllocBuffer(uint32_t size);
-EXPORT void FreeBuffer(Buffer buffer);
-
-EXPORT IoStream AllocStringIoStream();
-EXPORT void FreeIoStream(IoStream stream);
-
-EXPORT void WriteToIoStreamBuffer(IoStream stream, Buffer buffer);
-EXPORT Buffer GetIoStreamBuffer(IoStream stream);
-
 
 EXPORT OutputArchive AllocBinaryOutputArchive(IoStream stream);
 EXPORT InputArchive AllocBinaryInputArchive(IoStream stream);

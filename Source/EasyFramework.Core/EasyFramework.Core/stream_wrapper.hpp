@@ -41,3 +41,7 @@ public:
 private:
     std::stringstream sstream_;
 };
+
+inline IoStreamWrapper* GetStream(const IoStream& stream) {
+    return reinterpret_cast<IoStreamWrapper*>(stream.ptr);
+}

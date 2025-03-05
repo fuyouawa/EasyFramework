@@ -114,6 +114,14 @@ public:
     ~InputArchiveWrapper() override = default;
 };
 
+inline OutputArchiveWrapper* GetArchive(const OutputArchive& archive) {
+    return reinterpret_cast<OutputArchiveWrapper*>(archive.ptr);
+}
+
+inline InputArchiveWrapper* GetArchive(const InputArchive& archive) {
+    return reinterpret_cast<InputArchiveWrapper*>(archive.ptr);
+}
+
 template<class Archive, uint32_t kFlags = 0>
 class TemplateOutputArchiveWrapper : public OutputArchiveWrapper {
 public:

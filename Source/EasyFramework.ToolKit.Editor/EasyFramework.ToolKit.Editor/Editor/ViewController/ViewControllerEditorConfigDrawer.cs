@@ -102,6 +102,7 @@ namespace EasyFramework.ToolKit.Editor
 
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
             {
+                ViewControllerEditorUtility.Bind((IViewController)comp);
             }
 
             EditorGUILayout.EndHorizontal();

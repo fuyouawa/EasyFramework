@@ -153,14 +153,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="generic.cpp" />
+    <ClCompile Include="global.cpp" />
     <ClCompile Include="serializer.cpp" />
+    <ClCompile Include="template_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="algorithm.hpp" />
     <ClInclude Include="archive_wrapper.hpp" />
+    <ClInclude Include="generic.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="serializer.h" />
     <ClInclude Include="stream_wrapper.hpp" />
+    <ClInclude Include="template_engine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

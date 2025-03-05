@@ -2,9 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\serializer</Filter>
     </ClCompile>
     <ClCompile Include="serializer.cpp">
+      <Filter>源文件\serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="template_engine.cpp">
+      <Filter>源文件\template_engine</Filter>
+    </ClCompile>
+    <ClCompile Include="generic.cpp">
+      <Filter>源文件\generic</Filter>
+    </ClCompile>
+    <ClCompile Include="global.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -15,14 +24,20 @@
     <ClInclude Include="global.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="algorithm.hpp">
+      <Filter>源文件\serializer</Filter>
+    </ClInclude>
     <ClInclude Include="archive_wrapper.hpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="generic.h">
+      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stream_wrapper.hpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\generic</Filter>
     </ClInclude>
-    <ClInclude Include="algorithm.hpp">
-      <Filter>源文件</Filter>
+    <ClInclude Include="template_engine.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +46,15 @@
     </Filter>
     <Filter Include="头文件">
       <UniqueIdentifier>{e799d355-f919-4fc3-95c1-0cb8cc6d11fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\serializer">
+      <UniqueIdentifier>{95c85185-eefd-4822-842a-74752761822c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\template_engine">
+      <UniqueIdentifier>{b054740f-801d-4f24-9637-3f04780ebacf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\generic">
+      <UniqueIdentifier>{b56c64e1-1177-48de-94d6-88fbe66e58dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
