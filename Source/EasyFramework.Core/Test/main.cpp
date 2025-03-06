@@ -18,7 +18,7 @@ int main() {
     RenderTemplateToStream(ios, env, template_str.c_str(), R"(
     {
         "jj" : false,
-        "class_name" : "Test",
+        "class_names" : "Test",
         "has_id" : true
     }
 )");

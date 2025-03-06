@@ -1,3 +1,4 @@
+using System.IO;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
@@ -43,16 +44,23 @@ namespace EasyFramework.ToolKit.Editor
             var classType = ReflectionUtility.FindType(val.Namespace, val.ScriptName);
             var isBuild = classType != null && classType != typeof(ViewController);
 
-            if (isBuildAndBind)
+            if (isBuild)
             {
-                val.ScriptName = comp.GetType().Name;
+                val.ScriptName = classType.Name;
                 val.AutoScriptName = val.ScriptName == comp.gameObject.name;
+                val.BaseClass = classType.BaseType;
+                val.Namespace = classType.Namespace;
+                var monoScript = classType.GetMonoScript();
+                var path = AssetDatabase.GetAssetPath(monoScript);
+                var dir = path[..path.LastIndexOf('/')];
+                dir = dir["Assets/".Length..];
+                val.GenerateDir = dir;
             }
 
             EasyEditorGUI.Title("代码生成设置");
 
             EditorGUI.BeginDisabledGroup(isBuildAndBind);
-            
+
             _propertyOfGenerateDir.Draw(EditorHelper.TempContent("代码生成目录"));
             _propertyOfNamespace.Draw(EditorHelper.TempContent("命名空间"));
             _propertyOfAutoScriptName.Draw(EditorHelper.TempContent("自动命名", "类名与游戏对象的名称相同"));
@@ -64,6 +72,7 @@ namespace EasyFramework.ToolKit.Editor
                 EditorGUILayout.TextField("实际生成脚本名", ViewControllerEditorUtility.GetScriptName((IViewController)comp));
                 EditorGUI.EndDisabledGroup();
             }
+
             _propertyOfBaseClass.Draw(EditorHelper.TempContent("脚本基类"));
 
             if (GUILayout.Button("恢复默认值"))
@@ -82,7 +91,7 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             EasyEditorGUI.Title("代码生成操作");
-            
+
             var lbl = isBuildAndBind ? "已构建" : "未构建";
             if (!isBuildAndBind)
             {
@@ -98,6 +107,11 @@ namespace EasyFramework.ToolKit.Editor
             var height = EditorGUIUtility.singleLineHeight;
             if (SirenixEditorGUI.SDFIconButton("生成代码", height, SdfIconType.PencilFill))
             {
+                // var builder = new ViewControllerBuilder((IViewController)comp);
+                // if (builder.Check())
+                // {
+                //     builder.Build();
+                // }
             }
 
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
@@ -127,7 +141,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-            
+
             cfg.ScriptName = comp.gameObject.name;
             cfg.GenerateDir = _settings.Default.GenerateDir;
             cfg.Namespace = _settings.Default.Namespace;

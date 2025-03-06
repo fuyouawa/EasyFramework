@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 
@@ -7,8 +8,19 @@ namespace EasyFramework.Editor
     public static class MonoScriptExtension
     {
         private static MonoScript[] s_allScriptsCache;
+        private static readonly Dictionary<Type, MonoScript> ScriptsCache = new Dictionary<Type, MonoScript>(); 
 
         public static MonoScript GetMonoScript(this Type type)
+        {
+            if (!ScriptsCache.TryGetValue(type, out var script))
+            {
+                script = InternalGetMonoScript(type);
+                ScriptsCache[type] = script;
+            }
+            return script;
+        }
+
+        private static MonoScript InternalGetMonoScript(Type type)
         {
             if (s_allScriptsCache.IsNullOrEmpty())
             {

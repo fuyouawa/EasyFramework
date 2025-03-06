@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using EasyFramework.Serialization;
 
-namespace EasyFramework.ToolKit.TemplateEngine
+namespace EasyFramework.ToolKit
 {
     public class TemplateEngine : IDisposable
     {
@@ -26,9 +26,9 @@ namespace EasyFramework.ToolKit.TemplateEngine
                 return null;
             var ios = GenericNative.AllocStringIoStream();
             TemplateEngineNative.RenderTemplateToStream(ios, _environment, template, jsonData.StringData);
+            NativeUtility.HandleError();
             var cBuf = GenericNative.GetIoStreamBuffer(ios);
-            var buf = GenericNative.ConvertBufferToBytesWithFree(cBuf);
-            return Encoding.UTF8.GetString(buf);
+            return cBuf.ToStringWithFree();
         }
 
         public void Dispose()

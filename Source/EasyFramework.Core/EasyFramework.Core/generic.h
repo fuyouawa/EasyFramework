@@ -2,6 +2,7 @@
 #include "global.h"
 
 #include <cstdint>
+#include <exception>
 
 struct Buffer {
     char* ptr;
@@ -24,10 +25,30 @@ EXPORT Buffer GetIoStreamBuffer(IoStream stream);
 
 
 enum ErrorCode {
-    None,
-    UnKnow
+    ERROR_CODE_NONE,
+    ERROR_CODE_SERIALIZER_FAILED,
+    ERROR_CODE_TEMPLATE_ENGINE_RENDER_FAILED,
+    ERROR_CODE_UNKNOWN
 };
 
 EXPORT ErrorCode GetErrorCode();
+EXPORT Buffer GetErrorMsg();
 
 void SetErrorCode(ErrorCode ec);
+void SetErrorMsg(const char* msg);
+
+void HandleError(const std::exception& e);
+void HandleNonStandardError();
+
+#define TRY_CATCH_BEGIN try {       \
+    SetErrorCode(ERROR_CODE_NONE);  \
+    SetErrorMsg(nullptr);           \
+
+#define TRY_CATCH_END               \
+}                                   \
+catch (const std::exception& e) {   \
+    HandleError(e);                 \
+}                                   \
+catch (...) {                       \
+    HandleNonStandardError();       \
+}

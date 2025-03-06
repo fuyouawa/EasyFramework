@@ -173,5 +173,15 @@ namespace EasyFramework.Serialization
 
             public void Dispose() => FreeInputArchive(Archive);
         }
+        public static InputArchiveWrapper GetWrapper(this InputArchive archive)
+        {
+            return new InputArchiveWrapper(archive);
+        }
+
+        public static OutputArchiveWrapper GetWrapper(this OutputArchive archive)
+        {
+            return new OutputArchiveWrapper(archive);
+        }
+
     }
 }

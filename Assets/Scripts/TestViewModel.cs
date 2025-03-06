@@ -1,7 +1,6 @@
 using System.Reflection;
 using EasyFramework;
 using EasyFramework.ToolKit;
-using EasyFramework.ToolKit.TemplateEngine;
 using UnityEngine;
 
 public partial class TestViewModel : MonoBehaviour

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "generic.h"
 #include "algorithm.hpp"
 
 #include <cereal/archives/binary.hpp>
@@ -10,7 +10,7 @@ struct Varint32 {
     uint32_t value;
 
     Varint32() : value() {}
-    Varint32(uint32_t val) : value(val) { }
+    Varint32(uint32_t val) : value(val) {}
 
     template <class Archive>
     void serialize(Archive& ar) {
@@ -58,7 +58,7 @@ public:
         next_name_ = std::move(str);
     }
 
-    template<class T>
+    template <class T>
     void Process(T& value) {
         ProcessImpl(value);
     }
@@ -67,8 +67,13 @@ public:
         ProcessImpl(size);
     }
 
-    virtual void StartNode() {}
-    virtual void FinishNode() {}
+    void StartNode() {
+        StartNodeImpl();
+    }
+
+    void FinishNode() {
+        FinishNodeImpl();
+    }
 
 protected:
     std::string PeekName() {
@@ -79,6 +84,10 @@ protected:
         tmp.swap(next_name_);
         return tmp;
     }
+
+
+    virtual void StartNodeImpl() {}
+    virtual void FinishNodeImpl() {}
 
     virtual void ProcessImpl(cereal::SizeTag<size_t&> data) = 0;
 
@@ -122,14 +131,15 @@ inline InputArchiveWrapper* GetArchive(const InputArchive& archive) {
     return reinterpret_cast<InputArchiveWrapper*>(archive.ptr);
 }
 
-template<class Archive, uint32_t kFlags = 0>
+template <class Archive, uint32_t kFlags = 0>
 class TemplateOutputArchiveWrapper : public OutputArchiveWrapper {
 public:
     using OutputArchive = cereal::OutputArchive<Archive, kFlags>;
 
     TemplateOutputArchiveWrapper(const ArchiveType type, OutputArchive& archive)
         : OutputArchiveWrapper(type),
-        archive_(archive) {}
+          archive_(archive) {}
+
     ~TemplateOutputArchiveWrapper() override = default;
 
 protected:
@@ -144,7 +154,7 @@ protected:
     void ProcessImpl(float& value) override { AutoProcessImpl(value); }
     void ProcessImpl(double& value) override { AutoProcessImpl(value); }
 
-    template<class T>
+    template <class T>
     void AutoProcessImpl(T& value) {
         if (type() == ArchiveType::Binary) {
             archive_(value);
@@ -165,14 +175,15 @@ private:
 };
 
 
-template<class Archive, uint32_t kFlags = 0>
+template <class Archive, uint32_t kFlags = 0>
 class TemplateInputArchiveWrapper : public InputArchiveWrapper {
 public:
     using InputArchive = cereal::InputArchive<Archive, kFlags>;
 
     TemplateInputArchiveWrapper(const ArchiveType type, InputArchive& archive)
         : InputArchiveWrapper(type),
-        archive_(archive) {}
+          archive_(archive) {}
+
     ~TemplateInputArchiveWrapper() override = default;
 
 protected:
@@ -187,7 +198,7 @@ protected:
     void ProcessImpl(float& value) override { AutoProcessImpl(value); }
     void ProcessImpl(double& value) override { AutoProcessImpl(value); }
 
-    template<class T>
+    template <class T>
     void AutoProcessImpl(T& value) {
         auto name = PeekName();
         if (name.empty()) {
@@ -202,18 +213,19 @@ private:
     InputArchive& archive_;
 };
 
-class BinaryOutputArchiveWrapper : public TemplateOutputArchiveWrapper<cereal::BinaryOutputArchive, cereal::AllowEmptyClassElision> {
+class BinaryOutputArchiveWrapper : public TemplateOutputArchiveWrapper<
+        cereal::BinaryOutputArchive, cereal::AllowEmptyClassElision> {
 public:
     BinaryOutputArchiveWrapper(std::ostream& stream)
         : TemplateOutputArchiveWrapper(ArchiveType::Binary, archive_),
-        archive_(stream)
-    {}
+          archive_(stream) {}
 
 protected:
     void ProcessImpl(cereal::SizeTag<size_t&> value) override {
         auto v = Varint32(static_cast<uint32_t>(value.size));
         archive_(v);
     }
+
     void ProcessImpl(Varint32& value) override { archive_(value); }
     void ProcessImpl(bool& value) override { archive_(static_cast<uint8_t>(value ? 1 : 0)); }
 
@@ -231,12 +243,12 @@ private:
     cereal::BinaryOutputArchive archive_;
 };
 
-class BinaryInputArchiveWrapper : public TemplateInputArchiveWrapper<cereal::BinaryInputArchive, cereal::AllowEmptyClassElision> {
+class BinaryInputArchiveWrapper : public TemplateInputArchiveWrapper<
+        cereal::BinaryInputArchive, cereal::AllowEmptyClassElision> {
 public:
     BinaryInputArchiveWrapper(std::istream& stream)
         : TemplateInputArchiveWrapper(ArchiveType::Binary, archive_),
-        archive_(stream)
-    {}
+          archive_(stream) {}
 
 protected:
     void ProcessImpl(cereal::SizeTag<size_t&> value) override {
@@ -244,7 +256,9 @@ protected:
         archive_(v);
         value.size = v.value;
     }
+
     void ProcessImpl(Varint32& value) override { archive_(value); }
+
     void ProcessImpl(bool& value) override {
         auto u8 = uint8_t();
         archive_(u8);
@@ -274,11 +288,9 @@ class JsonOutputArchiveWrapper : public TemplateOutputArchiveWrapper<cereal::JSO
 public:
     JsonOutputArchiveWrapper(std::ostream& stream)
         : TemplateOutputArchiveWrapper(ArchiveType::Json, archive_),
-        archive_(stream)
-    {
-    }
+          archive_(stream) {}
 
-    void StartNode() override {
+    void StartNodeImpl() override {
         auto name = PeekName();
         if (!name.empty()) {
             archive_.setNextName(name.c_str());
@@ -286,7 +298,7 @@ public:
         archive_.startNode();
     }
 
-    void FinishNode() override {
+    void FinishNodeImpl() override {
         archive_.finishNode();
     }
 
@@ -312,11 +324,9 @@ class JsonInputArchiveWrapper : public TemplateInputArchiveWrapper<cereal::JSONI
 public:
     JsonInputArchiveWrapper(std::istream& stream)
         : TemplateInputArchiveWrapper(ArchiveType::Json, archive_),
-        archive_(stream)
-    {
-    }
+          archive_(stream) {}
 
-    void StartNode() override {
+    void StartNodeImpl() override {
         auto name = PeekName();
         if (!name.empty()) {
             archive_.setNextName(name.c_str());
@@ -324,7 +334,7 @@ public:
         archive_.startNode();
     }
 
-    void FinishNode() override {
+    void FinishNodeImpl() override {
         archive_.finishNode();
     }
 

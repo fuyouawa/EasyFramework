@@ -12,11 +12,11 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewControllerBuilder
     {
-        private ViewControllerEditorConfig _cfg;
-        private Component _component;
-        private IViewController _controller;
+        private readonly ViewControllerEditorConfig _cfg;
+        private readonly Component _component;
+        private readonly IViewController _controller;
 
-        public void Setup(IViewController controller)
+        public ViewControllerBuilder(IViewController controller)
         {
             _controller = controller;
             _component = (Component)controller;
@@ -35,7 +35,7 @@ namespace EasyFramework.ToolKit.Editor
             var designerPath = path + ".Designer.cs";
             path += ".cs";
 
-            // BuildCs(path);
+            BuildCs(path);
             // BuildCsDesigner(designerPath);
             AssetDatabase.Refresh();
         }
@@ -77,68 +77,39 @@ namespace EasyFramework.ToolKit.Editor
             return true;
         }
 
-        // private void BuildCs(string path)
-        // {
-        //     if (File.Exists(path)) return;
-        //
-        //     var data = new
-        //     {
-        //         Usings = new List<string>
-        //         {
-        //             "System",
-        //             "System.Collections.Generic",
-        //             "UnityEngine",
-        //             _cfg.BaseClass.Namespace
-        //         }.Distinct(),
-        //         ClassName = _cfg.ScriptName,
-        //         Namespace = _cfg.Namespace,
-        //         BaseClassName = _cfg.BaseClass.Name
-        //     };
-        //
-        //     var compileUnit = new CodeCompileUnit();
-        //
-        //     compileUnit.Namespaces.Add(new CodeNamespace());
-        //     compileUnit.UserData["Usings"] = new CodeNamespace();
-        //     var usings = new CodeNamespace();
-        //     foreach (var u in data.Usings)
-        //     {
-        //         usings.Imports.Add(new CodeNamespaceImport(u));
-        //     }
-        //     compileUnit.Namespaces.Add(usings);
-        //
-        //     var codeNamespace = new CodeNamespace(data.Namespace);
-        //     compileUnit.Namespaces.Add(codeNamespace);
-        //
-        //     var codeClass = new CodeTypeDeclaration(data.ClassName)
-        //     {
-        //         IsPartial = true,
-        //         TypeAttributes = TypeAttributes.Public
-        //     };
-        //
-        //     var classTemplate = ViewControllerSettings.Instance.AutoIndent
-        //         ? ProcessCodeSnippet(ViewControllerSettings.Instance.ClassTemplate)
-        //         : ViewControllerSettings.Instance.ClassTemplate;
-        //
-        //     codeClass.Members.Add(new CodeSnippetTypeMember(classTemplate));
-        //
-        //     codeClass.BaseTypes.Add(data.BaseClassName);
-        //
-        //     codeNamespace.Types.Add(codeClass);
-        //
-        //     using var writer = new StringWriter();
-        //     var provider = CodeDomProvider.CreateProvider("CSharp");
-        //     var options = new CodeGeneratorOptions
-        //     {
-        //         BracingStyle = "C",
-        //         IndentString = "    "
-        //     };
-        //
-        //     provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
-        //
-        //     var result = writer.ToString();
-        //     result = result[result.IndexOf("using System;", StringComparison.Ordinal)..];
-        //     File.WriteAllText(path, result);
-        // }
+        private static string CsTemplate = @"
+{% for using in Usings %}
+using {{ using }};
+{% endfor %}
+
+public class {{ ClassName }} : {{ BaseClassName }}
+{
+    {{ classTemplate }}
+}
+";
+
+        private void BuildCs(string path)
+        {
+            // if (File.Exists(path)) return;
+        
+            var data = new
+            {
+                Usings = new List<string>
+                {
+                    "System",
+                    "System.Collections.Generic",
+                    "UnityEngine",
+                    _cfg.BaseClass.Namespace
+                }.Distinct(),
+                ClassName = _cfg.ScriptName,
+                Namespace = _cfg.Namespace,
+                BaseClassName = _cfg.BaseClass.Name
+            };
+
+            var templateEngine = new TemplateEngine();
+            var code = templateEngine.Render(CsTemplate, data);
+            Debug.Log(code);
+        }
         //
         // private string ProcessCodeSnippet(string snippet)
         // {

@@ -38,7 +38,7 @@ namespace EasyFramework.Serialization
             CurrentSettings = settings ?? DefaultSettings;
 
             var ios = GenericNative.AllocStringIoStream();
-            using (new GenericNative.IoStreamWrapper(ios))
+            using (ios.GetWrapper())
             {
                 using (var arch = GetOutputArchive(serializationData.Format, ios))
                 {
@@ -49,7 +49,7 @@ namespace EasyFramework.Serialization
                 }
 
                 var cBuf = GenericNative.GetIoStreamBuffer(ios);
-                serializationData.SetData(GenericNative.ConvertBufferToBytesWithFree(cBuf));
+                serializationData.SetData(cBuf.ToBytesWithFree());
             }
         }
 
@@ -63,10 +63,10 @@ namespace EasyFramework.Serialization
                 return default;
 
             var ios = GenericNative.AllocStringIoStream();
-            using (new GenericNative.IoStreamWrapper(ios))
+            using (ios.GetWrapper())
             {
-                var cBuf = GenericNative.ConvertBytesToBuffer(buf);
-                using (new GenericNative.BufferWrapper(cBuf))
+                var cBuf = buf.ToNativeBuffer();
+                using (cBuf.GetWrapper())
                 {
                     GenericNative.WriteToIoStreamBuffer(ios, cBuf);
                 }
