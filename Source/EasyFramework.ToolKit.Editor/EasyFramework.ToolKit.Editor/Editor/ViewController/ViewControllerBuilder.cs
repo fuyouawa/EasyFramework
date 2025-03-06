@@ -1,3 +1,4 @@
+using EasyFramework.ToolKit;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
@@ -15,12 +16,14 @@ namespace EasyFramework.ToolKit.Editor
         private readonly ViewControllerEditorConfig _cfg;
         private readonly Component _component;
         private readonly IViewController _controller;
+        private readonly ViewControllerSettings _settings;
 
         public ViewControllerBuilder(IViewController controller)
         {
             _controller = controller;
             _component = (Component)controller;
             _cfg = _controller.Config.EditorConfig;
+            _settings = ViewControllerSettings.Instance;
         }
 
         public void Build()
@@ -36,7 +39,7 @@ namespace EasyFramework.ToolKit.Editor
             path += ".cs";
 
             BuildCs(path);
-            // BuildCsDesigner(designerPath);
+            BuildCsDesigner(designerPath);
             AssetDatabase.Refresh();
         }
 
@@ -56,7 +59,7 @@ namespace EasyFramework.ToolKit.Editor
             foreach (var binder in binders)
             {
                 var comp = (Component)binder;
-                var bindName = ViewBinderEditorUtility.GetBindName(binder);
+                var bindName = binder.GetBindName();
 
                 error = ViewControllerEditorUtility.GetIdentifierError("变量名称", bindName);
                 if (error.IsNotNullOrEmpty())
@@ -77,22 +80,37 @@ namespace EasyFramework.ToolKit.Editor
             return true;
         }
 
-        private static string CsTemplate = @"
-{% for using in Usings %}
-using {{ using }};
-{% endfor %}
+        private static readonly string CsTemplate = @"
+{{ Header }}
+{{ Body }}
+".TrimStart();
 
-public class {{ ClassName }} : {{ BaseClassName }}
-{
-    {{ classTemplate }}
+        private static readonly string CsNamespaceTemplate = @"
+{{ Header }}
+namespace {{ Namespace }} {
+{{ Body }}
 }
-";
+".Trim();
+
+        private static readonly string CsHeaderTemplate = @"
+{%- for using in Usings -%}
+using {{ using }};
+{%- endfor -%}
+".Trim();
+
+        private static readonly string CsBodyTemplate = @"
+public partial class {{ ClassName }} : {{ BaseClassName }}
+{
+{{ ClassTemplate }}
+}
+".Trim();
 
         private void BuildCs(string path)
         {
-            // if (File.Exists(path)) return;
-        
-            var data = new
+            if (File.Exists(path)) return;
+
+            var engine = new TemplateEngine();
+            var header = engine.Render(CsHeaderTemplate, new
             {
                 Usings = new List<string>
                 {
@@ -100,149 +118,129 @@ public class {{ ClassName }} : {{ BaseClassName }}
                     "System.Collections.Generic",
                     "UnityEngine",
                     _cfg.BaseClass.Namespace
-                }.Distinct(),
+                }.Distinct().ToArray()
+            });
+            var body = engine.Render(CsBodyTemplate, new
+            {
                 ClassName = _cfg.ScriptName,
-                Namespace = _cfg.Namespace,
-                BaseClassName = _cfg.BaseClass.Name
+                BaseClassName = _cfg.BaseClass.Name,
+                ClassTemplate = AddIndent(_settings.ClassTemplate)
+            });
+
+            var code = CombineCode(engine, header, body, _cfg.Namespace);
+            File.WriteAllText(path, code);
+        }
+
+        private static readonly string CsDesignerBodyTemplate = @"
+public partial class {{ ClassName }} : IViewController
+{
+{{ Fields }}
+    [SerializeField] private ViewControllerConfig _viewControllerConfig;
+
+    ViewControllerConfig IViewController.Config
+    {
+        get => _viewControllerConfig;
+        set => _viewControllerConfig = value;
+    }
+}
+".Trim();
+
+        private void BuildCsDesigner(string path)
+        {
+            var binders = ViewControllerUtility.GetAllBinders(_controller);
+
+            var engine = new TemplateEngine();
+
+            var allTypes = new List<Type>()
+            {
+                typeof(IViewController),
+                typeof(ViewControllerConfig),
+                typeof(SerializeField),
+                typeof(AutoBindingAttribute),
+            };
+            allTypes.AddRange(binders.Select(b => b.Config.EditorConfig.GetBindType()));
+
+            var header = engine.Render(CsHeaderTemplate, new
+            {
+                Usings = allTypes.Select(t => t.Namespace).Distinct().ToArray()
+            });
+
+            var fields = binders.Select(b =>
+            {
+                var cfg = b.Config.EditorConfig;
+
+                var access = cfg.BindAccess switch
+                {
+                    ViewBindAccess.Public => "public",
+                    ViewBindAccess.Protected => "protected",
+                    ViewBindAccess.Private => "private",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                return new
+                {
+                    Access = access,
+                    Type = cfg.GetBindType().Name,
+                    Name = b.GetBindName(),
+                    Comment = cfg.GetComment()
+                };
+            }).ToArray();
+
+            var fieldsBody = "";
+            foreach (var field in fields)
+            {
+                if (field.Comment.IsNotNullOrEmpty())
+                {
+                    fieldsBody += field.Comment + '\n';
+                }
+
+                fieldsBody += $"[AutoBinding, SerializeField] {field.Access} {field.Type} {field.Name};\n";
+            }
+
+            var bodyData = new
+            {
+                ClassName = _cfg.ScriptName,
+                Fields = AddIndent(fieldsBody)
             };
 
-            var templateEngine = new TemplateEngine();
-            var code = templateEngine.Render(CsTemplate, data);
-            Debug.Log(code);
+            var body = engine.Render(CsDesignerBodyTemplate, bodyData);
+
+            var code = CombineCode(engine, header, body, _cfg.Namespace);
+            File.WriteAllText(path, code);
         }
-        //
-        // private string ProcessCodeSnippet(string snippet)
-        // {
-        //     var indent = _cfg.Namespace.IsNullOrWhiteSpace() ? "\t" : "\t\t";
-        //     var splits = snippet.Split('\n').Select(s => indent + s);
-        //     return string.Join("\r\n", splits);
-        // }
-        //
-        // private void BuildCsDesigner(string path)
-        // {
-        //     var children = ViewModelHelper.GetChildren(_component.transform);
-        //
-        //     var data = new
-        //     {
-        //         Usings = new[] { "EasyFramework", "UnityEngine" }
-        //             .Concat(children.Select(c => c.GetBindType().Namespace))
-        //             .Distinct(),
-        //         Namespace = _cfg.Namespace,
-        //         ClassName = _cfg.ClassName,
-        //         Children = children.Select(c =>
-        //         {
-        //             var binderEditorInfo = c.Info.EditorData.Get<ViewBinderEditorInfo>()!;
-        //             var comp = (Component)c;
-        //
-        //             return new
-        //             {
-        //                 Type = c.GetBindType(),
-        //                 Name = c.GetBindName(),
-        //                 GameObjectName = comp.gameObject.name,
-        //                 CommentSplits = ViewBinderHelper.GetCommentSplits(binderEditorInfo),
-        //                 Access = binderEditorInfo.Access,
-        //             };
-        //         })
-        //     };
-        //     
-        //     var compileUnit = new CodeCompileUnit();
-        //
-        //     compileUnit.Namespaces.Add(new CodeNamespace());
-        //     compileUnit.UserData["Usings"] = new CodeNamespace();
-        //     var usings = new CodeNamespace();
-        //     foreach (var u in data.Usings)
-        //     {
-        //         usings.Imports.Add(new CodeNamespaceImport(u));
-        //     }
-        //     compileUnit.Namespaces.Add(usings);
-        //
-        //     var codeNamespace = new CodeNamespace(data.Namespace);
-        //     compileUnit.Namespaces.Add(codeNamespace);
-        //
-        //     var codeClass = new CodeTypeDeclaration(data.ClassName)
-        //     {
-        //         IsPartial = true,
-        //         TypeAttributes = TypeAttributes.Public,
-        //         BaseTypes = { nameof(IViewController) }
-        //     };
-        //
-        //     foreach (var child in data.Children)
-        //     {
-        //         var field = new CodeMemberField
-        //         {
-        //             Name = child.Name,
-        //             Type = new CodeTypeReference(child.Type.Name),
-        //             Attributes = child.Access == ViewBindAccess.Public
-        //                 ? MemberAttributes.Public
-        //                 : MemberAttributes.Private
-        //         };
-        //
-        //         if (child.Access == ViewBindAccess.PrivateWithSerializeFieldAttribute)
-        //         {
-        //             field.CustomAttributes.Add(new CodeAttributeDeclaration("SerializeField"));
-        //         }
-        //
-        //         field.CustomAttributes.Add(new CodeAttributeDeclaration("FromViewBinder"));
-        //
-        //         if (child.CommentSplits.IsNotNullOrEmpty())
-        //         {
-        //             foreach (var split in child.CommentSplits)
-        //             {
-        //                 field.Comments.Add(new CodeCommentStatement(split, true));
-        //             }
-        //         }
-        //
-        //         codeClass.Members.Add(field);
-        //     }
-        //
-        //     var infoField = new CodeMemberField(nameof(ViewModelInfo), "_viewModelInfo")
-        //     {
-        //         Attributes = MemberAttributes.Private
-        //     };
-        //     infoField.CustomAttributes.Add(
-        //         new CodeAttributeDeclaration("SerializeField"));
-        //     codeClass.Members.Add(infoField);
-        //
-        //     var infoProperty = new CodeMemberProperty
-        //     {
-        //         Name = "Info",
-        //         Type = new CodeTypeReference(nameof(ViewModelInfo)),
-        //         Attributes = MemberAttributes.Public | MemberAttributes.Final,
-        //         HasGet = true,
-        //         HasSet = true
-        //     };
-        //
-        //     infoProperty.GetStatements.Add(
-        //         new CodeMethodReturnStatement(
-        //             new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_viewModelInfo")
-        //         )
-        //     );
-        //
-        //     infoProperty.SetStatements.Add(
-        //         new CodeAssignStatement(
-        //             new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "_viewModelInfo"),
-        //             new CodePropertySetValueReferenceExpression()
-        //         )
-        //     );
-        //
-        //     infoProperty.ImplementationTypes.Add(new CodeTypeReference(nameof(IViewController)));
-        //     codeClass.Members.Add(infoProperty);
-        //
-        //     // Add class to namespace
-        //     codeNamespace.Types.Add(codeClass);
-        //
-        //     using var writer = new StringWriter();
-        //     var provider = CodeDomProvider.CreateProvider("CSharp");
-        //     var options = new CodeGeneratorOptions
-        //     {
-        //         BracingStyle = "C",
-        //         IndentString = "    "
-        //     };
-        //
-        //     provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
-        //
-        //     var result = writer.ToString();
-        //     File.WriteAllText(path, result);
-        // }
+
+        private static string CombineCode(TemplateEngine engine, string header, string body, string @namespace)
+        {
+            string code;
+            @namespace ??= string.Empty;
+            @namespace = @namespace.Trim();
+
+            if (@namespace.IsNotNullOrWhiteSpace())
+            {
+                code = engine.Render(CsNamespaceTemplate, new
+                {
+                    Header = header,
+                    Namespace = @namespace,
+                    Body = AddIndent(body)
+                });
+            }
+            else
+            {
+                code = engine.Render(CsTemplate, new
+                {
+                    Header = header,
+                    Body = body
+                });
+            }
+
+            return code.Replace("\r\n", "\n").Replace("\n", "\r\n");
+        }
+
+        private static string AddIndent(string text)
+        {
+            if (text.IsNullOrWhiteSpace())
+                return string.Empty;
+            var splits = text.Split('\n').Select(s => "    " + s);
+            return string.Join("\n", splits);
+        }
     }
 }

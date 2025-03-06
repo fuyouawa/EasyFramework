@@ -10,9 +10,9 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [Conditional("UNITY_EDITOR")]
-    public class FromViewBinderAttribute : PropertyAttribute
+    public class AutoBindingAttribute : PropertyAttribute
     {
-        public FromViewBinderAttribute()
+        public AutoBindingAttribute()
         {
         }
     }
@@ -20,7 +20,7 @@ namespace EasyFramework.ToolKit
     public enum ViewBindAccess
     {
         Public,
-        Protect,
+        Protected,
         Private
     }
 
@@ -120,9 +120,6 @@ namespace EasyFramework.ToolKit
 
         IEnumerable GetOwnerControllerDropdown()
         {
-            if (_targetComponent == null)
-                return Enumerable.Empty<Component>();
-
             return _targetComponent.gameObject
                 .GetComponentsInParent(typeof(IViewController), true);
         }

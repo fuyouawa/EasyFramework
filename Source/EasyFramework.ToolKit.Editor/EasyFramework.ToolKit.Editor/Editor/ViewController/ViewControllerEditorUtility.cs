@@ -78,7 +78,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var fields = controller.GetType()
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
-                .Where(f => f.GetCustomAttribute<FromViewBinderAttribute>() != null)
+                .Where(f => f.GetCustomAttribute<AutoBindingAttribute>() != null)
                 .ToArray();
 
             foreach (var binder in binders)
@@ -89,7 +89,7 @@ namespace EasyFramework.ToolKit.Editor
                     Debug.Assert(binder.Config.OwnerController == controller);
                 }
 
-                var bindName = ViewBinderEditorUtility.GetBindName(binder);
+                var bindName = binder.GetBindName();
                 var f = fields.FirstOrDefault(f => f.Name == bindName);
                 if (f == null)
                 {
@@ -98,7 +98,7 @@ namespace EasyFramework.ToolKit.Editor
                     return;
                 }
 
-                var bindObject = ViewBinderEditorUtility.GetBindObject(binder);
+                var bindObject = binder.GetBindObject();
                 if (bindObject == null)
                 {
                     EditorUtility.DisplayDialog("错误",
@@ -106,7 +106,7 @@ namespace EasyFramework.ToolKit.Editor
                     return;
                 }
 
-                if (ViewBinderEditorUtility.GetBindType(binder.Config.EditorConfig) != f.FieldType)
+                if (binder.Config.EditorConfig.GetBindType() != f.FieldType)
                 {
                     EditorUtility.DisplayDialog("错误",
                         $"绑定失败：绑定器 '{comp.gameObject.name}' 的绑定类型与控制器中实际的类型不相同，需要重新生成代码", "确认");
@@ -117,7 +117,7 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        public static string GetScriptName(IViewController controller)
+        public static string GetScriptName(this IViewController controller)
         {
             var cfg = controller.Config.EditorConfig;
             var comp = (Component)controller;

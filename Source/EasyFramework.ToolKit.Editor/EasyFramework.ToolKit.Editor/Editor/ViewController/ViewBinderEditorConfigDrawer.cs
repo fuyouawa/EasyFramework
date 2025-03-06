@@ -57,17 +57,14 @@ namespace EasyFramework.ToolKit.Editor
             _propertyOfBindComponentType.Draw(EditorHelper.TempContent("绑定组件"));
             _propertyOfSpecificBindType.Draw(EditorHelper.TempContent("指定要绑定的类型"));
             _propertyOfBindAccess.Draw(EditorHelper.TempContent("绑定权限"));
-            _propertyOfAutoBindName.Draw(EditorHelper.TempContent("自动绑定名称", "绑定名称与游戏对象名称相同"));
             _propertyOfBindName.Draw(EditorHelper.TempContent("绑定名称"));
-
+            
+            _propertyOfAutoBindName.Draw(EditorHelper.TempContent("自动绑定名称", "绑定名称与游戏对象名称相同"));
             _propertyOfProcessBindName.Draw(EditorHelper.TempContent("处理绑定命名"));
-
-            if (val.ProcessBindName)
-            {
-                EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.TextField("实际变量名称", ViewBinderEditorUtility.GetBindName((IViewBinder)comp));
-                EditorGUI.EndDisabledGroup();
-            }
+            
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.TextField("实际变量名称", ((IViewBinder)comp).GetBindName());
+            EditorGUI.EndDisabledGroup();
             
             EasyEditorGUI.Title("注释设置");
             _propertyOfUseDocumentComment.Draw(EditorHelper.TempContent("使用文档注释"));
@@ -116,7 +113,7 @@ namespace EasyFramework.ToolKit.Editor
             var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
 
             cfg.BindName = comp.gameObject.name;
-            var bindableComps = ViewBinderEditorUtility.GetBindableComponentTypes((IViewBinder)comp);
+            var bindableComps = ((IViewBinder)comp).GetBindableComponentTypes();
             cfg.BindComponentType = bindableComps[0];
 
             cfg.SpecificBindType = ViewBinderEditorUtility.GetDefaultSpecialType(

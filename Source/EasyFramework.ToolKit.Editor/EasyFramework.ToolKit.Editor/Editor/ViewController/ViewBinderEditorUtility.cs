@@ -9,7 +9,7 @@ namespace EasyFramework.ToolKit.Editor
 {
     public static class ViewBinderEditorUtility
     {
-        public static List<string> GetCommentSplits(ViewBinderEditorConfig config)
+        private static List<string> GetCommentSplits(ViewBinderEditorConfig config)
         {
             if (config.Comment.IsNullOrWhiteSpace())
             {
@@ -31,6 +31,14 @@ namespace EasyFramework.ToolKit.Editor
             commentSplits.Add("</summary>");
 
             return commentSplits;
+        }
+
+        public static string GetComment(this ViewBinderEditorConfig config)
+        {
+            var splits = GetCommentSplits(config);
+            if (splits.IsNullOrEmpty())
+                return string.Empty;
+            return string.Join("\n", splits);
         }
 
         public static void SortTypesByPriorities(Type[] types)
@@ -70,14 +78,14 @@ namespace EasyFramework.ToolKit.Editor
             return types[0];
         }
 
-        public static Type[] GetBindableComponentTypes(IViewBinder binder)
+        public static Type[] GetBindableComponentTypes(this IViewBinder binder)
         {
             var types = ViewBinderUtility.GetBindableComponentTypes(binder);
             SortTypesByPriorities(types);
             return types;
         }
         
-        public static Object GetBindObject(IViewBinder binder)
+        public static Object GetBindObject(this IViewBinder binder)
         {
             var cfg = binder.Config.EditorConfig;
             var comp = (Component)binder;
@@ -89,7 +97,7 @@ namespace EasyFramework.ToolKit.Editor
             return comp.GetComponent(cfg.BindComponentType);
         }
 
-        public static Type GetBindType(ViewBinderEditorConfig config)
+        public static Type GetBindType(this ViewBinderEditorConfig config)
         {
             if (config.BindGameObject)
             {
@@ -114,7 +122,7 @@ namespace EasyFramework.ToolKit.Editor
             return '_' + name;
         }
 
-        public static string GetBindName(IViewBinder binder)
+        public static string GetBindName(this IViewBinder binder)
         {
             var cfg = binder.Config.EditorConfig;
             var comp = (Component)binder;

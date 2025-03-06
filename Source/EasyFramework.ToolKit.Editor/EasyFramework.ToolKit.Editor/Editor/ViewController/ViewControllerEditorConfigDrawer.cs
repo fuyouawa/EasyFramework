@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector;
@@ -5,6 +6,7 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -41,7 +43,10 @@ namespace EasyFramework.ToolKit.Editor
 
             var isBuildAndBind = comp as ViewController == null;
 
-            var classType = ReflectionUtility.FindType(val.Namespace, val.ScriptName);
+            var classType = isBuildAndBind
+                ? comp.GetType()
+                : ReflectionUtility.FindType(val.Namespace, val.ScriptName);
+
             var isBuild = classType != null && classType != typeof(ViewController);
 
             if (isBuild)
@@ -69,7 +74,7 @@ namespace EasyFramework.ToolKit.Editor
             if (!isBuild && val.AutoScriptName)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.TextField("实际生成脚本名", ViewControllerEditorUtility.GetScriptName((IViewController)comp));
+                EditorGUILayout.TextField("实际生成脚本名", ((IViewController)comp).GetScriptName());
                 EditorGUI.EndDisabledGroup();
             }
 
@@ -107,11 +112,11 @@ namespace EasyFramework.ToolKit.Editor
             var height = EditorGUIUtility.singleLineHeight;
             if (SirenixEditorGUI.SDFIconButton("生成代码", height, SdfIconType.PencilFill))
             {
-                // var builder = new ViewControllerBuilder((IViewController)comp);
-                // if (builder.Check())
-                // {
-                //     builder.Build();
-                // }
+                var builder = new ViewControllerBuilder((IViewController)comp);
+                if (builder.Check())
+                {
+                    builder.Build();
+                }
             }
 
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
