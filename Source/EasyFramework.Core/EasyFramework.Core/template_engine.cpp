@@ -17,6 +17,7 @@ TemplateEngineEnvironment AllocTemplateEngineEnvironment() {
         ret.ptr = new inja::Environment();
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 void FreeTemplateEngineEnvironment(TemplateEngineEnvironment environment) {

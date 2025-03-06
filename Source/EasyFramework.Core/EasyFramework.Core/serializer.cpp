@@ -9,6 +9,7 @@ OutputArchive AllocBinaryOutputArchive(IoStream stream) {
         ret.ptr = archive;
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 void FreeOutputArchive(OutputArchive archive) {
@@ -24,6 +25,7 @@ InputArchive AllocBinaryInputArchive(IoStream stream) {
         ret.ptr = archive;
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 OutputArchive AllocJsonOutputArchive(IoStream stream) {
@@ -33,6 +35,7 @@ OutputArchive AllocJsonOutputArchive(IoStream stream) {
         ret.ptr = archive;
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 InputArchive AllocJsonInputArchive(IoStream stream) {
@@ -42,6 +45,7 @@ InputArchive AllocJsonInputArchive(IoStream stream) {
         ret.ptr = archive;
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 void FreeInputArchive(InputArchive archive) {
@@ -122,6 +126,7 @@ uint32_t ReadSizeFromInputArchive(InputArchive archive) {
             return static_cast<uint32_t>(size);
         }
     TRY_CATCH_END
+    return {};
 }
 
 #define NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(type_name, type) \
@@ -136,6 +141,7 @@ type Read##type_name##FromInputArchive(InputArchive archive) { \
     GetArchive(archive)->Process(ret);      \
     return ret;                             \
     TRY_CATCH_END                           \
+    return {};                              \
 }
 
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Int64, int64_t)
@@ -161,6 +167,7 @@ uint8_t ReadBoolFromInputArchive(InputArchive archive) {
         GetArchive(archive)->Process(b);
         return b ? 1 : 0;
     TRY_CATCH_END
+    return {};
 }
 
 NORMAL_WRITE_TO_OUTPUT_ARCHIVE_IMPL(Float, float)
@@ -193,6 +200,7 @@ uint32_t ReadVarint32FromInputArchive(InputArchive archive) {
             return ret.value;
         }
     TRY_CATCH_END
+    return {};
 }
 
 void WriteBinaryToOutputArchive(OutputArchive archive, Buffer buffer) {
@@ -222,6 +230,7 @@ Buffer ReadBinaryFromInputArchive(InputArchive archive) {
         memcpy_s(buf.ptr, buf.size, data.data(), data.size());
         return buf;
     TRY_CATCH_END
+    return {};
 }
 
 void WriteStringToOutputArchive(OutputArchive archive, const char* str) {
@@ -243,6 +252,7 @@ Buffer ReadStringFromInputArchive(InputArchive archive) {
         memcpy_s(ret.ptr, ret.size, s.c_str(), s.size());
         return ret;
     TRY_CATCH_END
+    return {};
 }
 
 // #include <cereal/types/vector.hpp>

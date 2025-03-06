@@ -230,6 +230,10 @@ protected:
     void ProcessImpl(bool& value) override { archive_(static_cast<uint8_t>(value ? 1 : 0)); }
 
     void ProcessImpl(std::string& str) override {
+        if (str.empty()) {
+            archive_(Varint32(0));
+            return;
+        }
         archive_(Varint32(static_cast<uint32_t>(str.size())));
         archive_(cereal::binary_data(str.data(), str.size()));
     }
@@ -268,6 +272,10 @@ protected:
     void ProcessImpl(std::string& str) override {
         auto size = Varint32();
         archive_(size);
+        if (size.value == 0) {
+            str = {};
+            return;
+        }
         str.resize(size.value);
         archive_(cereal::binary_data(str.data(), size.value));
     }

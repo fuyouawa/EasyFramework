@@ -137,7 +137,7 @@ namespace EasyFramework.Serialization
         #endregion
 
         #region FindSerializer
-        
+
         private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesDict =
             new Dictionary<Type, List<SerializerStore>>();
 
@@ -178,13 +178,24 @@ namespace EasyFramework.Serialization
 
         private static Type[] GetNeededGenericTypes(Type srcType, Type destType, bool allocInherit)
         {
-            var typeArgs = Array.Empty<Type>();
+            if (srcType.IsArray != destType.IsArray ||
+                srcType.IsSZArray != destType.IsSZArray)
+            {
+                return Array.Empty<Type>();
+            }
+
+            if (destType.IsArray)
+            {
+                return new[] { destType.GetElementType() };
+            }
+
+            Type[] typeArgs;
             if (srcType.IsGenericType && destType.IsGenericType)
             {
                 var srcArg = srcType.GenericTypeArguments;
                 var destArg = destType.GenericTypeArguments;
                 if (destArg.Length != srcArg.Length)
-                    return typeArgs;
+                    return Array.Empty<Type>();
 
                 var srcDef = srcType.GetGenericTypeDefinition();
                 var destDef = destType.GetGenericTypeDefinition();
@@ -249,7 +260,6 @@ namespace EasyFramework.Serialization
             serializes.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
             return serializes[0];
         }
-
 
         #endregion
 
