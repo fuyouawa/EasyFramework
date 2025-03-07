@@ -4,21 +4,17 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public class ViewBinderGameObjectCheckAttribute : PropertyAttribute
-    {
-    }
-
     [Serializable]
     public class OtherViewBinderTarget
     {
         public GameObject Target;
+        public Component Binder;
     }
     
     [Serializable]
     public class OtherViewBinderTargets
     {
-        [ViewBinderGameObjectCheck]
-        public List<GameObject> Collection;
+        public List<OtherViewBinderTarget> Collection;
     }
 
     public sealed class OtherViewBinders : MonoBehaviour

@@ -122,6 +122,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &63700820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 63700821}
+  - component: {fileID: 63700822}
+  m_Layer: 0
+  m_Name: dsfgdfg
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &63700821
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63700820}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1888331993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &63700822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 63700820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    _ownerController: {fileID: 1888331992}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 0
+      AutoBindName: 1
+      BindName: dsfgdfg
+      ProcessBindName: 1
+      UseDocumentComment: 0
+      AutoAddParaToComment: 0
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01002d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c652d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c650000000001076473666764666701000000
+        StringData: 
+        ReferencedUnityObjects: []
 --- !u!1 &452914655
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +275,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &473343823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 473343824}
+  - component: {fileID: 473343825}
+  m_Layer: 0
+  m_Name: dsfgdfgs3r
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &473343824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473343823}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1888331993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &473343825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473343823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    _ownerController: {fileID: 1888331992}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 0
+      AutoBindName: 1
+      BindName: dsfgdfg
+      ProcessBindName: 1
+      UseDocumentComment: 0
+      AutoAddParaToComment: 0
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01002d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c652d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c650000000001076473666764666701000000
+        StringData: 
+        ReferencedUnityObjects: []
 --- !u!1 &505184099
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,8 +414,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Targets:
     Collection:
-    - {fileID: 1888331991}
-    - {fileID: 0}
+    - Target: {fileID: 0}
+      Binder: {fileID: 0}
+    - Target: {fileID: 0}
+      Binder: {fileID: 0}
 --- !u!1 &1043417715
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,8 +458,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1166249102}
+  - component: {fileID: 1166249103}
   m_Layer: 0
-  m_Name: TestViewModel
+  m_Name: TestViewC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -359,6 +484,31 @@ Transform:
   - {fileID: 1921682779}
   m_Father: {fileID: 1000912421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1166249103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166249100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 987200766, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewControllerConfig:
+    EditorConfig:
+      IsInitialized: 1
+      GenerateDir: Scripts
+      Namespace: 
+      AutoScriptName: 1
+      ScriptName: TestViewCs
+      OtherBindersList: []
+      _serializationData:
+        Format: 0
+        BinaryData: 01075363726970747300010a546573745669657743730000
+        StringData: 
+        ReferencedUnityObjects: []
 --- !u!1 &1637753062
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +598,7 @@ MonoBehaviour:
       Comment: 
       _serializationData:
         Format: 0
-        BinaryData: 0100000000000000000001046f6f6f6f0101010000
+        BinaryData: 010000000000000001046f6f6f6f01010100
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1888331991
@@ -481,23 +631,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50d9105a2e9ea1c46a197ea45afa6e77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Oooo: {fileID: 0}
-  Oooogfdh: {fileID: 0}
-  Sadfsdf: {fileID: 0}
-  Kkkjjj: {fileID: 0}
-  _viewModelInfo:
+  Dsfgdfg: {fileID: 63700821}
+  Dsfgdfgs3r: {fileID: 473343824}
+  _viewControllerConfig:
     EditorConfig:
       IsInitialized: 1
       GenerateDir: Scripts
       Namespace: 
       AutoScriptName: 0
       ScriptName: TestViewModel
-      OtherBindersList: []
+      OtherBindersList:
+      - {fileID: 1000912423}
       _serializationData:
         Format: 0
-        BinaryData: 0107536372697074730000000d54657374566965774d6f64656c0031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65
+        BinaryData: 01075363726970747300000d54657374566965774d6f64656c010131556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65
         StringData: 
-        ReferencedUnityObjects: []
+        ReferencedUnityObjects:
+        - {fileID: 1000912423}
 --- !u!4 &1888331993
 Transform:
   m_ObjectHideFlags: 0
@@ -510,7 +660,9 @@ Transform:
   m_LocalPosition: {x: -0.26148415, y: -0.23664236, z: 0.045484066}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 63700821}
+  - {fileID: 473343824}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1888331994

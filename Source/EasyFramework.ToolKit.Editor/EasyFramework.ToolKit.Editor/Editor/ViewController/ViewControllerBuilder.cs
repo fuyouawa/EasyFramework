@@ -46,14 +46,14 @@ namespace EasyFramework.ToolKit.Editor
 
         public bool Check()
         {
-            string error = ViewControllerEditorUtility.GetIdentifierError("类名", _cfg.ScriptName);
+            string error = ViewControllerUtility.GetIdentifierError("类名", _cfg.ScriptName);
             if (error.IsNotNullOrEmpty())
             {
                 EditorUtility.DisplayDialog("错误", $"类名不规范：{error}", "确认");
                 return false;
             }
 
-            var binders = ViewControllerUtility.GetAllBinders(_controller);
+            var binders = _controller.GetAllBinders();
 
             var nameCheck = new HashSet<string>();
             foreach (var binder in binders)
@@ -61,7 +61,7 @@ namespace EasyFramework.ToolKit.Editor
                 var comp = (Component)binder;
                 var bindName = binder.GetBindName();
 
-                error = ViewControllerEditorUtility.GetIdentifierError("变量名称", bindName);
+                error = ViewControllerUtility.GetIdentifierError("变量名称", bindName);
                 if (error.IsNotNullOrEmpty())
                 {
                     EditorUtility.DisplayDialog("错误",
@@ -147,7 +147,7 @@ public partial class {{ ClassName }} : IViewController
 
         private void BuildCsDesigner(string path)
         {
-            var binders = ViewControllerUtility.GetAllBinders(_controller);
+            var binders = _controller.GetAllBinders();
 
             var engine = new TemplateEngine();
 

@@ -1,6 +1,8 @@
 using System;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.OdinInspector.Editor.Drawers;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -9,33 +11,16 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewBinderEditorConfigDrawer : FoldoutValueDrawer<ViewBinderEditorConfig>
     {
-        private InspectorProperty _propertyOfBindGameObject;
-        private InspectorProperty _propertyOfBindComponentType;
-        private InspectorProperty _propertyOfSpecificBindType;
-        private InspectorProperty _propertyOfBindAccess;
-        private InspectorProperty _propertyOfAutoBindName;
-        private InspectorProperty _propertyOfProcessBindName;
-        private InspectorProperty _propertyOfBindName;
-        private InspectorProperty _propertyOfUseDocumentComment;
-        private InspectorProperty _propertyOfAutoAddParaToComment;
-        private InspectorProperty _propertyOfComment;
         private ViewBinderSettings _settings;
+
+        private InspectorProperty _propertyOfComment;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _propertyOfBindGameObject = Property.Children[nameof(ViewBinderEditorConfig.BindGameObject)];
-            _propertyOfBindComponentType = Property.Children[nameof(ViewBinderEditorConfig.BindComponentType)];
-            _propertyOfSpecificBindType = Property.Children[nameof(ViewBinderEditorConfig.SpecificBindType)];
-            _propertyOfBindAccess = Property.Children[nameof(ViewBinderEditorConfig.BindAccess)];
-            _propertyOfAutoBindName = Property.Children[nameof(ViewBinderEditorConfig.AutoBindName)];
-            _propertyOfProcessBindName = Property.Children[nameof(ViewBinderEditorConfig.ProcessBindName)];
-            _propertyOfBindName = Property.Children[nameof(ViewBinderEditorConfig.BindName)];
-            _propertyOfUseDocumentComment = Property.Children[nameof(ViewBinderEditorConfig.UseDocumentComment)];
-            _propertyOfAutoAddParaToComment = Property.Children[nameof(ViewBinderEditorConfig.AutoAddParaToComment)];
-            _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
 
             _settings = ViewBinderSettings.Instance;
+            _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
         }
 
         protected override GUIContent GetLabel(GUIContent label)
@@ -52,51 +37,95 @@ namespace EasyFramework.ToolKit.Editor
 
             var val = ValueEntry.SmartValue;
             var comp = GetTargetComponent(Property);
+            var binder = (IViewBinder)comp;
 
-            _propertyOfBindGameObject.Draw(EditorHelper.TempContent("绑定游戏对象"));
-            _propertyOfBindComponentType.Draw(EditorHelper.TempContent("绑定组件"));
-            _propertyOfSpecificBindType.Draw(EditorHelper.TempContent("指定要绑定的类型"));
-            _propertyOfBindAccess.Draw(EditorHelper.TempContent("绑定权限"));
-            _propertyOfBindName.Draw(EditorHelper.TempContent("绑定名称"));
-            
-            _propertyOfAutoBindName.Draw(EditorHelper.TempContent("自动绑定名称", "绑定名称与游戏对象名称相同"));
-            _propertyOfProcessBindName.Draw(EditorHelper.TempContent("处理绑定命名"));
-            
+            EditorGUI.BeginChangeCheck();
+
+            val.BindGameObject = EditorGUILayout.Toggle(
+                EditorHelper.TempContent("绑定游戏对象"),
+                val.BindGameObject);
+
+            if (!val.BindGameObject)
+            {
+                var btnLabel = val.BindComponentType == null
+                    ? EditorHelper.NoneSelectorBtnLabel
+                    : EditorHelper.TempContent2(val.BindComponentType.GetNiceName());
+
+                EasyEditorGUI.DrawSelectorDropdown(
+                    binder.GetBindableComponentTypes(),
+                    EditorHelper.TempContent("绑定组件"),
+                    btnLabel,
+                    type =>
+                    {
+                        val.BindComponentType = type;
+                        val.SpecificBindType = type != null
+                            ? ViewBinderUtility.GetDefaultSpecialType(
+                                ViewBinderUtility.GetSpecficableBindTypes(type))
+                            : null;
+                    },
+                    type => type.GetNiceName());
+
+                btnLabel = val.SpecificBindType == null
+                    ? EditorHelper.NoneSelectorBtnLabel
+                    : EditorHelper.TempContent2(val.SpecificBindType.GetNiceName());
+
+                EasyEditorGUI.DrawSelectorDropdown(
+                    ViewBinderUtility.GetSpecficableBindTypes(val.SpecificBindType),
+                    EditorHelper.TempContent("指定要绑定的类型"),
+                    btnLabel,
+                    type => val.SpecificBindType = type,
+                    type => type.GetNiceName());
+            }
+
+            val.BindAccess = EnumSelector<ViewBindAccess>.DrawEnumField(
+                EditorHelper.TempContent("访问权限"),
+                val.BindAccess);
+            val.BindName = EditorGUILayout.TextField(
+                EditorHelper.TempContent("绑定名称"),
+                val.BindName);
+
+            val.AutoBindName = EditorGUILayout.Toggle(
+                EditorHelper.TempContent("自动绑定名称", "绑定名称与游戏对象名称相同"),
+                val.AutoBindName);
+
+            val.ProcessBindName = EditorGUILayout.Toggle(
+                EditorHelper.TempContent("处理绑定命名"),
+                val.ProcessBindName);
+
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.TextField("实际变量名称", ((IViewBinder)comp).GetBindName());
             EditorGUI.EndDisabledGroup();
-            
+
             EasyEditorGUI.Title("注释设置");
-            _propertyOfUseDocumentComment.Draw(EditorHelper.TempContent("使用文档注释"));
-            _propertyOfAutoAddParaToComment.Draw(EditorHelper.TempContent("自动添加注释段落"));
+
+            val.UseDocumentComment = EditorGUILayout.Toggle(
+                EditorHelper.TempContent("使用文档注释"),
+                val.UseDocumentComment);
+
+            if (val.UseDocumentComment)
+            {
+                val.AutoAddParaToComment = EditorGUILayout.Toggle(
+                    EditorHelper.TempContent("自动添加注释段落"),
+                    val.AutoAddParaToComment);
+            }
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(comp);
+            }
+
             _propertyOfComment.Draw(EditorHelper.TempContent("注释"));
 
             if (GUILayout.Button("恢复默认值"))
             {
                 UseDefault(Property);
             }
-            
-            _propertyOfBindComponentType.ValueEntry.OnValueChanged += i =>
-            {
-                if (_propertyOfBindComponentType.ValueEntry.WeakSmartValue is Type type)
-                {
-                    var specialType = ViewBinderEditorUtility.GetDefaultSpecialType(
-                        ViewBinderUtility.GetSpecficableBindTypes(type));
-                    _propertyOfSpecificBindType.ValueEntry.WeakSmartValue = specialType;
-                }
-                else
-                {
-                    _propertyOfSpecificBindType.ValueEntry.WeakSmartValue = null;
-                }
-            };
-
         }
 
         private void EnsureInitialize(InspectorProperty property)
         {
             var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
-            cfg.SetTargetComponent(comp);
 
             if (!cfg.IsInitialized)
             {
@@ -116,8 +145,8 @@ namespace EasyFramework.ToolKit.Editor
             var bindableComps = ((IViewBinder)comp).GetBindableComponentTypes();
             cfg.BindComponentType = bindableComps[0];
 
-            cfg.SpecificBindType = ViewBinderEditorUtility.GetDefaultSpecialType(
-                    ViewBinderUtility.GetSpecficableBindTypes(cfg.BindComponentType));
+            cfg.SpecificBindType = ViewBinderUtility.GetDefaultSpecialType(
+                ViewBinderUtility.GetSpecficableBindTypes(cfg.BindComponentType));
 
             cfg.BindGameObject = _settings.Default.BindGameObject;
             cfg.BindAccess = _settings.Default.BindAccess;

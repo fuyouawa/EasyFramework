@@ -28,8 +28,6 @@ namespace EasyFramework.ToolKit.Editor
 
         private void EnsureInitialize(InspectorProperty property)
         {
-            var cfg = property.WeakSmartValue<ViewBinderConfig>();
-            cfg.SetTargetComponent(GetTargetComponent(property));
         }
 
         private static Component GetTargetComponent(InspectorProperty property)

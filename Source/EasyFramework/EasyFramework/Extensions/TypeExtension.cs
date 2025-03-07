@@ -237,5 +237,10 @@ namespace EasyFramework
         {
             return Array.Exists(type.GetInterfaces(), t => t == interfaceType);
         }
+
+        public static string GetNiceName(this Type type)
+        {
+            return $"{type.Name} ({type.Namespace})";
+        }
     }
 }

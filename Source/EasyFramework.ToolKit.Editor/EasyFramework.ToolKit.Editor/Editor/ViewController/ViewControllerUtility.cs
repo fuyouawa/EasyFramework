@@ -10,8 +10,22 @@ using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    public static class ViewControllerEditorUtility
+    public static class ViewControllerUtility
     {
+        private static Type[] s_baseTypes;
+
+        public static Type[] BaseTypes
+        {
+            get
+            {
+                s_baseTypes ??= AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(asm => asm.GetTypes())
+                    .Where(t => t.IsSubclassOf(typeof(Component)) && !t.ContainsGenericParameters && t.IsPublic)
+                    .ToArray();
+                return s_baseTypes;
+            }
+        }
+
         public static void CheckIdentifierWithMessage(string name, string id)
         {
             var error = GetIdentifierError(name, id);
@@ -74,7 +88,7 @@ namespace EasyFramework.ToolKit.Editor
 
         private static void InternalBind(IViewController controller)
         {
-            var binders = ViewControllerUtility.GetAllBinders(controller);
+            var binders = controller.GetAllBinders();
 
             var fields = controller.GetType()
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
@@ -129,6 +143,33 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             return name;
+        }
+
+        public static List<IViewBinder> GetOtherBinders(this IViewController controller)
+        {
+            return controller.Config.EditorConfig.OtherBindersList
+                .SelectMany(b => b.Targets.Collection)
+                .Where(c => c != null && c.Binder != null)
+                .Select(c => (IViewBinder)c.Binder)
+                .ToList();
+        }
+
+        public static List<IViewBinder> GetAllBinders(this IViewController controller)
+        {
+            var total = new List<IViewBinder>();
+
+            total.AddRange(GetChildrenBinders(controller));
+            total.AddRange(GetOtherBinders(controller));
+
+            return total;
+        }
+
+        public static List<IViewBinder> GetChildrenBinders(this IViewController controller)
+        {
+            var comp = (Component)controller;
+            return comp.transform.GetComponentsInChildren<IViewBinder>(true)
+                .Where(b => b.Config.OwnerController == controller)
+                .ToList();
         }
 
         [MenuItem("GameObject/EasyFramework/Add ViewController")]

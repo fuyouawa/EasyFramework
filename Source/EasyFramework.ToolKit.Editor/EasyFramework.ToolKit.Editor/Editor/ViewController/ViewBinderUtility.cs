@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    public static class ViewBinderEditorUtility
+    public static class ViewBinderUtility
     {
         private static List<string> GetCommentSplits(ViewBinderEditorConfig config)
         {
@@ -31,6 +31,13 @@ namespace EasyFramework.ToolKit.Editor
             commentSplits.Add("</summary>");
 
             return commentSplits;
+        }
+
+        public static Type[] GetSpecficableBindTypes(Type type)
+        {
+            if (type == null)
+                return Array.Empty<Type>();
+            return type.GetAllBaseTypes(true, true);
         }
 
         public static string GetComment(this ViewBinderEditorConfig config)
@@ -75,16 +82,22 @@ namespace EasyFramework.ToolKit.Editor
                     return type;
                 }
             }
+
             return types[0];
         }
 
         public static Type[] GetBindableComponentTypes(this IViewBinder binder)
         {
-            var types = ViewBinderUtility.GetBindableComponentTypes(binder);
+            var comp = (Component)binder;
+            var types = comp.GetComponents<Component>()
+                .Where(c => c != null)
+                .Select(c => c.GetType())
+                .Distinct()
+                .ToArray();
             SortTypesByPriorities(types);
             return types;
         }
-        
+
         public static Object GetBindObject(this IViewBinder binder)
         {
             var cfg = binder.Config.EditorConfig;

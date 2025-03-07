@@ -13,21 +13,11 @@ namespace EasyFramework.ToolKit.Editor
     public class ViewControllerEditorConfigDrawer : OdinValueDrawer<ViewControllerEditorConfig>
     {
         private ViewControllerSettings _settings;
-        private InspectorProperty _propertyOfGenerateDir;
-        private InspectorProperty _propertyOfNamespace;
-        private InspectorProperty _propertyOfAutoScriptName;
-        private InspectorProperty _propertyOfScriptName;
-        private InspectorProperty _propertyOfBaseClass;
         private InspectorProperty _propertyOfOtherBindersList;
 
         protected override void Initialize()
         {
             _settings = ViewControllerSettings.Instance;
-            _propertyOfGenerateDir = Property.Children[nameof(ViewControllerEditorConfig.GenerateDir)];
-            _propertyOfNamespace = Property.Children[nameof(ViewControllerEditorConfig.Namespace)];
-            _propertyOfAutoScriptName = Property.Children[nameof(ViewControllerEditorConfig.AutoScriptName)];
-            _propertyOfScriptName = Property.Children[nameof(ViewControllerEditorConfig.ScriptName)];
-            _propertyOfBaseClass = Property.Children[nameof(ViewControllerEditorConfig.BaseClass)];
             _propertyOfOtherBindersList = Property.Children[nameof(ViewControllerEditorConfig.OtherBindersList)];
         }
 
@@ -66,10 +56,29 @@ namespace EasyFramework.ToolKit.Editor
 
             EditorGUI.BeginDisabledGroup(isBuildAndBind);
 
-            _propertyOfGenerateDir.Draw(EditorHelper.TempContent("代码生成目录"));
-            _propertyOfNamespace.Draw(EditorHelper.TempContent("命名空间"));
-            _propertyOfAutoScriptName.Draw(EditorHelper.TempContent("自动命名", "类名与游戏对象的名称相同"));
-            _propertyOfScriptName.Draw(EditorHelper.TempContent("生成脚本名"));
+            EditorGUI.BeginChangeCheck();
+            val.GenerateDir = SirenixEditorFields.FolderPathField(
+                EditorHelper.TempContent("代码生成目录"), val.GenerateDir, "Assets", false,
+                false);
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(comp);
+                GUIHelper.ExitGUI(false);
+            }
+            
+            bool hasChange = false;
+            EditorGUI.BeginChangeCheck();
+
+            val.Namespace = EditorGUILayout.TextField("命名空间", val.Namespace);
+            val.AutoScriptName = EditorGUILayout.Toggle(
+                EditorHelper.TempContent("自动命名", "类名与游戏对象的名称相同"),
+                val.AutoScriptName);
+            
+            val.ScriptName = EditorGUILayout.TextField("生成脚本名", val.ScriptName);
+            if (EditorGUI.EndChangeCheck())
+            {
+                hasChange = true;
+            }
 
             if (!isBuild && val.AutoScriptName)
             {
@@ -78,7 +87,23 @@ namespace EasyFramework.ToolKit.Editor
                 EditorGUI.EndDisabledGroup();
             }
 
-            _propertyOfBaseClass.Draw(EditorHelper.TempContent("脚本基类"));
+            var btnLabel = val.BaseClass == null
+                ? EditorHelper.NoneSelectorBtnLabel
+                : EditorHelper.TempContent2(val.BaseClass.GetNiceName());
+            
+            EditorGUI.BeginChangeCheck();
+
+            EasyEditorGUI.DrawSelectorDropdown(
+                ViewControllerUtility.BaseTypes,
+                EditorHelper.TempContent("脚本基类"),
+                btnLabel,
+                type => val.BaseClass = type,
+                type => type.GetNiceName());
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                hasChange = true;
+            }
 
             if (GUILayout.Button("恢复默认值"))
             {
@@ -121,17 +146,21 @@ namespace EasyFramework.ToolKit.Editor
 
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
             {
-                ViewControllerEditorUtility.Bind((IViewController)comp);
+                ViewControllerUtility.Bind((IViewController)comp);
             }
 
             EditorGUILayout.EndHorizontal();
+
+            if (hasChange)
+            {
+                EditorUtility.SetDirty(comp);
+            }
         }
 
         private void EnsureInitialize(InspectorProperty property)
         {
             var comp = GetTargetComponent(property);
             var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-            cfg.SetTargetComponent(comp);
 
             if (!cfg.IsInitialized)
             {
