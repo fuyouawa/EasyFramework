@@ -23,11 +23,6 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            foreach (var component in Property.Components)
-            {
-                EnsureInitialize(component.Property);
-            }
-
             var val = ValueEntry.SmartValue;
             var comp = GetTargetComponent(Property);
 
@@ -107,7 +102,8 @@ namespace EasyFramework.ToolKit.Editor
 
             if (GUILayout.Button("恢复默认值"))
             {
-                UseDefault(Property);
+                ((IViewController)comp).UseDefault();
+                hasChange = true;
             }
 
             EditorGUI.EndDisabledGroup();
@@ -144,10 +140,12 @@ namespace EasyFramework.ToolKit.Editor
                 }
             }
 
+            EditorGUI.BeginDisabledGroup(!isBuild);
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
             {
                 ViewControllerUtility.Bind((IViewController)comp);
             }
+            EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
 
@@ -155,31 +153,6 @@ namespace EasyFramework.ToolKit.Editor
             {
                 EditorUtility.SetDirty(comp);
             }
-        }
-
-        private void EnsureInitialize(InspectorProperty property)
-        {
-            var comp = GetTargetComponent(property);
-            var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-
-            if (!cfg.IsInitialized)
-            {
-                UseDefault(property);
-                cfg.IsInitialized = true;
-
-                ValueChanged(comp);
-            }
-        }
-
-        private void UseDefault(InspectorProperty property)
-        {
-            var comp = GetTargetComponent(property);
-            var cfg = property.WeakSmartValue<ViewControllerEditorConfig>();
-
-            cfg.ScriptName = comp.gameObject.name;
-            cfg.GenerateDir = _settings.Default.GenerateDir;
-            cfg.Namespace = _settings.Default.Namespace;
-            cfg.BaseClass = _settings.Default.BaseType;
         }
 
         private void ValueChanged(Object target)

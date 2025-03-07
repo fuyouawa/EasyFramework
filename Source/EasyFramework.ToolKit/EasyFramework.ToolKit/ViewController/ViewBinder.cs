@@ -55,11 +55,7 @@ namespace EasyFramework.ToolKit
     [Serializable]
     public class ViewBinderConfig
     {
-        public IViewController OwnerController => _ownerController as IViewController;
-
-        [SerializeField]
-        private Component _ownerController;
-
+        public Component OwnerController;
         public ViewBinderEditorConfig EditorConfig;
     }
 

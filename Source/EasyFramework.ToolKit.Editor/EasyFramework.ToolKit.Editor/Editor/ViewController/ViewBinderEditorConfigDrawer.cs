@@ -1,25 +1,18 @@
-using System;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.OdinInspector.Editor.Drawers;
-using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
     public class ViewBinderEditorConfigDrawer : FoldoutValueDrawer<ViewBinderEditorConfig>
     {
-        private ViewBinderSettings _settings;
-
         private InspectorProperty _propertyOfComment;
 
         protected override void Initialize()
         {
             base.Initialize();
 
-            _settings = ViewBinderSettings.Instance;
             _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
         }
 
@@ -30,11 +23,6 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void OnContentGUI(Rect headerRect)
         {
-            foreach (var component in Property.Components)
-            {
-                EnsureInitialize(component.Property);
-            }
-
             var val = ValueEntry.SmartValue;
             var comp = GetTargetComponent(Property);
             var binder = (IViewBinder)comp;
@@ -115,51 +103,6 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             _propertyOfComment.Draw(EditorHelper.TempContent("注释"));
-
-            if (GUILayout.Button("恢复默认值"))
-            {
-                UseDefault(Property);
-            }
-        }
-
-        private void EnsureInitialize(InspectorProperty property)
-        {
-            var comp = GetTargetComponent(property);
-            var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
-
-            if (!cfg.IsInitialized)
-            {
-                UseDefault(property);
-                cfg.IsInitialized = true;
-
-                ValueChanged(comp);
-            }
-        }
-
-        private void UseDefault(InspectorProperty property)
-        {
-            var comp = GetTargetComponent(property);
-            var cfg = property.WeakSmartValue<ViewBinderEditorConfig>();
-
-            cfg.BindName = comp.gameObject.name;
-            var bindableComps = ((IViewBinder)comp).GetBindableComponentTypes();
-            cfg.BindComponentType = bindableComps[0];
-
-            cfg.SpecificBindType = ViewBinderUtility.GetDefaultSpecialType(
-                ViewBinderUtility.GetSpecficableBindTypes(cfg.BindComponentType));
-
-            cfg.BindGameObject = _settings.Default.BindGameObject;
-            cfg.BindAccess = _settings.Default.BindAccess;
-            cfg.AutoBindName = _settings.Default.AutoBindName;
-            cfg.ProcessBindName = _settings.Default.ProcessBindName;
-            cfg.UseDocumentComment = _settings.Default.UseDocumentComment;
-            cfg.AutoAddParaToComment = _settings.Default.AutoAddParaToComment;
-            cfg.Comment = _settings.Default.Comment;
-        }
-
-        private void ValueChanged(Object target)
-        {
-            EditorUtility.SetDirty(target);
         }
 
         private static Component GetTargetComponent(InspectorProperty property)

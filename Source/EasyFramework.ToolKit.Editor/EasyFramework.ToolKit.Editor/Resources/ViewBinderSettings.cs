@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -10,53 +12,6 @@ namespace EasyFramework.ToolKit.Editor
     [ShowOdinSerializedPropertiesInInspector]
     public class ViewBinderSettings : ScriptableObjectSingleton<ViewBinderSettings>, ISerializationCallbackReceiver
     {
-        [HideLabel, InlineProperty, HideReferenceObjectPicker]
-        public struct FilteredType
-        {
-            [HideLabel, ShowInInspector]
-            [TypeDrawerSettings(BaseType = typeof(Component), Filter = TypeInclusionFilter.IncludeConcreteTypes)]
-            public Type Value;
-        }
-
-        [HideLabel, InlineProperty, HideReferenceObjectPicker]
-        public struct PriorityList
-        {
-            [LabelText("优先级列表")]
-            public List<FilteredType> Collection;
-
-            public int MatchIndexOf(Type type, bool checkDerive, bool checkBase)
-            {
-                int i = 0;
-                foreach (var t in Collection)
-                {
-                    if (t.Value == type)
-                        return i;
-
-                    i++;
-                }
-
-                i = 0;
-                foreach (var t in Collection)
-                {
-                    if (checkDerive)
-                    {
-                        if (type.IsAssignableFrom(t.Value))
-                            return i;
-                    }
-
-                    if (checkBase)
-                    {
-                        if (type.IsSubclassOf(t.Value))
-                            return i;
-                    }
-
-                    i++;
-                }
-
-                return -1;
-            }
-        }
-
         [HideLabel, InlineProperty, HideReferenceObjectPicker]
         public struct DefaultSettings
         {
@@ -85,8 +40,55 @@ namespace EasyFramework.ToolKit.Editor
         public DefaultSettings Default;
 
         [TitleEx("优先级设置")]
-        public PriorityList Priorities;
-        
+        [LabelText("优先级列表")]
+        [ValueDropdown(nameof(GetTypesDropdown))]
+        public List<Type> Priorities;
+
+        public int IndexByPriorityOf(Type type, bool checkDerive, bool checkBase)
+        {
+            int i = 0;
+            foreach (var t in Priorities)
+            {
+                if (t == type)
+                    return i;
+
+                i++;
+            }
+
+            i = 0;
+            foreach (var t in Priorities)
+            {
+                if (checkDerive)
+                {
+                    if (type.IsAssignableFrom(t))
+                        return i;
+                }
+
+                if (checkBase)
+                {
+                    if (type.IsSubclassOf(t))
+                        return i;
+                }
+
+                i++;
+            }
+
+            return -1;
+        }
+
+        private static Type[] s_types;
+        private IEnumerable GetTypesDropdown()
+        {
+            if (s_types.IsNullOrEmpty())
+            {
+                s_types = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(asm => asm.GetTypes())
+                    .Where(t => t.IsSubclassOf(typeof(Component)))
+                    .ToArray();
+            }
+            return s_types;
+        }
+
         [SerializeField, HideInInspector]
         private SerializationData _serializationData;
 

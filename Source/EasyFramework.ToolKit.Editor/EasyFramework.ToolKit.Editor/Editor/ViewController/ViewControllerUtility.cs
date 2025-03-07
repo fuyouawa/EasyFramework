@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using EasyFramework.Editor;
+using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -76,12 +77,19 @@ namespace EasyFramework.ToolKit.Editor
 
                 comp = newComp;
             }
+            
+            var binders = controller.GetAllBinders();
+            foreach (var binder in binders)
+            {
+                binder.Config.OwnerController = comp;
+            }
 
             InternalBind((IViewController)comp);
-
+            
+            EditorUtility.SetDirty(comp);
             if (originComp != comp)
             {
-                Object.DestroyImmediate(comp);
+                Object.DestroyImmediate(originComp);
                 GUIHelper.ExitGUI(true);
             }
         }
@@ -100,7 +108,7 @@ namespace EasyFramework.ToolKit.Editor
                 var comp = (Component)binder;
                 if (binder.Config.OwnerController != null)
                 {
-                    Debug.Assert(binder.Config.OwnerController == controller);
+                    Debug.Assert(binder.Config.OwnerController == (Component)controller);
                 }
 
                 var bindName = binder.GetBindName();
@@ -168,9 +176,23 @@ namespace EasyFramework.ToolKit.Editor
         {
             var comp = (Component)controller;
             return comp.transform.GetComponentsInChildren<IViewBinder>(true)
-                .Where(b => b.Config.OwnerController == controller)
+                .Where(b => b.Config.OwnerController == comp)
                 .ToList();
         }
+
+        public static  void UseDefault(this IViewController controller)
+        {
+            var settings = ViewControllerSettings.Instance;
+
+            var comp = (Component)controller;
+            var cfg = controller.Config.EditorConfig;
+
+            cfg.ScriptName = comp.gameObject.name;
+            cfg.GenerateDir = settings.Default.GenerateDir;
+            cfg.Namespace = settings.Default.Namespace;
+            cfg.BaseClass = settings.Default.BaseType;
+        }
+
 
         [MenuItem("GameObject/EasyFramework/Add ViewController")]
         private static void AddViewController()

@@ -13,7 +13,18 @@ MonoBehaviour:
   m_Name: ViewControllerSettings
   m_EditorClassIdentifier: 
   AutoIndent: 1
-  ClassTemplate: 
+  ClassTemplate: 'void Start()
+
+    {
+
+    }
+
+
+    void Update()
+
+    {
+
+    }'
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 

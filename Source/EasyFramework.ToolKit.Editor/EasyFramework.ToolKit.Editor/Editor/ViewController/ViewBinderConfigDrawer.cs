@@ -1,33 +1,63 @@
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
 {
     public class ViewBinderConfigDrawer : OdinValueDrawer<ViewBinderConfig>
     {
-        private InspectorProperty _property1;
-        private InspectorProperty _property2;
+        private InspectorProperty _propertyOfEditorConfig;
 
         protected override void Initialize()
         {
-            _property1 = Property.Children[0];
-            _property2 = Property.Children[1];
+            _propertyOfEditorConfig = Property.Children[nameof(ViewBinderConfig.EditorConfig)];
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            foreach (var component in Property.Components)
+            var val = ValueEntry.SmartValue;
+
+            var comp = GetTargetComponent(Property);
+
+            bool hasChange = false;
+            if (!val.EditorConfig.IsInitialized)
             {
-                EnsureInitialize(component.Property);
+                ((IViewBinder)comp).UseDefault();
+                val.EditorConfig.IsInitialized = true;
+                hasChange = true;
             }
 
-            _property1.Draw(EditorHelper.TempContent("拥有者"));
-            _property2.Draw(GUIContent.none);
-        }
+            var owners = comp.gameObject.GetComponentsInParent(typeof(IViewController));
 
-        private void EnsureInitialize(InspectorProperty property)
-        {
+            var btnLabel = val.OwnerController == null
+                ? EditorHelper.NoneSelectorBtnLabel
+                : EditorHelper.TempContent2(val.OwnerController.gameObject.name);
+
+            EditorGUI.BeginChangeCheck();
+            EasyEditorGUI.DrawSelectorDropdown(
+                owners,
+                EditorHelper.TempContent("拥有者"),
+                btnLabel,
+                value => val.OwnerController = value,
+                value => value.gameObject.name);
+            if (EditorGUI.EndChangeCheck())
+            {
+                hasChange = true;
+            }
+
+            _propertyOfEditorConfig.Draw(GUIContent.none);
+
+            if (GUILayout.Button("恢复默认值"))
+            {
+                ((IViewBinder)comp).UseDefault();
+                hasChange = true;
+            }
+
+            if (hasChange)
+            {
+                EditorUtility.SetDirty(comp);
+            }
         }
 
         private static Component GetTargetComponent(InspectorProperty property)

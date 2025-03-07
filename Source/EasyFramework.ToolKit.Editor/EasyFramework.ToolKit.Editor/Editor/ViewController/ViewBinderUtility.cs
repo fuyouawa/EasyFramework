@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,12 +51,12 @@ namespace EasyFramework.ToolKit.Editor
 
         public static void SortTypesByPriorities(Type[] types)
         {
-            var priorities = ViewBinderSettings.Instance.Priorities;
+            var settings = ViewBinderSettings.Instance;
 
             Array.Sort(types, (a, b) =>
             {
-                var indexA = priorities.MatchIndexOf(a, false, true);
-                var indexB = priorities.MatchIndexOf(b, false, true);
+                var indexA = settings.IndexByPriorityOf(a, false, true);
+                var indexB = settings.IndexByPriorityOf(b, false, true);
 
                 if (indexA < 0 && indexB >= 0)
                 {
@@ -73,11 +74,11 @@ namespace EasyFramework.ToolKit.Editor
 
         public static Type GetDefaultSpecialType(Type[] types)
         {
-            var priorities = ViewBinderSettings.Instance.Priorities;
+            var settings = ViewBinderSettings.Instance;
 
             foreach (var type in types)
             {
-                if (priorities.Collection.Any(priority => priority.Value == type))
+                if (settings.Priorities.Any(priority => priority == type))
                 {
                     return type;
                 }
@@ -153,6 +154,38 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             return name;
+        }
+
+        public static Component[] GetOwners(this IViewBinder binder)
+        {
+            var comp = (Component)binder;
+            return comp.gameObject.GetComponentsInParent(typeof(IViewController));
+        }
+        
+        public static void UseDefault(this IViewBinder binder)
+        {
+            var settings = ViewBinderSettings.Instance;
+
+            var comp = (Component)binder;
+            var editorConfig = binder.Config.EditorConfig;
+
+            var owners = binder.GetOwners();
+            binder.Config.OwnerController = owners.Length > 0 ? owners[0] : null;
+
+            editorConfig.BindName = comp.gameObject.name;
+            var bindableComps = ((IViewBinder)comp).GetBindableComponentTypes();
+            editorConfig.BindComponentType = bindableComps[0];
+
+            editorConfig.SpecificBindType = GetDefaultSpecialType(
+                GetSpecficableBindTypes(editorConfig.BindComponentType));
+
+            editorConfig.BindGameObject = settings.Default.BindGameObject;
+            editorConfig.BindAccess = settings.Default.BindAccess;
+            editorConfig.AutoBindName = settings.Default.AutoBindName;
+            editorConfig.ProcessBindName = settings.Default.ProcessBindName;
+            editorConfig.UseDocumentComment = settings.Default.UseDocumentComment;
+            editorConfig.AutoAddParaToComment = settings.Default.AutoAddParaToComment;
+            editorConfig.Comment = settings.Default.Comment;
         }
 
         [MenuItem("GameObject/EasyFramework/Add ViewBinder")]
