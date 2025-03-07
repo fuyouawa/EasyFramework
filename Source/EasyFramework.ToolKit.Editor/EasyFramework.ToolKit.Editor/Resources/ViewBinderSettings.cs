@@ -66,7 +66,7 @@ namespace EasyFramework.ToolKit.Editor
 
                 if (checkBase)
                 {
-                    if (type.IsSubclassOf(t))
+                    if (t.IsAssignableFrom(type))
                         return i;
                 }
 
@@ -83,7 +83,7 @@ namespace EasyFramework.ToolKit.Editor
             {
                 s_types = AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(asm => asm.GetTypes())
-                    .Where(t => t.IsSubclassOf(typeof(Component)))
+                    .Where(t => t.IsInterface || t.IsSubclassOf(typeof(Component)))
                     .ToArray();
             }
             return s_types;

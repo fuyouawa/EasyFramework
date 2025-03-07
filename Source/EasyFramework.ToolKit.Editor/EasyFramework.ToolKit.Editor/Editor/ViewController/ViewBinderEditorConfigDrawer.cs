@@ -11,6 +11,12 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void Initialize()
         {
+            var val = ValueEntry.SmartValue;
+            if (!val.IsInitialized)
+            {
+                Property.State.Expanded = true;
+            }
+
             base.Initialize();
 
             _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
@@ -58,7 +64,7 @@ namespace EasyFramework.ToolKit.Editor
                     : EditorHelper.TempContent2(val.SpecificBindType.GetNiceName());
 
                 EasyEditorGUI.DrawSelectorDropdown(
-                    ViewBinderUtility.GetSpecficableBindTypes(val.SpecificBindType),
+                    ViewBinderUtility.GetSpecficableBindTypes(val.BindComponentType),
                     EditorHelper.TempContent("指定要绑定的类型"),
                     btnLabel,
                     type => val.SpecificBindType = type,

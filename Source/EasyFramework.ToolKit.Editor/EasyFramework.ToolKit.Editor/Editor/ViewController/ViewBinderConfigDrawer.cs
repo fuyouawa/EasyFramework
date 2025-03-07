@@ -28,7 +28,7 @@ namespace EasyFramework.ToolKit.Editor
                 hasChange = true;
             }
 
-            var owners = comp.gameObject.GetComponentsInParent(typeof(IViewController));
+            var owners = ((IViewBinder)comp).GetOwners();
 
             var btnLabel = val.OwnerController == null
                 ? EditorHelper.NoneSelectorBtnLabel

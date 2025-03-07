@@ -120,11 +120,14 @@ public partial class {{ ClassName }} : {{ BaseClassName }}
                     _cfg.BaseClass.Namespace
                 }.Distinct().ToArray()
             });
+            var classTemplate = _settings.AutoIndent
+                ? AddIndent(_settings.ClassTemplate)
+                : _settings.ClassTemplate;
             var body = engine.Render(CsBodyTemplate, new
             {
                 ClassName = _cfg.ScriptName,
                 BaseClassName = _cfg.BaseClass.Name,
-                ClassTemplate = AddIndent(_settings.ClassTemplate)
+                ClassTemplate = classTemplate
             });
 
             var code = CombineCode(engine, header, body, _cfg.Namespace);
@@ -158,7 +161,9 @@ public partial class {{ ClassName }} : IViewController
                 typeof(SerializeField),
                 typeof(AutoBindingAttribute),
             };
-            allTypes.AddRange(binders.Select(b => b.Config.EditorConfig.GetBindType()));
+            allTypes.AddRange(binders
+                .Select(b => b.Config.EditorConfig.GetBindType())
+                .Where(t => t.Namespace != _cfg.Namespace));
 
             var header = engine.Render(CsHeaderTemplate, new
             {

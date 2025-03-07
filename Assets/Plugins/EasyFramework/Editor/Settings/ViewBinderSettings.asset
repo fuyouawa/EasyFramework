@@ -59,7 +59,7 @@ MonoBehaviour:
       Data: 1|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: EasyFramework.ToolKit.ViewController, EasyFramework.ToolKit
+      Data: EasyFramework.ToolKit.IViewController, EasyFramework.ToolKit
     - Name: 
       Entry: 8
       Data: 

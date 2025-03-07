@@ -155,11 +155,6 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        private void ValueChanged(Object target)
-        {
-            EditorUtility.SetDirty(target);
-        }
-
         private static Component GetTargetComponent(InspectorProperty property)
         {
             return property.Parent.Parent.WeakSmartValue<Component>();

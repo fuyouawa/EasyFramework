@@ -38,7 +38,9 @@ namespace EasyFramework.ToolKit.Editor
         {
             if (type == null)
                 return Array.Empty<Type>();
-            return type.GetAllBaseTypes(true, true);
+            return type.GetAllBaseTypes(true, true)
+                .Where(t => !t.IsInterface && t.IsSubclassOf(typeof(Object)))
+                .ToArray();
         }
 
         public static string GetComment(this ViewBinderEditorConfig config)
@@ -159,7 +161,7 @@ namespace EasyFramework.ToolKit.Editor
         public static Component[] GetOwners(this IViewBinder binder)
         {
             var comp = (Component)binder;
-            return comp.gameObject.GetComponentsInParent(typeof(IViewController));
+            return comp.gameObject.GetComponentsInParent(typeof(IViewController), true);
         }
         
         public static void UseDefault(this IViewBinder binder)
@@ -170,7 +172,23 @@ namespace EasyFramework.ToolKit.Editor
             var editorConfig = binder.Config.EditorConfig;
 
             var owners = binder.GetOwners();
-            binder.Config.OwnerController = owners.Length > 0 ? owners[0] : null;
+            if (owners.Length > 0)
+            {
+                var o = owners[0];
+                // 如果游戏对象相同，说明是既持有Controller又持有Binder
+                // 绑定再上一级的Controller(如果有)
+                if (o.gameObject == comp.gameObject)
+                {
+                    if (owners.Length > 1)
+                        o = owners[1];
+                }
+
+                binder.Config.OwnerController = o;
+            }
+            else
+            {
+                binder.Config.OwnerController = null;
+            }
 
             editorConfig.BindName = comp.gameObject.name;
             var bindableComps = ((IViewBinder)comp).GetBindableComponentTypes();
