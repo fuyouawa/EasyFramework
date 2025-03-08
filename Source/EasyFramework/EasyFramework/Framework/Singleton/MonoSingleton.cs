@@ -108,6 +108,7 @@ namespace EasyFramework
 
             s_instance = (T)this;
             s_loadBySelf = true;
+            s_destroyed = false;
             SingletonCreator.ProcessTarget(this);
         }
 

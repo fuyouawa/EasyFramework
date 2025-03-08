@@ -6,10 +6,10 @@ namespace EasyFramework.ToolKit.Editor
     {
         private static readonly GUIContent s_tempContent = new GUIContent();
 
-        public static GUIContent TempContent(string content, string tooltip = null)
+        public static GUIContent TempContent(string content, string tooltip = null, Texture image = null)
         {
             s_tempContent.text = content;
-            s_tempContent.image = null;
+            s_tempContent.image = image;
             s_tempContent.tooltip = tooltip;
             return s_tempContent;
         }

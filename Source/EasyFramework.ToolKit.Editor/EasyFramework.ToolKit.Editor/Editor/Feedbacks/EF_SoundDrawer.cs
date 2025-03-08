@@ -9,12 +9,18 @@ namespace EasyFramework.ToolKit.Editor
     [DrawerPriority(0.0, 0.0, 1.1)]
     public class EF_SoundDrawer : AbstractEasyFeedbackDrawer<EF_Sound>
     {
-        private InspectorProperty _randomSfxProperty;
+        private InspectorProperty _propertyOfRandomSfx;
+        private InspectorProperty _propertyOfVolume;
+        private InspectorProperty _propertyOfPitch;
+        private InspectorProperty _propertyOfDistance;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _randomSfxProperty = Property.Children[nameof(EF_Sound.RandomSfx)];
+            _propertyOfRandomSfx = Property.Children[nameof(EF_Sound.RandomSfx)];
+            _propertyOfVolume = Property.Children[nameof(EF_Sound.Volume)];
+            _propertyOfPitch = Property.Children[nameof(EF_Sound.Pitch)];
+            _propertyOfDistance = Property.Children[nameof(EF_Sound.Distance)];
         }
 
         protected override void PostBuildPropertiesGroups()
@@ -27,7 +33,7 @@ namespace EasyFramework.ToolKit.Editor
 
                 if (Feedback.Sfx == null)
                 {
-                    _randomSfxProperty.Draw(new GUIContent("随机音效"));
+                    _propertyOfRandomSfx.Draw(EditorHelper.TempContent("随机音效"));
                 }
             }));
 
@@ -51,18 +57,11 @@ namespace EasyFramework.ToolKit.Editor
 
             PropertiesGroups.Add(new PropertiesGroupInfo("声音属性", rect =>
             {
-                SirenixEditorFields.MinMaxSlider(
-                    new GUIContent("响度范围"),
-                    ref Feedback.MinVolume, ref Feedback.MaxVolume,
-                    0f, 2f, true);
-
-                SirenixEditorFields.MinMaxSlider(
-                    new GUIContent("音高范围"),
-                    ref Feedback.MinPitch, ref Feedback.MaxPitch,
-                    -3f, 3f, true);
+                _propertyOfVolume.Draw(EditorHelper.TempContent("响度"));
+                _propertyOfPitch.Draw(EditorHelper.TempContent("音高"));
 
                 EasyEditorField.UnityObject(
-                    new GUIContent("混音器组"),
+                    EditorHelper.TempContent("混音器组"),
                     ref Feedback.SfxAudioMixerGroup);
 
                 EasyEditorField.Value(
@@ -73,67 +72,62 @@ namespace EasyFramework.ToolKit.Editor
             PropertiesGroups.Add(new PropertiesGroupInfo("空间设置", rect =>
             {
                 Feedback.PanStereo = EditorGUILayout.Slider(
-                    new GUIContent("立体声平衡"),
+                    EditorHelper.TempContent("立体声平衡"),
                     Feedback.PanStereo, -1f, 1f);
                 Feedback.SpatialBlend = EditorGUILayout.Slider(
-                    new GUIContent("空间感"),
+                    EditorHelper.TempContent("空间感"),
                     Feedback.SpatialBlend, 0f, 1f);
             }));
 
             PropertiesGroups.Add(new PropertiesGroupInfo("3D Sound Settings", rect =>
             {
                     Feedback.DopplerLevel = EditorGUILayout.Slider(
-                        new GUIContent("多普勒效应"),
+                        EditorHelper.TempContent("多普勒效应"),
                         Feedback.DopplerLevel, 0f, 5f);
                     Feedback.Spread = EditorGUILayout.IntSlider(
-                        new GUIContent("扩展度"),
+                        EditorHelper.TempContent("扩展度"),
                         Feedback.Spread, 0, 360);
 
                     Feedback.RolloffMode = EasyEditorField.Enum(
-                        new GUIContent("衰减方式"),
+                        EditorHelper.TempContent("衰减方式"),
                         Feedback.RolloffMode);
 
-                    Feedback.MinDistance = EditorGUILayout.FloatField(
-                        new GUIContent("最小距离"),
-                        Feedback.MinDistance);
-                    Feedback.MaxDistance = EditorGUILayout.FloatField(
-                        new GUIContent("最大距离"),
-                        Feedback.MaxDistance);
+                    _propertyOfDistance.Draw(EditorHelper.TempContent("距离"));
 
                     Feedback.UseCustomRolloffCurve = EditorGUILayout.Toggle(
-                        new GUIContent("启用自定义衰减曲线"),
+                        EditorHelper.TempContent("启用自定义衰减曲线"),
                         Feedback.UseCustomRolloffCurve);
                     if (Feedback.UseCustomRolloffCurve)
                     {
                         Feedback.CustomRolloffCurve = EditorGUILayout.CurveField(
-                            new GUIContent("自定义衰减曲线"), Feedback.CustomRolloffCurve);
+                            EditorHelper.TempContent("自定义衰减曲线"), Feedback.CustomRolloffCurve);
                     }
 
                     Feedback.UseSpatialBlendCurve = EditorGUILayout.Toggle(
-                        new GUIContent("启用自定义空间混合曲线"),
+                        EditorHelper.TempContent("启用自定义空间混合曲线"),
                         Feedback.UseSpatialBlendCurve);
                     if (Feedback.UseSpatialBlendCurve)
                     {
                         Feedback.SpatialBlendCurve = EditorGUILayout.CurveField(
-                            new GUIContent("自定义空间混合曲线"), Feedback.SpatialBlendCurve);
+                            EditorHelper.TempContent("自定义空间混合曲线"), Feedback.SpatialBlendCurve);
                     }
 
                     Feedback.UseReverbZoneMixCurve = EditorGUILayout.Toggle(
-                        new GUIContent("启用自定义混响区混合曲线"),
+                        EditorHelper.TempContent("启用自定义混响区混合曲线"),
                         Feedback.UseReverbZoneMixCurve);
                     if (Feedback.UseReverbZoneMixCurve)
                     {
                         Feedback.ReverbZoneMixCurve = EditorGUILayout.CurveField(
-                            new GUIContent("自定义混响区混合曲线"), Feedback.ReverbZoneMixCurve);
+                            EditorHelper.TempContent("自定义混响区混合曲线"), Feedback.ReverbZoneMixCurve);
                     }
 
                     Feedback.UseSpreadCurve = EditorGUILayout.Toggle(
-                        new GUIContent("启用自定义扩展曲线"),
+                        EditorHelper.TempContent("启用自定义扩展曲线"),
                         Feedback.UseSpreadCurve);
                     if (Feedback.UseSpreadCurve)
                     {
                         Feedback.SpreadCurve = EditorGUILayout.CurveField(
-                            new GUIContent("自定义扩展曲线"), Feedback.SpreadCurve);
+                            EditorHelper.TempContent("自定义扩展曲线"), Feedback.SpreadCurve);
                     }
             }));
         }

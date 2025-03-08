@@ -1,7 +1,10 @@
 using Sirenix.OdinInspector.Editor;
 using System;
 using System.Linq;
+using System.Reflection;
 using EasyFramework.Editor;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,20 +15,19 @@ namespace EasyFramework.ToolKit.Editor
     public class EasyFeedbacksEditor : OdinEditor
     {
         private InspectorProperty _feedbackListProperty;
+        private LocalPersistentContext<bool> _settingsExpandContext;
 
         private FoldoutGroupConfig _foldoutGroupConfig;
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            var feedbacks = (EasyFeedbacks)target;
-            feedbacks.FeedbackList.DrawerSettings.OnAddElementVoid = OnAddElement;
-
-            _feedbackListProperty = Tree.RootProperty.Children[nameof(EasyFeedbacks.FeedbackList)];
+            _feedbackListProperty = Tree.RootProperty.Children["_feedbacks"];
+            _settingsExpandContext = this.GetPersistent("Settings/Expand", false);
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
-                this, new GUIContent("设置"),
-                _feedbackListProperty.State.Expanded,
+                this, new GUIContent("反馈设置"),
+                _settingsExpandContext.Value,
                 OnSettingsContentGUI);
         }
 
@@ -73,27 +75,38 @@ namespace EasyFramework.ToolKit.Editor
 
             var feedbacks = (EasyFeedbacks)target;
 
-            _foldoutGroupConfig.Expand = _feedbackListProperty.State.Expanded;
-            _feedbackListProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
+            _foldoutGroupConfig.Expand = _settingsExpandContext.Value;
+            _settingsExpandContext.Value = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
+
+            // SirenixEditorGUI.BeginBox();
 
             _feedbackListProperty.Draw(EditorHelper.TempContent("反馈列表"));
 
+            var btnHeight = EditorGUIUtility.singleLineHeight;
+            if (GUILayout.Button(EditorHelper.TempContent("添加新的反馈...", image:EasyEditorIcons.AddDropdown)))
+            {
+                DoAddFeedback();
+            }
+
+            // SirenixEditorGUI.EndBox();
+
+            EasyEditorGUI.Title("反馈调试");
             EditorGUI.BeginDisabledGroup(!EditorApplication.isPlaying);
             EditorGUILayout.BeginHorizontal();
             EditorGUI.BeginDisabledGroup(feedbacks.IsInitialized);
-            if (GUILayout.Button("初始化"))
+            if (SirenixEditorGUI.SDFIconButton("初始化", btnHeight, SdfIconType.Tools))
             {
                 feedbacks.Initialize();
             }
 
             EditorGUI.EndDisabledGroup();
 
-            if (GUILayout.Button("播放"))
+            if (SirenixEditorGUI.SDFIconButton("播放", btnHeight, SdfIconType.Play))
             {
                 feedbacks.Play();
             }
 
-            if (GUILayout.Button("停止"))
+            if (SirenixEditorGUI.SDFIconButton("停止", btnHeight, SdfIconType.Stop))
             {
                 feedbacks.Stop();
             }
@@ -124,7 +137,7 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        private void OnAddElement()
+        private void DoAddFeedback()
         {
             var feedbacks = (EasyFeedbacks)target;
 
@@ -136,7 +149,7 @@ namespace EasyFramework.ToolKit.Editor
                     inst.Initialize();
                 }
 
-                feedbacks.FeedbackList.Add(inst);
+                feedbacks.Feedbacks.Add(inst);
             }
 
             EasyEditorGUI.ShowSelectorInPopup(AllFeedbackTypes, new PopupSelectorConfig(value => OnConfirm((Type)value))

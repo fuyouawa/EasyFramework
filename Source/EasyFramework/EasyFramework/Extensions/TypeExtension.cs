@@ -224,9 +224,9 @@ namespace EasyFramework
 
             if (includeInterface)
             {
-                foreach (var iface in type.GetInterfaces())
+                foreach (var i in type.GetInterfaces())
                 {
-                    parentTypes.Add(iface);
+                    parentTypes.Add(i);
                 }
             }
 

@@ -27,10 +27,8 @@ namespace EasyFramework.ToolKit
 
         // 声音属性
 
-        public float MinVolume = 1f;
-        public float MaxVolume = 1f;
-        public float MinPitch = 1f;
-        public float MaxPitch = 1f;
+        public SliderValue Volume = new SliderValue(1f);
+        public SliderValue Pitch = new SliderValue(1f);
         public AudioMixerGroup SfxAudioMixerGroup;
         public int Priority = 128;
 
@@ -45,8 +43,7 @@ namespace EasyFramework.ToolKit
         public int Spread = 0;
 
         public AudioRolloffMode RolloffMode = AudioRolloffMode.Logarithmic;
-        public float MinDistance = 1f;
-        public float MaxDistance = 500f;
+        public SliderValue Distance = new SliderValue(new Vector2(1f, 500f));
 
         public bool UseCustomRolloffCurve = false;
         public AnimationCurve CustomRolloffCurve;
@@ -153,9 +150,9 @@ namespace EasyFramework.ToolKit
         /// <param name="position"></param>
         private void PlaySound(AudioClip sfx, Vector3 position)
         {
-            float volume = Random.Range(MinVolume, MaxVolume);
+            float volume = Volume.Evaluate();
 
-            float pitch = Random.Range(MinPitch, MaxPitch);
+            float pitch = Pitch.Evaluate();
 
             switch (PlayMethod)
             {
@@ -221,8 +218,8 @@ namespace EasyFramework.ToolKit
             audioSource.dopplerLevel = DopplerLevel;
             audioSource.spread = Spread;
             audioSource.rolloffMode = RolloffMode;
-            audioSource.minDistance = MinDistance;
-            audioSource.maxDistance = MaxDistance;
+            audioSource.minDistance = Distance.Min;
+            audioSource.maxDistance = Distance.Max;
             if (UseSpreadCurve)
             {
                 audioSource.SetCustomCurve(AudioSourceCurveType.Spread, SpreadCurve);

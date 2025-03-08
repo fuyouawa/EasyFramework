@@ -189,9 +189,15 @@ namespace EasyFramework.ToolKit.Editor
 
         private void DrawPropertiesGroups()
         {
+            EditorGUI.BeginChangeCheck();
             for (int i = 0; i < PropertiesGroups.Count; i++)
             {
                 FoldoutGroup(_foldoutGroupConfigs[i], _properties[i]);
+            }
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                EditorUtility.SetDirty(GetTargetComponent());
             }
 
             return;
@@ -201,6 +207,11 @@ namespace EasyFramework.ToolKit.Editor
                 config.Expand = property.State.Expanded;
                 property.State.Expanded = EasyEditorGUI.FoldoutGroup(config);
             }
+        }
+
+        private Component GetTargetComponent()
+        {
+            return Property.Parent.Parent.WeakSmartValue<Component>();
         }
     }
 }

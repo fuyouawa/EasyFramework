@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public class EasyFeedbacks : MonoBehaviour
+    public class EasyFeedbacks : SerializedMonoBehaviour
     {
         public enum InitializationModes
         {
@@ -19,7 +21,10 @@ namespace EasyFramework.ToolKit
         public bool CanPlay = true;
         public bool CanPlayWhileAlreadyPlaying = false;
         public bool CanMultiPlay = false;
-        public SerializedList<AbstractEasyFeedback> FeedbackList = new SerializedList<AbstractEasyFeedback>();
+        public List<AbstractEasyFeedback> Feedbacks => _feedbacks;
+
+        [SerializeField, ListDrawerSettings(HideAddButton = true)]
+        private readonly List<AbstractEasyFeedback> _feedbacks = new List<AbstractEasyFeedback>();
 
         public bool IsInitialized { get; private set; }
         public FeedbacksCoroutineHelper CoroutineHelper { get; private set; }
@@ -29,7 +34,7 @@ namespace EasyFramework.ToolKit
 
         public bool HasFeedbackPlaying()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 if (feedback.Enable && feedback.IsPlaying)
                 {
@@ -70,7 +75,7 @@ namespace EasyFramework.ToolKit
 
         private void OnEnable()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.OnEnable();
             }
@@ -83,7 +88,7 @@ namespace EasyFramework.ToolKit
 
         private void OnDisable()
         {
-            foreach (var item in FeedbackList)
+            foreach (var item in _feedbacks)
             {
                 item.OnDisable();
             }
@@ -118,7 +123,7 @@ namespace EasyFramework.ToolKit
 
         private void ResetFeedbacks()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 if (feedback is { Enable: true })
                 {
@@ -131,7 +136,7 @@ namespace EasyFramework.ToolKit
         {
             TimeSinceLastPlay = Time.time;
 
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 if (feedback.Enable)
                 {
@@ -156,7 +161,7 @@ namespace EasyFramework.ToolKit
             }
 
             _coroutines.Clear();
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.Stop();
             }
@@ -164,7 +169,7 @@ namespace EasyFramework.ToolKit
 
         private void OnDestroy()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.OnDestroy();
             }
@@ -175,7 +180,7 @@ namespace EasyFramework.ToolKit
             if (IsInitialized) return;
             IsInitialized = true;
 
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.Setup(this);
                 feedback.Initialize();
@@ -199,7 +204,7 @@ namespace EasyFramework.ToolKit
 
         private void OnDrawGizmosSelected()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.OnDrawGizmosSelected();
             }
@@ -207,7 +212,7 @@ namespace EasyFramework.ToolKit
 
         private void OnDrawGizmos()
         {
-            foreach (var feedback in FeedbackList)
+            foreach (var feedback in _feedbacks)
             {
                 feedback.OnDrawGizmos();
             }

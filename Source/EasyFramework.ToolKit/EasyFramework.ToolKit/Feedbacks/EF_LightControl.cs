@@ -12,21 +12,19 @@ namespace EasyFramework.ToolKit
         public bool RelativeValues = true;
 
         public bool ModifyColor = true;
-        public FlexibleColor Color = new FlexibleColor(UnityEngine.Color.white);
+        public GradientColor Color = new GradientColor(UnityEngine.Color.white);
 
         public bool ModifyIntensity = true;
-        public FlexibleFloat Intensity = new FlexibleFloat(
-            FlexibleModes.Overtime,
-            1f,
-            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)),
-            0f, 1f);
+
+        public CurveValue Intensity = new CurveValue(
+            true, 1f,
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)));
 
         public bool ModifyRange = true;
-        public FlexibleFloat Range = new FlexibleFloat(
-            FlexibleModes.Overtime,
-            10f,
-            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)),
-            0f, 10f);
+
+        public CurveValue Range = new CurveValue(
+            true, 10f,
+            new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.3f, 1f), new Keyframe(1, 0)));
 
         public override string Tip => "光照控制";
 
@@ -62,7 +60,7 @@ namespace EasyFramework.ToolKit
 
             TargetLight.enabled = true;
 
-            if (Color.IsOvertime || Intensity.IsOvertime || Range.IsOvertime)
+            if (Color.IsGradient || Intensity.IsCurve || Range.IsCurve)
             {
                 StartCoroutine(LightSequence());
             }
@@ -70,17 +68,17 @@ namespace EasyFramework.ToolKit
             {
                 if (ModifyIntensity)
                 {
-                    TargetLight.intensity = Intensity.InstantOfValue;
+                    TargetLight.intensity = Intensity.Value;
                 }
 
                 if (ModifyColor)
                 {
-                    TargetLight.color = Color.InstantOfColor;
+                    TargetLight.color = Color.Color;
                 }
 
                 if (ModifyRange)
                 {
-                    TargetLight.range = Range.InstantOfValue;
+                    TargetLight.range = Range.Value;
                 }
             }
         }
