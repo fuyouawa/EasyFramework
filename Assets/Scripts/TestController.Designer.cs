@@ -1,11 +1,15 @@
 using EasyFramework.ToolKit;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public partial class TestController : IViewController
 {
-    [AutoBinding, SerializeField] public Transform Dsfgdfg;
-    [AutoBinding, SerializeField] public GameObject Dsfgdfgs3r;
-    [AutoBinding, SerializeField] private SpriteRenderer _circle;
+    [TitleGroupEx("test"), AutoBinding, SerializeField]
+    public Transform Dsfgdfg;
+    [TitleGroupEx("test"), AutoBinding, SerializeField]
+    public GameObject Dsfgdfgs3r;
+    [TitleGroupEx("test"), AutoBinding, SerializeField]
+    private SpriteRenderer _circle;
     
     [SerializeField] private ViewControllerConfig _viewControllerConfig;
 

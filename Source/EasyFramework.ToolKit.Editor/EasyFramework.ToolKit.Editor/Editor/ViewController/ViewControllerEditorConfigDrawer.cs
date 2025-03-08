@@ -6,18 +6,15 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit.Editor
 {
     public class ViewControllerEditorConfigDrawer : OdinValueDrawer<ViewControllerEditorConfig>
     {
-        private ViewControllerSettings _settings;
         private InspectorProperty _propertyOfOtherBindersList;
 
         protected override void Initialize()
         {
-            _settings = ViewControllerSettings.Instance;
             _propertyOfOtherBindersList = Property.Children[nameof(ViewControllerEditorConfig.OtherBindersList)];
         }
 
@@ -95,11 +92,6 @@ namespace EasyFramework.ToolKit.Editor
                 type => val.BaseClass = type,
                 type => type.GetNiceName());
 
-            if (EditorGUI.EndChangeCheck())
-            {
-                hasChange = true;
-            }
-
             if (GUILayout.Button("恢复默认值"))
             {
                 ((IViewController)comp).UseDefault();
@@ -107,6 +99,23 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             EditorGUI.EndDisabledGroup();
+            
+            val.BindersGroupType = EnumSelector<ViewControllerBindersGroupType>.DrawEnumField(
+                EditorHelper.TempContent("绑定器分组类型"),
+                val.BindersGroupType);
+            if (val.BindersGroupType != ViewControllerBindersGroupType.None)
+            {
+                if (val.BindersGroupName.IsNullOrWhiteSpace())
+                {
+                    EasyEditorGUI.MessageBox("绑定器分组名称不能为空！", MessageType.Error);
+                }
+                val.BindersGroupName = EditorGUILayout.TextField("绑定器分组名称", val.BindersGroupName);
+            }
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                hasChange = true;
+            }
 
             EasyEditorGUI.Title("扩展设置");
 

@@ -6,6 +6,13 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public enum ViewControllerBindersGroupType
+    {
+        None,
+        Title,
+        Foldout
+    }
+
     [Serializable]
     public class ViewControllerEditorConfig : ISerializationCallbackReceiver
     {
@@ -16,6 +23,9 @@ namespace EasyFramework.ToolKit
         public string ScriptName;
         public List<OtherViewBinders> OtherBindersList;
         public Type BaseClass;
+
+        public ViewControllerBindersGroupType BindersGroupType;
+        public string BindersGroupName;
 
         [SerializeField, HideInInspector]
         private EasySerializationData _serializationData;

@@ -1,11 +1,8 @@
-using EasyFramework.ToolKit;
 using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
 
@@ -165,6 +162,20 @@ public partial class {{ ClassName }} : IViewController
                 .Select(b => b.Config.EditorConfig.GetBindType())
                 .Where(t => t.Namespace != _cfg.Namespace));
 
+            switch (_cfg.BindersGroupType)
+            {
+                case ViewControllerBindersGroupType.None:
+                    break;
+                case ViewControllerBindersGroupType.Title:
+                    allTypes.Add(typeof(TitleGroupAttribute));
+                    break;
+                case ViewControllerBindersGroupType.Foldout:
+                    allTypes.Add(typeof(FoldoutGroupAttribute));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             var header = engine.Render(CsHeaderTemplate, new
             {
                 Usings = allTypes.Select(t => t.Namespace).Distinct().ToArray()
@@ -198,7 +209,24 @@ public partial class {{ ClassName }} : IViewController
                     fieldsBody += field.Comment + '\n';
                 }
 
-                fieldsBody += $"[AutoBinding, SerializeField] {field.Access} {field.Type} {field.Name};\n";
+                var attributes = new List<string>();
+                switch (_cfg.BindersGroupType)
+                {
+                    case ViewControllerBindersGroupType.None:
+                        break;
+                    case ViewControllerBindersGroupType.Title:
+                        attributes.Add($"TitleGroupEx(\"{_cfg.BindersGroupName}\")");
+                        break;
+                    case ViewControllerBindersGroupType.Foldout:
+                        attributes.Add($"FoldoutGroup(\"{_cfg.BindersGroupName}\")");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                attributes.Add("AutoBinding");
+                attributes.Add("SerializeField");
+
+                fieldsBody += $"[{string.Join(", ", attributes)}]\n{field.Access} {field.Type} {field.Name};\n";
             }
 
             var bodyData = new
