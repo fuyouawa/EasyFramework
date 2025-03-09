@@ -616,9 +616,11 @@ MonoBehaviour:
       AutoScriptName: 1
       ScriptName: TestViewCs
       OtherBindersList: []
+      BindersGroupType: 0
+      BindersGroupName: 
       _serializationData:
         Format: 0
-        BinaryData: 01075363726970747300010a546573745669657743730000
+        BinaryData: 01075363726970747300010a5465737456696577437300000000000000
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1637753062
@@ -665,6 +667,280 @@ MonoBehaviour:
   m_Script: {fileID: 2142386141, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _feedbacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.AbstractEasyFeedback,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 1|EasyFramework.ToolKit.EF_AudioSource, EasyFramework.ToolKit
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetAudioSource
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 2|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: MinVolume
+      Entry: 4
+      Data: 1
+    - Name: MaxVolume
+      Entry: 4
+      Data: 1
+    - Name: MinPitch
+      Entry: 4
+      Data: 1
+    - Name: MaxPitch
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|EasyFramework.ToolKit.EF_Sound, EasyFramework.ToolKit
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Sfx
+      Entry: 6
+      Data: 
+    - Name: RandomSfx
+      Entry: 9
+      Data: 2
+    - Name: PlayMethod
+      Entry: 3
+      Data: 0
+    - Name: PoolSize
+      Entry: 3
+      Data: 10
+    - Name: StopSoundOnFeedbackStop
+      Entry: 5
+      Data: true
+    - Name: Volume
+      Entry: 7
+      Data: 4|EasyFramework.ToolKit.SliderValue, EasyFramework.ToolKit
+    - Name: IsSlider
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 4
+      Data: 1
+    - Name: Slider
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Limit
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Pitch
+      Entry: 7
+      Data: 5|EasyFramework.ToolKit.SliderValue, EasyFramework.ToolKit
+    - Name: IsSlider
+      Entry: 5
+      Data: false
+    - Name: Value
+      Entry: 4
+      Data: 1
+    - Name: Slider
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Limit
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: SfxAudioMixerGroup
+      Entry: 6
+      Data: 
+    - Name: Priority
+      Entry: 3
+      Data: 128
+    - Name: PanStereo
+      Entry: 4
+      Data: 0
+    - Name: SpatialBlend
+      Entry: 4
+      Data: 0
+    - Name: DopplerLevel
+      Entry: 4
+      Data: 1
+    - Name: Spread
+      Entry: 3
+      Data: 0
+    - Name: RolloffMode
+      Entry: 3
+      Data: 0
+    - Name: Distance
+      Entry: 7
+      Data: 6|EasyFramework.ToolKit.SliderValue, EasyFramework.ToolKit
+    - Name: IsSlider
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 4
+      Data: 500
+    - Name: Slider
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 500
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Limit
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 500
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: UseCustomRolloffCurve
+      Entry: 5
+      Data: false
+    - Name: CustomRolloffCurve
+      Entry: 6
+      Data: 
+    - Name: UseSpatialBlendCurve
+      Entry: 5
+      Data: false
+    - Name: SpatialBlendCurve
+      Entry: 6
+      Data: 
+    - Name: UseReverbZoneMixCurve
+      Entry: 5
+      Data: false
+    - Name: ReverbZoneMixCurve
+      Entry: 6
+      Data: 
+    - Name: UseSpreadCurve
+      Entry: 5
+      Data: false
+    - Name: SpreadCurve
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   InitializationMode: 0
   AutoInitialization: 1
   AutoPlayOnStart: 0
@@ -672,9 +948,6 @@ MonoBehaviour:
   CanPlay: 1
   CanPlayWhileAlreadyPlaying: 0
   CanMultiPlay: 0
-  FeedbackList:
-    _serializedData: 022f000000000170000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b0045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074002e0041006200730074007200610063007400450061007300790046006500650064006200610063006b002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000013500000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074002e00450046005f0053006f0075006e0064002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b0069007400010000002d01050000004c006100620065006c002b010600000045006e00610062006c006500011f010f000000440065006c00610079004200650066006f007200650050006c0061007900000000002b010800000042006c006f0063006b0069006e006700002b010d00000052006500700065006100740046006f00720065007600650072000017010e00000041006d006f0075006e0074004f006600520065007000650061007400010000001f011600000049006e00740065007200760061006c004200650074007700650065006e005200650070006500610074007300000000002d0103000000530066007800010109000000520061006e0064006f006d005300660078002f02000000013000000055006e0069007400790045006e00670069006e0065002e0041007500640069006f0043006c00690070005b005d002c00200055006e0069007400790045006e00670069006e0065002e0041007500640069006f004d006f00640075006c0065000200000006000000000000000007051d010a00000050006c00610079004d006500740068006f006400000000000000000017010800000050006f006f006c00530069007a0065000a0000002b0117000000530074006f00700053006f0075006e0064004f006e0046006500650064006200610063006b00530074006f0070000101010600000056006f006c0075006d0065002f03000000013800000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074002e0053006c006900640065007200560061006c00750065002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b0069007400030000002b01080000004900730053006c006900640065007200001f0105000000560061006c00750065000000803f03010600000053006c0069006400650072002f04000000012b00000055006e0069007400790045006e00670069006e0065002e0056006500630074006f00720032002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c0065002000000000200000803f050301050000004c0069006d006900740030040000002000000000200000803f0505010105000000500069007400630068003003000000040000002b01080000004900730053006c006900640065007200001f0105000000560061006c00750065000000803f03010600000053006c00690064006500720030040000002000000000200000803f050301050000004c0069006d006900740030040000002000000000200000803f05052d011200000053006600780041007500640069006f004d006900780065007200470072006f00750070001701080000005000720069006f007200690074007900800000001f0109000000500061006e00530074006500720065006f00000000001f010c0000005300700061007400690061006c0042006c0065006e006400000000001f010c00000044006f00700070006c00650072004c006500760065006c000000803f170106000000530070007200650061006400000000001d010b00000052006f006c006c006f00660066004d006f00640065000000000000000000010108000000440069007300740061006e00630065003003000000050000002b01080000004900730053006c006900640065007200001f0105000000560061006c00750065000000803f03010600000053006c00690064006500720030040000002000000000200000803f050301050000004c0069006d00690074003004000000200000803f200000fa4305052b011500000055007300650043007500730074006f006d0052006f006c006c006f006600660043007500720076006500002d011200000043007500730074006f006d0052006f006c006c006f0066006600430075007200760065002b01140000005500730065005300700061007400690061006c0042006c0065006e00640043007500720076006500002d01110000005300700061007400690061006c0042006c0065006e006400430075007200760065002b01150000005500730065005200650076006500720062005a006f006e0065004d006900780043007500720076006500002d01120000005200650076006500720062005a006f006e0065004d0069007800430075007200760065002b010e00000055007300650053007000720065006100640043007500720076006500002d010b00000053007000720065006100640043007500720076006500050705
-    _serializedUnityObjects: []
 --- !u!1 &1737443029
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,9 +1082,11 @@ MonoBehaviour:
       AutoScriptName: 1
       ScriptName: TestController
       OtherBindersList: []
+      BindersGroupType: 1
+      BindersGroupName: test
       _serializationData:
         Format: 0
-        BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65
+        BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65010000000474657374
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1921682778

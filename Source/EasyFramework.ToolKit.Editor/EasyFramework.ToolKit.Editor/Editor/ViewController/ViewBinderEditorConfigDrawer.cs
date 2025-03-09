@@ -87,7 +87,7 @@ namespace EasyFramework.ToolKit.Editor
                 val.ProcessBindName);
 
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("实际变量名称", ((IViewBinder)comp).GetBindName());
+            EditorGUILayout.TextField("实际变量名称", binder.GetBindName());
             EditorGUI.EndDisabledGroup();
 
             EasyEditorGUI.Title("注释设置");

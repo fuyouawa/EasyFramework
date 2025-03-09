@@ -26,6 +26,7 @@ namespace EasyFramework.ToolKit
 
         public ViewControllerBindersGroupType BindersGroupType;
         public string BindersGroupName;
+        public bool IsJustBound = true;
 
         [SerializeField, HideInInspector]
         private EasySerializationData _serializationData;

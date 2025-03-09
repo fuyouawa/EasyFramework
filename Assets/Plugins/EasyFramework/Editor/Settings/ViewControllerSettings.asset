@@ -53,6 +53,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: BindersGroupType
+      Entry: 3
+      Data: 1
+    - Name: BindersGroupName
+      Entry: 1
+      Data: Bindings
     - Name: 
       Entry: 8
       Data: 

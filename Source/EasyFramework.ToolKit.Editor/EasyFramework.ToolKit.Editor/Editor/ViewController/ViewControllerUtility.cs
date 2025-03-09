@@ -61,6 +61,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             var cfg = controller.Config.EditorConfig;
             var comp = (Component)controller;
+            var ctrl = (IViewController)comp;
             var originComp = comp;
 
             var classType = ReflectionUtility.FindType(cfg.Namespace, cfg.ScriptName);
@@ -72,20 +73,22 @@ namespace EasyFramework.ToolKit.Editor
                 if (newComp == null)
                 {
                     newComp = comp.gameObject.AddComponent(classType);
-                    ((IViewController)newComp).Config = ((IViewController)comp).Config;
+                    var newCtrl = ((IViewController)newComp);
+                    newCtrl.Config = ctrl.Config;
+                    newCtrl.Config.EditorConfig.IsJustBound = true;
                 }
 
                 comp = newComp;
             }
-            
+
             var binders = controller.GetAllBinders();
             foreach (var binder in binders)
             {
                 binder.Config.OwnerController = comp;
             }
 
-            InternalBind((IViewController)comp);
-            
+            InternalBind(ctrl);
+
             EditorUtility.SetDirty(comp);
             if (originComp != comp)
             {
@@ -180,7 +183,7 @@ namespace EasyFramework.ToolKit.Editor
                 .ToList();
         }
 
-        public static  void UseDefault(this IViewController controller)
+        public static void UseDefault(this IViewController controller)
         {
             var settings = ViewControllerSettings.Instance;
 
@@ -191,6 +194,8 @@ namespace EasyFramework.ToolKit.Editor
             cfg.GenerateDir = settings.Default.GenerateDir;
             cfg.Namespace = settings.Default.Namespace;
             cfg.BaseClass = settings.Default.BaseType;
+            cfg.BindersGroupType = settings.Default.BindersGroupType;
+            cfg.BindersGroupName = settings.Default.BindersGroupName;
         }
 
 

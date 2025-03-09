@@ -23,7 +23,7 @@ namespace EasyFramework.ToolKit.Editor
             var tree = new OdinMenuTree(false)
             {
                 { "Ui/UiTextPresets", UiTextPresetsSettings.Instance },
-                { "Editor/ViewModel", ViewControllerSettings.Instance },
+                { "Editor/ViewController", ViewControllerSettings.Instance },
                 { "Editor/ViewBinder", ViewBinderSettings.Instance }
             };
             return tree;

@@ -8,7 +8,8 @@ namespace EasyFramework.ToolKit.Editor
 {
     [EditorSettingsAssetPath]
     [ShowOdinSerializedPropertiesInInspector]
-    public class ViewControllerSettings : ScriptableObjectSingleton<ViewControllerSettings>, ISerializationCallbackReceiver
+    public class ViewControllerSettings : ScriptableObjectSingleton<ViewControllerSettings>,
+        ISerializationCallbackReceiver
     {
         [InlineProperty, HideReferenceObjectPicker, HideLabel]
         public struct DefaultSettings
@@ -24,23 +25,27 @@ namespace EasyFramework.ToolKit.Editor
             [ShowInInspector]
             [TypeDrawerSettings(BaseType = typeof(Component), Filter = TYPE_FILTER)]
             public Type BaseType;
+
+            [LabelText("绑定器分组类型")]
+            public ViewControllerBindersGroupType BindersGroupType;
+
+            [LabelText("绑定器分组名称")]
+            [ShowIf("@BindersGroupType != ViewControllerBindersGroupType.None")]
+            public string BindersGroupName;
         }
 
-        [TitleEx("默认值设置")]
-        public DefaultSettings Default;
+        [TitleEx("默认值设置")] public DefaultSettings Default;
 
-        [TitleEx("类内容生成模板")]
-        [LabelText("自动缩进")]
+        [TitleEx("类内容生成模板")] [LabelText("自动缩进")]
         public bool AutoIndent = true;
-        [HideLabel]
-        [TextArea(5, 10)]
-        public string ClassTemplate;
+
+        [HideLabel] [TextArea(5, 10)] public string ClassTemplate;
 
         private const TypeInclusionFilter TYPE_FILTER =
             TypeInclusionFilter.IncludeConcreteTypes | TypeInclusionFilter.IncludeAbstracts;
-        
-        [SerializeField, HideInInspector]
-        private SerializationData _serializationData;
+
+        [SerializeField, HideInInspector] private SerializationData _serializationData;
+
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             UnitySerializationUtility.DeserializeUnityObject(this, ref _serializationData);

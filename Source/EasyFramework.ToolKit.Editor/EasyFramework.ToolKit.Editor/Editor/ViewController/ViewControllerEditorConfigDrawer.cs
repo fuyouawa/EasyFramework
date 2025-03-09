@@ -22,6 +22,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             var val = ValueEntry.SmartValue;
             var comp = GetTargetComponent(Property);
+            var ctrl = (IViewController)comp;
 
             var isBuildAndBind = comp as ViewController == null;
 
@@ -75,7 +76,7 @@ namespace EasyFramework.ToolKit.Editor
             if (!isBuild && val.AutoScriptName)
             {
                 EditorGUI.BeginDisabledGroup(true);
-                EditorGUILayout.TextField("实际生成脚本名", ((IViewController)comp).GetScriptName());
+                EditorGUILayout.TextField("实际生成脚本名", ctrl.GetScriptName());
                 EditorGUI.EndDisabledGroup();
             }
 
@@ -142,7 +143,7 @@ namespace EasyFramework.ToolKit.Editor
             var height = EditorGUIUtility.singleLineHeight;
             if (SirenixEditorGUI.SDFIconButton("生成代码", height, SdfIconType.PencilFill))
             {
-                var builder = new ViewControllerBuilder((IViewController)comp);
+                var builder = new ViewControllerBuilder(ctrl);
                 if (builder.Check())
                 {
                     builder.Build();
@@ -152,7 +153,7 @@ namespace EasyFramework.ToolKit.Editor
             EditorGUI.BeginDisabledGroup(!isBuild);
             if (SirenixEditorGUI.SDFIconButton("绑定脚本", height, SdfIconType.Bezier))
             {
-                ViewControllerUtility.Bind((IViewController)comp);
+                ViewControllerUtility.Bind(ctrl);
             }
             EditorGUI.EndDisabledGroup();
 

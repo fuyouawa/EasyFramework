@@ -12,7 +12,13 @@ namespace EasyFramework.ToolKit.Editor
             var val = ValueEntry.SmartValue;
             if (!val.EditorConfig.IsInitialized)
             {
+                val.EditorConfig.IsJustBound = true;
+            }
+
+            if (val.EditorConfig.IsJustBound)
+            {
                 Property.State.Expanded = true;
+                val.EditorConfig.IsJustBound = false;
             }
             base.Initialize();
         }
