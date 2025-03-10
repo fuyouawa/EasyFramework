@@ -47,7 +47,7 @@ namespace EasyFramework.ToolKit.Editor
 
             EasyEditorGUI.Title("代码生成设置");
 
-            EditorGUI.BeginDisabledGroup(isBuildAndBind);
+            EditorGUI.BeginDisabledGroup(isBuild);
 
             EditorGUI.BeginChangeCheck();
             val.GenerateDir = SirenixEditorFields.FolderPathField(

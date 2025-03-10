@@ -60,37 +60,38 @@ namespace EasyFramework.ToolKit.Editor
         public static void Bind(IViewController controller)
         {
             var cfg = controller.Config.EditorConfig;
-            var comp = (Component)controller;
-            var ctrl = (IViewController)comp;
-            var originComp = comp;
+            var originComp = (Component)controller;
 
             var classType = ReflectionUtility.FindType(cfg.Namespace, cfg.ScriptName);
             Debug.Assert(classType != null);
 
-            if (comp.GetType() != classType)
+            Component newComp;
+            if (originComp.GetType() != classType)
             {
-                var newComp = comp.GetComponent(classType);
+                newComp = originComp.GetComponent(classType);
                 if (newComp == null)
                 {
-                    newComp = comp.gameObject.AddComponent(classType);
+                    newComp = originComp.gameObject.AddComponent(classType);
                     var newCtrl = ((IViewController)newComp);
-                    newCtrl.Config = ctrl.Config;
+                    newCtrl.Config = controller.Config;
                     newCtrl.Config.EditorConfig.IsJustBound = true;
                 }
-
-                comp = newComp;
+            }
+            else
+            {
+                newComp = originComp;
             }
 
             var binders = controller.GetAllBinders();
             foreach (var binder in binders)
             {
-                binder.Config.OwnerController = comp;
+                binder.Config.OwnerController = newComp;
             }
 
-            InternalBind(ctrl);
+            InternalBind((IViewController)newComp);
 
-            EditorUtility.SetDirty(comp);
-            if (originComp != comp)
+            EditorUtility.SetDirty(newComp);
+            if (originComp != newComp)
             {
                 Object.DestroyImmediate(originComp);
                 GUIHelper.ExitGUI(true);
@@ -204,7 +205,13 @@ namespace EasyFramework.ToolKit.Editor
         {
             foreach (var o in Selection.gameObjects)
             {
-                var c = o.GetOrAddComponent<ViewController>();
+                if (o.GetComponent(typeof(IViewController)) != null)
+                {
+                    EditorUtility.DisplayDialog("错误", $"游戏对象 '{o.gameObject}' 已经拥有ViewController！", "确认");
+                    continue;
+                }
+
+                o.AddComponent<ViewController>();
             }
         }
     }

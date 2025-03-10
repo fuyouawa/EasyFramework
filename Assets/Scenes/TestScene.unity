@@ -618,9 +618,10 @@ MonoBehaviour:
       OtherBindersList: []
       BindersGroupType: 0
       BindersGroupName: 
+      IsJustBound: 1
       _serializationData:
         Format: 0
-        BinaryData: 01075363726970747300010a5465737456696577437300000000000000
+        BinaryData: 01075363726970747300010a546573745669657743730000000000000001
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1637753062
@@ -1083,10 +1084,11 @@ MonoBehaviour:
       ScriptName: TestController
       OtherBindersList: []
       BindersGroupType: 1
-      BindersGroupName: test
+      BindersGroupName: Bindings
+      IsJustBound: 0
       _serializationData:
         Format: 0
-        BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65010000000474657374
+        BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65010000000842696e64696e677300
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1921682778

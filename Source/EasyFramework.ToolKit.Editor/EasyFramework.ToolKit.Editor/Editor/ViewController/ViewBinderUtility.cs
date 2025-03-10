@@ -211,7 +211,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             foreach (var o in Selection.gameObjects)
             {
-                var binder = o.GetOrAddComponent<ViewBinder>();
+                var binder = o.AddComponent<ViewBinder>();
             }
         }
     }
