@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("游戏物体/调用函数")]
@@ -9,7 +12,14 @@ namespace EasyFramework.ToolKit
 
         protected override void OnFeedbackPlay()
         {
-            Picker.TryInvoke(out _);
+            try
+            {
+                Picker.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
 
         protected override void OnFeedbackStop()

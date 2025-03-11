@@ -461,6 +461,11 @@
             <param name="rect">The original <see cref="T:UnityEngine.Rect" />.</param>
             <returns><c>true</c> if the <see cref="T:UnityEngine.Rect" /> is equal to (0, 0, 0, 0) or (0, 0, 1, 1); otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
+            <summary>
+            <para>确保会在Unity线程触发</para>
+            </summary>
+        </member>
         <member name="T:EasyFramework.EventHandlerDelegate`1">
             <summary>
             事件处理器
@@ -528,11 +533,6 @@
             <param name="target"></param>
             <param name="eventArg">事件</param>
             <returns></returns>
-        </member>
-        <member name="M:EasyFramework.IFromRegisterEvent.InUnityThread">
-            <summary>
-            <para>确保会在Unity线程触发</para>
-            </summary>
         </member>
         <member name="M:EasyFramework.MathUtility.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>

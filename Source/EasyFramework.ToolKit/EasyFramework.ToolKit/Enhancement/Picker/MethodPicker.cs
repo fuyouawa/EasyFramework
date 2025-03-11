@@ -7,6 +7,17 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public class MethodPickerSettingsAttribute : PropertyAttribute
+    {
+        public int LimitParameterCount { get; set; }
+        public string LimitParameterTypesGetter { get; set; }
+
+        public MethodPickerSettingsAttribute()
+        {
+            LimitParameterCount = int.MaxValue;
+        }
+    }
+
     [Serializable]
     public class MethodPicker : MemberPicker
     {
@@ -16,26 +27,12 @@ namespace EasyFramework.ToolKit
             public string Name;
             public SerializedVariant Value = new SerializedVariant();
         }
-        
+
         [SerializeField]
         [ListDrawerSettings(IsReadOnly = true)]
         private List<Parameter> _parameters = new List<Parameter>();
 
         public MethodInfo GetTargetMethod() => GetTargetMember() as MethodInfo;
-
-        public bool TryInvoke(out object returnValue)
-        {
-            try
-            {
-                returnValue = Invoke();
-                return true;
-            }
-            catch (Exception)
-            {
-                returnValue = null;
-                return false;
-            }
-        }
 
         public object Invoke()
         {
@@ -45,10 +42,13 @@ namespace EasyFramework.ToolKit
                 throw new ArgumentException("Invoke failed: Target method is null!");
             }
 
-            return m.Invoke(GetTargetComponent(),
-                m.GetParameters().Length != 0
-                    ? _parameters.Select(p => p.Value.GetRawObject()).ToArray()
-                    : null);
+            object[] invokeParams = null;
+            if (m.GetParameters().Length != 0)
+            {
+                invokeParams = _parameters.Select(p => p.Value.GetRawObject()).ToArray();
+            }
+
+            return m.Invoke(GetTargetComponent(), invokeParams);
         }
     }
 }

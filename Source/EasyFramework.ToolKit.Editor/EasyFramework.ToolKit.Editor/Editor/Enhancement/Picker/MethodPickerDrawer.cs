@@ -1,20 +1,33 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
+using Sirenix.OdinInspector.Editor.ValueResolvers;
+using Sirenix.Utilities.Editor;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
 {
-
-
     public class MethodPickerDrawer : MemberPickerDrawer<MethodPicker>
     {
-        private InspectorProperty _parameters;
+        private InspectorProperty _propertyOfParameters;
+        private MethodPickerSettingsAttribute _settings;
+        private string _error;
+
+        private ValueResolver<object> _limitParameterTypesResolver;
 
         protected override void Initialize()
         {
-            _parameters = Property.Children["_parameters"];
+            _propertyOfParameters = Property.Children["_parameters"];
+            _settings = Property.GetAttribute<MethodPickerSettingsAttribute>()
+                        ?? new MethodPickerSettingsAttribute();
+            _limitParameterTypesResolver = ValueResolver.Get<object>(Property, _settings.LimitParameterTypesGetter);
+            _error = _limitParameterTypesResolver.ErrorMessage;
+
             base.Initialize();
         }
 
@@ -25,11 +38,16 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
+            if (_error.IsNotNullOrEmpty())
+            {
+                SirenixEditorGUI.ErrorMessageBox(_error);
+            }
+
             base.DrawPropertyLayout(label);
 
-            if (_parameters.WeakSmartValue<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
+            if (_propertyOfParameters.WeakSmartValue<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
             {
-                _parameters.Draw();
+                _propertyOfParameters.Draw();
             }
         }
 
@@ -38,6 +56,36 @@ namespace EasyFramework.ToolKit.Editor
             if (member.MemberType != MemberTypes.Method)
                 return false;
             var method = (MethodInfo)member;
+            var parameters = method.GetParameters();
+            if (parameters.Length == 0)
+            {
+                return true;
+            }
+
+            if (_settings.LimitParameterCount < parameters.Length)
+                return false;
+
+            if (_error.IsNullOrEmpty())
+            {
+                var limitParameterTypesSource = _limitParameterTypesResolver.GetValue();
+                if (limitParameterTypesSource != null)
+                {
+                    var limitParameterTypes = ((IEnumerable)limitParameterTypesSource)
+                        .Cast<object>()
+                        .Select(o => (Type)o)
+                        .ToArray();
+
+                    if (limitParameterTypes.Length != parameters.Length)
+                        return false;
+
+                    for (int i = 0; i < limitParameterTypes.Length; i++)
+                    {
+                        if (limitParameterTypes[i] != parameters[i].ParameterType)
+                            return false;
+                    }
+                }
+            }
+
             return true;
         }
 
@@ -56,7 +104,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var newMethod = GetTargetMember() as MethodInfo;
 
-            var parameters = _parameters.WeakSmartValue<List<MethodPicker.Parameter>>();
+            var parameters = _propertyOfParameters.WeakSmartValue<List<MethodPicker.Parameter>>();
             if (newMethod != null)
             {
                 var ps = newMethod.GetParameters();
