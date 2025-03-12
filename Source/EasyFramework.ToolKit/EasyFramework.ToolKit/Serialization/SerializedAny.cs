@@ -80,8 +80,8 @@ namespace EasyFramework.ToolKit
             {
                 if (s_setMethod == null)
                 {
-                    s_setMethod = typeof(SerializedAny).GetMethods()
-                        .First(m => m.Name == "Set" && m.IsGenericMethod);
+                    var methods = typeof(SerializedAny).GetMethods();
+                    s_setMethod = methods.First(m => m.Name == "Set" && m.IsGenericMethod);
                 }
 
                 return s_setMethod;
@@ -97,8 +97,8 @@ namespace EasyFramework.ToolKit
             {
                 if (s_getMethod == null)
                 {
-                    s_getMethod = typeof(SerializedVariant).GetMethods()
-                        .First(m => m.Name == "Get" && m.IsGenericMethod);
+                    var methods = typeof(SerializedAny).GetMethods();
+                    s_getMethod = methods.First(m => m.Name == "Get" && m.IsGenericMethod);
                 }
 
                 return s_getMethod;

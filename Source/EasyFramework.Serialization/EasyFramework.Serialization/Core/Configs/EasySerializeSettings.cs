@@ -6,6 +6,6 @@ namespace EasyFramework.Serialization
 {
     public class EasySerializeSettings
     {
-        public MembersGetterDelegate MembersGetterOfGeneric { get; set; } = MembersGetterPresets.Default;
+        public MembersGetterDelegate MembersGetter { get; set; } = MembersGetterPresets.Default;
     }
 }

@@ -8,8 +8,8 @@ namespace EasyFramework.ToolKit
     {
         public object GetRawValue()
         {
-            var c = GetTargetComponent();
-            var m = GetTargetMember();
+            var c = TargetComponent;
+            var m = TargetMember;
             switch (m)
             {
                 case FieldInfo field:

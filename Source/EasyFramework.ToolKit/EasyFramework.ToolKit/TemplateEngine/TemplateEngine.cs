@@ -10,7 +10,7 @@ namespace EasyFramework.ToolKit
 
         private static readonly EasySerializeSettings SerializeSettings = new EasySerializeSettings()
         {
-            MembersGetterOfGeneric = MembersGetterPresets.AllPublicGettable
+            MembersGetter = MembersGetterPresets.AllPublicGettable
         };
 
         public TemplateEngine()

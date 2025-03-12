@@ -25,20 +25,20 @@ namespace EasyFramework.ToolKit
         {
             if (LogOnInit)
             {
-                Debug.Log(MessageOnInit);
+                Debug.Log(MessageOnInit, Owner.gameObject);
             }
         }
 
         protected override void OnFeedbackPlay()
         {
-            Debug.Log(Message);
+            Debug.Log(Message, Owner.gameObject);
         }
 
         protected override void OnFeedbackStop()
         {
             if (LogOnStop)
             {
-                Debug.Log(MessageOnStop);
+                Debug.Log(MessageOnStop, Owner.gameObject);
             }
         }
 
@@ -46,7 +46,7 @@ namespace EasyFramework.ToolKit
         {
             if (LogOnReset)
             {
-                Debug.Log(MessageOnReset);
+                Debug.Log(MessageOnReset, Owner.gameObject);
             }
         }
     }

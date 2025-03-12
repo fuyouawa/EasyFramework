@@ -18,7 +18,7 @@ namespace EasyFramework.ToolKit
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Debug.LogException(e, Owner.gameObject);
             }
         }
 

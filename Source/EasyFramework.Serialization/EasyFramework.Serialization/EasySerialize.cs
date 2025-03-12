@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
@@ -7,34 +9,43 @@ namespace EasyFramework.Serialization
         public static EasySerializeSettings DefaultSettings { get; set; } = new EasySerializeSettings();
         internal static EasySerializeSettings CurrentSettings { get; private set; }
 
-        public static byte[] ToBinary<T>(T value)
+        public static byte[] To<T>(T value, EasyDataFormat format, EasySerializeSettings settings = null)
         {
-            var data = new EasySerializationData(EasyDataFormat.Binary);
-            To(value, ref data);
-            return data.BinaryData;
+            var referencedUnityObjects = new List<UnityEngine.Object>();
+            return To(value, format, ref referencedUnityObjects, settings);
         }
 
-        public static T FromBinary<T>(byte[] data)
+        public static T From<T>(EasyDataFormat format, byte[] data, EasySerializeSettings settings = null)
         {
-            var d = new EasySerializationData(data, EasyDataFormat.Binary);
-            return From<T>(ref d);
+            return From<T>(format, data, new List<UnityEngine.Object>(), settings);
         }
 
-        public static string ToJson<T>(T value)
+        public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects, EasySerializeSettings settings = null)
         {
-            var data = new EasySerializationData(EasyDataFormat.Json);
-            To(value, ref data);
-            return data.StringData;
+            var d = new EasySerializationData(format);
+            To(value, ref d, settings);
+            referencedUnityObjects = d.ReferencedUnityObjects;
+            return d.GetData();
         }
 
-        public static T FromJson<T>(string json)
+        public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects, EasySerializeSettings settings = null)
         {
-            var d = new EasySerializationData(json, EasyDataFormat.Json);
-            return From<T>(ref d);
+            var d = new EasySerializationData(format);
+            d.SetData(data);
+            d.ReferencedUnityObjects = referencedUnityObjects ?? new List<UnityEngine.Object>();
+            return From<T>(ref d, settings);
         }
 
         public static void To<T>(T value, ref EasySerializationData serializationData, EasySerializeSettings settings = null)
         {
+            if (value == null)
+            {
+                Debug.LogWarning("Serialize null value!");
+                serializationData.SetData(Array.Empty<byte>());
+                return;
+            }
+            var valueType = value.GetType();
+
             CurrentSettings = settings ?? DefaultSettings;
 
             var ios = GenericNative.AllocStringIoStream();
@@ -42,9 +53,12 @@ namespace EasyFramework.Serialization
             {
                 using (var arch = GetOutputArchive(serializationData.Format, ios))
                 {
-                    var serializer = GetSerializerWithThrow<T>();
-                    ((IEasySerializer<T>)serializer).IsRoot = true;
-                    serializer.Process(ref value, arch);
+                    var serializer = GetSerializerWithThrow(valueType);
+                    ((IEasySerializer)serializer).IsRoot = true;
+
+                    var obj = (object)value;
+                    serializer.Process(ref obj, valueType, arch);
+
                     serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
 
@@ -75,8 +89,9 @@ namespace EasyFramework.Serialization
                 {
                     arch.SetupReferencedUnityObjects(serializationData.ReferencedUnityObjects);
 
-                    var serializer = GetSerializerWithThrow<T>();
-                    ((IEasySerializer<T>)serializer).IsRoot = true;
+                    var serializer = (EasySerializer<T>)GetSerializerWithThrow(typeof(T));
+                    ((IEasySerializer)serializer).IsRoot = true;
+
                     serializer.Process(ref res, arch);
                 }
             }
@@ -84,13 +99,13 @@ namespace EasyFramework.Serialization
             return res;
         }
 
-        private static EasySerializer<T> GetSerializerWithThrow<T>()
+        private static EasySerializer GetSerializerWithThrow(Type type)
         {
-            var serializer = EasySerializationUtility.GetSerializer<T>();
+            var serializer = EasySerializationUtility.GetSerializer(type);
             if (serializer == null)
             {
                 throw new ArgumentException(
-                    $"There is no serializer for type '{typeof(T).FullName}'." +
+                    $"There is no serializer for type '{type.FullName}'." +
                     "You need to implement a 'IEasySerializer' for type.");
             }
 

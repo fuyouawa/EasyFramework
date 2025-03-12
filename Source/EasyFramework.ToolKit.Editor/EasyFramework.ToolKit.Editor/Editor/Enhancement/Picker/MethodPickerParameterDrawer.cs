@@ -6,19 +6,18 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class MethodPickerParameterDrawer : OdinValueDrawer<MethodPicker.Parameter>
     {
-        private MethodPicker.Parameter _parameter;
-        private InspectorProperty _valueProperty;
+        private InspectorProperty _propertyOfValue;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _parameter = ValueEntry.SmartValue;
-            _valueProperty = Property.Children[nameof(MethodPicker.Parameter.Value)];
+            _propertyOfValue = Property.Children[nameof(MethodPicker.Parameter.Value)];
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            _valueProperty.Draw(EditorHelper.TempContent(_parameter.Name));
+            var val = ValueEntry.SmartValue;
+            _propertyOfValue.Draw(EditorHelper.TempContent(val.Name));
         }
     }
 

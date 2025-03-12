@@ -21,7 +21,7 @@ namespace EasyFramework.ToolKit
     [Serializable]
     public class MethodPicker : MemberPicker
     {
-        [Serializable]
+        [Serializable, HideLabel, HideReferenceObjectPicker, InlineProperty]
         public class Parameter
         {
             public string Name;
@@ -32,11 +32,11 @@ namespace EasyFramework.ToolKit
         [ListDrawerSettings(IsReadOnly = true)]
         private List<Parameter> _parameters = new List<Parameter>();
 
-        public MethodInfo GetTargetMethod() => GetTargetMember() as MethodInfo;
+        public MethodInfo TargetMethod => TargetMember as MethodInfo;
 
         public object Invoke()
         {
-            var m = GetTargetMethod();
+            var m = TargetMethod;
             if (m == null)
             {
                 throw new ArgumentException("Invoke failed: Target method is null!");
@@ -48,7 +48,7 @@ namespace EasyFramework.ToolKit
                 invokeParams = _parameters.Select(p => p.Value.GetRawObject()).ToArray();
             }
 
-            return m.Invoke(GetTargetComponent(), invokeParams);
+            return m.Invoke(TargetComponent, invokeParams);
         }
     }
 }

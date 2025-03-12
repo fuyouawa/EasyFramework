@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -163,7 +164,7 @@ namespace EasyFramework.ToolKit.Editor
             var comp = (Component)binder;
             return comp.gameObject.GetComponentsInParent(typeof(IViewController), true);
         }
-        
+
         public static void UseDefault(this IViewBinder binder)
         {
             var settings = ViewBinderSettings.Instance;
@@ -206,12 +207,16 @@ namespace EasyFramework.ToolKit.Editor
             editorConfig.Comment = settings.Default.Comment;
         }
 
-        [MenuItem("GameObject/EasyFramework/Add ViewBinder")]
+        [MenuItem("GameObject/EasyFramework/Add ViewBinder", false)]
         private static void AddViewBinder()
         {
             foreach (var o in Selection.gameObjects)
             {
-                var binder = o.AddComponent<ViewBinder>();
+                if (o.GetComponent<IViewBinder>() != null)
+                    continue;
+                o.AddComponent<ViewBinder>();
+                EditorUtility.SetDirty(o);
+                EditorSceneManager.MarkSceneDirty(o.scene);
             }
         }
     }

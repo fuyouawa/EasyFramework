@@ -491,6 +491,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1000912421}
   - component: {fileID: 1000912423}
+  - component: {fileID: 1000912425}
+  - component: {fileID: 1000912424}
   m_Layer: 0
   m_Name: sfdsdf
   m_TagString: Untagged
@@ -530,6 +532,64 @@ MonoBehaviour:
     Collection:
     - Target: {fileID: 1737443029}
       Binder: {fileID: 1737443032}
+--- !u!114 &1000912424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000912419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    OwnerController: {fileID: 0}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 2
+      AutoBindName: 1
+      BindName: sfdsdf
+      ProcessBindName: 1
+      UseDocumentComment: 1
+      AutoAddParaToComment: 1
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01002d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c652d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c6502000000010673666473646601010100
+        StringData: 
+        ReferencedUnityObjects: []
+--- !u!114 &1000912425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000912419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    OwnerController: {fileID: 0}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 2
+      AutoBindName: 1
+      BindName: sfdsdf
+      ProcessBindName: 1
+      UseDocumentComment: 1
+      AutoAddParaToComment: 1
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01002d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c652d556e697479456e67696e652e5472616e73666f726d2c20556e697479456e67696e652e436f72654d6f64756c6502000000010673666473646601010100
+        StringData: 
+        ReferencedUnityObjects: []
 --- !u!1 &1043417715
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,6 +1081,8 @@ GameObject:
   - component: {fileID: 1888331993}
   - component: {fileID: 1888331994}
   - component: {fileID: 1888331995}
+  - component: {fileID: 1888331997}
+  - component: {fileID: 1888331996}
   m_Layer: 0
   m_Name: TestController
   m_TagString: Untagged
@@ -1072,9 +1134,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c8b088d49c66e4abafa58da1372470, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Dsfgdfg: {fileID: 63700821}
-  Dsfgdfgs3r: {fileID: 473343823}
-  _circle: {fileID: 903816300}
+  TestPickers:
+  - _serializedTargetMemberType: 3
+    _serializedTargetMemberData: 022f00000000012d000000530079007300740065006d002e005200650066006c0065006300740069006f006e002e00520075006e00740069006d0065004d006500740068006f00640049006e0066006f002c0020006d00730063006f0072006c00690062000000000001010d0000006400650063006c006100720069006e00670054007900700065002f01000000011c000000530079007300740065006d002e00520075006e00740069006d00650054007900700065002c0020006d00730063006f0072006c00690062000100000028012d00000055006e0069007400790045006e00670069006e0065002e0043006f006d0070006f006e0065006e0074002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c0065000527010a0000006d006500740068006f0064004e0061006d006500010c00000047006500740043006f006d0070006f006e0065006e0074000101090000007300690067006e00610074007500720065002f020000000117000000530079007300740065006d002e0054007900700065005b005d002c0020006d00730063006f0072006c00690062000200000006010000000000000002300100000003000000280117000000530079007300740065006d002e0053007400720069006e0067002c0020006d00730063006f0072006c006900620005070505
+    _serializedUnityObjects:
+    - {fileID: 1888331991}
+    - {fileID: 1888331995}
+    _parameters:
+    - Name: type
+      Value:
+        _type:
+          _serializedData: System.String, mscorlib
+        _any:
+          _serializedData: 280106000000350036003700350036003700
+          _serializedUnityObjects: []
+  TestEvent:
+    _methodPickers:
+    - _serializedTargetMemberType: 0
+      _serializedTargetMemberData: 
+      _serializedUnityObjects:
+      - {fileID: 1888331991}
+      - {fileID: 0}
+      _parameters: []
+  Dsfgdfg: {fileID: 0}
+  Dsfgdfgs3r: {fileID: 0}
+  _circle: {fileID: 0}
   _viewControllerConfig:
     EditorConfig:
       IsInitialized: 1
@@ -1089,6 +1173,64 @@ MonoBehaviour:
       _serializationData:
         Format: 0
         BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65010000000842696e64696e677300
+        StringData: 
+        ReferencedUnityObjects: []
+--- !u!114 &1888331996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888331991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    OwnerController: {fileID: 1888331995}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 2
+      AutoBindName: 1
+      BindName: TestController
+      ProcessBindName: 1
+      UseDocumentComment: 1
+      AutoAddParaToComment: 1
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01001f54657374436f6e74726f6c6c65722c20417373656d626c792d4353686172701f54657374436f6e74726f6c6c65722c20417373656d626c792d43536861727002000000010e54657374436f6e74726f6c6c657201010100
+        StringData: 
+        ReferencedUnityObjects: []
+--- !u!114 &1888331997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888331991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _viewBinderConfig:
+    OwnerController: {fileID: 1888331995}
+    EditorConfig:
+      IsInitialized: 1
+      BindGameObject: 0
+      BindAccess: 2
+      AutoBindName: 1
+      BindName: TestController
+      ProcessBindName: 1
+      UseDocumentComment: 1
+      AutoAddParaToComment: 1
+      Comment: 
+      _serializationData:
+        Format: 0
+        BinaryData: 01001f54657374436f6e74726f6c6c65722c20417373656d626c792d4353686172701f54657374436f6e74726f6c6c65722c20417373656d626c792d43536861727002000000010e54657374436f6e74726f6c6c657201010100
         StringData: 
         ReferencedUnityObjects: []
 --- !u!1 &1921682778

@@ -6,6 +6,7 @@ using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -200,18 +201,17 @@ namespace EasyFramework.ToolKit.Editor
         }
 
 
-        [MenuItem("GameObject/EasyFramework/Add ViewController")]
+        [MenuItem("GameObject/EasyFramework/Add ViewController", false)]
         private static void AddViewController()
         {
             foreach (var o in Selection.gameObjects)
             {
-                if (o.GetComponent(typeof(IViewController)) != null)
-                {
-                    EditorUtility.DisplayDialog("错误", $"游戏对象 '{o.gameObject}' 已经拥有ViewController！", "确认");
+                if (o.GetComponent<IViewController>() != null)
                     continue;
-                }
 
                 o.AddComponent<ViewController>();
+                EditorUtility.SetDirty(o);
+                EditorSceneManager.MarkSceneDirty(o.scene);
             }
         }
     }

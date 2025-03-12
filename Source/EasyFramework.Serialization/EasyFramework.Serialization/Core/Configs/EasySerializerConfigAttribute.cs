@@ -5,24 +5,22 @@ namespace EasyFramework.Serialization
     [AttributeUsage(AttributeTargets.Class)]
     public class EasySerializerConfigAttribute : Attribute
     {
-        public int Priority { get; }
-        public bool AllowInherit { get; }
+        public int Priority { get; set; }
+        public bool AllowInherit { get; set; }
 
         public EasySerializerConfigAttribute()
             : this(EasySerializerProiority.Custom)
         {
         }
 
-        public EasySerializerConfigAttribute(EasySerializerProiority priority, bool allowInherit = false)
+        public EasySerializerConfigAttribute(EasySerializerProiority priority)
         {
             Priority = (int)priority;
-            AllowInherit = allowInherit;
         }
 
-        public EasySerializerConfigAttribute(int priority, bool allowInherit = false)
+        public EasySerializerConfigAttribute(int priority)
         {
             Priority = priority;
-            AllowInherit = allowInherit;
         }
     }
 }

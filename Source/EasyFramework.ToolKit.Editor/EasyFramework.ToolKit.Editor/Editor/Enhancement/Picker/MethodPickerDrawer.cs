@@ -7,7 +7,6 @@ using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.OdinInspector.Editor.ValueResolvers;
 using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
@@ -98,11 +97,11 @@ namespace EasyFramework.ToolKit.Editor
             return $"{member.Name} ({m.GetMethodParametersSignature()})";
         }
 
-        protected override void OnTargetMemberChanged()
+        protected override void OnTargetMemberChanged(MemberInfo member)
         {
-            base.OnTargetMemberChanged();
+            base.OnTargetMemberChanged(member);
 
-            var newMethod = GetTargetMember() as MethodInfo;
+            var newMethod = member as MethodInfo;
 
             var parameters = _propertyOfParameters.WeakSmartValue<List<MethodPicker.Parameter>>();
             if (newMethod != null)

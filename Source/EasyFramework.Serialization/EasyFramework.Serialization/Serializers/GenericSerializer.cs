@@ -1,8 +1,6 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using EasyFramework.Serialization;
 
 namespace EasyFramework.Serialization
 {
@@ -27,7 +25,7 @@ namespace EasyFramework.Serialization
                 }
             }
 
-            var members = EasySerialize.CurrentSettings.MembersGetterOfGeneric(typeof(T));
+            var members = EasySerialize.CurrentSettings.MembersGetter(typeof(T));
 
             foreach (var member in members)
             {

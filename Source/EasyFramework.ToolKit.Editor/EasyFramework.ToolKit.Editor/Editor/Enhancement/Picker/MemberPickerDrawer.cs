@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
@@ -11,29 +13,28 @@ namespace EasyFramework.ToolKit.Editor
     public class MemberPickerDrawer<T> : OdinValueDrawer<T>
         where T : MemberPicker
     {
-        private readonly Dictionary<string, Component> _targetComponents = new Dictionary<string, Component>();
         private readonly Dictionary<string, MemberInfo> _targetMembers = new Dictionary<string, MemberInfo>();
 
-        private InspectorProperty _targetObject;
-        private InspectorProperty _targetComponentName;
-        private InspectorProperty _targetMemberName;
+        private InspectorProperty _propertyOfTargetObject;
+        private InspectorProperty _propertyOfTargetComponent;
+        private InspectorProperty _propertyOfTargetMember;
 
         private GameObject TargetObject
         {
-            get => _targetObject.WeakSmartValue<GameObject>();
-            set => _targetObject.SetWeakSmartValue(value);
+            get => _propertyOfTargetObject.WeakSmartValue<GameObject>();
+            set => _propertyOfTargetObject.SetWeakSmartValue(value);
         }
 
-        private string TargetComponentName
+        private Component TargetComponent
         {
-            get => _targetComponentName.WeakSmartValue<string>();
-            set => _targetComponentName.SetWeakSmartValue(value);
+            get => _propertyOfTargetComponent.WeakSmartValue<Component>();
+            set => _propertyOfTargetComponent.SetWeakSmartValue(value);
         }
 
-        private string TargetMemberName
+        private MemberInfo TargetMember
         {
-            get => _targetMemberName.WeakSmartValue<string>();
-            set => _targetMemberName.SetWeakSmartValue(value);
+            get => _propertyOfTargetMember.WeakSmartValue<MemberInfo>();
+            set => _propertyOfTargetMember.SetWeakSmartValue(value);
         }
 
         protected override bool CanDrawValueProperty(InspectorProperty property)
@@ -43,102 +44,67 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void Initialize()
         {
-            _targetObject = Property.Children["_targetObject"];
-            _targetComponentName = Property.Children["_targetComponentName"];
-            _targetMemberName = Property.Children["_targetMemberName"];
+            _propertyOfTargetObject = Property.Children["_targetObject"];
+            _propertyOfTargetComponent = Property.Children["_targetComponent"];
+            _propertyOfTargetMember = Property.Children["_targetMember"];
 
-            base.Initialize();
+            _propertyOfTargetObject.ValueEntry.OnValueChanged += i => OnTargetObjectChanged();
 
-            RefreshTargetComponents();
-            RefreshTargetMember();
+            RefreshTargetMember(TargetComponent);
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
         {
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUI.BeginChangeCheck();
-            TargetObject =
-                (GameObject)SirenixEditorFields.UnityObjectField(GUIContent.none, TargetObject, typeof(GameObject),
-                    true);
-            if (EditorGUI.EndChangeCheck())
-            {
-                OnTargetObjectChanged();
-            }
+            TargetObject = (GameObject)SirenixEditorFields.UnityObjectField(
+                GUIContent.none, TargetObject, typeof(GameObject), true);
 
-            EditorGUI.BeginChangeCheck();
+            var btnLabel = TargetComponent != null
+                ? EditorHelper.TempContent2(GetComponentName(TargetComponent))
+                : EditorHelper.NoneSelectorBtnLabel;
+
             EasyEditorGUI.DrawSelectorDropdown(
-                _targetComponents.Keys,
+                TargetObject?.GetComponents<Component>().Where(c => c != null),
                 GUIContent.none,
-                EditorHelper.TempContent(TargetComponentName),
-                str => TargetComponentName = str);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                OnTargetComponentChanged();
-            }
+                btnLabel,
+                OnTargetComponentChanged,
+                GetComponentName);
 
             EditorGUILayout.EndHorizontal();
 
-            EditorGUI.BeginChangeCheck();
+            btnLabel = TargetMember != null
+                ? EditorHelper.TempContent(GetMemberName(TargetMember))
+                : EditorHelper.NoneSelectorBtnLabel;
 
-            var member = GetTargetMember();
             EasyEditorGUI.DrawSelectorDropdown(
                 _targetMembers.Values,
                 GUIContent.none,
-                EditorHelper.TempContent(GetMemberName(member)),
-                str => TargetMemberName = str.GetSignature(),
+                btnLabel,
+                OnTargetMemberChanged,
                 GetMemberName);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                OnTargetMemberChanged();
-            }
         }
 
         private void OnTargetObjectChanged()
         {
-            _targetComponents.Clear();
-
-            RefreshTargetComponents();
-
-            TargetComponentName = string.Empty;
-
-            OnTargetComponentChanged();
+            OnTargetComponentChanged(null);
         }
 
-        private void RefreshTargetComponents()
+        private void OnTargetComponentChanged(Component component)
         {
-            if (TargetObject != null)
-            {
-                int i = 0;
-                foreach (var component in TargetObject.GetComponents<Component>())
-                {
-                    _targetComponents.Add(component == null
-                        ? $"Missing Component<{i}>"
-                        : component.GetType().Name, component);
-                    i++;
-                }
-            }
-        }
+            TargetComponent = component;
 
-        private void OnTargetComponentChanged()
-        {
             _targetMembers.Clear();
+            RefreshTargetMember(component);
 
-            RefreshTargetMember();
-
-            TargetMemberName = string.Empty;
-
-            OnTargetMemberChanged();
+            OnTargetMemberChanged(null);
         }
 
-        private void RefreshTargetMember()
+        private void RefreshTargetMember(Component component)
         {
-            var comp = GetTargetComponent();
-            if (comp != null)
+            if (component != null)
             {
-                foreach (var member in comp.GetType()
+                foreach (var member in component.GetType()
                              .GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance))
                 {
                     if (!MemberFilter(member))
@@ -149,22 +115,15 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        protected virtual void OnTargetMemberChanged()
+        protected virtual void OnTargetMemberChanged(MemberInfo member)
         {
+            TargetMember = member;
         }
 
-        protected Component GetTargetComponent()
-        {
-            if (TargetComponentName.IsNullOrEmpty())
-                return null;
-            return _targetComponents[TargetComponentName];
-        }
 
-        protected MemberInfo GetTargetMember()
+        protected virtual string GetComponentName(Component component)
         {
-            if (TargetMemberName.IsNullOrEmpty())
-                return null;
-            return _targetMembers[TargetMemberName];
+            return component.GetType().GetNiceName();
         }
 
         protected virtual bool MemberFilter(MemberInfo member)

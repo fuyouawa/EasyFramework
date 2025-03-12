@@ -1,10 +1,11 @@
 using System;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [Serializable]
+    [Serializable, HideReferenceObjectPicker, InlineProperty]
     public class SerializedVariant
     {
         [SerializeField] private SerializedType _type = new SerializedType();
