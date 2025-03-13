@@ -28,7 +28,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var classType = isBuildAndBind
                 ? comp.GetType()
-                : ReflectionUtility.FindType(val.Namespace, val.ScriptName);
+                : ReflectionUtility.FindType(val.Namespace, ctrl.GetScriptName());
 
             var isBuild = classType != null && classType != typeof(ViewController);
 

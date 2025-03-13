@@ -731,7 +731,9 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 1637753062}
+    - {fileID: 1637753064}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -743,7 +745,7 @@ MonoBehaviour:
         EasyFramework.ToolKit]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 7
       Data: 1|EasyFramework.ToolKit.EF_AudioSource, EasyFramework.ToolKit
@@ -992,6 +994,119 @@ MonoBehaviour:
       Data: false
     - Name: SpreadCurve
       Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|EasyFramework.ToolKit.EF_GameObjectInvokeMethod, EasyFramework.ToolKit
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Picker
+      Entry: 7
+      Data: 8|EasyFramework.ToolKit.MethodPicker, EasyFramework.ToolKit
+    - Name: _serializedTargetMemberType
+      Entry: 3
+      Data: 3
+    - Name: _serializedTargetMemberData
+      Entry: 7
+      Data: 9|System.Byte[], mscorlib
+    - Name: 
+      Entry: 14
+      Data: 022f00000000012d000000530079007300740065006d002e005200650066006c0065006300740069006f006e002e00520075006e00740069006d0065004d006500740068006f00640049006e0066006f002c0020006d00730063006f0072006c00690062000000000001010d0000006400650063006c006100720069006e00670054007900700065002f01000000011c000000530079007300740065006d002e00520075006e00740069006d00650054007900700065002c0020006d00730063006f0072006c00690062000100000028013a00000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074002e00450061007300790046006500650064006200610063006b0073002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074000527010a0000006d006500740068006f0064004e0061006d00650001110000007300650074005f004900730049006e0069007400690061006c0069007a00650064000101090000007300690067006e00610074007500720065002f020000000117000000530079007300740065006d002e0054007900700065005b005d002c0020006d00730063006f0072006c00690062000200000006010000000000000002300100000003000000280118000000530079007300740065006d002e0042006f006f006c00650061006e002c0020006d00730063006f0072006c006900620005070505
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _serializedUnityObjects
+      Entry: 7
+      Data: 10|System.Collections.Generic.List`1[[UnityEngine.Object, UnityEngine.CoreModule]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _parameters
+      Entry: 7
+      Data: 11|System.Collections.Generic.List`1[[EasyFramework.ToolKit.MethodPicker+Parameter,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 12|EasyFramework.ToolKit.MethodPicker+Parameter, EasyFramework.ToolKit
+    - Name: Name
+      Entry: 1
+      Data: value
+    - Name: Value
+      Entry: 7
+      Data: 13|EasyFramework.ToolKit.SerializedVariant, EasyFramework.ToolKit
+    - Name: _type
+      Entry: 7
+      Data: 14|EasyFramework.ToolKit.SerializedType, EasyFramework.ToolKit
+    - Name: _serializedData
+      Entry: 1
+      Data: System.Boolean, mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _any
+      Entry: 7
+      Data: 15|EasyFramework.ToolKit.SerializedAny, EasyFramework.ToolKit
+    - Name: _serializedData
+      Entry: 6
+      Data: 
+    - Name: _serializedUnityObjects
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
       Data: 
     - Name: 
       Entry: 8

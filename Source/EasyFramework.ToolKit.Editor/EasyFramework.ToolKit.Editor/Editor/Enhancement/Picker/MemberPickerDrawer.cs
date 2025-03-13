@@ -64,8 +64,12 @@ namespace EasyFramework.ToolKit.Editor
                 ? EditorHelper.TempContent2(GetComponentName(TargetComponent))
                 : EditorHelper.NoneSelectorBtnLabel;
 
+            var targetComponents = Array.Empty<Component>();
+            if (TargetObject != null)
+                targetComponents = TargetObject.GetComponents<Component>().Where(c => c != null).ToArray();
+
             EasyEditorGUI.DrawSelectorDropdown(
-                TargetObject?.GetComponents<Component>().Where(c => c != null),
+                targetComponents,
                 GUIContent.none,
                 btnLabel,
                 OnTargetComponentChanged,

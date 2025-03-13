@@ -11,7 +11,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit.Editor
 {
     [CustomEditor(typeof(EasyFeedbacks))]
-    [CanEditMultipleObjects]
+    // [CanEditMultipleObjects]
     public class EasyFeedbacksEditor : OdinEditor
     {
         private InspectorProperty _feedbackListProperty;

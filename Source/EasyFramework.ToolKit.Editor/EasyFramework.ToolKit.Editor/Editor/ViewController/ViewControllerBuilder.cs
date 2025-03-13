@@ -31,7 +31,7 @@ namespace EasyFramework.ToolKit.Editor
                 Directory.CreateDirectory(dir);
             }
 
-            var path = Path.Combine(dir, _cfg.ScriptName);
+            var path = Path.Combine(dir, _controller.GetScriptName());
             var designerPath = path + ".Designer.cs";
             path += ".cs";
 
@@ -123,7 +123,7 @@ public partial class {{ ClassName }} : {{ BaseClassName }}
                 : _settings.ClassTemplate;
             var body = engine.Render(CsBodyTemplate, new
             {
-                ClassName = _cfg.ScriptName,
+                ClassName = _controller.GetScriptName(),
                 BaseClassName = _cfg.BaseClass.Name,
                 ClassTemplate = classTemplate
             });
@@ -138,7 +138,8 @@ public partial class {{ ClassName }} : IViewController
 {{ Fields }}
 
 
-    [SerializeField] private ViewControllerConfig _viewControllerConfig;
+    [SerializeField, PropertyOrder(1000000f)]
+    private ViewControllerConfig _viewControllerConfig;
 
     ViewControllerConfig IViewController.Config
     {
@@ -218,6 +219,8 @@ public partial class {{ ClassName }} : IViewController
             }).ToArray();
 
             var fieldStatements = new List<string>();
+
+            int i = 0;
             foreach (var field in fields)
             {
                 var statement = "";
@@ -226,7 +229,12 @@ public partial class {{ ClassName }} : IViewController
                     statement += field.Comment + '\n';
                 }
 
-                var attributes = new List<string>();
+                var attributes = new List<string>
+                {
+                    "SerializeField",
+                    $"PropertyOrder({100000 + i}f)",
+                    "AutoBinding"
+                };
                 switch (_cfg.BindersGroupType)
                 {
                     case ViewControllerBindersGroupType.None:
@@ -240,16 +248,16 @@ public partial class {{ ClassName }} : IViewController
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                attributes.Add("AutoBinding");
-                attributes.Add("SerializeField");
 
                 statement += $"[{string.Join(", ", attributes)}]\n{field.Access} {field.Type} {field.Name};";
                 fieldStatements.Add(statement);
+
+                ++i;
             }
 
             var bodyData = new
             {
-                ClassName = _cfg.ScriptName,
+                ClassName = _controller.GetScriptName(),
                 Fields = AddIndent(string.Join("\n\n", fieldStatements))
             };
 

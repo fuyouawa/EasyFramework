@@ -14,17 +14,21 @@ using Sirenix.OdinInspector;
 
 public partial class TestController : IViewController
 {
-    [TitleGroup("Bindings"), AutoBinding, SerializeField]
+    [SerializeField, PropertyOrder(100000f), AutoBinding, TitleGroup("Bindings")]
+    private TestController _testController;
+    
+    [SerializeField, PropertyOrder(100001f), AutoBinding, TitleGroup("Bindings")]
     public Transform Dsfgdfg;
     
-    [TitleGroup("Bindings"), AutoBinding, SerializeField]
+    [SerializeField, PropertyOrder(100002f), AutoBinding, TitleGroup("Bindings")]
     public GameObject Dsfgdfgs3r;
     
-    [TitleGroup("Bindings"), AutoBinding, SerializeField]
+    [SerializeField, PropertyOrder(100003f), AutoBinding, TitleGroup("Bindings")]
     private SpriteRenderer _circle;
 
 
-    [SerializeField] private ViewControllerConfig _viewControllerConfig;
+    [SerializeField, PropertyOrder(1000000f)]
+    private ViewControllerConfig _viewControllerConfig;
 
     ViewControllerConfig IViewController.Config
     {
