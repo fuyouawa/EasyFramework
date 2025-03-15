@@ -27,9 +27,7 @@ namespace EasyFramework
     public interface IArchitecture
     {
         void RegisterSystem<T>(T system) where T : ISystem;
-
         void RegisterModel<T>(T model) where T : IModel;
-
         void RegisterUtility<T>(T utility) where T : IUtility;
 
         T GetSystem<T>() where T : class, ISystem;
@@ -37,8 +35,8 @@ namespace EasyFramework
         T GetUtility<T>() where T : class, IUtility;
 
         void SendCommand<T>(T command) where T : ICommand;
-
         TResult SendCommand<TResult>(ICommand<TResult> command);
+        TResult SendQuery<TResult>(IQuery<TResult> query);
 
         void SendEvent<T>(T e);
 
@@ -139,6 +137,14 @@ namespace EasyFramework
         public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
             ExecuteCommand(command);
+        }
+
+        public TResult SendQuery<TResult>(IQuery<TResult> query) => DoQuery<TResult>(query);
+
+        protected virtual TResult DoQuery<TResult>(IQuery<TResult> query)
+        {
+            query.SetArchitecture(this);
+            return query.Do();
         }
 
         protected virtual TResult ExecuteCommand<TResult>(ICommand<TResult> command)

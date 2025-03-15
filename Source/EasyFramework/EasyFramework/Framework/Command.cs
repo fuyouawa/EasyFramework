@@ -6,24 +6,25 @@ namespace EasyFramework
 
     public static class CanSendCommandExtension
     {
-        public static void SendCommand<T>(this ICanSendCommand self) where T : ICommand, new() =>
-            self.GetArchitecture().SendCommand<T>(new T());
-
-        public static void SendCommand<T>(this ICanSendCommand self, T command) where T : ICommand =>
-            self.GetArchitecture().SendCommand<T>(command);
-
-        public static TResult SendCommand<TResult>(this ICanSendCommand self, ICommand<TResult> command) =>
+        public static void SendCommand<T>(this ICanSendCommand self, T command) where T : ICommand
+        {
             self.GetArchitecture().SendCommand(command);
+        }
+
+        public static TResult SendCommand<TResult>(this ICanSendCommand self, ICommand<TResult> command)
+        {
+            return self.GetArchitecture().SendCommand(command);
+        }
     }
 
     public interface ICommand : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
-        ICanSendEvent, ICanSendCommand, ICanGetUtility
+        ICanSendEvent, ICanSendCommand, ICanGetUtility, ICanSendQuery
     {
         void Execute();
     }
 
     public interface ICommand<TResult> : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
-        ICanSendEvent, ICanSendCommand, ICanGetUtility
+        ICanSendEvent, ICanSendCommand, ICanGetUtility, ICanSendQuery
     {
         TResult Execute();
     }

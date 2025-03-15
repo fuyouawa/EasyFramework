@@ -1197,7 +1197,6 @@ GameObject:
   - component: {fileID: 1888331994}
   - component: {fileID: 1888331995}
   - component: {fileID: 1888331997}
-  - component: {fileID: 1888331996}
   m_Layer: 0
   m_Name: TestController
   m_TagString: Untagged
@@ -1271,6 +1270,7 @@ MonoBehaviour:
       - {fileID: 1888331991}
       - {fileID: 0}
       _parameters: []
+  _testController: {fileID: 0}
   Dsfgdfg: {fileID: 0}
   Dsfgdfgs3r: {fileID: 0}
   _circle: {fileID: 0}
@@ -1288,35 +1288,6 @@ MonoBehaviour:
       _serializationData:
         Format: 0
         BinaryData: 01075363726970747300010e54657374436f6e74726f6c6c65720031556e697479456e67696e652e4d6f6e6f4265686176696f75722c20556e697479456e67696e652e436f72654d6f64756c65010000000842696e64696e677300
-        StringData: 
-        ReferencedUnityObjects: []
---- !u!114 &1888331996
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1888331991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _viewBinderConfig:
-    OwnerController: {fileID: 1888331995}
-    EditorConfig:
-      IsInitialized: 1
-      BindGameObject: 0
-      BindAccess: 2
-      AutoBindName: 1
-      BindName: TestController
-      ProcessBindName: 1
-      UseDocumentComment: 1
-      AutoAddParaToComment: 1
-      Comment: 
-      _serializationData:
-        Format: 0
-        BinaryData: 01001f54657374436f6e74726f6c6c65722c20417373656d626c792d4353686172701f54657374436f6e74726f6c6c65722c20417373656d626c792d43536861727002000000010e54657374436f6e74726f6c6c657201010100
         StringData: 
         ReferencedUnityObjects: []
 --- !u!114 &1888331997
