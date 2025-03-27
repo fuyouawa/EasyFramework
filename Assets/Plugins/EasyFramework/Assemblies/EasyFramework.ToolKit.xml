@@ -155,17 +155,5 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="T:EasyFramework.ToolKit.OnStateChangeDelegate`1">
-            <summary>
-            当状态更改完成的回调
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="stateId">当前状态</param>
-        </member>
-        <member name="E:EasyFramework.ToolKit.StateMachine`1.OnStateChanged">
-            <summary>
-            当状态更改完的的回调
-            </summary>
-        </member>
     </members>
 </doc>

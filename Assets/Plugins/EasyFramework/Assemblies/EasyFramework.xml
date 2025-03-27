@@ -466,6 +466,18 @@
             <para>确保会在Unity线程触发</para>
             </summary>
         </member>
+        <member name="T:EasyFramework.OnStateChangeDelegate`1">
+            <summary>
+            当状态更改完成的回调
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="stateId">当前状态</param>
+        </member>
+        <member name="E:EasyFramework.StateMachine`1.OnStateChanged">
+            <summary>
+            当状态更改完的的回调
+            </summary>
+        </member>
         <member name="T:EasyFramework.EventHandlerDelegate`1">
             <summary>
             事件处理器

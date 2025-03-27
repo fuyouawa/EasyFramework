@@ -16,9 +16,9 @@ namespace EasyFramework
                 return Vector2Int.zero;
             }
 
-            if (v.x > 0f)
+            if (v.x > zeroThreshold)
             {
-                if (v.y > 0f)
+                if (v.y > zeroThreshold)
                 {
                     return v.x > v.y ? Vector2Int.right : Vector2Int.up;
                 }
@@ -29,7 +29,7 @@ namespace EasyFramework
             }
             else
             {
-                if (v.y > 0f)
+                if (v.y > zeroThreshold)
                 {
                     return absX > v.y ? Vector2Int.left : Vector2Int.up;
                 }
