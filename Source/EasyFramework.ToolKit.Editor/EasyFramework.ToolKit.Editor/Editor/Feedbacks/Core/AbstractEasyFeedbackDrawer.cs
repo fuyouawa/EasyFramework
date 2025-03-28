@@ -58,16 +58,16 @@ namespace EasyFramework.ToolKit.Editor
             public GUIContent Label = new GUIContent();
             public OnContentGUIDelegate OnContentGUI;
 
-            public PropertiesGroupInfo(string label, OnContentGUIDelegate onContentGui)
+            public PropertiesGroupInfo(string label, OnContentGUIDelegate onContentGUI)
             {
                 Label.text = label;
-                OnContentGUI = onContentGui;
+                OnContentGUI = onContentGUI;
             }
 
-            public PropertiesGroupInfo(GUIContent label, OnContentGUIDelegate onContentGui)
+            public PropertiesGroupInfo(GUIContent label, OnContentGUIDelegate onContentGUI)
             {
                 Label = label;
-                OnContentGUI = onContentGui;
+                OnContentGUI = onContentGUI;
             }
         }
 

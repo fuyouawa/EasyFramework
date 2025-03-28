@@ -11,7 +11,7 @@ namespace EasyFramework.ToolKit.Editor
         public static readonly string DataDirectory;
 
         public static readonly string TempDirectory;
-        public static readonly string UiTextManagerWindowTempPath;
+        // public static readonly string UiTextManagerWindowTempPath;
 
 
         static EditorAssetsPath()
@@ -22,7 +22,7 @@ namespace EasyFramework.ToolKit.Editor
             DataDirectory = PluginsDirectory + "/Editor/Data";
 
             TempDirectory = Path.Combine(Path.GetTempPath(), PlayerSettings.productName);
-            UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");
+            // UiTextManagerWindowTempPath = Path.Combine(TempDirectory, "UiTextManager.WindowTemp.json");
 
             Directory.CreateDirectory(TempDirectory);
         }

@@ -6,8 +6,7 @@ namespace EasyFramework
     public interface IReadonlyBindableValue<T>
     {
         T Value { get; }
-        void UnRegister(Action<T> onValueChanged);
-        IFromRegister Register(Action<T> onValueChanged);
+        EasyEvent<T> OnValueChanged { get; }
     }
 
     public interface IBindableValue<T> : IReadonlyBindableValue<T>
@@ -27,33 +26,21 @@ namespace EasyFramework
 
         public virtual T Value => _value;
 
+        public EasyEvent<T> OnValueChanged { get; } = new EasyEvent<T>();
+
         public void SetValue(T value)
         {
             if (value == null && _value == null) return;
             if (value != null && EqualityComparer<T>.Default.Equals(_value, value)) return;
-            
+
             SetValueWithoutEvent(value);
-            OnValueChanged?.Invoke(value);
+            OnValueChanged.Invoke(value);
         }
 
         public void SetValueWithoutEvent(T value)
         {
             _value = value;
         }
-
-        public IFromRegister Register(Action<T> onValueChanged)
-        {
-            OnValueChanged += onValueChanged;
-            return new FromRegisterGeneric(() => UnRegister(onValueChanged));
-        }
-
-
-        public void UnRegister(Action<T> onValueChanged)
-        {
-            OnValueChanged -= onValueChanged;
-        }
-
-        private event Action<T> OnValueChanged;
 
         public override string ToString() => _value.ToString();
     }

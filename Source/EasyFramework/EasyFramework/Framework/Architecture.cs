@@ -116,17 +116,28 @@ namespace EasyFramework
 
         public TSystem GetSystem<TSystem>() where TSystem : class, ISystem
         {
-            return _container.Resolve<TSystem>();
+            return CheckNull(_container.Resolve<TSystem>());
         }
 
         public TModel GetModel<TModel>() where TModel : class, IModel
         {
-            return _container.Resolve<TModel>();
+            return CheckNull(_container.Resolve<TModel>());
         }
 
         public TUtility GetUtility<TUtility>() where TUtility : class, IUtility
         {
-            return _container.Resolve<TUtility>();
+            return CheckNull(_container.Resolve<TUtility>());
+        }
+
+        private T CheckNull<T>(T val) where T : class
+        {
+            if (val == null)
+            {
+                throw new InvalidOperationException(
+                    $"The type of '{typeof(T)}' " +
+                    $"is not registered to architecture '{GetType()}'");
+            }
+            return val;
         }
 
         public TResult SendCommand<TResult>(ICommand<TResult> command)
