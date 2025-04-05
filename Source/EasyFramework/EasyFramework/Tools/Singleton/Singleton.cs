@@ -7,7 +7,6 @@ namespace EasyFramework
 {
     public interface ISingleton : IDisposable
     {
-        bool IsInitialized { get; }
         void OnSingletonInit();
     }
 
@@ -87,9 +86,6 @@ namespace EasyFramework
 
         public static T Instance => s_instance.Value;
 
-        public bool IsSingletonInitialized { get; protected set; }
-        bool ISingleton.IsInitialized => IsSingletonInitialized;
-
         static Singleton()
         {
             s_instance = new Lazy<T>(SingletonCreator.CreateSingleton<T>);
@@ -98,13 +94,11 @@ namespace EasyFramework
         void ISingleton.OnSingletonInit()
         {
             OnSingletonInit();
-            IsSingletonInitialized = true;
         }
 
         void IDisposable.Dispose()
         {
             OnSingletonDispose();
-            IsSingletonInitialized = false;
         }
 
         protected virtual void OnSingletonInit()

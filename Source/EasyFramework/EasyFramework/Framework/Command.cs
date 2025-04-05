@@ -11,6 +11,12 @@ namespace EasyFramework
             self.GetArchitecture().SendCommand(command);
         }
 
+        public static void SendCommand<T>(this ICanSendCommand self) where T : class, ICommand, new()
+        {
+            using var cmd = EasyPool<T>.AllocScope();
+            self.SendCommand(cmd.Value);
+        }
+
         public static TResult SendCommand<TResult>(this ICanSendCommand self, ICommand<TResult> command)
         {
             return self.GetArchitecture().SendCommand(command);

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace EasyFramework
@@ -9,14 +11,11 @@ namespace EasyFramework
         IArchitecture GetArchitecture();
     }
 
-    public interface ICanInitialize
+    public interface ICanInitializeAsync
     {
         bool IsInitialized { get; }
-        void Initialize();
-    }
-
-    public interface ICanDispose : IDisposable
-    {
+        UniTask InitializeAsync();
+        UniTask DeinitializeAsync();
     }
 
     public interface ICanSetArchitecture
@@ -26,6 +25,9 @@ namespace EasyFramework
 
     public interface IArchitecture
     {
+        UniTask InitializeAsync();
+        UniTask DeinitializeAsync();
+
         void RegisterSystem<T>(T system) where T : ISystem;
         void RegisterModel<T>(T model) where T : IModel;
         void RegisterUtility<T>(T utility) where T : IUtility;
@@ -42,9 +44,15 @@ namespace EasyFramework
 
         IFromRegisterEvent RegisterEvent<T>(EventHandlerDelegate<T> onEvent);
         void UnRegisterEvent<T>(EventHandlerDelegate<T> onEvent);
+    }
 
-        IFromRegisterEvent RegisterEventSubscriber();
-        void UnRegisterEventSubscriber();
+    public enum ArchitectureState
+    {
+        UnInitialize,
+        Initializing,
+        Initialized,
+        Deinitializing,
+        Deinitialized
     }
 
     public abstract class Architecture<T> : Singleton<T>, IArchitecture
@@ -52,61 +60,74 @@ namespace EasyFramework
     {
         private readonly DiContainer _container = new DiContainer();
 
-        protected override void OnSingletonInit()
-        {
-            Initialize();
+        public ArchitectureState State { get; private set; }
 
+        public async UniTask InitializeAsync()
+        {
+            if (State != ArchitectureState.UnInitialize || State != ArchitectureState.Deinitialized)
+                return;
+
+            State = ArchitectureState.Initializing;
+            await OnInitAsync();
+
+            var tasks = new List<UniTask>();
             foreach (var model in _container.ResolveAll<IModel>()
                          .Where(m => !m.IsInitialized))
             {
-                model.Initialize();
+                tasks.Add(model.InitializeAsync());
             }
 
             foreach (var system in _container.ResolveAll<ISystem>()
                          .Where(m => !m.IsInitialized))
             {
-                system.Initialize();
+                tasks.Add(system.InitializeAsync());
             }
+
+            await UniTask.WhenAll(tasks);
+            State = ArchitectureState.Initialized;
         }
 
-        protected override void OnSingletonDispose()
+        public async UniTask DeinitializeAsync()
         {
-            Dispose();
+            if (State != ArchitectureState.Initialized)
+                return;
 
+            State = ArchitectureState.Deinitializing;
+            await OnDeinitAsync();
+
+            var tasks = new List<UniTask>();
             foreach (var system in _container.ResolveAll<ISystem>().Where(s => s.IsInitialized))
-                system.Dispose();
+            {
+                tasks.Add(system.DeinitializeAsync());
+            }
+
             foreach (var model in _container.ResolveAll<IModel>().Where(m => m.IsInitialized))
-                model.Dispose();
+            {
+                tasks.Add(model.DeinitializeAsync());
+            }
 
+            await UniTask.WhenAll(tasks);
             _container.Clear();
+            State = ArchitectureState.Deinitialized;
         }
 
-        protected abstract void Initialize();
 
-        protected virtual void Dispose()
-        {
-        }
+        protected abstract UniTask OnInitAsync();
+
+        protected virtual UniTask OnDeinitAsync() => UniTask.CompletedTask;
 
         public void RegisterSystem<TSystem>(TSystem system) where TSystem : ISystem
         {
+            CheckRegistrable();
             system.SetArchitecture(this);
             _container.Bind(system);
-
-            if (IsSingletonInitialized)
-            {
-                system.Initialize();
-            }
         }
 
         public void RegisterModel<TModel>(TModel model) where TModel : IModel
         {
+            CheckRegistrable();
             model.SetArchitecture(this);
             _container.Bind(model);
-
-            if (IsSingletonInitialized)
-            {
-                model.Initialize();
-            }
         }
 
         public void RegisterUtility<TUtility>(TUtility utility) where TUtility : IUtility
@@ -129,16 +150,6 @@ namespace EasyFramework
             return CheckNull(_container.Resolve<TUtility>());
         }
 
-        private T CheckNull<T>(T val) where T : class
-        {
-            if (val == null)
-            {
-                throw new InvalidOperationException(
-                    $"The type of '{typeof(T)}' " +
-                    $"is not registered to architecture '{GetType()}'");
-            }
-            return val;
-        }
 
         public TResult SendCommand<TResult>(ICommand<TResult> command)
         {
@@ -150,7 +161,10 @@ namespace EasyFramework
             ExecuteCommand(command);
         }
 
-        public TResult SendQuery<TResult>(IQuery<TResult> query) => DoQuery<TResult>(query);
+        public TResult SendQuery<TResult>(IQuery<TResult> query)
+        {
+            return DoQuery<TResult>(query);
+        }
 
         protected virtual TResult DoQuery<TResult>(IQuery<TResult> query)
         {
@@ -186,14 +200,25 @@ namespace EasyFramework
             EventManager.Instance.UnRegister(this, onEvent);
         }
 
-        public IFromRegisterEvent RegisterEventSubscriber()
+        private T CheckNull<T>(T val) where T : class
         {
-            return EventManager.Instance.RegisterSubscriber(this);
+            if (val == null)
+            {
+                throw new InvalidOperationException(
+                    $"The type '{typeof(T)}' " +
+                    $"is not registered to architecture '{GetType()}'");
+            }
+
+            return val;
         }
 
-        public void UnRegisterEventSubscriber()
+        private void CheckRegistrable()
         {
-            EventManager.Instance.UnRegisterSubscriber(this);
+            if (State != ArchitectureState.UnInitialize || State != ArchitectureState.Deinitialized)
+            {
+                throw new InvalidOperationException(
+                    $"The architecture '{GetType()}' has been initialized, you can no longer register anything.");
+            }
         }
     }
 }

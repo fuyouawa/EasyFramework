@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace EasyFramework
@@ -14,7 +15,7 @@ namespace EasyFramework
     }
 
     public interface ISystem : IBelongToArchitecture, ICanSetArchitecture, ICanGetModel,
-        ICanRegisterEvent, ICanSendEvent, ICanGetSystem, ICanInitialize, ICanDispose, ICanGetUtility
+        ICanRegisterEvent, ICanSendEvent, ICanGetSystem, ICanInitializeAsync, ICanGetUtility
     {
     }
 
@@ -27,23 +28,33 @@ namespace EasyFramework
         void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
 
         public bool IsInitialized { get; protected set; }
+        private bool _isDoing = false;
 
-        void ICanInitialize.Initialize()
+        async UniTask ICanInitializeAsync.InitializeAsync()
         {
-            Initialize();
+            if (IsInitialized || _isDoing)
+                return;
+
+            _isDoing = true;
+            await OnInitAsync();
+            _isDoing = false;
+
             IsInitialized = true;
         }
 
-        void IDisposable.Dispose()
+        async UniTask ICanInitializeAsync.DeinitializeAsync()
         {
-            Dispose();
+            if (!IsInitialized || _isDoing)
+                return;
+
+            _isDoing = true;
+            await OnDeinitAsync();
+            _isDoing = false;
+
             IsInitialized = false;
         }
 
-        protected abstract void Initialize();
-
-        protected virtual void Dispose()
-        {
-        }
+        protected virtual UniTask OnInitAsync() => UniTask.CompletedTask;
+        protected virtual UniTask OnDeinitAsync() => UniTask.CompletedTask;
     }
 }
