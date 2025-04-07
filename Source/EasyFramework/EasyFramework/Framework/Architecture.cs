@@ -64,7 +64,7 @@ namespace EasyFramework
 
         public async UniTask InitializeAsync()
         {
-            if (State != ArchitectureState.UnInitialize || State != ArchitectureState.Deinitialized)
+            if (State != ArchitectureState.UnInitialize && State != ArchitectureState.Deinitialized)
                 return;
 
             State = ArchitectureState.Initializing;
@@ -214,7 +214,7 @@ namespace EasyFramework
 
         private void CheckRegistrable()
         {
-            if (State != ArchitectureState.UnInitialize || State != ArchitectureState.Deinitialized)
+            if (State == ArchitectureState.Initialized)
             {
                 throw new InvalidOperationException(
                     $"The architecture '{GetType()}' has been initialized, you can no longer register anything.");
