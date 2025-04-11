@@ -17,5 +17,15 @@ namespace EasyFramework.Editor
         {
             property.ValueEntry.WeakSmartValue = value;
         }
+
+        public static void DrawEx(this InspectorProperty property, string label)
+        {
+            property.Draw(EditorHelper.TempContent(label));
+        }
+
+        public static void DrawEx(this InspectorProperty property, string label, string tooltip)
+        {
+            property.Draw(EditorHelper.TempContent(label, tooltip));
+        }
     }
 }

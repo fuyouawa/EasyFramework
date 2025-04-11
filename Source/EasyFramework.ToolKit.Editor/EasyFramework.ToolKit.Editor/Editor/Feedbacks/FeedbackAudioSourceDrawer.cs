@@ -7,7 +7,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_AudioSourceDrawer : AbstractEasyFeedbackDrawer<EF_AudioSource>
+    public class FeedbackAudioSourceDrawer : AbstractFeedbackDrawer<FeedbackAudioSource>
     {
         private InspectorProperty _randomSfxProperty;
 

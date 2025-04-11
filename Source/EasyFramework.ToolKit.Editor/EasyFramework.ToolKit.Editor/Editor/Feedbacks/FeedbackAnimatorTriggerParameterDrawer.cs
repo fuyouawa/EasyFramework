@@ -5,7 +5,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_AnimatorTriggerParameterDrawer : AbstractEasyFeedbackDrawer<EF_AnimatorTriggerParameter>
+    public class FeedbackAnimatorTriggerParameterDrawer : AbstractFeedbackDrawer<FeedbackAnimatorTriggerParameter>
     {
         protected override void PostBuildPropertiesGroups()
         {

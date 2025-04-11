@@ -3,7 +3,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("动画控制器/触发参数")]
-    public class EF_AnimatorTriggerParameter : AbstractEasyFeedback
+    public class FeedbackAnimatorTriggerParameter : AbstractFeedback
     {
         public Animator TargetAnimator;
         public string ParameterName;

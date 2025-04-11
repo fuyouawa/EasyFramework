@@ -5,7 +5,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_GameObjectInstantiateDrawer : AbstractEasyFeedbackDrawer<EF_GameObjectInstantiate>
+    public class FeedbackGameObjectInstantiateDrawer : AbstractFeedbackDrawer<FeedbackGameObjectInstantiate>
     {
         protected override void PostBuildPropertiesGroups()
         {

@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("粒子/播放粒子")]
-    public class EF_ParticlePlay : AbstractEasyFeedback
+    public class FeedbackParticlePlay : AbstractFeedback
     {
         public enum Modes
         {

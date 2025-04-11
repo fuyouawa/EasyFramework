@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("游戏物体/调用函数")]
-    public class EF_GameObjectInvokeMethod : AbstractEasyFeedback
+    public class FeedbackGameObjectInvokeMethod : AbstractFeedback
     {
         public MethodPicker Picker = new MethodPicker();
         

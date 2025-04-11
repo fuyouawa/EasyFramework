@@ -3,7 +3,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("调试/打印")]
-    public class EF_DebugLog : AbstractEasyFeedback
+    public class FeedbackDebugLog : AbstractFeedback
     {
         public float Duration;
         public string Message = "HelloWorld!";

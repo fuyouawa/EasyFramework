@@ -7,7 +7,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_SoundDrawer : AbstractEasyFeedbackDrawer<EF_Sound>
+    public class FeedbackSoundDrawer : AbstractFeedbackDrawer<FeedbackSound>
     {
         private InspectorProperty _propertyOfRandomSfx;
         private InspectorProperty _propertyOfVolume;
@@ -17,10 +17,10 @@ namespace EasyFramework.ToolKit.Editor
         protected override void Initialize()
         {
             base.Initialize();
-            _propertyOfRandomSfx = Property.Children[nameof(EF_Sound.RandomSfx)];
-            _propertyOfVolume = Property.Children[nameof(EF_Sound.Volume)];
-            _propertyOfPitch = Property.Children[nameof(EF_Sound.Pitch)];
-            _propertyOfDistance = Property.Children[nameof(EF_Sound.Distance)];
+            _propertyOfRandomSfx = Property.Children[nameof(FeedbackSound.RandomSfx)];
+            _propertyOfVolume = Property.Children[nameof(FeedbackSound.Volume)];
+            _propertyOfPitch = Property.Children[nameof(FeedbackSound.Pitch)];
+            _propertyOfDistance = Property.Children[nameof(FeedbackSound.Distance)];
         }
 
         protected override void PostBuildPropertiesGroups()
@@ -43,7 +43,7 @@ namespace EasyFramework.ToolKit.Editor
                     EditorHelper.TempContent("播放方式"),
                     ref Feedback.PlayMethod);
 
-                if (Feedback.PlayMethod == EF_Sound.PlayMethods.Pool)
+                if (Feedback.PlayMethod == FeedbackSound.PlayMethods.Pool)
                 {
                     EasyEditorField.Value(
                         EditorHelper.TempContent("池大小"),

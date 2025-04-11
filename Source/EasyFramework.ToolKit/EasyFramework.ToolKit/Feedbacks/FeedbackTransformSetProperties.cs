@@ -3,7 +3,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("变换/设置属性")]
-    public class EF_TransformSetProperties : AbstractEasyFeedback
+    public class FeedbackTransformSetProperties : AbstractFeedback
     {
         public Transform Target;
 

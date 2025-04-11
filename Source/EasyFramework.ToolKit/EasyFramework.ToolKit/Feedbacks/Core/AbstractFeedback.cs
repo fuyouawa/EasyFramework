@@ -16,19 +16,20 @@ namespace EasyFramework.ToolKit
     }
 
     [Serializable, InlineProperty, HideReferenceObjectPicker]
-    public abstract class AbstractEasyFeedback
+    public abstract class AbstractFeedback
     {
         public string Label;
         public bool Enable = true;
         public float DelayBeforePlay;
         public bool Blocking;
         public bool RepeatForever = false;
+        [HideIf(nameof(RepeatForever))]
         public int AmountOfRepeat = 1;
         public float IntervalBetweenRepeats = 0f;
 
         public virtual string Tip => string.Empty;
 
-        public EasyFeedbacks Owner { get; private set; }
+        public Feedbacks Owner { get; private set; }
         public bool IsPlaying { get; protected set; }
         public float TimeSincePlay { get; protected set; }
 
@@ -38,7 +39,7 @@ namespace EasyFramework.ToolKit
         private Coroutine _lastPlayCoroutine;
         private int _playCount = 0;
 
-        public virtual void Setup(EasyFeedbacks owner)
+        public virtual void Setup(Feedbacks owner)
         {
             Owner = owner;
         }

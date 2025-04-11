@@ -3,7 +3,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("游戏物体/设置启用状态")]
-    public class EF_GameObjectSetActive : AbstractEasyFeedback
+    public class FeedbackGameObjectSetActive : AbstractFeedback
     {
         public GameObject Target;
         public bool ActiveToSet = true;

@@ -5,7 +5,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_TransformSetPropertiesDrawer : AbstractEasyFeedbackDrawer<EF_TransformSetProperties>
+    public class FeedbackTransformSetPropertiesDrawer : AbstractFeedbackDrawer<FeedbackTransformSetProperties>
     {
         protected override void PostBuildPropertiesGroups()
         {

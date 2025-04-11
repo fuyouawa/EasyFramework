@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("游戏物体/实例化")]
-    public class EF_GameObjectInstantiate : AbstractEasyFeedback
+    public class FeedbackGameObjectInstantiate : AbstractFeedback
     {
         public GameObject Prefab;
         public bool HasLiftTime;

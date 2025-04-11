@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public class EasyFeedbacks : SerializedMonoBehaviour
+    public class Feedbacks : SerializedMonoBehaviour
     {
         public enum InitializationModes
         {
@@ -20,11 +20,11 @@ namespace EasyFramework.ToolKit
         public bool AutoPlayOnEnable;
         public bool CanPlay = true;
         public bool CanPlayWhileAlreadyPlaying = false;
+        [ShowIf(nameof(CanPlayWhileAlreadyPlaying))]
         public bool CanMultiPlay = false;
-        public List<AbstractEasyFeedback> Feedbacks => _feedbacks;
 
         [SerializeField, ListDrawerSettings(HideAddButton = true)]
-        private readonly List<AbstractEasyFeedback> _feedbacks = new List<AbstractEasyFeedback>();
+        private readonly List<AbstractFeedback> _feedbacks = new List<AbstractFeedback>();
 
         public bool IsInitialized { get; private set; }
         public FeedbacksCoroutineHelper CoroutineHelper { get; private set; }
@@ -92,6 +92,11 @@ namespace EasyFramework.ToolKit
             {
                 item.OnDisable();
             }
+        }
+
+        public void AddFeedback(AbstractFeedback feedback)
+        {
+            _feedbacks.Add(feedback);
         }
 
         public bool IsPlayable()

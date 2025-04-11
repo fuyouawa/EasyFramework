@@ -1,13 +1,11 @@
-using EasyFramework;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Pokeworld.UI.Tools
+namespace EasyFramework.ToolKit
 {
-    public class EasyToggleGroup : MonoBehaviour
+    public class ToggleGroupEx : MonoBehaviour
     {
         [SerializeField] private bool _allowSwitchOff = false;
 
@@ -24,9 +22,9 @@ namespace Pokeworld.UI.Tools
             set { _allowSwitchOff = value; }
         }
 
-        private readonly List<EasyToggle> _toggles = new List<EasyToggle>();
+        private readonly List<ToggleEx> _toggles = new List<ToggleEx>();
 
-        public EasyEvent<EasyToggle> OnToggleSelected;
+        public EasyEvent<ToggleEx> OnToggleSelected;
 
         /// <summary>
         /// Because all the Toggles have registered themselves in the OnEnabled, Start should check to
@@ -42,7 +40,7 @@ namespace Pokeworld.UI.Tools
             EnsureValidState();
         }
 
-        private void ValidateToggleIsInGroup(EasyToggle toggle)
+        private void ValidateToggleIsInGroup(ToggleEx toggle)
         {
             if (toggle == null || !_toggles.Contains(toggle))
                 throw new ArgumentException(string.Format("Toggle {0} is not part of ToggleGroup {1}",
@@ -54,7 +52,7 @@ namespace Pokeworld.UI.Tools
         /// </summary>
         /// <param name="toggle">The toggle that got triggered on.</param>
         /// <param name="sendCallback">If other toggles should send onValueChanged.</param>
-        internal void NotifyToggleOn(EasyToggle toggle, bool sendCallback = true)
+        internal void NotifyToggleOn(ToggleEx toggle, bool sendCallback = true)
         {
             ValidateToggleIsInGroup(toggle);
             // disable all toggles in the group
@@ -79,7 +77,7 @@ namespace Pokeworld.UI.Tools
         /// Unregister a toggle from the group.
         /// </summary>
         /// <param name="toggle">The toggle to remove.</param>
-        internal void UnRegisterToggle(EasyToggle toggle)
+        internal void UnRegisterToggle(ToggleEx toggle)
         {
             if (_toggles.Contains(toggle))
                 _toggles.Remove(toggle);
@@ -99,7 +97,7 @@ namespace Pokeworld.UI.Tools
         /// Register a toggle with the toggle group so it is watched for changes and notified if another toggle in the group changes.
         /// </summary>
         /// <param name="toggle">The toggle to register with the group.</param>
-        internal void RegisterToggle(EasyToggle toggle)
+        internal void RegisterToggle(ToggleEx toggle)
         {
             if (!_toggles.Contains(toggle))
                 _toggles.Add(toggle);
@@ -151,7 +149,7 @@ namespace Pokeworld.UI.Tools
         /// <remarks>
         /// Toggles belonging to this group but are not active either because their GameObject is inactive or because the Toggle component is disabled, are not returned as part of the list.
         /// </remarks>
-        public EasyToggle[] ActiveToggles()
+        public ToggleEx[] ActiveToggles()
         {
             return _toggles.Where(x => x.IsOn).ToArray();
         }
@@ -163,7 +161,7 @@ namespace Pokeworld.UI.Tools
         /// <remarks>
         /// Get the active toggle for this group. As the group
         /// </remarks>
-        public EasyToggle GetFirstActiveToggle()
+        public ToggleEx GetFirstActiveToggle()
         {
             var activeToggles = ActiveToggles();
             return activeToggles.FirstOrDefault();

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("辅助/运行指定时间")]
-    public class EF_AuxiliaryRunTime : AbstractEasyFeedback
+    public class FeedbackAuxiliaryRunTime : AbstractFeedback
     {
         public enum Modes
         {

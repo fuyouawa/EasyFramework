@@ -1,16 +1,15 @@
 using System;
-using EasyFramework;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
 
-namespace Pokeworld.UI.Tools
+namespace EasyFramework.ToolKit
 {
     /// <summary>
     /// Display settings for when a toggle is activated or deactivated.
     /// </summary>
-    public enum ToggleTransition
+    public enum ToggleExTransition
     {
         /// <summary>
         /// Show / hide the toggle instantly
@@ -24,12 +23,12 @@ namespace Pokeworld.UI.Tools
     }
 
     [RequireComponent(typeof(RectTransform))]
-    public class EasyToggle : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
+    public class ToggleEx : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         /// <summary>
         /// Transition mode for the toggle.
         /// </summary>
-        public ToggleTransition ToggleTransition = ToggleTransition.Fade;
+        public ToggleExTransition ToggleTransition = ToggleExTransition.Fade;
 
         /// <summary>
         /// Graphic the toggle should be working with.
@@ -37,12 +36,12 @@ namespace Pokeworld.UI.Tools
         public Graphic Graphic;
 
         [SerializeField]
-        private EasyToggleGroup _group;
+        private ToggleGroupEx _group;
 
         /// <summary>
         /// Group the toggle belongs to.
         /// </summary>
-        public EasyToggleGroup Group
+        public ToggleGroupEx Group
         {
             get { return _group; }
             set
@@ -126,7 +125,7 @@ namespace Pokeworld.UI.Tools
             base.OnDidApplyAnimationProperties();
         }
 
-        private void SetToggleGroup(EasyToggleGroup newGroup, bool setMemberValue)
+        private void SetToggleGroup(ToggleGroupEx newGroup, bool setMemberValue)
         {
             // Sometimes IsActive returns false in OnDisable so don't check for it.
             // Rather remove the toggle too often than too little.
@@ -186,7 +185,7 @@ namespace Pokeworld.UI.Tools
                 }
             }
             
-            PlayEffect(ToggleTransition == ToggleTransition.None);
+            PlayEffect(ToggleTransition == ToggleExTransition.None);
             // Always send event when toggle is clicked, even if value didn't change
             // due to already active toggle in a toggle group being clicked.
             // Controls like Dropdown rely on this.

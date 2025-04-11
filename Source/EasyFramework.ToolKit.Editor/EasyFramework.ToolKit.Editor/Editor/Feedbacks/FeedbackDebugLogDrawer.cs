@@ -4,7 +4,7 @@ using Sirenix.OdinInspector.Editor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_DebugLogDrawer : AbstractEasyFeedbackDrawer<EF_DebugLog>
+    public class FeedbackDebugLogDrawer : AbstractFeedbackDrawer<FeedbackDebugLog>
     {
         protected override void PostBuildPropertiesGroups()
         {

@@ -4,7 +4,7 @@ using Sirenix.OdinInspector.Editor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class EF_GameObjectSetActiveDrawer : AbstractEasyFeedbackDrawer<EF_GameObjectSetActive>
+    public class FeedbackGameObjectSetActiveDrawer : AbstractFeedbackDrawer<FeedbackGameObjectSetActive>
     {
         protected override void PostBuildPropertiesGroups()
         {

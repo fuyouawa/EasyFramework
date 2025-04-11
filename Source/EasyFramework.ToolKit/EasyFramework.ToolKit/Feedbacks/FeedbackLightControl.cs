@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("光照/光照控制")]
-    public class EF_LightControl : AbstractEasyFeedback
+    public class FeedbackLightControl : AbstractFeedback
     {
         public Light TargetLight;
         public float Duration = 0.2f;

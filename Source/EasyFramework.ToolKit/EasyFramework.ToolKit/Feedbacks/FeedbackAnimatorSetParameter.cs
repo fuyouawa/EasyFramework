@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [AddEasyFeedbackMenu("动画控制器/设置参数")]
-    public class EF_AnimatorSetParameter : AbstractEasyFeedback
+    public class FeedbackAnimatorSetParameter : AbstractFeedback
     {
         public enum ParameterTypes
         {
