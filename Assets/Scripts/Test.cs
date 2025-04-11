@@ -3,12 +3,10 @@ using EasyFramework;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    public int Jj = 10;
-    public float OO = 1.34f;
-
     void Awake()
     {
         Log.Logger = new LoggerConfiguration()
@@ -19,9 +17,8 @@ public class Test : MonoBehaviour
             .CreateLogger();
     }
 
-    [Button]
-    public void TestLog(string message)
+    public void TestLog(InputField input)
     {
-        Log.Info(message);
+        Log.Info(input.text);
     }
 }
