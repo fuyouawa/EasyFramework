@@ -1,6 +1,4 @@
-using EasyFramework.ToolKit;
-
-namespace EasyFramework
+namespace EasyFramework.ToolKit
 {
     public static class SinkExtension
     {
