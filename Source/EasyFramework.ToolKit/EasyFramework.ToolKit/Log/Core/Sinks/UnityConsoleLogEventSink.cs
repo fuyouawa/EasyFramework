@@ -41,11 +41,15 @@ namespace EasyFramework.ToolKit
             }
             else
             {
-                var message = e.Message;
+                var sb = new StringBuilder(e.Message);
                 var stackTrack = GetStackTrack();
                 if (stackTrack.IsNotNullOrWhiteSpace())
-                    message += $"\n{stackTrack}\n--------- Unity Stack Track ---------";
-                _unityLogger.Log(type, message);
+                {
+                    sb.AppendLine();
+                    sb.AppendLine(stackTrack);
+                    sb.Append("--------- Unity Stack Track ---------");
+                }
+                _unityLogger.Log(type, sb.ToString());
             }
         }
 
@@ -63,8 +67,16 @@ namespace EasyFramework.ToolKit
             {
                 var frame = frames[i];
                 var method = frame.GetMethod();
-                var text = $"{method.DeclaringType.Namespace}.{method.DeclaringType.Name}.{method.Name} at ({frame.GetFileName()}:{frame.GetFileLineNumber()})";
-                sb.AppendLine(text);
+                sb.Append($"{method.DeclaringType.Namespace}.{method.DeclaringType.Name}:");
+                sb.Append(method.Name);
+
+                var fileName = frame.GetFileName();
+                var lineNum = frame.GetFileLineNumber();
+
+                sb.Append(" at (");
+                sb.Append($"<a href=\"{fileName}\" line={lineNum}>");
+                sb.Append($"{fileName}:{lineNum}");
+                sb.AppendLine("</a>)");
             }
             return sb.ToString();
         }
