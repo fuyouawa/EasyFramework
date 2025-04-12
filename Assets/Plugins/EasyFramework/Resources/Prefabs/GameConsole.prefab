@@ -418,7 +418,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 11419798}
   m_HandleRect: {fileID: 22426080}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2684,6 +2684,7 @@ MonoBehaviour:
   _btnClear: {fileID: 114466839828933532}
   _btnClose: {fileID: 11477250}
   _btnCollapse: {fileID: 11437802}
+  _btnSendCommand: {fileID: 4802633512571326684}
   _inputSearch: {fileID: 114664465529608634}
   _inputCommand: {fileID: 114000010993257018}
   _textInfoCount: {fileID: 11400274}
@@ -2746,7 +2747,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 5
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
@@ -4751,7 +4752,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5265614580344042609, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.989167
+      value: -12.905833
       objectReference: {fileID: 0}
     - target: {fileID: 6072667126465163102, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4835,7 +4836,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8464170389494474287, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.989167
+      value: -12.905833
       objectReference: {fileID: 0}
     - target: {fileID: 8464170389494474287, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4867,7 +4868,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9111820136477139616, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -7.9166665
+      value: -5.833333
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -48,18 +48,35 @@ namespace EasyFramework.ToolKit
             if (frames == null)
                 return null;
 
-            for (int i = 0; i < frames.Length; i++)
-            {
-                var frame = frames[i];
-                var fileName = frame.GetFileName();
-                if (fileName.IsNullOrEmpty())
-                {
-                    return frame;
-                }
+            const string logSign = "EasyFramework.ToolKit\\Log\\Core\\Log.cs";
 
-                if (fileName.Contains("EasyFramework.ToolKit\\Log\\Core\\Log.cs"))
+            // 判断是否来自日志
+            if (frames.Any(f => f.GetFileName().Is(x => x != null && x.Contains(logSign))))
+            {
+                // 去除日志栈帧
+                for (int i = 0; i < frames.Length; i++)
                 {
-                    return frames[i + 1];
+                    var frame = frames[i];
+                    var fileName = frame.GetFileName();
+
+                    if (fileName.Contains(logSign))
+                    {
+                        return frames[i + 1];
+                    }
+                }
+            }
+            else
+            {
+                // 去除空白文件名
+                for (int i = 0; i < frames.Length; i++)
+                {
+                    var frame = frames[i];
+                    var fileName = frame.GetFileName();
+                    var method = frame.GetMethod();
+                    if (fileName.IsNotNullOrEmpty() && method.DeclaringType != typeof(GameConsole))
+                    {
+                        return frame;
+                    }
                 }
             }
 

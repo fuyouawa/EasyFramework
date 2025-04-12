@@ -20,16 +20,16 @@ namespace EasyFramework.ToolKit.Editor
             public readonly GUIContent ScaleContent = EditorGUIUtility.TrTextContent("Scale");
         }
 
-        private readonly ComponentPreviewPanel _componentPreviewPanel = new ComponentPreviewPanel();
+        // private readonly ComponentPreviewPanel _componentPreviewPanel = new ComponentPreviewPanel();
         protected override void OnEnable()
         {
             base.OnEnable();
-            _componentPreviewPanel.OnEnable(Target.gameObject, targets.Select(t =>
-            {
-                if (!(t is Transform t2))
-                    throw new Exception("T is different from the type in the CustomEditor attribute");
-                return t2.gameObject;
-            }));
+            // _componentPreviewPanel.OnEnable(Target.gameObject, targets.Select(t =>
+            // {
+            //     if (!(t is Transform t2))
+            //         throw new Exception("T is different from the type in the CustomEditor attribute");
+            //     return t2.gameObject;
+            // }));
         }
 
         private static Contents s_contents;
@@ -37,15 +37,15 @@ namespace EasyFramework.ToolKit.Editor
         {
             s_contents ??= new Contents();
 
-            _componentPreviewPanel.OnHeaderGUI();
+            // _componentPreviewPanel.OnHeaderGUI();
             serializedObject.ApplyModifiedProperties();
 
-            SirenixEditorGUI.Title("局部空间", string.Empty, TextAlignment.Left, true);
+            SirenixEditorGUI.Title("Local Space", string.Empty, TextAlignment.Left, true);
             // EditorGUILayout.LabelField("Local Space", EditorStyles.boldLabel);
 
             base.OnInspectorGUI();
             
-            SirenixEditorGUI.Title("世界空间", string.Empty, TextAlignment.Left, true);
+            SirenixEditorGUI.Title("World Space", string.Empty, TextAlignment.Left, true);
             // EditorGUILayout.LabelField("World", EditorStyles.boldLabel);
 
             var v = Target.position;

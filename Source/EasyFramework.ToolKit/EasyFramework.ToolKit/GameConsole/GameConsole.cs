@@ -65,7 +65,28 @@ namespace EasyFramework.ToolKit
             Destroy(gameObject);
         }
 
-        public void PushLog(LogType logType, string message, StackTrace stackTrace)
+        public void LogInfo(string message)
+        {
+            Log(LogType.Info, message);
+        }
+
+        public void LogWarn(string message)
+        {
+            Log(LogType.Warn, message);
+        }
+
+        public void LogError(string message)
+        {
+            Log(LogType.Error, message);
+        }
+
+
+        public void Log(LogType logType, string message)
+        {
+            Log(logType, message, new StackTrace(true));
+        }
+
+        public void Log(LogType logType, string message, StackTrace stackTrace)
         {
             var data = new GameConsoleLogItemData()
             {

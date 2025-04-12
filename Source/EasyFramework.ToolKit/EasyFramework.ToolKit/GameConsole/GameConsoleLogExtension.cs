@@ -25,7 +25,7 @@ namespace EasyFramework.ToolKit
                     throw new ArgumentOutOfRangeException();
             }
 
-            GameConsole.Instance.PushLog(logType, e.Message, new StackTrace(true));
+            GameConsole.Instance.Log(logType, e.Message);
         }
     }
 

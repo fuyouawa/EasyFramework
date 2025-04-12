@@ -80,6 +80,11 @@ namespace EasyFramework
             return int.Parse(str);
         }
 
+        public static float ToFloat(this string str)
+        {
+            return float.Parse(str);
+        }
+
         public static bool IsValidIdentifier(this string identifier, bool throwIfInvalid = false)
         {
             if (identifier.IsNullOrWhiteSpace())
