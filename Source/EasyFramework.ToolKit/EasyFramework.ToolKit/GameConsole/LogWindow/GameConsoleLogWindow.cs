@@ -84,17 +84,40 @@ namespace EasyFramework.ToolKit
             if (_inputCommand.text.IsNullOrWhiteSpace())
                 return;
 
-            var cmd = _inputCommand.text.Trim();
+            var originCmd = _inputCommand.text.Trim();
 
-            var res = Regex.Matches(cmd, @"^(\w+)\s*(\S*)$");
-            if (res.Count == 0)
+            var match = Regex.Match(originCmd, @"^(\w+)(?:\s+(\w+))?$");
+            if (!match.Success)
             {
-                GameConsole.Instance.LogError("Command format error, must be: <command> [argument]");
+                var errmsg = "Command format error, must be: <command> [argument]";
+                GameConsole.Instance.LogError(errmsg);
+                Debug.LogError(errmsg);
                 return;
             }
 
+            var cmd = match.Groups[1].Value;
+            var c = GameConsoleCommandsManager.Instance.GetCommand(cmd);
+            if (c == null)
+            {
+                var errmsg = $"Unknown command: {cmd}";
+                GameConsole.Instance.Log(GameConsole.LogType.Error, errmsg);
+                Debug.LogError(errmsg);
+                return;
+            }
+            
             GameConsole.Instance.LogInfo($"Input Command: {cmd}");
-            GameConsoleCommandsManager.Instance.Send(res[0].Value, res.Count == 2 ? res[1].Value : null);
+
+            try
+            {
+                c.Send(match.Groups[2].Success ? match.Groups[2].Value : null);
+            }
+            catch (Exception e)
+            {
+                var errmsg = $"Send command failed: {e.Message}";
+                GameConsole.Instance.Log(GameConsole.LogType.Error, errmsg);
+                Debug.LogError(errmsg);
+                return;
+            }
         }
 
         private void OnPushLog(GameConsoleLogItemData data)
