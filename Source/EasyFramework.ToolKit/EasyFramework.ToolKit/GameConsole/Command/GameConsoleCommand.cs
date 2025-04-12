@@ -47,7 +47,17 @@ namespace EasyFramework.ToolKit
             {
                 var p = parameters[0];
                 var send = _methodOfInternalSendWithArg.MakeGenericMethod(p.ParameterType);
-                send.Invoke(this, new object[] { Call, argText });
+
+                try
+                {
+                    send.Invoke(this, new object[] { Call, argText });
+                }
+                catch (TargetInvocationException e)
+                {
+                    if (e.InnerException != null)
+                        throw e.InnerException;
+                    throw;
+                }
             }
             else
             {
@@ -66,31 +76,29 @@ namespace EasyFramework.ToolKit
 
         private void InternalSendWithArg<T>(MethodInfo call, string argText)
         {
-            if (argText.IsNotNullOrWhiteSpace())
+            if (argText.IsNullOrWhiteSpace() && !Attribute.OptionalParameter)
             {
-                object arg = null;
-                if (typeof(T).IsPrimitive)
-                {
-                    if (typeof(T).IsIntegerType())
-                        arg = argText.ToInt();
-                    else if (typeof(T).IsFloatingPointType())
-                        arg = argText.ToFloat();
-                    else
-                        throw new NotImplementedException($"The arg type '{typeof(T)}' is not implemented!");
-                }
-                else if (typeof(T).IsStringType())
-                    arg = argText;
-                else
-                {
-                    arg = EasySerialize.From<T>(EasyDataFormat.Json, Encoding.UTF8.GetBytes(argText));
-                }
-
-                call.Invoke(this, new object[] { arg });
+                throw new ArgumentException($"The command '{Attribute.Name}' argument cannot be empty!");
             }
+
+            object arg = null;
+            if (typeof(T).IsPrimitive)
+            {
+                if (typeof(T).IsIntegerType())
+                    arg = argText.ToInt();
+                else if (typeof(T).IsFloatingPointType())
+                    arg = argText.ToFloat();
+                else
+                    throw new NotImplementedException($"The arg type '{typeof(T)}' is not implemented!");
+            }
+            else if (typeof(T).IsStringType())
+                arg = argText;
             else
             {
-                call.Invoke(this, new object[] { null });
+                arg = EasySerialize.From<T>(EasyDataFormat.Json, Encoding.UTF8.GetBytes(argText));
             }
+
+            call.Invoke(this, new object[] { arg });
         }
 
         private void InternalSendNoArg(MethodInfo call, string argText)

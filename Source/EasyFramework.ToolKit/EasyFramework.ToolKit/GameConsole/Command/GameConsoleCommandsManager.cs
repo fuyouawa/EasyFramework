@@ -25,14 +25,14 @@ namespace EasyFramework.ToolKit
 
             var examples = methods
                 .Where(m => m.HasCustomAttribute<GameConsoleCommandExampleAttribute>() &&
-                            m.ReturnParameter != null &&
-                            m.ReturnParameter.ParameterType == typeof(string))
+                            m.ReturnType == typeof(string))
                 .ToDictionary(m => m.GetCustomAttribute<GameConsoleCommandExampleAttribute>().Name, m => m);
 
             foreach (var call in calls)
             {
                 var attr = call.GetCustomAttribute<GameConsoleCommandAttribute>();
-                _commands[attr.Name] = new GameConsoleCommand(call, examples.GetValueOrDefault(attr.Name));
+                var example = examples.GetValueOrDefault(attr.Name);
+                _commands[attr.Name] = new GameConsoleCommand(call, example);
             }
         }
 

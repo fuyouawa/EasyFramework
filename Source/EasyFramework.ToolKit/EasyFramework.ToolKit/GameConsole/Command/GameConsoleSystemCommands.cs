@@ -27,7 +27,7 @@ namespace EasyFramework.ToolKit
 
                 if (cmd.Parameter != null)
                 {
-                    sb.AppendLine("Argument Property:");
+                    sb.AppendLine("Argument:");
                     sb.Append("\t" + "Optional".PadRight(align));
                     if (cmd.Attribute.OptionalParameter)
                     {
@@ -39,21 +39,27 @@ namespace EasyFramework.ToolKit
                     }
 
                     sb.Append("\t" + "Type".PadRight(align));
-                    if (cmd.Parameter.ParameterType.IsPrimitive)
+
+                    var paramType = cmd.Parameter.ParameterType;
+                    if (paramType.IsPrimitive || paramType.IsStringType())
                     {
-                        sb.AppendLine(cmd.Parameter.ParameterType.GetAliases());
+                        sb.AppendLine(paramType.GetAliases());
                     }
                     else
                     {
                         sb.AppendLine("Object");
                     }
-
-                    var example = cmd.GetExample();
-                    if (example.IsNotNullOrWhiteSpace())
-                    {
-                        sb.AppendLine("Argument Example:");
-                        sb.Append($"\t{example}");
-                    }
+                }
+                
+                sb.AppendLine("Example:");
+                var example = cmd.GetExample();
+                if (example.IsNotNullOrWhiteSpace())
+                {
+                    sb.Append($"\t{example}");
+                }
+                else
+                {
+                    sb.Append("Empty example.");
                 }
 
                 GameConsole.Instance.LogInfo(sb.ToString());
@@ -92,6 +98,30 @@ namespace EasyFramework.ToolKit
         static string HelpExample()
         {
             return "help echo";
+        }
+
+        [GameConsoleCommand("echo", Description = "Echo the input argument.")]
+        static void Echo(string message)
+        {
+            GameConsole.Instance.LogInfo(message);
+        }
+
+        [GameConsoleCommandExample("echo")]
+        static string EchoExample()
+        {
+            return "echo Hello world!";
+        }
+
+        [GameConsoleCommand("clear", Description = "Clear log.")]
+        static void Clear()
+        {
+            GameConsole.Instance.ClearLogs();
+        }
+
+        [GameConsoleCommandExample("clear")]
+        static string ClearExample()
+        {
+            return "clear";
         }
     }
 }

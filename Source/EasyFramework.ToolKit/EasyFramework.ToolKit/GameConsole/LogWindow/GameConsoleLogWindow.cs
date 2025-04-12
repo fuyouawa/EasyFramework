@@ -86,7 +86,7 @@ namespace EasyFramework.ToolKit
 
             var originCmd = _inputCommand.text.Trim();
 
-            var match = Regex.Match(originCmd, @"^(\w+)(?:\s+(\w+))?$");
+            var match = Regex.Match(originCmd, @"^(\w+)(?:\s+(.+))?$");
             if (!match.Success)
             {
                 var errmsg = "Command format error, must be: <command> [argument]";
@@ -105,7 +105,7 @@ namespace EasyFramework.ToolKit
                 return;
             }
             
-            GameConsole.Instance.LogInfo($"Input Command: {cmd}");
+            // GameConsole.Instance.LogInfo($"Input Command: {cmd}");
 
             try
             {
