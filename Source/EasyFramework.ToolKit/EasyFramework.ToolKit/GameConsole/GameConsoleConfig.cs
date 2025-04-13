@@ -2,8 +2,7 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [SettingsAssetPath, CreateAssetMenu(fileName = nameof(GameConsoleSettings), menuName = "EasyFramework/Create GameConsoleSettings")]
-    public class GameConsoleSettings : ScriptableObjectSingleton<GameConsoleSettings>
+    public class GameConsoleConfig : MonoBehaviour
     {
         public Sprite InfoLogIcon;
         public Sprite WarnLogIcon;

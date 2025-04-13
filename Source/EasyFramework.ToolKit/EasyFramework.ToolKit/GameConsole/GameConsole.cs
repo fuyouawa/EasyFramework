@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
@@ -22,8 +23,10 @@ namespace EasyFramework.ToolKit
             Error
         }
 
+        [Title("Binding")]
         [SerializeField] private GameConsoleLogWindow _logWindow;
         [SerializeField] private GameConsoleLogPopup _logPopup;
+        [SerializeField] private GameConsoleConfig _config;
 
         internal event Action<GameConsoleLogItemData> OnPushLog;
         internal event Action OnClearLogs;
@@ -37,6 +40,7 @@ namespace EasyFramework.ToolKit
         public IReadonlyBindableValue<int> InfoLogCount => _infoLogCount;
         public IReadonlyBindableValue<int> WarnLogCount => _warnLogCount;
         public IReadonlyBindableValue<int> ErrorLogCount => _errorLogCount;
+        public GameConsoleConfig Config => _config;
 
         public void ClearLogs()
         {

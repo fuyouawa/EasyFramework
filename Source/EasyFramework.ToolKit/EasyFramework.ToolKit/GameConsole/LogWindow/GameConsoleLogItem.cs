@@ -11,19 +11,29 @@ namespace EasyFramework.ToolKit
         [SerializeField] private Image _icon;
         [SerializeField] private Text _textMessage;
         [SerializeField] private Text _textPosition;
+        [SerializeField] private Button _btnCopy;
+
+        void Awake()
+        {
+            _btnCopy.onClick.AddListener(() =>
+            {
+                GUIUtility.systemCopyBuffer = _textMessage.text;
+            });
+        }
+
 
         internal void Set(GameConsoleLogItemData data)
         {
             switch (data.LogType)
             {
                 case GameConsole.LogType.Info:
-                    _icon.sprite = GameConsoleSettings.Instance.InfoLogIcon;
+                    _icon.sprite = GameConsole.Instance.Config.InfoLogIcon;
                     break;
                 case GameConsole.LogType.Warn:
-                    _icon.sprite = GameConsoleSettings.Instance.WarnLogIcon;
+                    _icon.sprite = GameConsole.Instance.Config.WarnLogIcon;
                     break;
                 case GameConsole.LogType.Error:
-                    _icon.sprite = GameConsoleSettings.Instance.ErrorLogIcon;
+                    _icon.sprite = GameConsole.Instance.Config.ErrorLogIcon;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(data.LogType), data.LogType, null);

@@ -8,7 +8,8 @@ namespace EasyFramework.ToolKit
 {
     public class GameConsoleLogWindow : MonoBehaviour
     {
-        [Title("Bindings")] [SerializeField] private Button _btnClear;
+        [Title("Binding")]
+        [SerializeField] private Button _btnClear;
         [SerializeField] private Button _btnClose;
         [SerializeField] private Button _btnCollapse;
         [SerializeField] private Button _btnSendCommand;
@@ -132,7 +133,7 @@ namespace EasyFramework.ToolKit
 
         private void SpawnLogItem(GameConsoleLogItemData data)
         {
-            var item = Instantiate(GameConsoleSettings.Instance.LogItemPrefab, _logsContainer, false);
+            var item = Instantiate(GameConsole.Instance.Config.LogItemPrefab, _logsContainer, false);
             item.Set(data);
         }
     }
