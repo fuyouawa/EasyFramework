@@ -21,6 +21,12 @@ namespace EasyFramework.ToolKit
             });
         }
 
+        public void Clear()
+        {
+            _icon.sprite = null;
+            _textMessage.text = null;
+            _textPosition.text = null;
+        }
 
         internal void Set(GameConsoleLogItemData data)
         {

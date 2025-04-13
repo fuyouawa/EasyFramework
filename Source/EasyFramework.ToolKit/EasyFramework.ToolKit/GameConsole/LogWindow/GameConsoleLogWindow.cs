@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -8,38 +9,53 @@ namespace EasyFramework.ToolKit
 {
     public class GameConsoleLogWindow : MonoBehaviour
     {
-        [Title("Binding")]
-        [SerializeField] private Button _btnClear;
-        [SerializeField] private Button _btnClose;
-        [SerializeField] private Button _btnCollapse;
-        [SerializeField] private Button _btnSendCommand;
+        [Title("Settings")] [SerializeField, DisableInPlayMode]
+        private int _pageMaxNumber = 10;
 
+        [Title("Binding")] [SerializeField] private Button _btnClear;
         [SerializeField] private InputField _inputSearch;
-        [SerializeField] private InputField _inputCommand;
-
         [SerializeField] private Text _textInfoCount;
         [SerializeField] private Text _textWarnCount;
         [SerializeField] private Text _textErrorCount;
+        [SerializeField] private Button _btnCollapse;
+        [SerializeField] private Button _btnClose;
+
+        [SerializeField] private InputField _inputCommand;
+        [SerializeField] private Button _btnSendCommand;
+
+        [SerializeField] private Button _btnPrevPage;
+        [SerializeField] private Text _textPageNum;
+        [SerializeField] private Button _btnNextPage;
 
         [SerializeField] private RectTransform _logsContainer;
 
         private CanvasGroup _canvasGroup;
+        private GameConsole _console;
+
+        private List<GameConsoleLogItem> _items = new List<GameConsoleLogItem>();
+        private int _nextVailedItemIndex = 0;
+
+        private int _currentPageNum = 0;
+        private int _pageNum = 0;
 
         void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
 
-            var console = GameConsole.Instance;
-            _btnClear.onClick.AddListener(() => console.ClearLogs());
+            _console = GameConsole.Instance;
+            _btnClear.onClick.AddListener(() => _console.ClearLogs());
 
-            _btnCollapse.onClick.AddListener(() => console.HideLogWindow());
-            _btnClose.onClick.AddListener(() => console.Close());
+            _btnCollapse.onClick.AddListener(() => _console.HideLogWindow());
+            _btnClose.onClick.AddListener(() => _console.Close());
 
             _btnSendCommand.onClick.AddListener(SendCommand);
 
-            console.InfoLogCount.OnValueChanged.Register(val => _textInfoCount.text = val.ToString());
-            console.WarnLogCount.OnValueChanged.Register(val => _textWarnCount.text = val.ToString());
-            console.ErrorLogCount.OnValueChanged.Register(val => _textErrorCount.text = val.ToString());
+            _console.InfoLogCount.OnValueChanged.Register(val => _textInfoCount.text = val.ToString());
+            _console.WarnLogCount.OnValueChanged.Register(val => _textWarnCount.text = val.ToString());
+            _console.ErrorLogCount.OnValueChanged.Register(val => _textErrorCount.text = val.ToString());
+
+            _btnPrevPage.onClick.AddListener(() => PrevPage());
+            _btnNextPage.onClick.AddListener(() => NextPage());
 
             GameConsole.Instance.OnPushLog += OnPushLog;
             GameConsole.Instance.OnClearLogs += OnClearLogs;
@@ -47,25 +63,32 @@ namespace EasyFramework.ToolKit
 
         void Start()
         {
-            Refresh();
-        }
-
-        public void Refresh()
-        {
-            Clear();
-            foreach (var data in GameConsole.Instance.LogItemDataStack)
-            {
-                SpawnLogItem(data);
-            }
-        }
-
-        public void Clear()
-        {
-            var items = _logsContainer.GetComponentsInChildren<GameConsoleLogItem>();
-            foreach (var item in items)
+            foreach (var item in _logsContainer.GetComponentsInChildren<GameConsoleLogItem>())
             {
                 Destroy(item.gameObject);
             }
+
+            Rebuild();
+        }
+
+        private void Rebuild()
+        {
+            foreach (var item in _items)
+            {
+                Destroy(item.gameObject);
+            }
+
+            _items.Clear();
+            _nextVailedItemIndex = 0;
+
+            for (int i = 0; i < _pageMaxNumber; i++)
+            {
+                var item = Instantiate(GameConsole.Instance.Config.LogItemPrefab, _logsContainer, false);
+                item.gameObject.SetActive(false);
+                _items.Add(item);
+            }
+
+            ClearPage();
         }
 
         public void Show()
@@ -78,6 +101,64 @@ namespace EasyFramework.ToolKit
         {
             _canvasGroup.alpha = 0;
             _canvasGroup.blocksRaycasts = false;
+        }
+
+        public bool PrevPage()
+        {
+            if (_currentPageNum > 0)
+            {
+                _currentPageNum--;
+                RefreshPageNum();
+                RefreshPage();
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool NextPage()
+        {
+            if (_currentPageNum < _pageNum)
+            {
+                _currentPageNum++;
+                RefreshPageNum();
+                RefreshPage();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void ClearPage()
+        {
+            foreach (var item in _items)
+            {
+                item.gameObject.SetActive(false);
+                item.Clear();
+            }
+
+            _nextVailedItemIndex = 0;
+        }
+
+        private void RefreshPageNum()
+        {
+            _pageNum = _console.LogItemDataList.Count / (_pageMaxNumber + 1);   // 当数量和最大数量相同时，也算做当前页；超过1个才算新增一页
+            _currentPageNum = Mathf.Min(_pageNum, _currentPageNum);
+
+            _textPageNum.text = $"{_currentPageNum + 1}/{_pageNum + 1}";
+        }
+
+        private void RefreshPage()
+        {
+            ClearPage();
+            var idx = _currentPageNum * _pageMaxNumber;
+            var count = Mathf.Min(_console.LogItemDataList.Count - idx, _pageMaxNumber);
+
+            for (int i = 0; i < count; i++)
+            {
+                var data = _console.LogItemDataList[idx + i];
+                AppendLog(data);
+            }
         }
 
         private void SendCommand()
@@ -105,7 +186,7 @@ namespace EasyFramework.ToolKit
                 Debug.LogError(errmsg);
                 return;
             }
-            
+
             // GameConsole.Instance.LogInfo($"Input Command: {cmd}");
 
             try
@@ -123,18 +204,27 @@ namespace EasyFramework.ToolKit
 
         private void OnPushLog(GameConsoleLogItemData data)
         {
-            SpawnLogItem(data);
+            RefreshPageNum();
+            AppendLog(data);
+        }
+
+        private bool AppendLog(GameConsoleLogItemData data)
+        {
+            if (_nextVailedItemIndex < _pageMaxNumber)
+            {
+                var item = _items[_nextVailedItemIndex++];
+                item.gameObject.SetActive(true);
+                item.Set(data);
+                return true;
+            }
+
+            return false;
         }
 
         private void OnClearLogs()
         {
-            Clear();
-        }
-
-        private void SpawnLogItem(GameConsoleLogItemData data)
-        {
-            var item = Instantiate(GameConsole.Instance.Config.LogItemPrefab, _logsContainer, false);
-            item.Set(data);
+            ClearPage();
+            RefreshPageNum();
         }
     }
 }

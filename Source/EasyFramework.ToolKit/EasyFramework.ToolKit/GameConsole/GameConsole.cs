@@ -31,7 +31,7 @@ namespace EasyFramework.ToolKit
         internal event Action<GameConsoleLogItemData> OnPushLog;
         internal event Action OnClearLogs;
 
-        internal readonly Stack<GameConsoleLogItemData> LogItemDataStack = new Stack<GameConsoleLogItemData>();
+        internal readonly List<GameConsoleLogItemData> LogItemDataList = new List<GameConsoleLogItemData>();
 
         private readonly IBindableValue<int> _infoLogCount = new BindableValue<int>();
         private readonly IBindableValue<int> _warnLogCount = new BindableValue<int>();
@@ -44,7 +44,7 @@ namespace EasyFramework.ToolKit
 
         public void ClearLogs()
         {
-            LogItemDataStack.Clear();
+            LogItemDataList.Clear();
             OnClearLogs?.Invoke();
 
             _infoLogCount.SetValue(0);
@@ -99,7 +99,7 @@ namespace EasyFramework.ToolKit
                 Message = message,
                 StackTrace = stackTrace
             };
-            LogItemDataStack.Push(data);
+            LogItemDataList.Add(data);
             OnPushLog?.Invoke(data);
             switch (logType)
             {
