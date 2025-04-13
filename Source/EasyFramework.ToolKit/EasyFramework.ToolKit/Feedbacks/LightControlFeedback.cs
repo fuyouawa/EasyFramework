@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("光照/光照控制")]
-    public class FeedbackLightControl : AbstractFeedback
+    [AddFeedbackMenu("光照/光照控制")]
+    public class LightControlFeedback : AbstractFeedback
     {
         public Light TargetLight;
         public float Duration = 0.2f;

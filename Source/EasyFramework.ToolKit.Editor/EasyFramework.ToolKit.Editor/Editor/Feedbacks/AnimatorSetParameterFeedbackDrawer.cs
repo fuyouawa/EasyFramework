@@ -6,7 +6,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class FeedbackAnimatorSetParameterDrawer : AbstractFeedbackDrawer<FeedbackAnimatorSetParameter>
+    public class AnimatorSetParameterFeedbackDrawer : AbstractFeedbackDrawer<AnimatorSetParameterFeedback>
     {
         protected override void PostBuildPropertiesGroups()
         {
@@ -31,17 +31,17 @@ namespace EasyFramework.ToolKit.Editor
 
                 switch (Feedback.ParameterType)
                 {
-                    case FeedbackAnimatorSetParameter.ParameterTypes.Int:
+                    case AnimatorSetParameterFeedback.ParameterTypes.Int:
                         Feedback.IntToSet = EasyEditorField.Value(
                             EditorHelper.TempContent("参数设置（Int）"),
                             Feedback.IntToSet);
                         break;
-                    case FeedbackAnimatorSetParameter.ParameterTypes.Float:
+                    case AnimatorSetParameterFeedback.ParameterTypes.Float:
                         Feedback.FloatToSet = EasyEditorField.Value(
                             EditorHelper.TempContent("参数设置（Float）"),
                             Feedback.FloatToSet);
                         break;
-                    case FeedbackAnimatorSetParameter.ParameterTypes.Bool:
+                    case AnimatorSetParameterFeedback.ParameterTypes.Bool:
                         Feedback.BoolToSet = EasyEditorField.Value(
                             EditorHelper.TempContent("参数设置（Bool）"),
                             Feedback.BoolToSet);

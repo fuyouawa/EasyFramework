@@ -5,14 +5,14 @@ using UnityEngine;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class FeedbackGameObjectInvokeMethodDrawer : AbstractFeedbackDrawer<FeedbackGameObjectInvokeMethod>
+    public class GameObjectInvokeMethodFeedbackDrawer : AbstractFeedbackDrawer<GameObjectInvokeMethodFeedback>
     {
         private InspectorProperty _pickerProperty;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _pickerProperty = Property.Children[nameof(FeedbackGameObjectInvokeMethod.Picker)];
+            _pickerProperty = Property.Children[nameof(GameObjectInvokeMethodFeedback.Picker)];
         }
         
         protected override void PostBuildPropertiesGroups()

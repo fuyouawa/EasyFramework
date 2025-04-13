@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("调试/打印")]
-    public class FeedbackDebugLog : AbstractFeedback
+    [AddFeedbackMenu("调试/打印")]
+    public class DebugLogFeedback : AbstractFeedback
     {
         public float Duration;
         public string Message = "HelloWorld!";

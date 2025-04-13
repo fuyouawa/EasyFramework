@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public class ToggleGroupEx : MonoBehaviour
+    public class EasyToggleGroup : MonoBehaviour
     {
         [SerializeField] private bool _allowSwitchOff = false;
 
@@ -22,9 +22,9 @@ namespace EasyFramework.ToolKit
             set { _allowSwitchOff = value; }
         }
 
-        private readonly List<ToggleEx> _toggles = new List<ToggleEx>();
+        private readonly List<EasyToggle> _toggles = new List<EasyToggle>();
 
-        public EasyEvent<ToggleEx> OnToggleSelected;
+        public EasyEvent<EasyToggle> OnToggleSelected;
 
         /// <summary>
         /// Because all the Toggles have registered themselves in the OnEnabled, Start should check to
@@ -40,7 +40,7 @@ namespace EasyFramework.ToolKit
             EnsureValidState();
         }
 
-        private void ValidateToggleIsInGroup(ToggleEx toggle)
+        private void ValidateToggleIsInGroup(EasyToggle toggle)
         {
             if (toggle == null || !_toggles.Contains(toggle))
                 throw new ArgumentException(string.Format("Toggle {0} is not part of ToggleGroup {1}",
@@ -52,7 +52,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="toggle">The toggle that got triggered on.</param>
         /// <param name="sendCallback">If other toggles should send onValueChanged.</param>
-        internal void NotifyToggleOn(ToggleEx toggle, bool sendCallback = true)
+        internal void NotifyToggleOn(EasyToggle toggle, bool sendCallback = true)
         {
             ValidateToggleIsInGroup(toggle);
             // disable all toggles in the group
@@ -77,7 +77,7 @@ namespace EasyFramework.ToolKit
         /// Unregister a toggle from the group.
         /// </summary>
         /// <param name="toggle">The toggle to remove.</param>
-        internal void UnRegisterToggle(ToggleEx toggle)
+        internal void UnRegisterToggle(EasyToggle toggle)
         {
             if (_toggles.Contains(toggle))
                 _toggles.Remove(toggle);
@@ -97,7 +97,7 @@ namespace EasyFramework.ToolKit
         /// Register a toggle with the toggle group so it is watched for changes and notified if another toggle in the group changes.
         /// </summary>
         /// <param name="toggle">The toggle to register with the group.</param>
-        internal void RegisterToggle(ToggleEx toggle)
+        internal void RegisterToggle(EasyToggle toggle)
         {
             if (!_toggles.Contains(toggle))
                 _toggles.Add(toggle);
@@ -149,7 +149,7 @@ namespace EasyFramework.ToolKit
         /// <remarks>
         /// Toggles belonging to this group but are not active either because their GameObject is inactive or because the Toggle component is disabled, are not returned as part of the list.
         /// </remarks>
-        public ToggleEx[] ActiveToggles()
+        public EasyToggle[] ActiveToggles()
         {
             return _toggles.Where(x => x.IsOn).ToArray();
         }
@@ -161,7 +161,7 @@ namespace EasyFramework.ToolKit
         /// <remarks>
         /// Get the active toggle for this group. As the group
         /// </remarks>
-        public ToggleEx GetFirstActiveToggle()
+        public EasyToggle GetFirstActiveToggle()
         {
             var activeToggles = ActiveToggles();
             return activeToggles.FirstOrDefault();

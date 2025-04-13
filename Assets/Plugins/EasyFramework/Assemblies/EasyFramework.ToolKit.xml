@@ -133,14 +133,14 @@
             </summary>
             <param name="other">The other group attribute to combine with.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.FeedbackSound.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
+        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
             <summary>
             Plays a sound differently based on the selected play method
             </summary>
             <param name="sfx"></param>
             <param name="position"></param>
         </member>
-        <member name="M:EasyFramework.ToolKit.FeedbackSound.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
+        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
             <summary>
             Plays the audio source with the specified volume and pitch
             </summary>
@@ -149,74 +149,74 @@
             <param name="volume"></param>
             <param name="pitch"></param>
         </member>
-        <member name="M:EasyFramework.ToolKit.FeedbackSound.GetAudioSourceFromPool">
+        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.GetAudioSourceFromPool">
             <summary>
             Gets an audio source from the pool if possible
             </summary>
             <returns></returns>
         </member>
-        <member name="T:EasyFramework.ToolKit.ToggleExTransition">
+        <member name="T:EasyFramework.ToolKit.EasyToggleTransition">
             <summary>
             Display settings for when a toggle is activated or deactivated.
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.ToggleExTransition.None">
+        <member name="F:EasyFramework.ToolKit.EasyToggleTransition.None">
             <summary>
             Show / hide the toggle instantly
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.ToggleExTransition.Fade">
+        <member name="F:EasyFramework.ToolKit.EasyToggleTransition.Fade">
             <summary>
             Fade the toggle in / out smoothly.
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.ToggleEx.ToggleTransition">
+        <member name="F:EasyFramework.ToolKit.EasyToggle.EasyToggleTransition">
             <summary>
             Transition mode for the toggle.
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.ToggleEx.Graphic">
+        <member name="F:EasyFramework.ToolKit.EasyToggle.Graphic">
             <summary>
             Graphic the toggle should be working with.
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.ToggleEx.Group">
+        <member name="P:EasyFramework.ToolKit.EasyToggle.Group">
             <summary>
             Group the toggle belongs to.
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.ToggleEx.OnValueChanged">
+        <member name="F:EasyFramework.ToolKit.EasyToggle.OnValueChanged">
             <summary>
             Allow for delegate-based subscriptions for faster events than 'eventReceiver', and allowing for multiple receivers.
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.ToggleEx.IsOn">
+        <member name="P:EasyFramework.ToolKit.EasyToggle.IsOn">
             <summary>
             Whether the toggle is currently active.
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleEx.SetIsOnWithoutNotify(System.Boolean)">
+        <member name="M:EasyFramework.ToolKit.EasyToggle.SetIsOnWithoutNotify(System.Boolean)">
             <summary>
             Set isOn without invoking onValueChanged callback.
             </summary>
             <param name="value">New Value for isOn.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleEx.PlayEffect(System.Boolean)">
+        <member name="M:EasyFramework.ToolKit.EasyToggle.PlayEffect(System.Boolean)">
             <summary>
             Play the appropriate effect.
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleEx.Start">
+        <member name="M:EasyFramework.ToolKit.EasyToggle.Start">
             <summary>
             Assume the correct visual state.
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleEx.UnityEngine#EventSystems#IPointerClickHandler#OnPointerClick(UnityEngine.EventSystems.PointerEventData)">
+        <member name="M:EasyFramework.ToolKit.EasyToggle.UnityEngine#EventSystems#IPointerClickHandler#OnPointerClick(UnityEngine.EventSystems.PointerEventData)">
             <summary>
             React to clicks.
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.ToggleGroupEx.AllowSwitchOff">
+        <member name="P:EasyFramework.ToolKit.EasyToggleGroup.AllowSwitchOff">
             <summary>
             Is it allowed that no toggle is switched on?
             </summary>
@@ -225,44 +225,44 @@
             Note that even if allowSwitchOff is false, the Toggle Group will not enforce its constraint right away if no toggles in the group are switched on when the scene is loaded or when the group is instantiated. It will only prevent the user from switching a toggle off.
             </remarks>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.Start">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.Start">
             <summary>
             Because all the Toggles have registered themselves in the OnEnabled, Start should check to
             make sure at least one Toggle is active in groups that do not AllowSwitchOff
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.NotifyToggleOn(EasyFramework.ToolKit.ToggleEx,System.Boolean)">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.NotifyToggleOn(EasyFramework.ToolKit.EasyToggle,System.Boolean)">
             <summary>
             Notify the group that the given toggle is enabled.
             </summary>
             <param name="toggle">The toggle that got triggered on.</param>
             <param name="sendCallback">If other toggles should send onValueChanged.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.UnRegisterToggle(EasyFramework.ToolKit.ToggleEx)">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.UnRegisterToggle(EasyFramework.ToolKit.EasyToggle)">
             <summary>
             Unregister a toggle from the group.
             </summary>
             <param name="toggle">The toggle to remove.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.RegisterToggle(EasyFramework.ToolKit.ToggleEx)">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.RegisterToggle(EasyFramework.ToolKit.EasyToggle)">
             <summary>
             Register a toggle with the toggle group so it is watched for changes and notified if another toggle in the group changes.
             </summary>
             <param name="toggle">The toggle to register with the group.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.EnsureValidState">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.EnsureValidState">
             <summary>
             Ensure that the toggle group still has a valid state. This is only relevant when a ToggleGroup is Started
             or a Toggle has been deleted from the group.
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.AnyTogglesOn">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.AnyTogglesOn">
             <summary>
             Are any of the toggles on?
             </summary>
             <returns>Are and of the toggles on?</returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.ActiveToggles">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.ActiveToggles">
             <summary>
             Returns the toggles in this group that are active.
             </summary>
@@ -271,7 +271,7 @@
             Toggles belonging to this group but are not active either because their GameObject is inactive or because the Toggle component is disabled, are not returned as part of the list.
             </remarks>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.GetFirstActiveToggle">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.GetFirstActiveToggle">
             <summary>
             Returns the toggle that is the first in the list of active toggles.
             </summary>
@@ -280,7 +280,7 @@
             Get the active toggle for this group. As the group
             </remarks>
         </member>
-        <member name="M:EasyFramework.ToolKit.ToggleGroupEx.SetAllTogglesOff(System.Boolean)">
+        <member name="M:EasyFramework.ToolKit.EasyToggleGroup.SetAllTogglesOff(System.Boolean)">
             <summary>
             Switch all toggles off.
             </summary>

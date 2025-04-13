@@ -9,7 +9,7 @@ namespace EasyFramework.ToolKit
     /// <summary>
     /// Display settings for when a toggle is activated or deactivated.
     /// </summary>
-    public enum ToggleExTransition
+    public enum EasyToggleTransition
     {
         /// <summary>
         /// Show / hide the toggle instantly
@@ -23,12 +23,12 @@ namespace EasyFramework.ToolKit
     }
 
     [RequireComponent(typeof(RectTransform))]
-    public class ToggleEx : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
+    public class EasyToggle : Selectable, IPointerClickHandler, ISubmitHandler, ICanvasElement
     {
         /// <summary>
         /// Transition mode for the toggle.
         /// </summary>
-        public ToggleExTransition ToggleTransition = ToggleExTransition.Fade;
+        public EasyToggleTransition EasyToggleTransition = EasyToggleTransition.Fade;
 
         /// <summary>
         /// Graphic the toggle should be working with.
@@ -36,12 +36,12 @@ namespace EasyFramework.ToolKit
         public Graphic Graphic;
 
         [SerializeField]
-        private ToggleGroupEx _group;
+        private EasyToggleGroup _group;
 
         /// <summary>
         /// Group the toggle belongs to.
         /// </summary>
-        public ToggleGroupEx Group
+        public EasyToggleGroup Group
         {
             get { return _group; }
             set
@@ -125,7 +125,7 @@ namespace EasyFramework.ToolKit
             base.OnDidApplyAnimationProperties();
         }
 
-        private void SetToggleGroup(ToggleGroupEx newGroup, bool setMemberValue)
+        private void SetToggleGroup(EasyToggleGroup newGroup, bool setMemberValue)
         {
             // Sometimes IsActive returns false in OnDisable so don't check for it.
             // Rather remove the toggle too often than too little.
@@ -185,7 +185,7 @@ namespace EasyFramework.ToolKit
                 }
             }
             
-            PlayEffect(ToggleTransition == ToggleExTransition.None);
+            PlayEffect(EasyToggleTransition == EasyToggleTransition.None);
             // Always send event when toggle is clicked, even if value didn't change
             // due to already active toggle in a toggle group being clicked.
             // Controls like Dropdown rely on this.

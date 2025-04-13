@@ -5,14 +5,14 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class FeedbackParticlePlayDrawer : AbstractFeedbackDrawer<FeedbackParticlePlay>
+    public class ParticlePlayFeedbackDrawer : AbstractFeedbackDrawer<ParticlePlayFeedback>
     {
         private InspectorProperty _randomParticleSystemsProperty;
 
         protected override void Initialize()
         {
             base.Initialize();
-            _randomParticleSystemsProperty = Property.Children[nameof(FeedbackParticlePlay.RandomParticleSystems)];
+            _randomParticleSystemsProperty = Property.Children[nameof(ParticlePlayFeedback.RandomParticleSystems)];
         }
 
         protected override void PostBuildPropertiesGroups()
@@ -52,7 +52,7 @@ namespace EasyFramework.ToolKit.Editor
                     EditorHelper.TempContent("模式"),
                     Feedback.Mode);
 
-                if (Feedback.Mode == FeedbackParticlePlay.Modes.Emit)
+                if (Feedback.Mode == ParticlePlayFeedback.Modes.Emit)
                 {
                     Feedback.EmitCount = EasyEditorField.Value(
                         EditorHelper.TempContent("发射数量"),

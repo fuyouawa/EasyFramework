@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("游戏物体/设置启用状态")]
-    public class FeedbackGameObjectSetActive : AbstractFeedback
+    [AddFeedbackMenu("游戏物体/设置启用状态")]
+    public class GameObjectSetActiveFeedback : AbstractFeedback
     {
         public GameObject Target;
         public bool ActiveToSet = true;

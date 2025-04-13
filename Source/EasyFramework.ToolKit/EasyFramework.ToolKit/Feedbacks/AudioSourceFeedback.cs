@@ -4,8 +4,8 @@ using Random = UnityEngine.Random;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("音效/播放音频源")]
-    public class FeedbackAudioSource : AbstractFeedback
+    [AddFeedbackMenu("音效/播放音频源")]
+    public class AudioSourceFeedback : AbstractFeedback
     {
         public enum Modes
         {

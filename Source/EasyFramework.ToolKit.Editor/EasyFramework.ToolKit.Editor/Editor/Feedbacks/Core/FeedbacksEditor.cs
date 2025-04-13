@@ -24,7 +24,7 @@ namespace EasyFramework.ToolKit.Editor
         private InspectorProperty _propertyOfCanPlay;
         private InspectorProperty _propertyOfCanPlayWhileAlreadyPlaying;
         private InspectorProperty _propertyOfCanMultiPlay;
-        private InspectorProperty _propertyOfFeedbacks;
+        private InspectorProperty _propertyOfsFeedback;
 
         protected override void OnEnable()
         {
@@ -38,7 +38,7 @@ namespace EasyFramework.ToolKit.Editor
             _propertyOfCanPlay = Tree.RootProperty.Children["CanPlay"];
             _propertyOfCanPlayWhileAlreadyPlaying = Tree.RootProperty.Children["CanPlayWhileAlreadyPlaying"];
             _propertyOfCanMultiPlay = Tree.RootProperty.Children["CanMultiPlay"];
-            _propertyOfFeedbacks = Tree.RootProperty.Children["_feedbacks"];
+            _propertyOfsFeedback = Tree.RootProperty.Children["_feedbacks"];
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
                 this, new GUIContent("反馈设置"),
@@ -51,7 +51,7 @@ namespace EasyFramework.ToolKit.Editor
             EasyEditorGUI.Title("初始化");
 
             _propertyOfInitializationMode.DrawEx("初始化模式");
-            _propertyOfAutoInitialization.DrawEx("自动初始化", "确保播放前所有Feedbacks都初始化");
+            _propertyOfAutoInitialization.DrawEx("自动初始化", "确保播放前所有s都初始化Feedback");
             _propertyOfAutoPlayOnStart.DrawEx("开始时自动播放", "在开始时自动播放一次");
             _propertyOfAutoPlayOnEnable.DrawEx("启用时自动播放", "在启用时自动播放一次");
 
@@ -62,7 +62,7 @@ namespace EasyFramework.ToolKit.Editor
             
             _propertyOfCanMultiPlay.DrawEx("是否可以多重播放",
                 "是否可以同时存在多个播放\n" +
-                "注意：反馈的OnFeedbackStop只会在最后一个播放结束时调用");
+                "注意：反馈的OnStop只会在最后一个播放结束时调用Feedback");
         }
 
         protected override void DrawTree()
@@ -76,7 +76,7 @@ namespace EasyFramework.ToolKit.Editor
 
             // SirenixEditorGUI.BeginBox();
 
-            _propertyOfFeedbacks.DrawEx("反馈列表");
+            _propertyOfsFeedback.DrawEx("反馈列表");
 
             var btnHeight = EditorGUIUtility.singleLineHeight;
             if (GUILayout.Button(EditorHelper.TempContent("添加新的反馈...", image:EasyEditorIcons.AddDropdown)))
@@ -113,23 +113,23 @@ namespace EasyFramework.ToolKit.Editor
             Tree.EndDraw();
         }
 
-        private static Type[] s_allFeedbackTypes;
+        private static Type[] s_allTypesFeedback;
 
-        private static Type[] AllFeedbackTypes
+        private static Type[] AllTypesFeedback
         {
             get
             {
-                if (s_allFeedbackTypes == null)
+                if (s_allTypesFeedback == null)
                 {
-                    s_allFeedbackTypes = AppDomain.CurrentDomain.GetAssemblies()
+                    s_allTypesFeedback = AppDomain.CurrentDomain.GetAssemblies()
                         .SelectMany(a => a.GetTypes())
                         .Where(t => t.IsSubclassOf(typeof(AbstractFeedback))
                                     && !t.IsAbstract
-                                    && t.HasCustomAttribute<AddEasyFeedbackMenuAttribute>())
+                                    && t.HasCustomAttribute<AddFeedbackMenuAttribute>())
                         .ToArray();
                 }
 
-                return s_allFeedbackTypes;
+                return s_allTypesFeedback;
             }
         }
 
@@ -148,9 +148,9 @@ namespace EasyFramework.ToolKit.Editor
                 feedbacks.AddFeedback(inst);
             }
 
-            EasyEditorGUI.ShowSelectorInPopup(AllFeedbackTypes, new PopupSelectorConfig(value => OnConfirm((Type)value))
+            EasyEditorGUI.ShowSelectorInPopup(AllTypesFeedback, new PopupSelectorConfig(value => OnConfirm((Type)value))
             {
-                MenuItemNameGetter = t => ((Type)t).GetCustomAttribute<AddEasyFeedbackMenuAttribute>().Path,
+                MenuItemNameGetter = t => ((Type)t).GetCustomAttribute<AddFeedbackMenuAttribute>().Path,
                 AddThumbnailIcons = false
             });
         }

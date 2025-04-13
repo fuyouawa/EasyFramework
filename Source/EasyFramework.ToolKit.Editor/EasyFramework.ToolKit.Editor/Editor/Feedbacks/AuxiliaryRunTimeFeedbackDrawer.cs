@@ -6,7 +6,7 @@ using UnityEditor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class FeedbackAuxiliaryRunTimeDrawer : AbstractFeedbackDrawer<FeedbackAuxiliaryRunTime>
+    public class AuxiliaryRunTimeFeedbackDrawer : AbstractFeedbackDrawer<AuxiliaryRunTimeFeedback>
     {
         protected override void PostBuildPropertiesGroups()
         {
@@ -18,12 +18,12 @@ namespace EasyFramework.ToolKit.Editor
 
                 switch (Feedback.Mode)
                 {
-                    case FeedbackAuxiliaryRunTime.Modes.Frame:
+                    case AuxiliaryRunTimeFeedback.Modes.Frame:
                         Feedback.Frame = EditorGUILayout.IntField(
                             EditorHelper.TempContent("帧"),
                             Feedback.Frame);
                         break;
-                    case FeedbackAuxiliaryRunTime.Modes.Seconds:
+                    case AuxiliaryRunTimeFeedback.Modes.Seconds:
                         Feedback.Seconds = EditorGUILayout.FloatField(
                             EditorHelper.TempContent("秒"),
                             Feedback.Seconds);

@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("变换/设置属性")]
-    public class FeedbackTransformSetProperties : AbstractFeedback
+    [AddFeedbackMenu("变换/设置属性")]
+    public class TransformSetPropertiesFeedback : AbstractFeedback
     {
         public Transform Target;
 

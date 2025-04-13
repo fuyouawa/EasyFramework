@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("辅助/运行指定时间")]
-    public class FeedbackAuxiliaryRunTime : AbstractFeedback
+    [AddFeedbackMenu("辅助/运行指定时间")]
+    public class AuxiliaryRunTimeFeedback : AbstractFeedback
     {
         public enum Modes
         {

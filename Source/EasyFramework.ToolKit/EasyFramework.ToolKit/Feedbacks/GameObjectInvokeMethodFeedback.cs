@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("游戏物体/调用函数")]
-    public class FeedbackGameObjectInvokeMethod : AbstractFeedback
+    [AddFeedbackMenu("游戏物体/调用函数")]
+    public class GameObjectInvokeMethodFeedback : AbstractFeedback
     {
         public MethodPicker Picker = new MethodPicker();
         

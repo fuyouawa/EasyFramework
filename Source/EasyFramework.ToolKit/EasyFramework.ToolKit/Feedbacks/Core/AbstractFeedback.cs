@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public class AddEasyFeedbackMenuAttribute : Attribute
+    public class AddFeedbackMenuAttribute : Attribute
     {
         public string Path { get; }
 
-        public AddEasyFeedbackMenuAttribute(string path)
+        public AddFeedbackMenuAttribute(string path)
         {
             Path = path;
         }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    internal class EasyFeedbackHelper
+    internal class EasyHelperFeedback
     {
         private static FieldInfo[] s_ignoreDrawFields;
         public static FieldInfo[] IgnoreDrawFields => s_ignoreDrawFields ??= typeof(AbstractFeedback).GetFields().ToArray();
@@ -65,7 +65,7 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override LabelConfig GetRightLabelConfig(GUIContent label)
         {
-            var attr = Property.GetAttribute<AddEasyFeedbackMenuAttribute>();
+            var attr = Property.GetAttribute<AddFeedbackMenuAttribute>();
             _labelConfig.Content.text = $"[{attr.Path.Replace("/", " - ")}]";
             return _labelConfig;
         }
@@ -183,7 +183,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             foreach (var child in Property.Children)
             {
-                if (!Array.Exists(EasyFeedbackHelper.IgnoreDrawFields, f => f.Name == child.Name))
+                if (!Array.Exists(EasyHelperFeedback.IgnoreDrawFields, f => f.Name == child.Name))
                 {
                     child.Draw();
                 }

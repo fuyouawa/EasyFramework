@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("游戏物体/实例化")]
-    public class FeedbackGameObjectInstantiate : AbstractFeedback
+    [AddFeedbackMenu("游戏物体/实例化")]
+    public class GameObjectInstantiateFeedback : AbstractFeedback
     {
         public GameObject Prefab;
         public bool HasLiftTime;

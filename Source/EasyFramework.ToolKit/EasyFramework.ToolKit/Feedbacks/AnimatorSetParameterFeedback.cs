@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    [AddEasyFeedbackMenu("动画控制器/设置参数")]
-    public class FeedbackAnimatorSetParameter : AbstractFeedback
+    [AddFeedbackMenu("动画控制器/设置参数")]
+    public class AnimatorSetParameterFeedback : AbstractFeedback
     {
         public enum ParameterTypes
         {

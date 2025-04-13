@@ -4,7 +4,7 @@ using Sirenix.OdinInspector.Editor;
 namespace EasyFramework.ToolKit.Editor
 {
     [DrawerPriority(0.0, 0.0, 1.1)]
-    public class FeedbackLightControlDrawer : AbstractFeedbackDrawer<FeedbackLightControl>
+    public class LightControlFeedbackDrawer : AbstractFeedbackDrawer<LightControlFeedback>
     {
         private InspectorProperty _intensityProperty;
         private InspectorProperty _colorProperty;
@@ -13,9 +13,9 @@ namespace EasyFramework.ToolKit.Editor
         protected override void Initialize()
         {
             base.Initialize();
-            _intensityProperty = Property.Children[nameof(FeedbackLightControl.Intensity)];
-            _colorProperty = Property.Children[nameof(FeedbackLightControl.Color)];
-            _rangeProperty = Property.Children[nameof(FeedbackLightControl.Range)];
+            _intensityProperty = Property.Children[nameof(LightControlFeedback.Intensity)];
+            _colorProperty = Property.Children[nameof(LightControlFeedback.Color)];
+            _rangeProperty = Property.Children[nameof(LightControlFeedback.Range)];
         }
 
         protected override void PostBuildPropertiesGroups()
