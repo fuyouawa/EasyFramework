@@ -1,14 +1,15 @@
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
     static class GameConsoleSystemCommands
     {
-        [GameConsoleCommand("help", OptionalParameter = true, Description = "Use 'help <command>' for more information. (such as 'help echo')")]
+        [GameConsoleCommand("help", OptionalParameter = true, Description = "使用 help <command> 获取指令的更多信息。（例如 help echo）")]
         static void Help(string command)
         {
-            const int align = 15;
+            const int align = 30;
 
             if (command.IsNotNullOrWhiteSpace())
             {
@@ -16,29 +17,29 @@ namespace EasyFramework.ToolKit
                 if (cmd == null)
                 {
                     GameConsole.Instance.LogError($"Unknown command: {command}");
+                    Debug.Log($"Unknown command: {command}");
                     return;
                 }
                 
                 var sb = new StringBuilder();
-                sb.AppendLine("------------ Command Information ------------");
-                sb.AppendLine($"Command: {command}");
-                sb.AppendLine("Description:");
+                sb.AppendLine("------------ 指令信息 ------------");
+                sb.AppendLine("描述：");
                 sb.AppendLine($"\t{cmd.Attribute.Description}");
 
                 if (cmd.Parameter != null)
                 {
-                    sb.AppendLine("Argument:");
-                    sb.Append("\t" + "Optional".PadRight(align));
+                    sb.AppendLine("参数：");
+                    sb.Append("\t" + "可选".PadRight(align));
                     if (cmd.Attribute.OptionalParameter)
                     {
-                        sb.AppendLine("True");
+                        sb.AppendLine("是");
                     }
                     else
                     {
-                        sb.AppendLine("False");
+                        sb.AppendLine("否");
                     }
 
-                    sb.Append("\t" + "Type".PadRight(align));
+                    sb.Append("\t" + "类型".PadRight(align));
 
                     var paramType = cmd.Parameter.ParameterType;
                     if (paramType.IsPrimitive || paramType.IsStringType())
@@ -51,7 +52,7 @@ namespace EasyFramework.ToolKit
                     }
                 }
                 
-                sb.AppendLine("Example:");
+                sb.AppendLine("示例:");
                 var example = cmd.GetExample();
                 if (example.IsNotNullOrWhiteSpace())
                 {
@@ -59,7 +60,7 @@ namespace EasyFramework.ToolKit
                 }
                 else
                 {
-                    sb.Append("Empty example.");
+                    sb.Append("空。");
                 }
 
                 GameConsole.Instance.LogInfo(sb.ToString());
@@ -69,19 +70,19 @@ namespace EasyFramework.ToolKit
                 var cmds = GameConsoleCommandsManager.Instance.GetCommands();
 
                 var sb = new StringBuilder();
-                sb.AppendLine("------------ Commands Document ------------");
+                sb.AppendLine("------------ 指令文档 ------------");
 
                 var systemCmds = cmds.Where(c => c.IsSystem).ToArray();
                 if (systemCmds.Length > 0)
                 {
-                    sb.AppendLine("System:");
+                    sb.AppendLine("系统指令：");
                     sb.Append(CommandsString(systemCmds));
                 }
 
                 var customCmds = cmds.Where(c => !c.IsSystem).ToArray();
                 if (customCmds.Length > 0)
                 {
-                    sb.AppendLine("Custom:");
+                    sb.AppendLine("自定义指令：");
                     sb.Append(CommandsString(customCmds));
                 }
 
@@ -100,7 +101,7 @@ namespace EasyFramework.ToolKit
             return "help echo";
         }
 
-        [GameConsoleCommand("echo", Description = "Echo the input argument.")]
+        [GameConsoleCommand("echo", Description = "回应输入的参数。")]
         static void Echo(string message)
         {
             GameConsole.Instance.LogInfo(message);
@@ -112,7 +113,7 @@ namespace EasyFramework.ToolKit
             return "echo Hello world!";
         }
 
-        [GameConsoleCommand("clear", Description = "Clear log.")]
+        [GameConsoleCommand("clear", Description = "清空控制台的日志。")]
         static void Clear()
         {
             GameConsole.Instance.ClearLogs();
