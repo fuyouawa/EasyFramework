@@ -133,28 +133,6 @@
             </summary>
             <param name="other">The other group attribute to combine with.</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.PlaySound(UnityEngine.AudioClip,UnityEngine.Vector3)">
-            <summary>
-            Plays a sound differently based on the selected play method
-            </summary>
-            <param name="sfx"></param>
-            <param name="position"></param>
-        </member>
-        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.PlayAudioSource(UnityEngine.AudioSource,UnityEngine.AudioClip,System.Single,System.Single,UnityEngine.Audio.AudioMixerGroup,System.Int32)">
-            <summary>
-            Plays the audio source with the specified volume and pitch
-            </summary>
-            <param name="audioSource"></param>
-            <param name="sfx"></param>
-            <param name="volume"></param>
-            <param name="pitch"></param>
-        </member>
-        <member name="M:EasyFramework.ToolKit.SoundPlayFeedback.GetAudioSourceFromPool">
-            <summary>
-            Gets an audio source from the pool if possible
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:EasyFramework.ToolKit.EasyToggleTransition">
             <summary>
             Display settings for when a toggle is activated or deactivated.

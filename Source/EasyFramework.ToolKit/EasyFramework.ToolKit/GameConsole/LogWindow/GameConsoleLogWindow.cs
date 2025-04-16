@@ -9,10 +9,11 @@ namespace EasyFramework.ToolKit
 {
     public class GameConsoleLogWindow : MonoBehaviour
     {
-        [Title("Settings")] [SerializeField, DisableInPlayMode]
-        private int _pageMaxNumber = 10;
+        [Title("Settings")]
+        [SerializeField, DisableInPlayMode] private int _pageMaxNumber = 10;
 
-        [Title("Binding")] [SerializeField] private Button _btnClear;
+        [Title("Binding")]
+        [SerializeField] private Button _btnClear;
         [SerializeField] private InputField _inputSearch;
         [SerializeField] private Text _textInfoCount;
         [SerializeField] private Text _textWarnCount;
