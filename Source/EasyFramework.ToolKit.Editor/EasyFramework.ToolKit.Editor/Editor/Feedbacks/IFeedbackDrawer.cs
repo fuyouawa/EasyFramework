@@ -53,52 +53,16 @@ namespace EasyFramework.ToolKit.Editor
             _labelConfig.Style = style;
         }
 
-        private void OnSettingsContentGUI(Rect headerRect)
+        protected override void OnContentGUI(Rect headerRect)
         {
-            // _propertyOfDelayBeforePlay.DrawEx("播放前延迟", "在正式Play前经过多少时间的延迟(s)");
-            // _propertyOfBlocking.DrawEx("阻塞", "是否会阻塞反馈运行");
-            // _propertyOfRepeatForever.DrawEx("无限重复", "无限重复播放");
-            //
-            // _propertyOfAmountOfRepeat.DrawEx("重复次数", "重复播放的次数");
-            // _propertyOfIntervalBetweenRepeats.DrawEx("重复间隔", "每次循环播放的间隔");
-        }
+            var value = ValueEntry.SmartValue;
 
-        // protected override void OnContentGUI(Rect headerRect)
-        // {
-        //     if (Feedback.Tip.IsNotNullOrWhiteSpace())
-        //     {
-        //         EasyEditorGUI.MessageBox(Feedback.Tip, MessageType.Info);
-        //     }
-        //     
-        //     _propertyOfLabel.DrawEx("标签");
-        //     _propertyOfEnable.DrawEx("启用");
-        //
-        //     DrawPropertiesGroups();
-        //     if (_autoDrawOtherProperties)
-        //     {
-        //         DrawOtherProperties();
-        //     }
-        //
-        //     EditorGUI.BeginDisabledGroup(!Application.isPlaying);
-        //     EditorGUILayout.BeginHorizontal();
-        //
-        //     if (GUILayout.Button("播放"))
-        //     {
-        //         Feedback.StartCoroutine(Feedback.PlayCo());
-        //     }
-        //
-        //     if (GUILayout.Button("重置"))
-        //     {
-        //         Feedback.Reset();
-        //     }
-        //
-        //     if (GUILayout.Button("停止"))
-        //     {
-        //         Feedback.Stop();
-        //     }
-        //
-        //     EditorGUILayout.EndHorizontal();
-        //     EditorGUI.EndDisabledGroup();
-        // }
+            if (value.Tip.IsNotNullOrWhiteSpace())
+            {
+                EasyEditorGUI.MessageBox(value.Tip, MessageType.Info);
+            }
+
+            base.OnContentGUI(headerRect);
+        }
     }
 }

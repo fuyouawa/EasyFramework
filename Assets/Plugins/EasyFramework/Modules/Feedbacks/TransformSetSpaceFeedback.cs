@@ -63,7 +63,7 @@ namespace EasyFramework.Modules
         [LabelText("保持世界坐标")]
         public bool WorldPositionStay = false;
         
-        public override string Tip => "修改Transform的各种属性";
+        public override string Tip => "修改Transform的各种空间属性";
 
         private bool ShowTargetError => Target == null;
 

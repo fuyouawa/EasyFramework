@@ -3,19 +3,10 @@ using System.Collections;
 
 namespace EasyFramework.ToolKit
 {
-    public class AddFeedbackMenuAttribute : Attribute
-    {
-        public string Path { get; }
-
-        public AddFeedbackMenuAttribute(string path)
-        {
-            Path = path;
-        }
-    }
-
     public interface IFeedback
     {
         string Label { get; }
+        string Tip { get; }
         bool Enable { get; set; }
         bool IsPlaying { get; }
 

@@ -9,11 +9,9 @@ namespace EasyFramework.Modules
     [Serializable, InlineProperty, HideReferenceObjectPicker]
     public abstract class AbstractFeedback : IFeedback
     {
-        [FoldoutGroup("反馈设置")]
         [LabelText("标签")]
         public string Label;
-
-        [FoldoutGroup("反馈设置")]
+        
         [LabelText("启用")]
         public bool Enable = true;
 
