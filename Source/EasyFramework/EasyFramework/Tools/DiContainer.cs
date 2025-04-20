@@ -10,28 +10,29 @@ namespace EasyFramework
 
         public void Bind<T>(T instance)
         {
-            var key = typeof(T);
+            Bind(instance, typeof(T));
+        }
 
-            if (_instances.ContainsKey(key))
+        public void Bind(object instance, Type type)
+        {
+            if (_instances.ContainsKey(type))
             {
-                _instances[key] = instance;
+                _instances[type] = instance;
             }
             else
             {
-                _instances.Add(key, instance);
+                _instances.Add(type, instance);
             }
         }
 
         public T Resolve<T>() where T : class
         {
-            var key = typeof(T);
+            return Resolve(typeof(T)) as T;
+        }
 
-            if (_instances.TryGetValue(key, out var retInstance))
-            {
-                return retInstance as T;
-            }
-
-            return null;
+        public object Resolve(Type type)
+        {
+            return _instances.GetValueOrDefault(type);
         }
 
         public IEnumerable<T> ResolveAll<T>()

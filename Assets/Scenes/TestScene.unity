@@ -1340,10 +1340,10 @@ MonoBehaviour:
         EasyFramework.ToolKit]], mscorlib
     - Name: 
       Entry: 12
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 7
-      Data: 1|EasyFramework.Modules.AnimatorSetParameterFeedback, EasyFramework.Modules.Feedbacks
+      Data: 1|EasyFramework.Modules.AnimatorSetParameterFeedback, EasyFramework.Modules
     - Name: Label
       Entry: 1
       Data: 546
@@ -1365,7 +1365,7 @@ MonoBehaviour:
     - Name: IntervalBetweenRepeats
       Entry: 4
       Data: 0
-    - Name: TargetAnimator
+    - Name: Target
       Entry: 6
       Data: 
     - Name: ParameterName
@@ -1381,6 +1381,738 @@ MonoBehaviour:
       Entry: 4
       Data: 0
     - Name: BoolToSet
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|EasyFramework.Modules.GameObjectInstantiateFeedback, EasyFramework.Modules
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Prefab
+      Entry: 6
+      Data: 
+    - Name: HasLiftTime
+      Entry: 5
+      Data: false
+    - Name: LiftTime
+      Entry: 4
+      Data: 0
+    - Name: Parent
+      Entry: 6
+      Data: 
+    - Name: Relative
+      Entry: 6
+      Data: 
+    - Name: Position
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Rotation
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LocalScale
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|EasyFramework.Modules.LightControlFeedback, EasyFramework.Modules
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: TargetLight
+      Entry: 6
+      Data: 
+    - Name: Duration
+      Entry: 4
+      Data: 0.2
+    - Name: DisableOnStop
+      Entry: 5
+      Data: false
+    - Name: RelativeValues
+      Entry: 5
+      Data: true
+    - Name: ModifyColor
+      Entry: 5
+      Data: true
+    - Name: Color
+      Entry: 7
+      Data: 4|EasyFramework.GradientColor, EasyFramework
+    - Name: IsGradient
+      Entry: 5
+      Data: false
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Gradient
+      Entry: 7
+      Data: 5|UnityEngine.Gradient, UnityEngine.CoreModule
+    - Name: 
+      Entry: 7
+      Data: 6|UnityEngine.GradientAlphaKey[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.GradientAlphaKey, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.GradientAlphaKey, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|UnityEngine.GradientColorKey[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.GradientColorKey, UnityEngine.CoreModule
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.GradientColorKey, UnityEngine.CoreModule
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: mode
+      Entry: 7
+      Data: 8|UnityEngine.GradientMode, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ModifyIntensity
+      Entry: 5
+      Data: true
+    - Name: Intensity
+      Entry: 7
+      Data: 9|EasyFramework.CurveValue, EasyFramework
+    - Name: IsCurve
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 4
+      Data: 1
+    - Name: Curve
+      Entry: 7
+      Data: 10|UnityEngine.AnimationCurve, UnityEngine.CoreModule
+    - Name: 
+      Entry: 7
+      Data: 11|UnityEngine.Keyframe[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 0
+    - Name: m_Value
+      Entry: 4
+      Data: 0
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 0.3
+    - Name: m_Value
+      Entry: 4
+      Data: 1
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 1
+    - Name: m_Value
+      Entry: 4
+      Data: 0
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CurveValueRemap
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ModifyRange
+      Entry: 5
+      Data: true
+    - Name: Range
+      Entry: 7
+      Data: 12|EasyFramework.CurveValue, EasyFramework
+    - Name: IsCurve
+      Entry: 5
+      Data: true
+    - Name: Value
+      Entry: 4
+      Data: 10
+    - Name: Curve
+      Entry: 7
+      Data: 13|UnityEngine.AnimationCurve, UnityEngine.CoreModule
+    - Name: 
+      Entry: 7
+      Data: 14|UnityEngine.Keyframe[], UnityEngine.CoreModule
+    - Name: 
+      Entry: 12
+      Data: 3
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 0
+    - Name: m_Value
+      Entry: 4
+      Data: 0
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 0.3
+    - Name: m_Value
+      Entry: 4
+      Data: 1
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: UnityEngine.Keyframe, UnityEngine.CoreModule
+    - Name: ver
+      Entry: 3
+      Data: 1
+    - Name: m_Time
+      Entry: 4
+      Data: 1
+    - Name: m_Value
+      Entry: 4
+      Data: 0
+    - Name: m_InTangent
+      Entry: 4
+      Data: 0
+    - Name: m_OutTangent
+      Entry: 4
+      Data: 0
+    - Name: m_TangentMode
+      Entry: 3
+      Data: 0
+    - Name: m_WeightedMode
+      Entry: 3
+      Data: 0
+    - Name: m_InWeight
+      Entry: 4
+      Data: 0
+    - Name: m_OutWeight
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 3
+      Data: 8
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: CurveValueRemap
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 10
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 15|EasyFramework.Modules.ParticlePlayFeedback, EasyFramework.Modules
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Target
+      Entry: 6
+      Data: 
+    - Name: RandomTargets
+      Entry: 7
+      Data: 16|UnityEngine.ParticleSystem[], UnityEngine.ParticleSystemModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: Duration
+      Entry: 4
+      Data: 0
+    - Name: StopSystemOnInit
+      Entry: 5
+      Data: true
+    - Name: ActivateOnPlay
+      Entry: 5
+      Data: false
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: EmitCount
+      Entry: 3
+      Data: 100
+    - Name: WithChildrenParticleSystems
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|EasyFramework.Modules.TransformSetSpaceFeedback, EasyFramework.Modules
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Target
+      Entry: 6
+      Data: 
+    - Name: ModifyPosition
+      Entry: 5
+      Data: true
+    - Name: LocalPositionToSet
+      Entry: 5
+      Data: true
+    - Name: PositionToSet
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ModifyRotation
+      Entry: 5
+      Data: true
+    - Name: LocalRotationToSet
+      Entry: 5
+      Data: true
+    - Name: RotationToSet
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ModifyScale
+      Entry: 5
+      Data: true
+    - Name: LocalScaleToSet
+      Entry: 7
+      Data: UnityEngine.Vector3, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: ModifyParent
+      Entry: 5
+      Data: false
+    - Name: ParentToSet
+      Entry: 6
+      Data: 
+    - Name: WorldPositionStay
       Entry: 5
       Data: false
     - Name: 

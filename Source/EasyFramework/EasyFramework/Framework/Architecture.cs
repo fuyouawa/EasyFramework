@@ -36,7 +36,7 @@ namespace EasyFramework
         T GetModel<T>() where T : class, IModel;
         T GetUtility<T>() where T : class, IUtility;
 
-        void SendCommand<T>(T command) where T : ICommand;
+        void SendCommand(ICommand command);
         TResult SendCommand<TResult>(ICommand<TResult> command);
         TResult SendQuery<TResult>(IQuery<TResult> query);
 
@@ -156,7 +156,7 @@ namespace EasyFramework
             return ExecuteCommand(command);
         }
 
-        public void SendCommand<TCommand>(TCommand command) where TCommand : ICommand
+        public void SendCommand(ICommand command)
         {
             ExecuteCommand(command);
         }

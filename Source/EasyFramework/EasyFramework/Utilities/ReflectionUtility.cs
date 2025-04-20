@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EasyFramework
 {
@@ -21,6 +23,11 @@ namespace EasyFramework
             }
         
             return null;
+        }
+
+        public static IEnumerable<Type> GetAssemblyTypes()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm => asm.GetTypes());
         }
     }
 }
