@@ -25,6 +25,11 @@ namespace EasyFramework
 
     public interface IArchitecture
     {
+        internal static readonly List<IArchitecture> Architectures = new List<IArchitecture>();
+        static IArchitecture[] GetArchitectures() => Architectures.ToArray();
+
+        int Index { get; }
+
         UniTask InitializeAsync();
         UniTask DeinitializeAsync();
 
@@ -35,6 +40,10 @@ namespace EasyFramework
         T GetSystem<T>() where T : class, ISystem;
         T GetModel<T>() where T : class, IModel;
         T GetUtility<T>() where T : class, IUtility;
+
+        ISystem[] GetAllSystems();
+        IModel[] GetAllModels();
+        IUtility[] GetAllUtilities();
 
         void SendCommand(ICommand command);
         TResult SendCommand<TResult>(ICommand<TResult> command);
@@ -61,6 +70,20 @@ namespace EasyFramework
         private readonly DiContainer _container = new DiContainer();
 
         public ArchitectureState State { get; private set; }
+
+        public int Index { get; private set; }
+
+        protected override void OnSingletonInit()
+        {
+            Index = IArchitecture.Architectures.Count;
+            IArchitecture.Architectures.Add(this);
+        }
+
+        protected override void OnSingletonDispose()
+        {
+            IArchitecture.Architectures[Index] = null;
+            Index = -1;
+        }
 
         public async UniTask InitializeAsync()
         {
@@ -150,6 +173,20 @@ namespace EasyFramework
             return CheckNull(_container.Resolve<TUtility>());
         }
 
+        public ISystem[] GetAllSystems()
+        {
+            return _container.ResolveAll<ISystem>().ToArray();
+        }
+
+        public IModel[] GetAllModels()
+        {
+            return _container.ResolveAll<IModel>().ToArray();
+        }
+
+        public IUtility[] GetAllUtilities()
+        {
+            return _container.ResolveAll<IUtility>().ToArray();
+        }
 
         public TResult SendCommand<TResult>(ICommand<TResult> command)
         {

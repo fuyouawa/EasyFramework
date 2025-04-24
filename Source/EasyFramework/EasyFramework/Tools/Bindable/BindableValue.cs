@@ -23,7 +23,7 @@ namespace EasyFramework
 
         private T _value;
 
-        public virtual T Value => _value;
+        public T Value => _value;
 
         public EasyEvent<T> OnValueChanged { get; } = new EasyEvent<T>();
 
