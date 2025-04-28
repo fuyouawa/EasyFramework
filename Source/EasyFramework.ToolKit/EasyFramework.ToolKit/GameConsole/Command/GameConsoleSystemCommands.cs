@@ -42,7 +42,7 @@ namespace EasyFramework.ToolKit
                     sb.Append("\t" + "类型".PadRight(align));
 
                     var paramType = cmd.Parameter.ParameterType;
-                    if (paramType.IsPrimitive || paramType.IsStringType())
+                    if (paramType.IsValueType || paramType.IsStringType())
                     {
                         sb.AppendLine(paramType.GetAliases());
                     }

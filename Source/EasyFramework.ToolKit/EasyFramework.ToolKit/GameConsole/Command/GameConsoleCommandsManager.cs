@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EasyFramework.ToolKit
 {
-    internal class GameConsoleCommandsManager : Singleton<GameConsoleCommandsManager>
+    public class GameConsoleCommandsManager : Singleton<GameConsoleCommandsManager>
     {
         private readonly Dictionary<string, GameConsoleCommand>
             _commands = new Dictionary<string, GameConsoleCommand>();

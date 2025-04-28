@@ -64,7 +64,7 @@ namespace EasyFramework.Editor
                 ? EditorHelper.TempContent2(GetComponentName(TargetComponent))
                 : EditorHelper.NoneSelectorBtnLabel;
 
-            var targetComponents = Array.Empty<Component>();
+            var targetComponents = new Component[] { };
             if (TargetObject != null)
                 targetComponents = TargetObject.GetComponents<Component>().Where(c => c != null).ToArray();
 

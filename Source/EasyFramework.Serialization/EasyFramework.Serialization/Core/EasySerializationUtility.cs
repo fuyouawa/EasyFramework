@@ -181,7 +181,7 @@ namespace EasyFramework.Serialization
             if (srcType.IsArray != destType.IsArray ||
                 srcType.IsSZArray != destType.IsSZArray)
             {
-                return Array.Empty<Type>();
+                return new Type[] { };
             }
 
             if (destType.IsArray)
@@ -195,14 +195,14 @@ namespace EasyFramework.Serialization
                 var srcArg = srcType.GenericTypeArguments;
                 var destArg = destType.GenericTypeArguments;
                 if (destArg.Length != srcArg.Length)
-                    return Array.Empty<Type>();
+                    return new Type[] { };
 
                 var srcDef = srcType.GetGenericTypeDefinition();
                 var destDef = destType.GetGenericTypeDefinition();
                 if (srcDef != destDef)
                 {
                     if (!allocInherit || !TypeUtility.IsDerivedOrImplementsGeneric(destDef, srcType))
-                        return Array.Empty<Type>();
+                        return new Type[] { };
                 }
 
                 typeArgs = srcArg.Select((t, i) => (t, i))

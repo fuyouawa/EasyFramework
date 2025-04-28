@@ -7,6 +7,14 @@ using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
+    public class JJ
+    {
+        public int JK;
+    }
+    
+    [HideLabel, InlineProperty]
+    public SerializedVariant Js = new SerializedVariant("345");
+
     void Awake()
     {
         Log.Logger = new LoggerConfiguration()
@@ -20,5 +28,11 @@ public class Test : MonoBehaviour
     public void TestLog(InputField input)
     {
         Log.Info(input.text);
+    }
+
+    [GameConsoleCommand("jjbb")]
+    static void Command(JJ jk)
+    {
+
     }
 }

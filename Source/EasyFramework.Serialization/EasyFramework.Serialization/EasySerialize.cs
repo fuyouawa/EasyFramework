@@ -20,7 +20,8 @@ namespace EasyFramework.Serialization
             return From<T>(format, data, new List<UnityEngine.Object>(), settings);
         }
 
-        public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects, EasySerializeSettings settings = null)
+        public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects,
+            EasySerializeSettings settings = null)
         {
             var d = new EasySerializationData(format);
             To(value, ref d, settings);
@@ -28,7 +29,8 @@ namespace EasyFramework.Serialization
             return d.GetData();
         }
 
-        public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects, EasySerializeSettings settings = null)
+        public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects,
+            EasySerializeSettings settings = null)
         {
             var d = new EasySerializationData(format);
             d.SetData(data);
@@ -36,15 +38,15 @@ namespace EasyFramework.Serialization
             return From<T>(ref d, settings);
         }
 
-        public static void To<T>(T value, ref EasySerializationData serializationData, EasySerializeSettings settings = null)
+        public static void To(object value, Type valueType, ref EasySerializationData serializationData,
+            EasySerializeSettings settings = null)
         {
             if (value == null)
             {
-                Debug.LogWarning("Serialize null value!");
-                serializationData.SetData(Array.Empty<byte>());
+                // Debug.LogWarning("Serialize null value!");
+                serializationData.SetData(new byte[] { });
                 return;
             }
-            var valueType = value.GetType();
 
             CurrentSettings = settings ?? DefaultSettings;
 
@@ -56,8 +58,7 @@ namespace EasyFramework.Serialization
                     var serializer = GetSerializerWithThrow(valueType);
                     ((IEasySerializer)serializer).IsRoot = true;
 
-                    var obj = (object)value;
-                    serializer.Process(ref obj, valueType, arch);
+                    serializer.Process(ref value, valueType, arch);
 
                     serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
@@ -67,14 +68,21 @@ namespace EasyFramework.Serialization
             }
         }
 
-        public static T From<T>(ref EasySerializationData serializationData, EasySerializeSettings settings = null)
+        public static void To<T>(T value, ref EasySerializationData serializationData,
+            EasySerializeSettings settings = null)
+        {
+            To(value, typeof(T), ref serializationData, settings);
+        }
+
+        public static object From(Type type, ref EasySerializationData serializationData,
+            EasySerializeSettings settings = null)
         {
             CurrentSettings = settings ?? DefaultSettings;
 
-            T res = default;
+            object res = null;
             var buf = serializationData.GetData();
             if (buf.Length == 0)
-                return default;
+                return null;
 
             var ios = GenericNative.AllocStringIoStream();
             using (ios.GetWrapper())
@@ -89,14 +97,19 @@ namespace EasyFramework.Serialization
                 {
                     arch.SetupReferencedUnityObjects(serializationData.ReferencedUnityObjects);
 
-                    var serializer = (EasySerializer<T>)GetSerializerWithThrow(typeof(T));
+                    var serializer = GetSerializerWithThrow(type);
                     ((IEasySerializer)serializer).IsRoot = true;
 
-                    serializer.Process(ref res, arch);
+                    serializer.Process(ref res, type, arch);
                 }
             }
 
             return res;
+        }
+
+        public static T From<T>(ref EasySerializationData serializationData, EasySerializeSettings settings = null)
+        {
+            return (T)From(typeof(T), ref serializationData, settings);
         }
 
         private static EasySerializer GetSerializerWithThrow(Type type)

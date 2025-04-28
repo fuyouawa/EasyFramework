@@ -5,7 +5,7 @@ using System;
 
 namespace EasyFramework.ToolKit
 {
-    internal class GameConsoleCommand
+    public class GameConsoleCommand
     {
         public MethodInfo Call { get; }
         public MethodInfo ExampleGetter { get; }

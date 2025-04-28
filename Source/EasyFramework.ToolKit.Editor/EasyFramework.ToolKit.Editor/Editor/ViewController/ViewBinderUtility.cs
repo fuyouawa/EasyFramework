@@ -38,7 +38,7 @@ namespace EasyFramework.ToolKit.Editor
         public static Type[] GetSpecficableBindTypes(Type type)
         {
             if (type == null)
-                return Array.Empty<Type>();
+                return new Type[]{};
             return type.GetAllBaseTypes(true, true)
                 .Where(t => !t.IsInterface && t.IsSubclassOf(typeof(Object)))
                 .ToArray();

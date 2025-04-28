@@ -16,14 +16,14 @@ namespace EasyFramework.Serialization
                 value = Activator.CreateInstance<T>();
             }
             
-            var isNode = IsNode(typeof(T));
-            if (!IsRoot)
-            {
-                if (isNode)
-                {
-                    archive.StartNode();
-                }
-            }
+            // var isNode = IsNode(typeof(T));
+            // if (!IsRoot)
+            // {
+            //     if (isNode)
+            //     {
+            //         archive.StartNode();
+            //     }
+            // }
 
             var members = EasySerialize.CurrentSettings.MembersGetter(typeof(T));
 
@@ -61,13 +61,13 @@ namespace EasyFramework.Serialization
                 }
             }
 
-            if (!IsRoot)
-            {
-                if (isNode)
-                {
-                    archive.FinishNode();
-                }
-            }
+            // if (!IsRoot)
+            // {
+            //     if (isNode)
+            //     {
+            //         archive.FinishNode();
+            //     }
+            // }
         }
 
         private static bool IsNode(Type type)

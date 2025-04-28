@@ -29,7 +29,7 @@ namespace EasyFramework.Serialization
             Format = format;
             if (format == EasyDataFormat.Binary)
             {
-                BinaryData = Array.Empty<byte>();
+                BinaryData = new byte[] { };
                 StringData = null;
             }
             else
@@ -37,6 +37,7 @@ namespace EasyFramework.Serialization
                 StringData = string.Empty;
                 BinaryData = null;
             }
+
             ReferencedUnityObjects = new List<UnityEngine.Object>();
         }
 
@@ -50,24 +51,28 @@ namespace EasyFramework.Serialization
         {
         }
 
-        public EasySerializationData(byte[] binaryData, List<UnityEngine.Object> referencedUnityObjects, EasyDataFormat format)
+        public EasySerializationData(byte[] binaryData, List<UnityEngine.Object> referencedUnityObjects,
+            EasyDataFormat format)
         {
             if (format != EasyDataFormat.Binary)
             {
                 throw new ArgumentException("Binary data can only be serialized by the EasyDataFormat.Binary mode");
             }
+
             BinaryData = binaryData;
             StringData = null;
             ReferencedUnityObjects = referencedUnityObjects;
             Format = format;
         }
 
-        public EasySerializationData(string stringData, List<UnityEngine.Object> referencedUnityObjects, EasyDataFormat format)
+        public EasySerializationData(string stringData, List<UnityEngine.Object> referencedUnityObjects,
+            EasyDataFormat format)
         {
             if (format == EasyDataFormat.Binary)
             {
                 throw new ArgumentException("String data can not be serialized by the EasyDataFormat.Binary mode");
             }
+
             StringData = stringData;
             BinaryData = null;
             ReferencedUnityObjects = referencedUnityObjects;
@@ -78,7 +83,7 @@ namespace EasyFramework.Serialization
         {
             if (!ContainsData)
             {
-                return Array.Empty<byte>();
+                return new byte[] { };
             }
 
             if (Format == EasyDataFormat.Binary)
@@ -88,8 +93,9 @@ namespace EasyFramework.Serialization
 
             if (string.IsNullOrEmpty(StringData))
             {
-                return Array.Empty<byte>();
+                return new byte[] { };
             }
+
             return Encoding.UTF8.GetBytes(StringData);
         }
 

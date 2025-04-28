@@ -69,6 +69,11 @@ namespace EasyFramework
 
         public static object CreateInstance(this Type type)
         {
+            if (type == null)
+                return null;
+
+            if (type == typeof(string))
+                return string.Empty;
             return Activator.CreateInstance(type);
         }
 
@@ -196,7 +201,7 @@ namespace EasyFramework
             {
                 throw new ArgumentException($"类型\"{type}\"中没有名为\"{eventName}\"并且\"{flags}\"的事件!");
             }
-            
+
             e.GetAddMethod().Invoke(target, new object[] { func });
         }
 
@@ -205,7 +210,8 @@ namespace EasyFramework
             type.AddEvent(eventName, BindingFlagsHelper.All(), target, func);
         }
 
-        public static Type[] GetAllBaseTypes(this Type type, bool includeInterface = true, bool includeTargetType = false)
+        public static Type[] GetAllBaseTypes(this Type type, bool includeInterface = true,
+            bool includeTargetType = false)
         {
             var parentTypes = new List<Type>();
 

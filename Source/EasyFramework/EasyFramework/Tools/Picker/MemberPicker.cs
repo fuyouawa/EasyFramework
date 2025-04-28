@@ -40,7 +40,7 @@ namespace EasyFramework
             if (_targetMember == null)
             {
                 _serializedTargetMemberType = MemberTypes.None;
-                _serializedTargetMemberData = Array.Empty<byte>();
+                _serializedTargetMemberData = new byte[]{};
             }
             else if (_targetMember is MethodInfo method)
             {
