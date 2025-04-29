@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using EasyFramework.Core.Native;
 using UnityEngine;
 
 namespace EasyFramework.Serialization
 {
     internal abstract class OutputArchive : IArchive
     {
-        private readonly EasySerializeNative.OutputArchive _archive;
+        private readonly NativeOutputArchive _archive;
 
         private readonly List<Object> _referencedUnityObjects = new List<Object>();
 
-        protected OutputArchive(EasySerializeNative.OutputArchive archive)
+        protected OutputArchive(NativeOutputArchive archive)
         {
             _archive = archive;
         }
@@ -24,69 +25,59 @@ namespace EasyFramework.Serialization
         
         public void SetNextName(string name)
         {
-            EasySerializeNative.OutputArchiveSetNextName(_archive, name);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.OutputArchiveSetNextNameSafety(_archive, name);
         }
 
         public void StartNode()
         {
-            EasySerializeNative.OutputArchiveStartNode(_archive);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.OutputArchiveStartNodeSafety(_archive);
         }
 
         public void FinishNode()
         {
-            EasySerializeNative.OutputArchiveFinishNode(_archive);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.OutputArchiveFinishNodeSafety(_archive);
         }
 
         public bool Process(ref int value)
         {
-            EasySerializeNative.WriteInt32ToOutputArchive(_archive, value);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteInt32ToOutputArchiveSafety(_archive, value);
             return true;
         }
 
         public bool Process(ref Varint32 value)
         {
-            EasySerializeNative.WriteVarint32ToOutputArchive(_archive, value.Value);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteVarint32ToOutputArchiveSafety(_archive, value.Value);
             return true;
         }
 
         public bool Process(ref SizeTag sizeTag)
         {
-            EasySerializeNative.WriteSizeToOutputArchive(_archive, sizeTag.Size);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteSizeToOutputArchiveSafety(_archive, sizeTag.Size);
             return true;
         }
 
         public bool Process(ref bool value)
         {
             int val = value ? 1 : 0;
-            EasySerializeNative.WriteBoolToOutputArchive(_archive, (byte)val);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteBoolToOutputArchiveSafety(_archive, (byte)val);
             return true;
         }
 
         public bool Process(ref float value)
         {
-            EasySerializeNative.WriteFloatToOutputArchive(_archive, value);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteFloatToOutputArchiveSafety(_archive, value);
             return true;
         }
 
         public bool Process(ref double value)
         {
-            EasySerializeNative.WriteDoubleToOutputArchive(_archive, value);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteDoubleToOutputArchiveSafety(_archive, value);
             return true;
         }
 
         public bool Process(ref string str)
         {
-            EasySerializeNative.WriteStringToOutputArchive(_archive, str);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteStringToOutputArchiveSafety(_archive, str);
             return true;
         }
 
@@ -95,8 +86,7 @@ namespace EasyFramework.Serialization
             var cBuf = data.ToNativeBuffer();
             using (cBuf.GetWrapper())
             {
-                EasySerializeNative.WriteBinaryToOutputArchive(_archive, cBuf);
-                NativeUtility.HandleSerializerError();
+                NativeEasySerialize.WriteBinaryToOutputArchiveSafety(_archive, cBuf);
             }
             return true;
         }
@@ -105,21 +95,19 @@ namespace EasyFramework.Serialization
         {
             if (unityObject == null)
             {
-                EasySerializeNative.WriteVarint32ToOutputArchive(_archive, 0);
-                NativeUtility.HandleSerializerError();
+                NativeEasySerialize.WriteVarint32ToOutputArchiveSafety(_archive, 0);
                 return true;
             }
 
             var idx = _referencedUnityObjects.Count + 1;
-            EasySerializeNative.WriteVarint32ToOutputArchive(_archive, (uint)idx);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.WriteVarint32ToOutputArchiveSafety(_archive, (uint)idx);
             _referencedUnityObjects.Add(unityObject);
             return true;
         }
 
         public void Dispose()
         {
-            EasySerializeNative.FreeOutputArchive(_archive);
+            NativeEasySerialize.FreeOutputArchiveSafety(_archive);
         }
     }
 }

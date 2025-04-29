@@ -11,6 +11,9 @@ namespace EasyFramework.Serialization
 
         public override void Process(string name, ref T[] value, IArchive archive)
         {
+            archive.SetNextName(name);
+            archive.StartNode();
+
             var sizeTag = new SizeTag(value == null ? 0 : (uint)value.Length);
             archive.Process(ref sizeTag);
 
@@ -37,6 +40,7 @@ namespace EasyFramework.Serialization
 
                 value = total.ToArray();
             }
+            archive.FinishNode();
         }
     }
 }

@@ -1,9 +1,11 @@
+using EasyFramework.Core.Native;
+
 namespace EasyFramework.Serialization
 {
     internal class JsonOutputArchive : OutputArchive
     {
-        public JsonOutputArchive(GenericNative.IoStream stream)
-            : base(EasySerializeNative.AllocJsonOutputArchive(stream))
+        public JsonOutputArchive(NativeIoStream stream)
+            : base(NativeEasySerialize.AllocJsonOutputArchiveSafety(stream))
         {
         }
 

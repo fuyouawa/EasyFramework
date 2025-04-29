@@ -1,16 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using EasyFramework.Core.Native;
 
 namespace EasyFramework.Serialization
 {
     internal abstract class InputArchive : IArchive
     {
-        private readonly EasySerializeNative.InputArchive _archive;
+        private readonly NativeInputArchive _archive;
 
         private List<UnityEngine.Object> _referencedUnityObjects;
 
-        protected InputArchive(EasySerializeNative.InputArchive archive)
+        protected InputArchive(NativeInputArchive archive)
         {
             _archive = archive;
         }
@@ -26,84 +28,73 @@ namespace EasyFramework.Serialization
 
         public void SetNextName(string name)
         {
-            EasySerializeNative.InputArchiveSetNextName(_archive, name);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.InputArchiveSetNextNameSafety(_archive, name);
         }
 
         public void StartNode()
         {
-            EasySerializeNative.InputArchiveStartNode(_archive);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.InputArchiveStartNodeSafety(_archive);
         }
 
         public void FinishNode()
         {
-            EasySerializeNative.InputArchiveFinishNode(_archive);
-            NativeUtility.HandleSerializerError();
+            NativeEasySerialize.InputArchiveFinishNodeSafety(_archive);
         }
 
         public bool Process(ref int value)
         {
-            value = EasySerializeNative.ReadInt32FromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            value = NativeEasySerialize.ReadInt32FromInputArchiveSafety(_archive);
             return true;
         }
 
         public bool Process(ref Varint32 value)
         {
-            value.Value = EasySerializeNative.ReadVarint32FromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            value.Value = NativeEasySerialize.ReadVarint32FromInputArchiveSafety(_archive);
             return true;
         }
 
         public bool Process(ref SizeTag sizeTag)
         {
-            sizeTag.Size = EasySerializeNative.ReadSizeFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            sizeTag.Size = NativeEasySerialize.ReadSizeFromInputArchiveSafety(_archive);
             return true;
         }
 
         public bool Process(ref bool value)
         {
-            byte val = EasySerializeNative.ReadBoolFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            byte val = NativeEasySerialize.ReadBoolFromInputArchiveSafety(_archive);
             value = val != 0;
             return true;
         }
 
         public bool Process(ref float value)
         {
-            value = EasySerializeNative.ReadFloatFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            value = NativeEasySerialize.ReadFloatFromInputArchiveSafety(_archive);
             return true;
         }
 
         public bool Process(ref double value)
         {
-            value = EasySerializeNative.ReadDoubleFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            value = NativeEasySerialize.ReadDoubleFromInputArchiveSafety(_archive);
             return true;
         }
 
         public bool Process(ref string str)
         {
-            var cBuf = EasySerializeNative.ReadStringFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            var cBuf = NativeEasySerialize.ReadStringFromInputArchiveSafety(_archive);
             str = cBuf.ToStringWithFree();
             return true;
         }
 
         public bool Process(ref byte[] data)
         {
-            var cBuf = EasySerializeNative.ReadBinaryFromInputArchive(_archive);
-            NativeUtility.HandleSerializerError();
+            var cBuf = NativeEasySerialize.ReadBinaryFromInputArchiveSafety(_archive);
             data = cBuf.ToBytesWithFree();
             return true;
         }
 
         public bool Process(ref UnityEngine.Object unityObject)
         {
-            var idx = EasySerializeNative.ReadVarint32FromInputArchive(_archive);
+            var idx = NativeEasySerialize.ReadVarint32FromInputArchiveSafety(_archive);
             if (idx == 0)
             {
                 unityObject = null;
@@ -122,7 +113,7 @@ namespace EasyFramework.Serialization
 
         public void Dispose()
         {
-            EasySerializeNative.FreeInputArchive(_archive);
+            NativeEasySerialize.FreeInputArchiveSafety(_archive);
         }
     }
 }

@@ -1,9 +1,11 @@
+using EasyFramework.Core.Native;
+
 namespace EasyFramework.Serialization
 {
     internal class BinaryOutputArchive : OutputArchive
     {
-        public BinaryOutputArchive(GenericNative.IoStream stream)
-            : base(EasySerializeNative.AllocBinaryOutputArchive(stream))
+        public BinaryOutputArchive(NativeIoStream stream)
+            : base(NativeEasySerialize.AllocBinaryOutputArchiveSafety(stream))
         {
         }
 

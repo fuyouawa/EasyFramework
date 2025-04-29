@@ -40,7 +40,8 @@ void SetErrorMsg(const char* msg);
 void HandleError(const std::exception& e);
 void HandleNonStandardError();
 
-#define TRY_CATCH_BEGIN try {       \
+#define TRY_CATCH_BEGIN             \
+try {                               \
     SetErrorCode(ERROR_CODE_NONE);  \
     SetErrorMsg(nullptr);           \
 
@@ -48,6 +49,9 @@ void HandleNonStandardError();
 }                                   \
 catch (const std::exception& e) {   \
     HandleError(e);                 \
+}                                   \
+catch (const std::bad_alloc& e) {   \
+    throw e;                        \
 }                                   \
 catch (...) {                       \
     HandleNonStandardError();       \

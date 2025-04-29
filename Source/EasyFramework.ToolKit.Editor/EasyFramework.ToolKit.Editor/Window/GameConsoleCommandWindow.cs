@@ -168,6 +168,7 @@ namespace EasyFramework.ToolKit.Editor
                 Build.Argument = null;
             }
 
+            Build.BuildArgument = true;
             Build.Output = string.Empty;
         }
     }

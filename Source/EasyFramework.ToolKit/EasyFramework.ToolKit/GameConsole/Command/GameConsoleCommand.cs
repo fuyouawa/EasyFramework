@@ -95,7 +95,8 @@ namespace EasyFramework.ToolKit
                 arg = argText;
             else
             {
-                arg = EasySerialize.From<T>(EasyDataFormat.Json, Encoding.UTF8.GetBytes(argText));
+                var data = new EasySerializationData(argText, EasyDataFormat.Json);
+                arg = EasySerialize.From<T>(ref data);
             }
 
             call.Invoke(this, new object[] { arg });

@@ -16,14 +16,15 @@ namespace EasyFramework.Serialization
                 value = Activator.CreateInstance<T>();
             }
             
-            // var isNode = IsNode(typeof(T));
-            // if (!IsRoot)
-            // {
-            //     if (isNode)
-            //     {
-            //         archive.StartNode();
-            //     }
-            // }
+            var isNode = IsNode(typeof(T));
+            if (!IsRoot)
+            {
+                if (isNode)
+                {
+                    archive.SetNextName(name);
+                    archive.StartNode();
+                }
+            }
 
             var members = EasySerialize.CurrentSettings.MembersGetter(typeof(T));
 
@@ -31,12 +32,12 @@ namespace EasyFramework.Serialization
             {
                 var memberType = ReflectionUtility.GetMemberType(member);
 
-                var isMemberNode = IsNode(memberType);
-                if (isMemberNode)
-                {
-                    archive.SetNextName(member.Name);
-                    archive.StartNode();
-                }
+                // var isMemberNode = IsNode(memberType);
+                // if (isMemberNode)
+                // {
+                //     archive.SetNextName(member.Name);
+                //     archive.StartNode();
+                // }
 
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
@@ -45,29 +46,30 @@ namespace EasyFramework.Serialization
                 }
                 
                 var serializer = EasySerializationUtility.GetSerializer(memberType);
-                if (isMemberNode)
-                    serializer.Process(ref obj, memberType, archive);
-                else
-                    serializer.Process(member.Name, ref obj, memberType, archive);
+                // if (isMemberNode)
+                //     serializer.Process(ref obj, memberType, archive);
+                // else
+                //     serializer.Process(member.Name, ref obj, memberType, archive);
+                serializer.Process(member.Name, ref obj, memberType, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {
                     ReflectionUtility.SetMemberValue(member, value, obj);
                 }
 
-                if (isMemberNode)
+                // if (isMemberNode)
+                // {
+                //     archive.FinishNode();
+                // }
+            }
+
+            if (!IsRoot)
+            {
+                if (isNode)
                 {
                     archive.FinishNode();
                 }
             }
-
-            // if (!IsRoot)
-            // {
-            //     if (isNode)
-            //     {
-            //         archive.FinishNode();
-            //     }
-            // }
         }
 
         private static bool IsNode(Type type)

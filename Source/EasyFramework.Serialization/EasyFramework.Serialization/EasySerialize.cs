@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EasyFramework.Core.Native;
 using UnityEngine;
 
 namespace EasyFramework.Serialization
@@ -9,34 +10,34 @@ namespace EasyFramework.Serialization
         public static EasySerializeSettings DefaultSettings { get; set; } = new EasySerializeSettings();
         internal static EasySerializeSettings CurrentSettings { get; private set; }
 
-        public static byte[] To<T>(T value, EasyDataFormat format, EasySerializeSettings settings = null)
-        {
-            var referencedUnityObjects = new List<UnityEngine.Object>();
-            return To(value, format, ref referencedUnityObjects, settings);
-        }
-
-        public static T From<T>(EasyDataFormat format, byte[] data, EasySerializeSettings settings = null)
-        {
-            return From<T>(format, data, new List<UnityEngine.Object>(), settings);
-        }
-
-        public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects,
-            EasySerializeSettings settings = null)
-        {
-            var d = new EasySerializationData(format);
-            To(value, ref d, settings);
-            referencedUnityObjects = d.ReferencedUnityObjects;
-            return d.GetData();
-        }
-
-        public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects,
-            EasySerializeSettings settings = null)
-        {
-            var d = new EasySerializationData(format);
-            d.SetData(data);
-            d.ReferencedUnityObjects = referencedUnityObjects ?? new List<UnityEngine.Object>();
-            return From<T>(ref d, settings);
-        }
+        // public static byte[] To<T>(T value, EasyDataFormat format, EasySerializeSettings settings = null)
+        // {
+        //     var referencedUnityObjects = new List<UnityEngine.Object>();
+        //     return To(value, format, ref referencedUnityObjects, settings);
+        // }
+        //
+        // public static T From<T>(EasyDataFormat format, byte[] data, EasySerializeSettings settings = null)
+        // {
+        //     return From<T>(format, data, new List<UnityEngine.Object>(), settings);
+        // }
+        //
+        // public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects,
+        //     EasySerializeSettings settings = null)
+        // {
+        //     var d = new EasySerializationData(format);
+        //     To(value, ref d, settings);
+        //     referencedUnityObjects = d.ReferencedUnityObjects;
+        //     return d.GetData();
+        // }
+        //
+        // public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects,
+        //     EasySerializeSettings settings = null)
+        // {
+        //     var d = new EasySerializationData(format);
+        //     d.SetData(data);
+        //     d.ReferencedUnityObjects = referencedUnityObjects ?? new List<UnityEngine.Object>();
+        //     return From<T>(ref d, settings);
+        // }
 
         public static void To(object value, Type valueType, ref EasySerializationData serializationData,
             EasySerializeSettings settings = null)
@@ -50,7 +51,7 @@ namespace EasyFramework.Serialization
 
             CurrentSettings = settings ?? DefaultSettings;
 
-            var ios = GenericNative.AllocStringIoStream();
+            var ios = NativeGeneric.AllocStringIoStreamSafety();
             using (ios.GetWrapper())
             {
                 using (var arch = GetOutputArchive(serializationData.Format, ios))
@@ -63,7 +64,7 @@ namespace EasyFramework.Serialization
                     serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
 
-                var cBuf = GenericNative.GetIoStreamBuffer(ios);
+                var cBuf = NativeGeneric.GetIoStreamBufferSafety(ios);
                 serializationData.SetData(cBuf.ToBytesWithFree());
             }
         }
@@ -84,13 +85,13 @@ namespace EasyFramework.Serialization
             if (buf.Length == 0)
                 return null;
 
-            var ios = GenericNative.AllocStringIoStream();
+            var ios = NativeGeneric.AllocStringIoStreamSafety();
             using (ios.GetWrapper())
             {
                 var cBuf = buf.ToNativeBuffer();
                 using (cBuf.GetWrapper())
                 {
-                    GenericNative.WriteToIoStreamBuffer(ios, cBuf);
+                    NativeGeneric.WriteToIoStreamBufferSafety(ios, cBuf);
                 }
 
                 using (var arch = GetInputArchive(serializationData.Format, ios))
@@ -125,7 +126,7 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        private static OutputArchive GetOutputArchive(EasyDataFormat format, GenericNative.IoStream stream)
+        private static OutputArchive GetOutputArchive(EasyDataFormat format, NativeIoStream stream)
         {
             return format switch
             {
@@ -137,7 +138,7 @@ namespace EasyFramework.Serialization
             };
         }
 
-        private static InputArchive GetInputArchive(EasyDataFormat format, GenericNative.IoStream stream)
+        private static InputArchive GetInputArchive(EasyDataFormat format, NativeIoStream stream)
         {
             return format switch
             {

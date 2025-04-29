@@ -4,10 +4,10 @@
 #include <string>
 
 Buffer AllocBuffer(uint32_t size) {
-    auto buf = Buffer();
-    buf.ptr = new char[size];
-    buf.size = size;
-    return buf;
+    auto ret = Buffer();
+    ret.ptr = new char[size];
+    ret.size = size;
+    return ret;
 }
 
 void FreeBuffer(Buffer buffer) {
@@ -15,10 +15,13 @@ void FreeBuffer(Buffer buffer) {
 }
 
 IoStream AllocStringIoStream() {
-    auto s = new StringIoStreamWrapper({});
-    auto ret = IoStream();
-    ret.ptr = s;
-    return ret;
+    TRY_CATCH_BEGIN
+        auto s = new StringIoStreamWrapper({});
+        auto ret = IoStream();
+        ret.ptr = s;
+        return ret;
+    TRY_CATCH_END
+    return {};
 }
 
 void FreeIoStream(IoStream stream) {
@@ -26,21 +29,26 @@ void FreeIoStream(IoStream stream) {
 }
 
 void WriteToIoStreamBuffer(IoStream stream, Buffer buffer) {
-    auto s = GetStream(stream);
-    s->stream()->write(buffer.ptr, buffer.size);
+    TRY_CATCH_BEGIN
+        auto s = GetStream(stream);
+        s->stream()->write(buffer.ptr, buffer.size);
+    TRY_CATCH_END
 }
 
 Buffer GetIoStreamBuffer(IoStream stream) {
-    auto buf = GetStream(stream)->buffer();
+    TRY_CATCH_BEGIN
+        auto buf = GetStream(stream)->buffer();
 
-    auto buffer = AllocBuffer(static_cast<uint32_t>(buf.size()));
-    memcpy_s(buffer.ptr, buffer.size, buf.c_str(), buf.size());
-    return buffer;
+        auto ret = AllocBuffer(static_cast<uint32_t>(buf.size()));
+        memcpy_s(ret.ptr, ret.size, buf.c_str(), buf.size());
+        return ret;
+    TRY_CATCH_END
+    return {};
 }
 
 namespace {
-ErrorCode last_error;
-std::string error_msg;
+    ErrorCode last_error;
+    std::string error_msg;
 }
 
 ErrorCode GetErrorCode() {
@@ -51,9 +59,9 @@ Buffer GetErrorMsg() {
     if (error_msg.empty()) {
         return {};
     }
-    auto buf = AllocBuffer(static_cast<uint32_t>(error_msg.size()));
-    memcpy_s(buf.ptr, buf.size, error_msg.c_str(), error_msg.size());
-    return buf;
+    auto ret = AllocBuffer(static_cast<uint32_t>(error_msg.size()));
+    memcpy_s(ret.ptr, ret.size, error_msg.c_str(), error_msg.size());
+    return ret;
 }
 
 void SetErrorCode(ErrorCode ec) {

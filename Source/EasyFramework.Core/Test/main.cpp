@@ -1,8 +1,16 @@
 #include "serializer.h"
 #include "template_engine.h"
 #include <iostream>
+#include <fcntl.h>
+#include <io.h>
+#include <Windows.h>
 
 int main() {
+    SetConsoleOutputCP(CP_UTF8);  // 设置输出为 UTF-8
+    SetConsoleCP(CP_UTF8);        // 设置输入为 UTF-8
+    _setmode(_fileno(stdin), _O_U8TEXT);
+    _setmode(_fileno(stderr), _O_U8TEXT);
+
     auto ios = AllocStringIoStream();
     //     auto env = AllocTemplateEngineEnvironment();
     //
@@ -26,12 +34,17 @@ int main() {
 
     auto oarch = AllocJsonOutputArchive(ios);
 
+    OutputArchiveSetNextName(oarch, u8"345");
     OutputArchiveStartNode(oarch);
+
     WriteSizeToOutputArchive(oarch, 3);
+    // OutputArchiveStartNode(oarch);
 
     WriteInt32ToOutputArchive(oarch, 134);
     WriteInt32ToOutputArchive(oarch, 35434);
     WriteInt32ToOutputArchive(oarch, 1356747);
+
+    // OutputArchiveFinishNode(oarch);
 
     OutputArchiveFinishNode(oarch);
 
@@ -44,8 +57,8 @@ int main() {
     // OutputArchiveSetNextName(oarch, "float");
     // WriteFloatToOutputArchive(oarch, 1.234f);
 
-    OutputArchiveSetNextName(oarch, "Bool");
-    WriteBoolToOutputArchive(oarch, 1);
+    // OutputArchiveSetNextName(oarch, u8"sefs阿松大");
+    // WriteBoolToOutputArchive(oarch, 1);
 
     // OutputArchiveSetNextName(oarch, "str");
     // WriteStringToOutputArchive(oarch, "777");
@@ -62,4 +75,12 @@ int main() {
     auto ios_buffer = GetIoStreamBuffer(ios);
     auto ios_str = std::string(ios_buffer.ptr, ios_buffer.size);
     std::cout << ios_str << std::endl;
+
+    // auto iarch = AllocJsonInputArchive(ios);
+    // InputArchiveStartNode(iarch);
+    // auto size = ReadSizeFromInputArchive(iarch);
+    // auto i32 = ReadInt32FromInputArchive(iarch);
+    // auto i32_2 = ReadInt32FromInputArchive(iarch);
+    // auto i32_3 = ReadInt32FromInputArchive(iarch);
+    // InputArchiveFinishNode(iarch);
 }
