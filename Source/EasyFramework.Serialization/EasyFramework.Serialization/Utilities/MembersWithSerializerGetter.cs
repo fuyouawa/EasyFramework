@@ -9,6 +9,8 @@ namespace EasyFramework.Serialization
     {
         public Type MemberType;
         public MemberInfo Member;
+        public Func<object, object> ValueGetter;
+        public Action<object, object> ValueSetter;
         public EasySerializer Serializer;
     }
 
@@ -40,6 +42,8 @@ namespace EasyFramework.Serialization
                     {
                         MemberType = m.GetMemberType(),
                         Member = m,
+                        ValueGetter = MemberAccessor.GetMemberValueGetter(m),
+                        ValueSetter = MemberAccessor.GetMemberValueSetter(m),
                         Serializer = EasySerializersManager.GetSerializer(m.GetMemberType())
                     });
 

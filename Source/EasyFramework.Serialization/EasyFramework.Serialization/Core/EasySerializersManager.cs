@@ -268,7 +268,7 @@ namespace EasyFramework.Serialization
         private static readonly Dictionary<Type, SerializerStore> SerializerCache =
             new Dictionary<Type, SerializerStore>();
 
-        private static SerializerStore? InternalGetSerializer(Type valueType)
+        private static SerializerStore? GetSerializerImpl(Type valueType)
         {
             EnsureInitializeSerializers();
 
@@ -304,7 +304,7 @@ namespace EasyFramework.Serialization
 
         public static EasySerializer GetSerializer(Type valueType)
         {
-            var info = InternalGetSerializer(valueType);
+            var info = GetSerializerImpl(valueType);
             if (info.HasValue)
             {
                 return (EasySerializer)info.Value.Instance;
@@ -326,23 +326,5 @@ namespace EasyFramework.Serialization
         }
 
         #endregion
-
-        // public static void AutoCopy(object source, object destination)
-        // {
-        //     var type = source.GetType();
-        //     if (type != destination.GetType())
-        //     {
-        //         throw new ArgumentException(
-        //             $"Both sides of the automatic copy must be of the same type. " +
-        //             $"Source is '{type.FullName}', but destination is '{destination.GetType().FullName}')");
-        //     }
-        //
-        //     var members = MemberFilterPresets.Default(type);
-        //     foreach (var member in members)
-        //     {
-        //         var sourceValue = member.GetMemberValue(source);
-        //         member.SetMemberValue(destination, sourceValue);
-        //     }
-        // }
     }
 }

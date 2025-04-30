@@ -40,12 +40,12 @@ namespace EasyFramework.Serialization
             {
                 _configuration = configuration;
                 _excludeTypes = excludeTypes;
-                InternalReset();
+                ResetImpl();
             }
 
             public ExcludeTypesConfiguration Reset()
             {
-                InternalReset();
+                ResetImpl();
                 return this;
             }
 
@@ -61,7 +61,7 @@ namespace EasyFramework.Serialization
                 return this;
             }
 
-            private void InternalReset()
+            private void ResetImpl()
             {
                 _excludeTypes.Clear();
                 _excludeTypes.AddRange(DefaultExcludeTypes);

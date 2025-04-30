@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace EasyFramework.Serialization
 {
     [EasySerializerConfig(EasySerializerProiority.Generic)]
     public class GenericSerializer<T> : EasySerializer<T>
+        where T : new()
     {
         private List<MemberWithSerializer> _memberWithSerializersCache;
+        private static readonly bool IsNode = IsNodeImpl(typeof(T));
+        private static readonly Func<T> Constructor = CreateConstructor();
 
         public override void Process(string name, ref T value, IArchive archive)
         {
@@ -18,13 +22,12 @@ namespace EasyFramework.Serialization
 
             if (value == null)
             {
-                value = Activator.CreateInstance<T>();
+                value = Constructor();
             }
-            
-            var isNode = IsNode(typeof(T));
+
             if (!IsRoot)
             {
-                if (isNode)
+                if (IsNode)
                 {
                     archive.SetNextName(name);
                     archive.StartNode();
@@ -40,30 +43,36 @@ namespace EasyFramework.Serialization
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
                 {
-                    obj = member.GetMemberValue(value);
+                    obj = memberWithSerializer.ValueGetter(value);
                 }
-                
+
                 serializer.Process(member.Name, ref obj, memberType, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {
-                    member.SetMemberValue(value, obj);
+                    memberWithSerializer.ValueSetter(value, obj);
                 }
             }
 
             if (!IsRoot)
             {
-                if (isNode)
+                if (IsNode)
                 {
                     archive.FinishNode();
                 }
             }
         }
 
-        private static bool IsNode(Type type)
+        private static bool IsNodeImpl(Type type)
         {
             return (type.IsClass && type != typeof(string)) ||
                    (type.IsValueType && !type.IsPrimitive && !type.IsEnum);
+        }
+
+        private static Func<T> CreateConstructor()
+        {
+            var newExp = Expression.New(typeof(T));
+            return Expression.Lambda<Func<T>>(newExp).Compile();
         }
     }
 }
