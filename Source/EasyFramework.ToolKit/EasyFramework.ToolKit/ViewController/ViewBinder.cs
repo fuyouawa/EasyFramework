@@ -48,7 +48,19 @@ namespace EasyFramework.ToolKit
         {
             var obj = EasySerialize.From<ViewBinderEditorConfig>(ref _serializationData);
             if (obj != null)
-                EasySerializationUtility.AutoCopy(obj, this);
+            {
+                IsInitialized = obj.IsInitialized;
+                BindGameObject = obj.BindGameObject;
+                BindComponentType = obj.BindComponentType;
+                SpecificBindType = obj.SpecificBindType;
+                BindAccess = obj.BindAccess;
+                AutoBindName = obj.AutoBindName;
+                BindName = obj.BindName;
+                ProcessBindName = obj.ProcessBindName;
+                UseDocumentComment = obj.UseDocumentComment;
+                AutoAddParaToComment = obj.AutoAddParaToComment;
+                Comment = obj.Comment;
+            }
         }
     }
 

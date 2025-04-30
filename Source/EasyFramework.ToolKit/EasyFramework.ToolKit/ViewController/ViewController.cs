@@ -40,7 +40,18 @@ namespace EasyFramework.ToolKit
         {
             var obj = EasySerialize.From<ViewControllerEditorConfig>(ref _serializationData);
             if (obj != null)
-                EasySerializationUtility.AutoCopy(obj, this);
+            {
+                IsInitialized = obj.IsInitialized;
+                GenerateDir = obj.GenerateDir;
+                Namespace = obj.Namespace;
+                AutoScriptName = obj.AutoScriptName;
+                ScriptName = obj.ScriptName;
+                OtherBindersList = obj.OtherBindersList;
+                BaseClass = obj.BaseClass;
+                BindersGroupType = obj.BindersGroupType;
+                BindersGroupName = obj.BindersGroupName;
+                IsJustBound = obj.IsJustBound;
+            }
         }
     }
 

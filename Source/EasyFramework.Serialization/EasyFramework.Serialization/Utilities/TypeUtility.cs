@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace EasyFramework.Serialization
 {
-    public static class TypeUtility
+    internal static class TypeUtility
     {
-        public static bool IsSubclassOfRawGeneric(Type derivedType, Type genericBaseType)
+        public static bool IsSubclassOfRawGeneric(this Type derivedType, Type genericBaseType)
         {
             while (derivedType != null && derivedType != typeof(object))
             {
@@ -17,7 +17,7 @@ namespace EasyFramework.Serialization
             }
             return false;
         }
-        public static bool ImplementsGenericInterface(Type type, Type genericInterfaceType)
+        public static bool ImplementsGenericInterface(this Type type, Type genericInterfaceType)
         {
             var interfaces = type.GetInterfaces();
             var def = genericInterfaceType.GetGenericTypeDefinition();
@@ -36,7 +36,7 @@ namespace EasyFramework.Serialization
             return false;
         }
 
-        public static bool IsDerivedOrImplementsGeneric(Type type, Type genericType)
+        public static bool IsDerivedOrImplementsGeneric(this Type type, Type genericType)
         {
             if (genericType.IsInterface)
             {

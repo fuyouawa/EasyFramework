@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     {
         public int JK;
     }
-    
+
     [HideLabel, InlineProperty]
     public SerializedVariant Js = new SerializedVariant("345");
 
@@ -51,6 +51,7 @@ public class Test : MonoBehaviour
         }
 
         public MyClass2 cc2 = new MyClass2();
+
         public MyClass2[] cc3 = new MyClass2[]
         {
             new MyClass2(),
@@ -62,7 +63,6 @@ public class Test : MonoBehaviour
     [GameConsoleCommand("jjbb")]
     static void Command(JJ jk)
     {
-
     }
 
     static ProfilerMarker s_profilerMarker = new ProfilerMarker("Serialize");
@@ -74,33 +74,35 @@ public class Test : MonoBehaviour
 
         var data = new EasySerializationData(EasyDataFormat.Json);
 
-        // int count = 30000;
-        // var begin = DateTime.Now;
-        //
-        // s_profilerMarker.Begin(this);
-        // for (int i = 0; i < count; i++)
-        // {
-        //     EasySerialize.To(val, ref data);
-        // }
-        // s_profilerMarker.End();
-        //
-        // var end = DateTime.Now;
-        // var diff = end - begin;
-        // Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
-        // Debug.Log($"Serialize data: {data.StringData}");
+        int count = 10000;
+        var begin = DateTime.Now;
 
-        
-        // begin = DateTime.Now;
-        // for (int i = 0; i < count; i++)
-        // {
-        //     EasySerialize.From<MyClass>(ref data);
-        // }
-        // end = DateTime.Now;
-        // diff = end - begin;
-        // Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
-        
-        EasySerialize.To(val, ref data);
-        var cls = EasySerialize.From<MyClass>(ref data);
-        return;
+        s_profilerMarker.Begin(this);
+        for (int i = 0; i < count; i++)
+        {
+            EasySerialize.To(val, ref data);
+        }
+
+        s_profilerMarker.End();
+
+        var end = DateTime.Now;
+        var diff = end - begin;
+        Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+        Debug.Log($"Serialize data: {data.StringData}");
+
+
+        begin = DateTime.Now;
+        for (int i = 0; i < count; i++)
+        {
+            EasySerialize.From<MyClass>(ref data);
+        }
+
+        end = DateTime.Now;
+        diff = end - begin;
+        Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+
+        // EasySerialize.To(val, ref data);
+        // var cls = EasySerialize.From<MyClass>(ref data);
+        // return;
     }
 }

@@ -3,9 +3,9 @@ using System.Reflection;
 
 namespace EasyFramework.Serialization
 {
-    public static class ReflectionUtility
+    internal static class ReflectionUtility
     {
-        public static object GetMemberValue(MemberInfo member, object target)
+        public static object GetMemberValue(this MemberInfo member, object target)
         {
             if (member is FieldInfo field)
             {
@@ -22,7 +22,7 @@ namespace EasyFramework.Serialization
             throw new NotImplementedException();
         }
 
-        public static void SetMemberValue(MemberInfo member, object target, object value)
+        public static void SetMemberValue(this MemberInfo member, object target, object value)
         {
             if (member is FieldInfo field)
             {
@@ -41,7 +41,7 @@ namespace EasyFramework.Serialization
             throw new NotImplementedException();
         }
 
-        public static Type GetMemberType(MemberInfo member)
+        public static Type GetMemberType(this MemberInfo member)
         {
             if (member is FieldInfo field)
             {

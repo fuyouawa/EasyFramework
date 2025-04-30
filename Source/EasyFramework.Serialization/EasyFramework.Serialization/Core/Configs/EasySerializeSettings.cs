@@ -6,6 +6,19 @@ namespace EasyFramework.Serialization
 {
     public class EasySerializeSettings
     {
-        public MembersGetterDelegate MembersGetter { get; set; } = MembersGetterPresets.Default;
+        internal IMembersWithSerializerGetter MembersWithSerializerGetter { get; }
+
+        public MemberFilterDelegate MemberFilter { get; }
+
+        public EasySerializeSettings()
+            : this(MemberFilterPresets.Default)
+        {
+        }
+
+        public EasySerializeSettings(MemberFilterDelegate memberFilter)
+        {
+            MemberFilter = memberFilter;
+            MembersWithSerializerGetter = new MembersWithSerializerGetter(MemberFilter);
+        }
     }
 }

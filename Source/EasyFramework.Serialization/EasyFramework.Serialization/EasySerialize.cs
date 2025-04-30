@@ -8,36 +8,19 @@ namespace EasyFramework.Serialization
     public static class EasySerialize
     {
         public static EasySerializeSettings DefaultSettings { get; set; } = new EasySerializeSettings();
-        internal static EasySerializeSettings CurrentSettings { get; private set; }
 
-        // public static byte[] To<T>(T value, EasyDataFormat format, EasySerializeSettings settings = null)
-        // {
-        //     var referencedUnityObjects = new List<UnityEngine.Object>();
-        //     return To(value, format, ref referencedUnityObjects, settings);
-        // }
-        //
-        // public static T From<T>(EasyDataFormat format, byte[] data, EasySerializeSettings settings = null)
-        // {
-        //     return From<T>(format, data, new List<UnityEngine.Object>(), settings);
-        // }
-        //
-        // public static byte[] To<T>(T value, EasyDataFormat format, ref List<UnityEngine.Object> referencedUnityObjects,
-        //     EasySerializeSettings settings = null)
-        // {
-        //     var d = new EasySerializationData(format);
-        //     To(value, ref d, settings);
-        //     referencedUnityObjects = d.ReferencedUnityObjects;
-        //     return d.GetData();
-        // }
-        //
-        // public static T From<T>(EasyDataFormat format, byte[] data, List<UnityEngine.Object> referencedUnityObjects,
-        //     EasySerializeSettings settings = null)
-        // {
-        //     var d = new EasySerializationData(format);
-        //     d.SetData(data);
-        //     d.ReferencedUnityObjects = referencedUnityObjects ?? new List<UnityEngine.Object>();
-        //     return From<T>(ref d, settings);
-        // }
+        internal static EasySerializeSettings CurrentSettings { get; private set; }
+        
+        public static void To<T>(T value, ref EasySerializationData serializationData,
+            EasySerializeSettings settings = null)
+        {
+            To(value, typeof(T), ref serializationData, settings);
+        }
+
+        public static T From<T>(ref EasySerializationData serializationData, EasySerializeSettings settings = null)
+        {
+            return (T)From(typeof(T), ref serializationData, settings);
+        }
 
         public static void To(object value, Type valueType, ref EasySerializationData serializationData,
             EasySerializeSettings settings = null)
@@ -49,7 +32,7 @@ namespace EasyFramework.Serialization
                 return;
             }
 
-            CurrentSettings = settings ?? DefaultSettings;
+            ChangeSettings(settings);
 
             var ios = NativeGeneric.AllocStringIoStreamSafety();
             using (ios.GetWrapper())
@@ -69,16 +52,10 @@ namespace EasyFramework.Serialization
             }
         }
 
-        public static void To<T>(T value, ref EasySerializationData serializationData,
-            EasySerializeSettings settings = null)
-        {
-            To(value, typeof(T), ref serializationData, settings);
-        }
-
         public static object From(Type type, ref EasySerializationData serializationData,
             EasySerializeSettings settings = null)
         {
-            CurrentSettings = settings ?? DefaultSettings;
+            ChangeSettings(settings);
 
             object res = null;
             var buf = serializationData.GetData();
@@ -104,18 +81,13 @@ namespace EasyFramework.Serialization
                     serializer.Process(ref res, type, arch);
                 }
             }
-
+            
             return res;
-        }
-
-        public static T From<T>(ref EasySerializationData serializationData, EasySerializeSettings settings = null)
-        {
-            return (T)From(typeof(T), ref serializationData, settings);
         }
 
         private static EasySerializer GetSerializerWithThrow(Type type)
         {
-            var serializer = EasySerializationUtility.GetSerializer(type);
+            var serializer = EasySerializersManager.GetSerializer(type);
             if (serializer == null)
             {
                 throw new ArgumentException(
@@ -124,6 +96,16 @@ namespace EasyFramework.Serialization
             }
 
             return serializer;
+        }
+
+        private static void ChangeSettings(EasySerializeSettings settings)
+        {
+            settings ??= DefaultSettings;
+            if (settings != CurrentSettings)
+            {
+                CurrentSettings = settings;
+                EasySerializersManager.ClearCache();
+            }
         }
 
         private static OutputArchive GetOutputArchive(EasyDataFormat format, NativeIoStream stream)

@@ -9,10 +9,7 @@ namespace EasyFramework.ToolKit
     {
         private readonly NativeTemplateEngineEnvironment _environment;
 
-        private static readonly EasySerializeSettings SerializeSettings = new EasySerializeSettings()
-        {
-            MembersGetter = MembersGetterPresets.AllPublicGettable
-        };
+        private static readonly EasySerializeSettings SerializeSettings = new EasySerializeSettings(MemberFilterPresets.AllPublicGettable);
 
         public TemplateEngine()
         {

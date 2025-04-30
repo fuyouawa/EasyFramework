@@ -62,7 +62,7 @@ namespace EasyFramework.Serialization
         }
     }
 
-    public static class EasySerializationUtility
+    public static class EasySerializersManager
     {
         #region Initialization
 
@@ -136,7 +136,7 @@ namespace EasyFramework.Serialization
 
         #endregion
 
-        #region FindSerializer
+        #region FindSerializerImpl
 
         private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesDict =
             new Dictionary<Type, List<SerializerStore>>();
@@ -201,7 +201,7 @@ namespace EasyFramework.Serialization
                 var destDef = destType.GetGenericTypeDefinition();
                 if (srcDef != destDef)
                 {
-                    if (!allocInherit || !TypeUtility.IsDerivedOrImplementsGeneric(destDef, srcType))
+                    if (!allocInherit || !destDef.IsDerivedOrImplementsGeneric(srcType))
                         return new Type[] { };
                 }
 
@@ -263,6 +263,8 @@ namespace EasyFramework.Serialization
 
         #endregion
 
+        #region GetSerializer
+
         private static readonly Dictionary<Type, SerializerStore> SerializerCache =
             new Dictionary<Type, SerializerStore>();
 
@@ -317,22 +319,30 @@ namespace EasyFramework.Serialization
             return (EasySerializer<T>)serializer;
         }
 
-        public static void AutoCopy(object source, object destination)
+        public static void ClearCache()
         {
-            var type = source.GetType();
-            if (type != destination.GetType())
-            {
-                throw new ArgumentException(
-                    $"Both sides of the automatic copy must be of the same type. " +
-                    $"Source is '{type.FullName}', but destination is '{destination.GetType().FullName}')");
-            }
-
-            var members = MembersGetterPresets.Default(type);
-            foreach (var member in members)
-            {
-                var sourceValue = ReflectionUtility.GetMemberValue(member, source);
-                ReflectionUtility.SetMemberValue(member, destination, sourceValue);
-            }
+            ConcreteSerializerCachesDict.Clear();
+            SerializerCache.Clear();
         }
+
+        #endregion
+
+        // public static void AutoCopy(object source, object destination)
+        // {
+        //     var type = source.GetType();
+        //     if (type != destination.GetType())
+        //     {
+        //         throw new ArgumentException(
+        //             $"Both sides of the automatic copy must be of the same type. " +
+        //             $"Source is '{type.FullName}', but destination is '{destination.GetType().FullName}')");
+        //     }
+        //
+        //     var members = MemberFilterPresets.Default(type);
+        //     foreach (var member in members)
+        //     {
+        //         var sourceValue = member.GetMemberValue(source);
+        //         member.SetMemberValue(destination, sourceValue);
+        //     }
+        // }
     }
 }

@@ -20,15 +20,23 @@ namespace EasyFramework.Serialization
         public virtual bool CanSerialize(Type valueType) => true;
 
         protected bool IsRoot { get; private set; }
-        bool IEasySerializer.IsRoot { get => IsRoot; set => IsRoot = value; }
+
+        bool IEasySerializer.IsRoot
+        {
+            get => IsRoot;
+            set => IsRoot = value;
+        }
+
+        protected EasySerializeSettings Settings => EasySerialize.CurrentSettings;
 
         internal void Process(ref object value, Type valueType, IArchive archive)
         {
             Process(null, ref value, valueType, archive);
         }
+
         internal abstract void Process(string name, ref object value, Type valueType, IArchive archive);
 
-        public static EasySerializer<T> GetSerializer<T>() => EasySerializationUtility.GetSerializer<T>();
+        public static EasySerializer<T> GetSerializer<T>() => EasySerializersManager.GetSerializer<T>();
     }
 
     public abstract class EasySerializer<T> : EasySerializer, IEasySerializer<T>
@@ -42,6 +50,7 @@ namespace EasyFramework.Serialization
             {
                 val = (T)value;
             }
+
             Process(name, ref val, archive);
 
             if (archive.ArchiveIoType == ArchiveIoTypes.Input)

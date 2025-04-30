@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -7,9 +8,13 @@ namespace EasyFramework.Serialization
     [EasySerializerConfig(EasySerializerProiority.Generic)]
     public class GenericSerializer<T> : EasySerializer<T>
     {
+        private List<MemberWithSerializer> _memberWithSerializersCache;
+
         public override void Process(string name, ref T value, IArchive archive)
         {
             Debug.Assert(!typeof(T).IsSubclassOf(typeof(UnityEngine.Object)));
+
+            _memberWithSerializersCache ??= Settings.MembersWithSerializerGetter.Get(typeof(T));
 
             if (value == null)
             {
@@ -26,41 +31,24 @@ namespace EasyFramework.Serialization
                 }
             }
 
-            var members = EasySerialize.CurrentSettings.MembersGetter(typeof(T));
-
-            foreach (var member in members)
+            foreach (var memberWithSerializer in _memberWithSerializersCache)
             {
-                var memberType = ReflectionUtility.GetMemberType(member);
-
-                // var isMemberNode = IsNode(memberType);
-                // if (isMemberNode)
-                // {
-                //     archive.SetNextName(member.Name);
-                //     archive.StartNode();
-                // }
+                var memberType = memberWithSerializer.MemberType;
+                var member = memberWithSerializer.Member;
+                var serializer = memberWithSerializer.Serializer;
 
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
                 {
-                    obj = ReflectionUtility.GetMemberValue(member, value);
+                    obj = member.GetMemberValue(value);
                 }
                 
-                var serializer = EasySerializationUtility.GetSerializer(memberType);
-                // if (isMemberNode)
-                //     serializer.Process(ref obj, memberType, archive);
-                // else
-                //     serializer.Process(member.Name, ref obj, memberType, archive);
                 serializer.Process(member.Name, ref obj, memberType, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {
-                    ReflectionUtility.SetMemberValue(member, value, obj);
+                    member.SetMemberValue(value, obj);
                 }
-
-                // if (isMemberNode)
-                // {
-                //     archive.FinishNode();
-                // }
             }
 
             if (!IsRoot)
