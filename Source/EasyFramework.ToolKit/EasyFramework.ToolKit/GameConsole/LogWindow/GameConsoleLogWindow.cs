@@ -169,7 +169,7 @@ namespace EasyFramework.ToolKit
 
             var originCmd = _inputCommand.text.Trim();
 
-            var match = Regex.Match(originCmd, @"^(\w+)(?:\s+(.+))?$");
+            var match = Regex.Match(originCmd, @"^(\S+)(?:\s+(.+))?$");
             if (!match.Success)
             {
                 var errmsg = "Command format error, must be: <command> [argument]";
