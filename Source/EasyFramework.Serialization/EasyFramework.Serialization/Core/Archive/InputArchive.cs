@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using EasyFramework.Core.Native;
+using EasyFramework.Core;
 
 namespace EasyFramework.Serialization
 {

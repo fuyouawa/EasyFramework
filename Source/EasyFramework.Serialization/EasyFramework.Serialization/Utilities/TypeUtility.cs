@@ -15,8 +15,10 @@ namespace EasyFramework.Serialization
 
                 derivedType = derivedType.BaseType; // 继续向上查找
             }
+
             return false;
         }
+
         public static bool ImplementsGenericInterface(this Type type, Type genericInterfaceType)
         {
             var interfaces = type.GetInterfaces();
@@ -42,6 +44,7 @@ namespace EasyFramework.Serialization
             {
                 return ImplementsGenericInterface(type, genericType);
             }
+
             return IsSubclassOfRawGeneric(type, genericType);
         }
     }

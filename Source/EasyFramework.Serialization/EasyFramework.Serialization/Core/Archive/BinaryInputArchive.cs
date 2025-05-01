@@ -1,4 +1,4 @@
-using EasyFramework.Core.Native;
+using EasyFramework.Core;
 
 namespace EasyFramework.Serialization
 {

@@ -3,22 +3,22 @@ using System.Reflection;
 using System;
 using System.Linq.Expressions;
 
-namespace EasyFramework.Serialization
+namespace EasyFramework.Core
 {
-    internal static class MemberAccessor
+    public static class MemberAccessor
     {
-        private static readonly Dictionary<MemberInfo, Func<object, object>> _getterCache =
+        private static readonly Dictionary<MemberInfo, Func<object, object>> GetterCache =
             new Dictionary<MemberInfo, Func<object, object>>();
 
-        private static readonly Dictionary<MemberInfo, Action<object, object>> _setterCache =
+        private static readonly Dictionary<MemberInfo, Action<object, object>> SetterCache =
             new Dictionary<MemberInfo, Action<object, object>>();
 
         public static Func<object, object> GetMemberValueGetter(MemberInfo member)
         {
-            if (!_getterCache.TryGetValue(member, out var getter))
+            if (!GetterCache.TryGetValue(member, out var getter))
             {
                 getter = CreateGetter(member);
-                _getterCache[member] = getter;
+                GetterCache[member] = getter;
             }
 
             return getter;
@@ -26,10 +26,10 @@ namespace EasyFramework.Serialization
 
         public static Action<object, object> GetMemberValueSetter(MemberInfo member)
         {
-            if (!_setterCache.TryGetValue(member, out var setter))
+            if (!SetterCache.TryGetValue(member, out var setter))
             {
                 setter = CreateSetter(member);
-                _setterCache[member] = setter;
+                SetterCache[member] = setter;
             }
 
             return setter;

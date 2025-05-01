@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System;
 
-namespace EasyFramework.Core.Native
+namespace EasyFramework.Core
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct NativeTemplateEngineEnvironment
@@ -34,7 +34,7 @@ namespace EasyFramework.Core.Native
 
         #region Unsafety
 
-        internal const string DllName = "EasyFramework.Core.dll";
+        internal const string DllName = "EasyFramework.Native.dll";
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         private static extern NativeTemplateEngineEnvironment AllocTemplateEngineEnvironment();

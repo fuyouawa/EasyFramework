@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System;
 
-namespace EasyFramework.Core.Native
+namespace EasyFramework.Core
 {
     public static class NativeUtility
     {

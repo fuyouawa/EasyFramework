@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System;
 
-namespace EasyFramework.Core.Native
+namespace EasyFramework.Core
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct NativeOutputArchive
@@ -41,8 +41,6 @@ namespace EasyFramework.Core.Native
 
     public static class NativeEasySerialize
     {
-        internal const string DllName = "EasyFramework.Core.dll";
-
         /* Archive */
 
         public static NativeOutputArchive AllocBinaryOutputArchiveSafety(NativeIoStream stream)
@@ -332,6 +330,8 @@ namespace EasyFramework.Core.Native
 
 
         #region Unsafety
+        
+        internal const string DllName = "EasyFramework.Native.dll";
 
         /* Archive */
 

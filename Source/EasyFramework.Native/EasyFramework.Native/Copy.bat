@@ -2,10 +2,10 @@
 setlocal
 
 rem 设置源路径（相对于bat的位置）
-set SOURCE_DEBUG=..\x64\Debug\EasyFramework.Core.dll
-set SOURCE_DEBUG_PDB=..\x64\Debug\EasyFramework.Core.pdb
-set SOURCE_RELEASE=..\x64\Release\EasyFramework.Core.dll
-set SOURCE_RELEASE_PDB=..\x64\Release\EasyFramework.Core.pdb
+set SOURCE_DEBUG=..\x64\Debug\EasyFramework.Native.dll
+set SOURCE_DEBUG_PDB=..\x64\Debug\EasyFramework.Native.pdb
+set SOURCE_RELEASE=..\x64\Release\EasyFramework.Native.dll
+set SOURCE_RELEASE_PDB=..\x64\Release\EasyFramework.Native.pdb
 
 rem 设置目标路径
 set TARGET_DEBUG=..\..\..\Assets\Plugins\EasyFramework\Assemblies

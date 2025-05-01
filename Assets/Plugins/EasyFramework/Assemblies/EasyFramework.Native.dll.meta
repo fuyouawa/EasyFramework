@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4e6fcdd90d61e4341b754b7b5e05d272
+guid: 8cd8f66929be4ed469cb0c7afe265e3e
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
@@ -22,12 +22,6 @@ PluginImporter:
       enabled: 0
       settings:
         DefaultValueInitialized: true
-  - first:
-      Windows Store Apps: WindowsStoreApps
-    second:
-      enabled: 0
-      settings:
-        CPU: AnyCPU
   userData: 
   assetBundleName: 
   assetBundleVariant: 

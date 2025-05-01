@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System;
 
-namespace EasyFramework.Core.Native
+namespace EasyFramework.Core
 {
     public enum NativeErrorCode
     {
@@ -68,7 +68,7 @@ namespace EasyFramework.Core.Native
 
         #region Unsafety
 
-        internal const string DllName = "EasyFramework.Core.dll";
+        internal const string DllName = "EasyFramework.Native.dll";
 
         [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
         internal static extern NativeErrorCode GetErrorCode();
