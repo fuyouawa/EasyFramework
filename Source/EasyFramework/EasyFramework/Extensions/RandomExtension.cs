@@ -3,24 +3,24 @@ using UnityEngine;
 
 namespace EasyFramework
 {
-    public static class RandomUtility
+    public static class RandomExtension
     {
-        public static float Range(Vector2 range)
+        public static float GetRandom(this Vector2 range)
         {
             return Random.Range(range.x, range.y);
         }
 
-        public static T List<T>(IList<T> list)
+        public static T GetRandom<T>(this IList<T> list)
         {
             return list[Random.Range(0, list.Count)];
         }
 
-        public static T List<T>(T[] list)
+        public static T GetRandom<T>(this T[] list)
         {
             return list[Random.Range(0, list.Length)];
         }
 
-        public static Color Gradient(Gradient gradient)
+        public static Color GetRandom(this Gradient gradient)
         {
             return gradient.Evaluate(Random.Range(0f, 1f));
         }
