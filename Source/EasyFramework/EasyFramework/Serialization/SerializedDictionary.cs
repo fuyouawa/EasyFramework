@@ -4,12 +4,6 @@ using System.Collections.Generic;
 
 namespace EasyFramework
 {
-    public class SerializedDictionaryDrawerSettings
-    {
-        public string KeyLabel;
-        public string ValueLabel;
-    }
-
     [Serializable]
     public class SerializedDictionary<TKey, TValue> : SerializedDictionaryBase<TKey, TValue>
         where TKey : notnull
@@ -21,10 +15,7 @@ namespace EasyFramework
         }
 
         [NonSerialized, ShowInInspector]
-        [DictionaryDrawerSettings]
         private Dictionary<TKey, TValue> _collection;
-
-        public SerializedDictionaryDrawerSettings DrawerSettings { get; } = new SerializedDictionaryDrawerSettings();
 
         public SerializedDictionary()
         {

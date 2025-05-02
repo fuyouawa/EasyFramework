@@ -7,10 +7,7 @@ namespace EasyFramework.Editor
     {
         protected override void DrawPropertyLayout(GUIContent label)
         {
-            foreach (var child in Property.Children)
-            {
-                child.Draw(label);
-            }
+            Property.Children[0].Draw(label);
         }
     }
 }
