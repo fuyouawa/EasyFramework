@@ -8,7 +8,6 @@ namespace EasyFramework.Serialization
 {
     [EasySerializerConfig(EasySerializerProiority.Generic)]
     public class GenericSerializer<T> : EasySerializer<T>
-        where T : new()
     {
         private List<MemberWithSerializer> _memberWithSerializersCache;
         private static readonly bool IsNode = IsNodeImpl(typeof(T));
@@ -22,6 +21,11 @@ namespace EasyFramework.Serialization
 
             if (value == null)
             {
+                if (Constructor == null)
+                {
+                    throw new ArgumentException($"The type '{typeof(T)}' does not have a default constructor.");
+                }
+
                 value = Constructor();
             }
 
@@ -43,14 +47,26 @@ namespace EasyFramework.Serialization
                 object obj = null;
                 if (archive.ArchiveIoType == ArchiveIoTypes.Output)
                 {
-                    obj = memberWithSerializer.ValueGetter(value);
+                    var getter = memberWithSerializer.ValueGetter;
+                    if (getter == null)
+                    {
+                        throw new ArgumentException($"The member '{member}' is not readable!");
+                    }
+
+                    obj = getter(value);
                 }
 
                 serializer.Process(member.Name, ref obj, memberType, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {
-                    memberWithSerializer.ValueSetter(value, obj);
+                    var setter = memberWithSerializer.ValueSetter;
+                    if (setter == null)
+                    {
+                        throw new ArgumentException($"The member '{member}' is not writable!");
+                    }
+
+                    setter(value, obj);
                 }
             }
 
@@ -71,8 +87,15 @@ namespace EasyFramework.Serialization
 
         private static Func<T> CreateConstructor()
         {
-            var newExp = Expression.New(typeof(T));
-            return Expression.Lambda<Func<T>>(newExp).Compile();
+            try
+            {
+                var newExp = Expression.New(typeof(T));
+                return Expression.Lambda<Func<T>>(newExp).Compile();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

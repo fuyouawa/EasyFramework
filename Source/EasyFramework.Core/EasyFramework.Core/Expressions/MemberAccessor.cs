@@ -18,6 +18,11 @@ namespace EasyFramework.Core
             if (!GetterCache.TryGetValue(member, out var getter))
             {
                 getter = CreateGetter(member);
+                if (getter == null)
+                {
+                    return null;
+                }
+
                 GetterCache[member] = getter;
             }
 
@@ -29,6 +34,11 @@ namespace EasyFramework.Core
             if (!SetterCache.TryGetValue(member, out var setter))
             {
                 setter = CreateSetter(member);
+                if (setter == null)
+                {
+                    return null;
+                }
+
                 SetterCache[member] = setter;
             }
 
@@ -50,7 +60,7 @@ namespace EasyFramework.Core
             {
                 var getMethod = property.GetGetMethod(true);
                 if (getMethod == null)
-                    throw new ArgumentException($"Property '{property.Name}' does not have a getter.");
+                    return null;
 
                 var call = Expression.Call(Expression.Convert(instance, property.DeclaringType!), getMethod);
                 var convertResult = Expression.Convert(call, typeof(object));
@@ -76,7 +86,7 @@ namespace EasyFramework.Core
             {
                 var setMethod = property.GetSetMethod(true);
                 if (setMethod == null)
-                    throw new ArgumentException($"Property '{property.Name}' does not have a setter.");
+                    return null;
 
                 var call = Expression.Call(
                     Expression.Convert(instance, property.DeclaringType!),

@@ -39,13 +39,17 @@ namespace EasyFramework.Serialization
             {
                 var members = targetType.GetMembers(AllBinding)
                     .Where(m => _filter(m))
-                    .Select(m => new MemberWithSerializer()
+                    .Select(m =>
                     {
-                        MemberType = m.GetMemberType(),
-                        Member = m,
-                        ValueGetter = MemberAccessor.GetMemberValueGetter(m),
-                        ValueSetter = MemberAccessor.GetMemberValueSetter(m),
-                        Serializer = EasySerializersManager.GetSerializer(m.GetMemberType())
+                        var mtype = m.GetMemberType();
+                        return new MemberWithSerializer()
+                        {
+                            MemberType = mtype,
+                            Member = m,
+                            ValueGetter = MemberAccessor.GetMemberValueGetter(m),
+                            ValueSetter = MemberAccessor.GetMemberValueSetter(m),
+                            Serializer = EasySerializersManager.GetSerializer(mtype)
+                        };
                     });
 
                 list = new List<MemberWithSerializer>(members);
