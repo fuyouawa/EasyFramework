@@ -2,23 +2,23 @@ using System;
 
 namespace EasyFramework
 {
-    public interface IUnRegister
+    public interface IUnregister
     {
-        void UnRegister();
+        void Unregister();
     }
     
-    public class UnRegisterGeneric : IUnRegister
+    public class UnregisterGeneric : IUnregister
     {
-        private readonly Action _onUnRegister;
+        private readonly Action _onUnregister;
 
-        public UnRegisterGeneric(Action onUnRegister)
+        public UnregisterGeneric(Action onUnregister)
         {
-            _onUnRegister = onUnRegister;
+            _onUnregister = onUnregister;
         }
 
-        public void UnRegister()
+        public void Unregister()
         {
-            _onUnRegister?.Invoke();
+            _onUnregister?.Invoke();
         }
     }
 

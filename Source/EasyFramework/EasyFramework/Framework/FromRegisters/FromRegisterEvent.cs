@@ -14,7 +14,7 @@ namespace EasyFramework
     {
         private readonly Action _inUnityThreadSetter;
 
-        public FromRegisterEventGeneric(Action onUnRegister, Action inUnityThreadSetter) : base(onUnRegister)
+        public FromRegisterEventGeneric(Action onUnregister, Action inUnityThreadSetter) : base(onUnregister)
         {
             _inUnityThreadSetter = inUnityThreadSetter;
         }

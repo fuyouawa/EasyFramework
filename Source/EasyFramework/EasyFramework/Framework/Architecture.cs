@@ -52,7 +52,7 @@ namespace EasyFramework
         void SendEvent<T>(T e);
 
         IFromRegisterEvent RegisterEvent<T>(EventHandlerDelegate<T> onEvent);
-        void UnRegisterEvent<T>(EventHandlerDelegate<T> onEvent);
+        void UnregisterEvent<T>(EventHandlerDelegate<T> onEvent);
     }
 
     public enum ArchitectureState
@@ -232,9 +232,9 @@ namespace EasyFramework
             return EventManager.Instance.Register(this, onEvent);
         }
 
-        public void UnRegisterEvent<TEvent>(EventHandlerDelegate<TEvent> onEvent)
+        public void UnregisterEvent<TEvent>(EventHandlerDelegate<TEvent> onEvent)
         {
-            EventManager.Instance.UnRegister(this, onEvent);
+            EventManager.Instance.Unregister(this, onEvent);
         }
 
         private T CheckNull<T>(T val) where T : class

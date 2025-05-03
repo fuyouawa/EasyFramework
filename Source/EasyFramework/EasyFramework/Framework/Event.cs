@@ -9,8 +9,8 @@ namespace EasyFramework
         public static IFromRegisterEvent RegisterEvent<T>(this ICanRegisterEvent self, EventHandlerDelegate<T> onEvent) =>
             self.GetArchitecture().RegisterEvent<T>(onEvent);
 
-        public static void UnRegisterEvent<T>(this ICanRegisterEvent self, EventHandlerDelegate<T> onEvent) =>
-            self.GetArchitecture().UnRegisterEvent<T>(onEvent);
+        public static void UnregisterEvent<T>(this ICanRegisterEvent self, EventHandlerDelegate<T> onEvent) =>
+            self.GetArchitecture().UnregisterEvent<T>(onEvent);
     }
 
     public interface ICanSendEvent : IBelongToArchitecture

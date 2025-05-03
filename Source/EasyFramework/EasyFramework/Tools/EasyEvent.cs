@@ -18,10 +18,10 @@ namespace EasyFramework
         public IFromRegister Register(Handler handler)
         {
             _handler += handler;
-            return new FromRegisterGeneric(() => UnRegister(handler));
+            return new FromRegisterGeneric(() => Unregister(handler));
         }
 
-        public void UnRegister(Handler handler)
+        public void Unregister(Handler handler)
         {
             _handler -= handler;
         }
@@ -51,10 +51,10 @@ namespace EasyFramework
         public IFromRegister Register(Handler handler)
         {
             _handler += handler;
-            return new FromRegisterGeneric(() => UnRegister(handler));
+            return new FromRegisterGeneric(() => Unregister(handler));
         }
 
-        public void UnRegister(Handler handler)
+        public void Unregister(Handler handler)
         {
             _handler -= handler;
         }
@@ -89,10 +89,10 @@ namespace EasyFramework
         public IFromRegister Register(Handler handler)
         {
             _handler += handler;
-            return new FromRegisterGeneric(() => UnRegister(handler));
+            return new FromRegisterGeneric(() => Unregister(handler));
         }
 
-        public void UnRegister(Handler handler)
+        public void Unregister(Handler handler)
         {
             _handler -= handler;
         }
@@ -127,10 +127,10 @@ namespace EasyFramework
         public IFromRegister Register(Handler handler)
         {
             _handler += handler;
-            return new FromRegisterGeneric(() => UnRegister(handler));
+            return new FromRegisterGeneric(() => Unregister(handler));
         }
 
-        public void UnRegister(Handler handler)
+        public void Unregister(Handler handler)
         {
             _handler -= handler;
         }

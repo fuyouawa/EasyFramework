@@ -32,103 +32,98 @@ namespace EasyFramework
     {
     }
 
+    internal class EasyEventHandleExtension
+    {
+        public EventTriggerExtensionDelegate TriggerExtension;
+    }
+
+    internal class EasyEventHandlers
+    {
+        private readonly Dictionary<object, HashSet<Delegate>> _handlesMap =
+            new Dictionary<object, HashSet<Delegate>>();
+
+        private readonly Dictionary<Delegate, EasyEventHandleExtension> _handlerExtensionMap =
+            new Dictionary<Delegate, EasyEventHandleExtension>();
+
+        public void AddHandler(object target, Delegate handler)
+        {
+            if (!_handlesMap.TryGetValue(target, out var handlers))
+            {
+                handlers = new HashSet<Delegate>();
+                _handlesMap[target] = handlers;
+            }
+
+            var suc = handlers.Add(handler);
+            if (!suc)
+            {
+                throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
+            }
+        }
+
+        public EasyEventHandleExtension GetHandleExtension(Delegate handler)
+        {
+            if (!_handlerExtensionMap.TryGetValue(handler, out var extension))
+            {
+                extension = new EasyEventHandleExtension();
+                _handlerExtensionMap[handler] = extension;
+            }
+
+            return extension;
+        }
+
+        public bool RemoveHandler(object target, Delegate handler)
+        {
+            if (_handlesMap.TryGetValue(target, out var handlers))
+            {
+                return handlers.Remove(handler);
+            }
+
+            return false;
+        }
+
+        public bool RemoveSubscriber(object target)
+        {
+            return _handlesMap.Remove(target);
+        }
+
+        public void Invoke(object sender, object eventArg)
+        {
+            foreach (var handlers in _handlesMap.Values)
+            {
+                foreach (var handler in handlers)
+                {
+                    InternalInvoke(sender, eventArg, handler);
+                }
+            }
+        }
+
+        private void InternalInvoke(object sender, object eventArg, Delegate handler)
+        {
+            void Call() => handler.DynamicInvoke(sender, eventArg);
+
+            if (_handlerExtensionMap.TryGetValue(handler, out var extension))
+            {
+                if (extension.TriggerExtension != null)
+                {
+                    extension.TriggerExtension(Call);
+                    return;
+                }
+            }
+
+            Call();
+        }
+    }
+
     #endregion
 
     public class EventManager : Singleton<EventManager>
     {
-        #region Internal
-
-        private class HandleExtension
-        {
-            public EventTriggerExtensionDelegate TriggerExtension;
-        }
-
-        private class Handlers
-        {
-            private readonly Dictionary<object, HashSet<Delegate>> _handlesMap =
-                new Dictionary<object, HashSet<Delegate>>();
-
-            private readonly Dictionary<Delegate, HandleExtension> _handlerExtensionMap =
-                new Dictionary<Delegate, HandleExtension>();
-
-            public void AddHandler(object target, Delegate handler)
-            {
-                if (!_handlesMap.TryGetValue(target, out var handlers))
-                {
-                    handlers = new HashSet<Delegate>();
-                    _handlesMap[target] = handlers;
-                }
-
-                var suc = handlers.Add(handler);
-                if (!suc)
-                {
-                    throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
-                }
-            }
-
-            public HandleExtension GetHandleExtension(Delegate handler)
-            {
-                if (!_handlerExtensionMap.TryGetValue(handler, out var extension))
-                {
-                    extension = new HandleExtension();
-                    _handlerExtensionMap[handler] = extension;
-                }
-
-                return extension;
-            }
-
-            public bool RemoveHandler(object target, Delegate handler)
-            {
-                if (_handlesMap.TryGetValue(target, out var handlers))
-                {
-                    return handlers.Remove(handler);
-                }
-
-                return false;
-            }
-
-            public bool RemoveSubscriber(object target)
-            {
-                return _handlesMap.Remove(target);
-            }
-
-            public void Invoke(object sender, object eventArg)
-            {
-                foreach (var handlers in _handlesMap.Values)
-                {
-                    foreach (var handler in handlers)
-                    {
-                        InternalInvoke(sender, eventArg, handler);
-                    }
-                }
-            }
-
-            private void InternalInvoke(object sender, object eventArg, Delegate handler)
-            {
-                void Call() => handler.DynamicInvoke(sender, eventArg);
-
-                if (_handlerExtensionMap.TryGetValue(handler, out var extension))
-                {
-                    if (extension.TriggerExtension != null)
-                    {
-                        extension.TriggerExtension(Call);
-                        return;
-                    }
-                }
-
-                Call();
-            }
-        }
-
-        private readonly Dictionary<Type, Handlers> _handlesDict;
-
+        private readonly Dictionary<Type, EasyEventHandlers> _handlesDict;
 
         EventManager()
         {
-            _handlesDict = new Dictionary<Type, Handlers>();
+            _handlesDict = new Dictionary<Type, EasyEventHandlers>();
         }
-
-        #endregion
 
         #region Register
 
@@ -163,7 +158,7 @@ namespace EasyFramework
                 inUnityThreadSetter += () => ret.InUnityThread();
             }
 
-            return new FromRegisterEventGeneric(() => UnRegisterSubscriber(target), inUnityThreadSetter);
+            return new FromRegisterEventGeneric(() => UnregisterSubscriber(target), inUnityThreadSetter);
         }
 
         /// <summary>
@@ -179,12 +174,12 @@ namespace EasyFramework
 
         public IFromRegisterEvent Register(object target, Type eventType, Delegate handler)
         {
-            Handlers handlers;
+            EasyEventHandlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))
                 {
-                    handlers = new Handlers();
+                    handlers = new EasyEventHandlers();
                     _handlesDict[eventType] = handlers;
                 }
             }
@@ -195,7 +190,7 @@ namespace EasyFramework
             }
 
             return new FromRegisterEventGeneric(
-                () => UnRegister(target, eventType, handler),
+                () => Unregister(target, eventType, handler),
                 () =>
                 {
                     lock (handlers)
@@ -205,9 +200,9 @@ namespace EasyFramework
                 });
         }
 
-        private HandleExtension GetHandleExtension(Type eventType, Delegate handler)
+        private EasyEventHandleExtension GetHandleExtension(Type eventType, Delegate handler)
         {
-            Handlers handlers;
+            EasyEventHandlers handlers;
             lock (_handlesDict)
             {
                 handlers = _handlesDict[eventType];
@@ -224,7 +219,7 @@ namespace EasyFramework
 
         #endregion
 
-        #region UnRegister
+        #region Unregister
 
         /// <summary>
         /// 取消注册target中所有事件处理器
@@ -232,7 +227,7 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="includeBaseClass">包含基类的事件处理器</param>
         /// <returns></returns>
-        public bool UnRegisterSubscriber(object target, bool includeBaseClass = false)
+        public bool UnregisterSubscriber(object target, bool includeBaseClass = false)
         {
             bool has = false;
 
@@ -255,14 +250,14 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public bool UnRegister<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
+        public bool Unregister<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
         {
-            return UnRegister(target, typeof(TEvent), handler);
+            return Unregister(target, typeof(TEvent), handler);
         }
 
-        public bool UnRegister(object target, Type eventType, Delegate handler)
+        public bool Unregister(object target, Type eventType, Delegate handler)
         {
-            Handlers handlers;
+            EasyEventHandlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))
@@ -299,7 +294,7 @@ namespace EasyFramework
 
         public bool SendEvent(object target, object eventArg, Type eventType)
         {
-            Handlers handlers;
+            EasyEventHandlers handlers;
             lock (_handlesDict)
             {
                 if (!_handlesDict.TryGetValue(eventType, out handlers))

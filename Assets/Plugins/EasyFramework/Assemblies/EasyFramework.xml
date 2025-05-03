@@ -516,7 +516,7 @@
             <param name="target"></param>
             <param name="handler"></param>
         </member>
-        <member name="M:EasyFramework.EventManager.UnRegisterSubscriber(System.Object,System.Boolean)">
+        <member name="M:EasyFramework.EventManager.UnregisterSubscriber(System.Object,System.Boolean)">
             <summary>
             取消注册target中所有事件处理器
             </summary>
@@ -524,7 +524,7 @@
             <param name="includeBaseClass">包含基类的事件处理器</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EventManager.UnRegister``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
+        <member name="M:EasyFramework.EventManager.Unregister``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
             <summary>
             取消注册事件处理器
             </summary>

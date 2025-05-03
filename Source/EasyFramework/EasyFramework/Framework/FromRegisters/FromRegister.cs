@@ -4,74 +4,74 @@ using UnityEngine;
 
 namespace EasyFramework
 {
-    public interface IFromRegister : IUnRegister
+    public interface IFromRegister : IUnregister
     {
     }
 
-    public class FromRegisterGeneric : UnRegisterGeneric, IFromRegister
+    public class FromRegisterGeneric : UnregisterGeneric, IFromRegister
     {
-        public FromRegisterGeneric(Action onUnRegister) : base(onUnRegister)
+        public FromRegisterGeneric(Action onUnregister) : base(onUnregister)
         {
         }
     }
 
-    public abstract class UnRegisterTrigger : MonoBehaviour
+    public abstract class UnregisterTrigger : MonoBehaviour
     {
-        private readonly HashSet<IUnRegister> _unRegisters = new HashSet<IUnRegister>();
+        private readonly HashSet<IUnregister> _unregisters = new HashSet<IUnregister>();
 
-        public void AddUnRegister(IUnRegister unRegister) => _unRegisters.Add(unRegister);
+        public void AddUnregister(IUnregister unregister) => _unregisters.Add(unregister);
 
-        public void RemoveUnRegister(IUnRegister unRegister) => _unRegisters.Remove(unRegister);
+        public void RemoveUnregister(IUnregister unregister) => _unregisters.Remove(unregister);
 
-        public void UnRegister()
+        public void Unregister()
         {
-            foreach (var unRegister in _unRegisters)
+            foreach (var unregister in _unregisters)
             {
-                unRegister.UnRegister();
+                unregister.Unregister();
             }
 
-            _unRegisters.Clear();
+            _unregisters.Clear();
         }
     }
 
-    public class UnRegisterOnDestroyTrigger : UnRegisterTrigger
+    public class UnregisterOnDestroyTrigger : UnregisterTrigger
     {
         private void OnDestroy()
         {
-            UnRegister();
+            Unregister();
         }
     }
 
-    public class UnRegisterOnDisableTrigger : UnRegisterTrigger
+    public class UnregisterOnDisableTrigger : UnregisterTrigger
     {
         private void OnDestroy()
         {
-            UnRegister();
+            Unregister();
         }
 
         private void OnDisable()
         {
-            UnRegister();
+            Unregister();
         }
     }
 
     public static class IFromRegisterExtension
     {
-        public static IUnRegister UnRegisterWhenDestroyed(
+        public static IUnregister UnregisterWhenDestroyed(
             this IFromRegister unRegister,
             GameObject gameObject)
         {
-            var trigger = gameObject.GetOrAddComponent<UnRegisterOnDestroyTrigger>();
-            trigger.AddUnRegister(unRegister);
+            var trigger = gameObject.GetOrAddComponent<UnregisterOnDestroyTrigger>();
+            trigger.AddUnregister(unRegister);
             return unRegister;
         }
 
-        public static IUnRegister UnRegisterWhenDisabled(
+        public static IUnregister UnregisterWhenDisabled(
             this IFromRegister unRegister,
             GameObject gameObject)
         {
-            var trigger = gameObject.GetOrAddComponent<UnRegisterOnDisableTrigger>();
-            trigger.AddUnRegister(unRegister);
+            var trigger = gameObject.GetOrAddComponent<UnregisterOnDisableTrigger>();
+            trigger.AddUnregister(unRegister);
             return unRegister;
         }
     }
