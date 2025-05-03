@@ -6,7 +6,8 @@ namespace EasyFramework.ToolKit
 {
     static class GameConsoleSystemCommands
     {
-        [GameConsoleCommand("help", OptionalParameter = true, Description = "使用 help <command> 获取指令的更多信息。（例如 help echo）")]
+        [GameConsoleCommand("help", "使用 help <command> 获取指令的更多信息。（例如 help echo）", OptionalParameter = true,
+            IsSystem = true)]
         static void Help(string command)
         {
             const int align = 30;
@@ -20,7 +21,7 @@ namespace EasyFramework.ToolKit
                     Debug.Log($"Unknown command: {command}");
                     return;
                 }
-                
+
                 var sb = new StringBuilder();
                 sb.AppendLine("------------ 指令信息 ------------");
                 sb.AppendLine("描述：");
@@ -51,7 +52,7 @@ namespace EasyFramework.ToolKit
                         sb.AppendLine("Object");
                     }
                 }
-                
+
                 sb.AppendLine("示例:");
                 var example = cmd.GetExample();
                 if (example.IsNotNullOrWhiteSpace())
@@ -72,18 +73,23 @@ namespace EasyFramework.ToolKit
                 var sb = new StringBuilder();
                 sb.AppendLine("------------ 指令文档 ------------");
 
-                var systemCmds = cmds.Where(c => c.IsSystem).ToArray();
-                if (systemCmds.Length > 0)
+                var userCmds = cmds.Where(c => !c.Attribute.IsSystem).ToArray();
+                if (userCmds.Length > 0)
                 {
-                    sb.AppendLine("系统指令：");
-                    sb.Append(CommandsString(systemCmds));
+                    sb.AppendLine("用户指令：");
+                    sb.Append(CommandsString(userCmds));
                 }
 
-                var customCmds = cmds.Where(c => !c.IsSystem).ToArray();
-                if (customCmds.Length > 0)
+                var systemCmds = cmds.Where(c => c.Attribute.IsSystem).ToArray();
+                if (systemCmds.Length > 0)
                 {
-                    sb.AppendLine("自定义指令：");
-                    sb.Append(CommandsString(customCmds));
+                    if (userCmds.Length > 0)
+                    {
+                        sb.AppendLine();
+                    }
+
+                    sb.AppendLine("系统指令：");
+                    sb.Append(CommandsString(systemCmds));
                 }
 
                 GameConsole.Instance.LogInfo(sb.ToString());
@@ -101,7 +107,7 @@ namespace EasyFramework.ToolKit
             return "help echo";
         }
 
-        [GameConsoleCommand("echo", Description = "回应输入的参数。")]
+        [GameConsoleCommand("echo", "回应输入的参数。", IsSystem = true)]
         static void Echo(string message)
         {
             GameConsole.Instance.LogInfo(message);
@@ -113,7 +119,7 @@ namespace EasyFramework.ToolKit
             return "echo Hello world!";
         }
 
-        [GameConsoleCommand("clear", Description = "清空控制台的日志。")]
+        [GameConsoleCommand("clear", "清空控制台的日志。", IsSystem = true)]
         static void Clear()
         {
             GameConsole.Instance.ClearLogs();

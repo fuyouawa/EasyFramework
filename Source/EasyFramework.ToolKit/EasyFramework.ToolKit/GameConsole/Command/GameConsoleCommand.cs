@@ -12,7 +12,6 @@ namespace EasyFramework.ToolKit
         public GameConsoleCommandAttribute Attribute { get; }
         public GameConsoleCommandExampleAttribute ExampleAttribute { get; }
 
-        public bool IsSystem { get; }
         public ParameterInfo Parameter { get; }
 
         private static MethodInfo _methodOfInternalSendWithArg;
@@ -30,8 +29,6 @@ namespace EasyFramework.ToolKit
             Attribute = call.GetCustomAttribute<GameConsoleCommandAttribute>();
             ExampleGetter = exampleGetter;
             ExampleAttribute = exampleGetter?.GetCustomAttribute<GameConsoleCommandExampleAttribute>();
-
-            IsSystem = Call.DeclaringType == typeof(GameConsoleSystemCommands);
 
             var ps = Call.GetParameters();
             if (ps.Length > 0)

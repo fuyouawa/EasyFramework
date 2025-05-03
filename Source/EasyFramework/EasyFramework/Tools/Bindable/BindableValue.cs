@@ -5,6 +5,7 @@ namespace EasyFramework
     public interface IReadonlyBindableValue<T>
     {
         T Value { get; }
+        EasyEvent<T> OnBeforeValueChange { get; }
         EasyEvent<T> OnValueChanged { get; }
     }
 
@@ -24,6 +25,7 @@ namespace EasyFramework
         private T _value;
 
         public T Value => _value;
+        public EasyEvent<T> OnBeforeValueChange { get; } = new EasyEvent<T>();
 
         public EasyEvent<T> OnValueChanged { get; } = new EasyEvent<T>();
 
@@ -32,6 +34,7 @@ namespace EasyFramework
             if (value == null && _value == null) return;
             if (value != null && EqualityComparer<T>.Default.Equals(_value, value)) return;
 
+            OnBeforeValueChange.Invoke(value);
             SetValueWithoutEvent(value);
             OnValueChanged.Invoke(value);
         }

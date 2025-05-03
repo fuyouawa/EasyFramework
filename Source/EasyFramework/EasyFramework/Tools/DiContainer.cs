@@ -15,14 +15,7 @@ namespace EasyFramework
 
         public void Bind(object instance, Type type)
         {
-            if (_instances.ContainsKey(type))
-            {
-                _instances[type] = instance;
-            }
-            else
-            {
-                _instances.Add(type, instance);
-            }
+            _instances[type] = instance;
         }
 
         public T Resolve<T>() where T : class
