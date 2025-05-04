@@ -8,18 +8,6 @@ namespace EasyFramework
 {
     public static class TypeExtension
     {
-        public static readonly TypeCode[] IntegerTypes =
-        {
-            TypeCode.SByte, TypeCode.Byte, TypeCode.Int16, TypeCode.UInt16, TypeCode.Int32, TypeCode.UInt32,
-            TypeCode.Int64, TypeCode.UInt64
-        };
-
-        public static readonly TypeCode[] FloatingPointTypes =
-        {
-            TypeCode.Double, TypeCode.Single, TypeCode.Decimal
-        };
-
-
         private static readonly Dictionary<Type, string> TypeAliases = new Dictionary<Type, string>
         {
             { typeof(void), "void" },
@@ -107,24 +95,54 @@ namespace EasyFramework
             return type.GetCustomAttributes<T>(inherit).Any();
         }
 
-        public static bool IsIntegerType(this Type type)
+        public static bool IsInteger(this Type type)
         {
-            return typeof(int).IsAssignableFrom(type);
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Byte:
+                case TypeCode.Char:
+                case TypeCode.Int16:
+                case TypeCode.Int32:
+                case TypeCode.Int64:
+                case TypeCode.SByte:
+                case TypeCode.UInt16:
+                case TypeCode.UInt32:
+                case TypeCode.UInt64:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
-        public static bool IsFloatingPointType(this Type type)
+        public static bool IsFloatingPoint(this Type type)
         {
-            return typeof(float).IsAssignableFrom(type);
+            switch (Type.GetTypeCode(type))
+            {
+                case TypeCode.Single:
+                case TypeCode.Double:
+                case TypeCode.Decimal:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
-        public static bool IsBooleanType(this Type type)
+        public static bool IsBoolean(this Type type)
         {
-            return typeof(bool).IsAssignableFrom(type);
+            return type == typeof(bool);
         }
 
-        public static bool IsStringType(this Type type)
+        public static bool IsString(this Type type)
         {
-            return typeof(string).IsAssignableFrom(type);
+            return type == typeof(string);
+        }
+
+        public static bool IsBasic(this Type type)
+        {
+            if (type == null)
+                return false;
+
+            return type.IsEnum || type.IsString() || type.IsBoolean() | type.IsFloatingPoint() || type.IsInteger();
         }
 
         public static T GetPropertyValue<T>(this Type type, string propertyName, BindingFlags flags, object target)

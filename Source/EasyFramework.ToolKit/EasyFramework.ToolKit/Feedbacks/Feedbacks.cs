@@ -6,25 +6,68 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public enum FeedbacksInitializeMode
+    {
+        OnAwake,
+        OnStart
+    }
+
     public class Feedbacks : SerializedMonoBehaviour
     {
-        public enum InitializationModes
+        [SerializeField] private FeedbacksInitializeMode _initializeMode = FeedbacksInitializeMode.OnAwake;
+        [SerializeField] private bool _autoInitialization = true;
+        [SerializeField] private bool _autoPlayOnStart;
+        [SerializeField] private bool _autoPlayOnEnable;
+        [SerializeField] private bool _canPlay = true;
+        [SerializeField] private bool _canPlayWhileAlreadyPlaying = false;
+
+        [ShowIf(nameof(CanPlayWhileAlreadyPlaying))]
+        [SerializeField] private bool _canMultiPlay = false;
+
+        [ListDrawerSettings(HideAddButton = true)]
+        [SerializeField] private readonly List<IFeedback> _feedbacks = new List<IFeedback>();
+
+        public FeedbacksInitializeMode InitializeMode
         {
-            OnAwake,
-            OnStart
+            get => _initializeMode;
+            set => _initializeMode = value;
         }
 
-        public InitializationModes InitializationMode = InitializationModes.OnAwake;
-        public bool AutoInitialization = true;
-        public bool AutoPlayOnStart;
-        public bool AutoPlayOnEnable;
-        public bool CanPlay = true;
-        public bool CanPlayWhileAlreadyPlaying = false;
-        [ShowIf(nameof(CanPlayWhileAlreadyPlaying))]
-        public bool CanMultiPlay = false;
+        public bool AutoInitialization
+        {
+            get => _autoInitialization;
+            set => _autoInitialization = value;
+        }
 
-        [SerializeField, ListDrawerSettings(HideAddButton = true)]
-        private readonly List<IFeedback> _feedbacks = new List<IFeedback>();
+        public bool AutoPlayOnStart
+        {
+            get => _autoPlayOnStart;
+            set => _autoPlayOnStart = value;
+        }
+
+        public bool AutoPlayOnEnable
+        {
+            get => _autoPlayOnEnable;
+            set => _autoPlayOnEnable = value;
+        }
+
+        public bool CanPlay
+        {
+            get => _canPlay;
+            set => _canPlay = value;
+        }
+
+        public bool CanPlayWhileAlreadyPlaying
+        {
+            get => _canPlayWhileAlreadyPlaying;
+            set => _canPlayWhileAlreadyPlaying = value;
+        }
+
+        public bool CanMultiPlay
+        {
+            get => _canMultiPlay;
+            set => _canMultiPlay = value;
+        }
 
         public bool IsInitialized { get; private set; }
         public FeedbacksCoroutineHelper CoroutineHelper { get; private set; }
@@ -54,7 +97,7 @@ namespace EasyFramework.ToolKit
 
             _coroutines = new List<Coroutine>();
             CoroutineHelper = coroutineHelper;
-            if (InitializationMode == InitializationModes.OnAwake)
+            if (InitializeMode == FeedbacksInitializeMode.OnAwake)
             {
                 Initialize();
             }
@@ -62,7 +105,7 @@ namespace EasyFramework.ToolKit
 
         private void Start()
         {
-            if (InitializationMode == InitializationModes.OnStart)
+            if (InitializeMode == FeedbacksInitializeMode.OnStart)
             {
                 Initialize();
             }

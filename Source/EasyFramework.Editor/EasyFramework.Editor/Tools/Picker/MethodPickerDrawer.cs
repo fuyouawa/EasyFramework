@@ -61,17 +61,12 @@ namespace EasyFramework.Editor
                 return true;
             }
 
-            if (_settings.LimitParameterCount < parameters.Length)
-                return false;
-
             if (_error.IsNullOrEmpty())
             {
                 var limitParameterTypesSource = _limitParameterTypesResolver.GetValue();
                 if (limitParameterTypesSource != null)
                 {
-                    var limitParameterTypes = ((IEnumerable)limitParameterTypesSource)
-                        .Cast<object>()
-                        .Select(o => (Type)o)
+                    var limitParameterTypes = ((IEnumerable<Type>)limitParameterTypesSource)
                         .ToArray();
 
                     if (limitParameterTypes.Length != parameters.Length)
@@ -79,7 +74,8 @@ namespace EasyFramework.Editor
 
                     for (int i = 0; i < limitParameterTypes.Length; i++)
                     {
-                        if (limitParameterTypes[i] != parameters[i].ParameterType)
+                        if (limitParameterTypes[i] != null &&
+                            limitParameterTypes[i] != parameters[i].ParameterType)
                             return false;
                     }
                 }
@@ -128,6 +124,8 @@ namespace EasyFramework.Editor
                     p2.Value.SetNull();
                     p2.Value.Type = p.ParameterType;
                 }
+                // EasyEditorHelper.ForceRebuildInspectors();
+                _propertyOfParameters.RefreshSetup();
             }
             else
             {

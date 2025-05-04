@@ -546,6 +546,12 @@
             <param name="eventArg">事件</param>
             <returns></returns>
         </member>
+        <member name="P:EasyFramework.MethodPickerSettingsAttribute.LimitParameterTypesGetter">
+            <summary>
+            <para>获取参数的限制类型</para>
+            <para>匹配时会先判断返回的Type数组长度是否与参数数量相同，然后逐个参数匹配是否符合，如果有Type为null代表不限制该参数的类型。</para>
+            </summary>
+        </member>
         <member name="M:EasyFramework.MathUtility.Remap(System.Single,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             将一个在[A, B]区间的x, 映射到[C, D]区间

@@ -17,7 +17,7 @@ namespace EasyFramework.ToolKit.Editor
         private LocalPersistentContext<bool> _settingsExpandContext;
         private FoldoutGroupConfig _foldoutGroupConfig;
 
-        private InspectorProperty _propertyOfInitializationMode;
+        private InspectorProperty _propertyOfInitializeMode;
         private InspectorProperty _propertyOfAutoInitialization;
         private InspectorProperty _propertyOfAutoPlayOnStart;
         private InspectorProperty _propertyOfAutoPlayOnEnable;
@@ -31,13 +31,13 @@ namespace EasyFramework.ToolKit.Editor
             base.OnEnable();
             _settingsExpandContext = this.GetPersistent("Settings/Expand", false);
 
-            _propertyOfInitializationMode = Tree.RootProperty.Children["InitializationMode"];
-            _propertyOfAutoInitialization = Tree.RootProperty.Children["AutoInitialization"];
-            _propertyOfAutoPlayOnStart = Tree.RootProperty.Children["AutoPlayOnStart"];
-            _propertyOfAutoPlayOnEnable = Tree.RootProperty.Children["AutoPlayOnEnable"];
-            _propertyOfCanPlay = Tree.RootProperty.Children["CanPlay"];
-            _propertyOfCanPlayWhileAlreadyPlaying = Tree.RootProperty.Children["CanPlayWhileAlreadyPlaying"];
-            _propertyOfCanMultiPlay = Tree.RootProperty.Children["CanMultiPlay"];
+            _propertyOfInitializeMode = Tree.RootProperty.Children["_initializeMode"];
+            _propertyOfAutoInitialization = Tree.RootProperty.Children["_autoInitialization"];
+            _propertyOfAutoPlayOnStart = Tree.RootProperty.Children["_autoPlayOnStart"];
+            _propertyOfAutoPlayOnEnable = Tree.RootProperty.Children["_autoPlayOnEnable"];
+            _propertyOfCanPlay = Tree.RootProperty.Children["_canPlay"];
+            _propertyOfCanPlayWhileAlreadyPlaying = Tree.RootProperty.Children["_canPlayWhileAlreadyPlaying"];
+            _propertyOfCanMultiPlay = Tree.RootProperty.Children["_canMultiPlay"];
             _propertyOfsFeedback = Tree.RootProperty.Children["_feedbacks"];
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
@@ -50,7 +50,7 @@ namespace EasyFramework.ToolKit.Editor
         {
             EasyEditorGUI.Title("初始化");
 
-            _propertyOfInitializationMode.DrawEx("初始化模式");
+            _propertyOfInitializeMode.DrawEx("初始化模式");
             _propertyOfAutoInitialization.DrawEx("自动初始化", "确保播放前所有s都初始化Feedback");
             _propertyOfAutoPlayOnStart.DrawEx("开始时自动播放", "在开始时自动播放一次");
             _propertyOfAutoPlayOnEnable.DrawEx("启用时自动播放", "在启用时自动播放一次");

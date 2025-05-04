@@ -78,18 +78,21 @@ namespace EasyFramework.ToolKit
                 throw new ArgumentException($"The command '{Attribute.Name}' argument cannot be empty!");
             }
 
-            object arg = null;
-            if (typeof(T).IsPrimitive)
+            object arg;
+            var type = typeof(T);
+            if (type.IsBasic())
             {
-                if (typeof(T).IsIntegerType())
+                if (type.IsInteger())
                     arg = argText.ToInt();
-                else if (typeof(T).IsFloatingPointType())
+                else if (type.IsFloatingPoint())
                     arg = argText.ToFloat();
+                else if (type.IsString())
+                    arg = argText;
+                else if (type.IsBoolean())
+                    arg = argText == "True";
                 else
                     throw new NotImplementedException($"The arg type '{typeof(T)}' is not implemented!");
             }
-            else if (typeof(T).IsStringType())
-                arg = argText;
             else
             {
                 var data = new EasySerializationData(argText, EasyDataFormat.Json);

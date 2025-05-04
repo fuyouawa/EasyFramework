@@ -9,8 +9,8 @@ namespace EasyFramework.Editor
         {
             var variant = ValueEntry.SmartValue;
             var type = variant.Type;
-    
-            if (type.IsPrimitive || type == typeof(string))
+
+            if (type.IsBasic())
             {
                 var getterSetterType = typeof(GetterSetter<>).MakeGenericType(type);
                 var getterSetter = Activator.CreateInstance(getterSetterType) as IValueGetterSetter;

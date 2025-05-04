@@ -9,12 +9,14 @@ namespace EasyFramework
 {
     public class MethodPickerSettingsAttribute : PropertyAttribute
     {
-        public int LimitParameterCount { get; set; }
+        /// <summary>
+        /// <para>获取参数的限制类型</para>
+        /// <para>匹配时会先判断返回的Type数组长度是否与参数数量相同，然后逐个参数匹配是否符合，如果有Type为null代表不限制该参数的类型。</para>
+        /// </summary>
         public string LimitParameterTypesGetter { get; set; }
 
         public MethodPickerSettingsAttribute()
         {
-            LimitParameterCount = int.MaxValue;
         }
     }
 

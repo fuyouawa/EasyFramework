@@ -79,7 +79,7 @@ namespace EasyFramework.ToolKit.Editor
                 {
                     Output += " ";
                     var paramType = TargetCommand.Parameter.ParameterType;
-                    if (paramType.IsValueType || paramType == typeof(string))
+                    if (paramType.IsBasic())
                     {
                         Output += Argument.ToString();
                     }
@@ -118,7 +118,7 @@ namespace EasyFramework.ToolKit.Editor
                 _commandsDropdown = new ValueDropdownList<string>();
                 _commandsDropdown.AddRange(GameConsoleCommandsManager.Instance.GetCommands()
                     .Select(cmd => new ValueDropdownItem<string>(
-                            (cmd.IsSystem ? "system/" : "custom/") + cmd.Attribute.Name,
+                            (cmd.Attribute.IsSystem ? "system/" : "custom/") + cmd.Attribute.Name,
                             cmd.Attribute.Name)));
             }
 
@@ -145,7 +145,7 @@ namespace EasyFramework.ToolKit.Editor
             if (_command.Parameter != null)
             {
                 var paramType = _command.Parameter.ParameterType;
-                if (paramType.IsPrimitive || paramType.IsStringType())
+                if (paramType.IsBasic())
                 {
                     Info.ParameterType = paramType.GetAliases();
                 }
