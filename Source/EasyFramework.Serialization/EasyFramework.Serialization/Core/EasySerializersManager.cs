@@ -69,7 +69,7 @@ namespace EasyFramework.Serialization
         /// <summary>
         /// 具体类型的序列化
         /// </summary>
-        private static readonly Dictionary<Type, HashSet<Type>> ConcreteSerializerTypesDict =
+        private static readonly Dictionary<Type, HashSet<Type>> ConcreteSerializerTypesByArgType =
             new Dictionary<Type, HashSet<Type>>();
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace EasyFramework.Serialization
 
         private static void RegisterConcreteSerializerType(Type serializerType, Type argType)
         {
-            if (!ConcreteSerializerTypesDict.TryGetValue(argType, out var list))
+            if (!ConcreteSerializerTypesByArgType.TryGetValue(argType, out var list))
             {
                 list = new HashSet<Type>();
-                ConcreteSerializerTypesDict[argType] = list;
+                ConcreteSerializerTypesByArgType[argType] = list;
             }
 
             var suc = list.Add(serializerType);
@@ -138,14 +138,14 @@ namespace EasyFramework.Serialization
 
         #region FindSerializerImpl
 
-        private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesDict =
+        private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesByValueType =
             new Dictionary<Type, List<SerializerStore>>();
 
         private static SerializerStore? FindSerializerInSerializersDict(Type valueType)
         {
-            if (!ConcreteSerializerCachesDict.TryGetValue(valueType, out var list))
+            if (!ConcreteSerializerCachesByValueType.TryGetValue(valueType, out var list))
             {
-                if (ConcreteSerializerTypesDict.TryGetValue(valueType, out var types))
+                if (ConcreteSerializerTypesByArgType.TryGetValue(valueType, out var types))
                 {
                     list = new List<SerializerStore>();
 
@@ -158,7 +158,7 @@ namespace EasyFramework.Serialization
                     }
 
                     list.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
-                    ConcreteSerializerCachesDict[valueType] = list;
+                    ConcreteSerializerCachesByValueType[valueType] = list;
                 }
             }
 
@@ -265,14 +265,14 @@ namespace EasyFramework.Serialization
 
         #region GetSerializer
 
-        private static readonly Dictionary<Type, SerializerStore> SerializerCache =
+        private static readonly Dictionary<Type, SerializerStore> SerializerCacheByValueType =
             new Dictionary<Type, SerializerStore>();
 
         private static SerializerStore? GetSerializerImpl(Type valueType)
         {
             EnsureInitializeSerializers();
 
-            if (SerializerCache.TryGetValue(valueType, out var serializer))
+            if (SerializerCacheByValueType.TryGetValue(valueType, out var serializer))
             {
                 return serializer;
             }
@@ -298,7 +298,7 @@ namespace EasyFramework.Serialization
             sortList.Sort((a, b) => b.Attribute.Priority.CompareTo(a.Attribute.Priority));
 
             serializer = sortList[0];
-            SerializerCache[valueType] = serializer;
+            SerializerCacheByValueType[valueType] = serializer;
             return serializer;
         }
 
@@ -321,8 +321,8 @@ namespace EasyFramework.Serialization
 
         public static void ClearCache()
         {
-            ConcreteSerializerCachesDict.Clear();
-            SerializerCache.Clear();
+            ConcreteSerializerCachesByValueType.Clear();
+            SerializerCacheByValueType.Clear();
         }
 
         #endregion

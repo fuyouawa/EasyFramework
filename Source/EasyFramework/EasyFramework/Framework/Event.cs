@@ -6,10 +6,10 @@ namespace EasyFramework
 
     public static class CanRegisterEventExtension
     {
-        public static IFromRegisterEvent RegisterEvent<T>(this ICanRegisterEvent self, EventHandlerDelegate<T> onEvent) =>
+        public static IFromRegisterEvent RegisterEvent<T>(this ICanRegisterEvent self, EasyEventHandler<T> onEvent) =>
             self.GetArchitecture().RegisterEvent<T>(onEvent);
 
-        public static void UnregisterEvent<T>(this ICanRegisterEvent self, EventHandlerDelegate<T> onEvent) =>
+        public static void UnregisterEvent<T>(this ICanRegisterEvent self, EasyEventHandler<T> onEvent) =>
             self.GetArchitecture().UnregisterEvent<T>(onEvent);
     }
 

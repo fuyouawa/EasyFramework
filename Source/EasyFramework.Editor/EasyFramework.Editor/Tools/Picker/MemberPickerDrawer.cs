@@ -13,7 +13,7 @@ namespace EasyFramework.Editor
     public class MemberPickerDrawer<T> : OdinValueDrawer<T>
         where T : MemberPicker
     {
-        private readonly Dictionary<string, MemberInfo> _targetMembers = new Dictionary<string, MemberInfo>();
+        private readonly Dictionary<string, MemberInfo> _membersBySignature = new Dictionary<string, MemberInfo>();
 
         private InspectorProperty _propertyOfTargetObject;
         private InspectorProperty _propertyOfTargetComponent;
@@ -82,7 +82,7 @@ namespace EasyFramework.Editor
                 : EditorHelper.NoneSelectorBtnLabel;
 
             EasyEditorGUI.DrawSelectorDropdown(
-                _targetMembers.Values,
+                _membersBySignature.Values,
                 GUIContent.none,
                 btnLabel,
                 OnTargetMemberChanged,
@@ -98,7 +98,7 @@ namespace EasyFramework.Editor
         {
             TargetComponent = component;
 
-            _targetMembers.Clear();
+            _membersBySignature.Clear();
             RefreshTargetMember(component);
 
             OnTargetMemberChanged(null);
@@ -114,7 +114,7 @@ namespace EasyFramework.Editor
                     if (!MemberFilter(member))
                         continue;
 
-                    _targetMembers.Add(member.GetSignature(), member);
+                    _membersBySignature.Add(member.GetSignature(), member);
                 }
             }
         }
@@ -123,7 +123,6 @@ namespace EasyFramework.Editor
         {
             TargetMember = member;
         }
-
 
         protected virtual string GetComponentName(Component component)
         {

@@ -13,14 +13,14 @@ namespace EasyFramework
     /// <typeparam name="TEvent"></typeparam>
     /// <param name="sender">发送者</param>
     /// <param name="e">事件参数</param>
-    public delegate void EventHandlerDelegate<in TEvent>(object sender, TEvent e);
+    public delegate void EasyEventHandler<in TEvent>(object sender, TEvent e);
 
     /// <summary>
     /// <para>事件处理器的触发行为扩展</para>
     /// <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
     /// </summary>
     /// <param name="triggerInvoker">事件处理器的触发调用对象</param>
-    public delegate void EventTriggerExtensionDelegate(Action triggerInvoker);
+    public delegate void EventTriggerWrapper(Action triggerInvoker);
 
     /// <summary>
     /// <para>标记为事件处理器</para>
@@ -32,25 +32,20 @@ namespace EasyFramework
     {
     }
 
-    internal class EasyEventHandleExtension
-    {
-        public EventTriggerExtensionDelegate TriggerExtension;
-    }
-
     internal class EasyEventHandlers
     {
-        private readonly Dictionary<object, HashSet<Delegate>> _handlesMap =
+        private readonly Dictionary<object, HashSet<Delegate>> _handlesByTarget =
             new Dictionary<object, HashSet<Delegate>>();
 
-        private readonly Dictionary<Delegate, EasyEventHandleExtension> _handlerExtensionMap =
-            new Dictionary<Delegate, EasyEventHandleExtension>();
+        private readonly Dictionary<Delegate, EventTriggerWrapper> _eventTriggerWrapperByHandler =
+            new Dictionary<Delegate, EventTriggerWrapper>();
 
         public void AddHandler(object target, Delegate handler)
         {
-            if (!_handlesMap.TryGetValue(target, out var handlers))
+            if (!_handlesByTarget.TryGetValue(target, out var handlers))
             {
                 handlers = new HashSet<Delegate>();
-                _handlesMap[target] = handlers;
+                _handlesByTarget[target] = handlers;
             }
 
             var suc = handlers.Add(handler);
@@ -60,20 +55,28 @@ namespace EasyFramework
             }
         }
 
-        public EasyEventHandleExtension GetHandleExtension(Delegate handler)
+        public void AddTriggerWrapper(Delegate handler, EventTriggerWrapper wrapper)
         {
-            if (!_handlerExtensionMap.TryGetValue(handler, out var extension))
+            if (_eventTriggerWrapperByHandler.TryGetValue(handler, out var w))
             {
-                extension = new EasyEventHandleExtension();
-                _handlerExtensionMap[handler] = extension;
+                w += wrapper;
+            }
+            else
+            {
+                w = wrapper;
             }
 
-            return extension;
+            _eventTriggerWrapperByHandler[handler] = w;
+        }
+
+        public EventTriggerWrapper GetTriggerWrapper(Delegate handler)
+        {
+            return _eventTriggerWrapperByHandler.GetValueOrDefault(handler);
         }
 
         public bool RemoveHandler(object target, Delegate handler)
         {
-            if (_handlesMap.TryGetValue(target, out var handlers))
+            if (_handlesByTarget.TryGetValue(target, out var handlers))
             {
                 return handlers.Remove(handler);
             }
@@ -83,12 +86,12 @@ namespace EasyFramework
 
         public bool RemoveSubscriber(object target)
         {
-            return _handlesMap.Remove(target);
+            return _handlesByTarget.Remove(target);
         }
 
         public void Invoke(object sender, object eventArg)
         {
-            foreach (var handlers in _handlesMap.Values)
+            foreach (var handlers in _handlesByTarget.Values)
             {
                 foreach (var handler in handlers)
                 {
@@ -101,13 +104,9 @@ namespace EasyFramework
         {
             void Call() => handler.DynamicInvoke(sender, eventArg);
 
-            if (_handlerExtensionMap.TryGetValue(handler, out var extension))
+            if (_eventTriggerWrapperByHandler.TryGetValue(handler, out var wrapper))
             {
-                if (extension.TriggerExtension != null)
-                {
-                    extension.TriggerExtension(Call);
-                    return;
-                }
+                wrapper?.Invoke(Call);
             }
 
             Call();
@@ -116,11 +115,11 @@ namespace EasyFramework
 
     #endregion
 
-    public class EventManager : Singleton<EventManager>
+    public class EasyEventManager : Singleton<EasyEventManager>
     {
         private readonly Dictionary<Type, EasyEventHandlers> _handlesDict;
 
-        EventManager()
+        EasyEventManager()
         {
             _handlesDict = new Dictionary<Type, EasyEventHandlers>();
         }
@@ -167,7 +166,7 @@ namespace EasyFramework
         /// <typeparam name="TEvent"></typeparam>
         /// <param name="target"></param>
         /// <param name="handler"></param>
-        public IFromRegisterEvent Register<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
+        public IFromRegisterEvent Register<TEvent>(object target, EasyEventHandler<TEvent> handler)
         {
             return Register(target, typeof(TEvent), handler);
         }
@@ -195,27 +194,27 @@ namespace EasyFramework
                 {
                     lock (handlers)
                     {
-                        handlers.GetHandleExtension(handler).TriggerExtension += UnityInvoke.Invoke;
+                        handlers.AddTriggerWrapper(handler, UnityInvoke.Invoke);
                     }
                 });
         }
 
-        private EasyEventHandleExtension GetHandleExtension(Type eventType, Delegate handler)
-        {
-            EasyEventHandlers handlers;
-            lock (_handlesDict)
-            {
-                handlers = _handlesDict[eventType];
-            }
-
-            if (handlers == null)
-                return null;
-
-            lock (handlers)
-            {
-                return handlers.GetHandleExtension(handler);
-            }
-        }
+        // private EventTriggerWrapper GetTriggerWrapper(Type eventType, Delegate handler)
+        // {
+        //     EasyEventHandlers handlers;
+        //     lock (_handlesDict)
+        //     {
+        //         handlers = _handlesDict[eventType];
+        //     }
+        //
+        //     if (handlers == null)
+        //         return null;
+        //
+        //     lock (handlers)
+        //     {
+        //         return handlers.GetTriggerWrapper(handler);
+        //     }
+        // }
 
         #endregion
 
@@ -250,7 +249,7 @@ namespace EasyFramework
         /// <param name="target"></param>
         /// <param name="handler"></param>
         /// <returns></returns>
-        public bool Unregister<TEvent>(object target, EventHandlerDelegate<TEvent> handler)
+        public bool Unregister<TEvent>(object target, EasyEventHandler<TEvent> handler)
         {
             return Unregister(target, typeof(TEvent), handler);
         }

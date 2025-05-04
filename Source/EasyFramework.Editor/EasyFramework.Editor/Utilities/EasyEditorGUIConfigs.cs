@@ -5,19 +5,19 @@ using UnityEngine;
 
 namespace EasyFramework.Editor
 {
-    public delegate void OnCoveredTitleBarGUIDelegate(Rect headerRect);
+    public delegate void CoveredTitleBarGUIHandler(Rect headerRect);
 
-    public delegate void OnTitleBarGUIDelegate(Rect headerRect);
+    public delegate void TitleBarGUIHandler(Rect headerRect);
 
-    public delegate void OnContentGUIDelegate(Rect headerRect);
+    public delegate void ContentGUIHandler(Rect headerRect);
 
-    public delegate void OnConfirmedDelegate(object value);
-    public delegate string MenuItemNameGetterDelegate(object value);
-    public delegate void OnConfirmedDelegate<in T>(T value);
-    public delegate string MenuItemNameGetterDelegate<in T>(T value);
+    public delegate void ConfirmedHandler(object value);
+    public delegate string MenuItemNameGetter(object value);
+    public delegate void ConfirmationHandler<in T>(T value);
+    public delegate string MenuItemNameGetter<in T>(T value);
 
-    public delegate void TitleStyleProcessorDelegate(GUIStyle style);
-    public delegate void SubTitleStyleProcessorDelegate(GUIStyle style);
+    public delegate void TitleStyleProcessor(GUIStyle style);
+    public delegate void SubTitleStyleProcessor(GUIStyle style);
 
 
     public class TitleConfig
@@ -33,8 +33,8 @@ namespace EasyFramework.Editor
         public float? TitleFontSize;
         public float? SubtitleFontSize;
 
-        public TitleStyleProcessorDelegate TitleStyleProcessor;
-        public SubTitleStyleProcessorDelegate SubtitleStyleProcessor;
+        public TitleStyleProcessor TitleStyleProcessor;
+        public SubTitleStyleProcessor SubtitleStyleProcessor;
 
         public TitleConfig()
             : this(null)
@@ -78,8 +78,8 @@ namespace EasyFramework.Editor
 
     public class PopupSelectorConfig
     {
-        public OnConfirmedDelegate OnConfirmed;
-        public MenuItemNameGetterDelegate MenuItemNameGetter = null;
+        public ConfirmedHandler OnConfirmed;
+        public MenuItemNameGetter MenuItemNameGetter = null;
         public string Title = null;
         public bool SupportsMultiSelect = false;
         public bool AddThumbnailIcons = true;
@@ -88,7 +88,7 @@ namespace EasyFramework.Editor
         {
         }
 
-        public PopupSelectorConfig(OnConfirmedDelegate onConfirmed, [CanBeNull] MenuItemNameGetterDelegate menuItemNameGetter = null)
+        public PopupSelectorConfig(ConfirmedHandler onConfirmed, [CanBeNull] MenuItemNameGetter menuItemNameGetter = null)
         {
             OnConfirmed = onConfirmed;
             MenuItemNameGetter = menuItemNameGetter;
@@ -106,7 +106,7 @@ namespace EasyFramework.Editor
         {
         }
 
-        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, OnConfirmedDelegate onConfirmed, [CanBeNull] MenuItemNameGetterDelegate menuItemNameGetter = null)
+        public SelectorDropdownConfig(GUIContent label, GUIContent btnLabel, ConfirmedHandler onConfirmed, [CanBeNull] MenuItemNameGetter menuItemNameGetter = null)
             : base(onConfirmed, menuItemNameGetter)
         {
             Label = label;
@@ -121,7 +121,7 @@ namespace EasyFramework.Editor
         public bool Expand;
         public bool Expandable = true;
         public Color? BoxColor;
-        public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
+        public CoveredTitleBarGUIHandler OnCoveredTitleBarGUI;
 
         public FoldoutHeaderConfig()
         {
@@ -137,15 +137,15 @@ namespace EasyFramework.Editor
     public class FoldoutGroupConfig : FoldoutHeaderConfig
     {
         public object Key;
-        public OnTitleBarGUIDelegate OnTitleBarGUI;
-        public OnContentGUIDelegate OnContentGUI;
+        public TitleBarGUIHandler OnTitleBarGUI;
+        public ContentGUIHandler OnContentGUI;
 
         public FoldoutGroupConfig()
         {
         }
 
         public FoldoutGroupConfig(object key, GUIContent label, bool expand,
-            OnContentGUIDelegate onContentGUI)
+            ContentGUIHandler onContentGUI)
             : base(label, expand)
         {
             Key = key;
@@ -158,15 +158,15 @@ namespace EasyFramework.Editor
         public GUIContent Label;
         public LabelConfig RightLabel;
         public Color? BoxColor;
-        public OnCoveredTitleBarGUIDelegate OnCoveredTitleBarGUI;
-        public OnTitleBarGUIDelegate OnTitleBarGUI;
-        public OnContentGUIDelegate OnContentGUI;
+        public CoveredTitleBarGUIHandler OnCoveredTitleBarGUI;
+        public TitleBarGUIHandler OnTitleBarGUI;
+        public ContentGUIHandler OnContentGUI;
 
         public BoxGroupConfig()
         {
         }
 
-        public BoxGroupConfig(GUIContent label, OnContentGUIDelegate onContentGUI = null)
+        public BoxGroupConfig(GUIContent label, ContentGUIHandler onContentGUI = null)
         {
             Label = label;
             OnContentGUI = onContentGUI;
@@ -226,13 +226,13 @@ namespace EasyFramework.Editor
 
     public class TreeNodeState
     {
-        public delegate void OnExpandChangedDelegate(bool expand);
+        public delegate void ExpandChangedHandler(bool expand);
 
         public bool Expand = false;
         public bool? Expandable;
         public Color? BoxColor;
 
-        public OnExpandChangedDelegate OnExpandChanged;
+        public ExpandChangedHandler OnExpandChanged;
     }
 
     public struct TreeNodeInfo
@@ -249,13 +249,13 @@ namespace EasyFramework.Editor
 
         public delegate TreeNodeState NodeStateGetterDelegate(TElement node);
 
-        public delegate void OnNodeTitleBarGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
+        public delegate void NodeTitleBarGUIHandler(TElement node, Rect headerRect, TreeNodeInfo info);
 
-        public delegate void OnNodeConveredTitleBarGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
+        public delegate void NodeConveredTitleBarGUIHandler(TElement node, Rect headerRect, TreeNodeInfo info);
 
-        public delegate void OnBeforeChildrenContentGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
+        public delegate void BeforeChildrenContentGUIHandler(TElement node, Rect headerRect, TreeNodeInfo info);
 
-        public delegate void OnAfterChildrenContentGUIDelegate(TElement node, Rect headerRect, TreeNodeInfo info);
+        public delegate void AfterChildrenContentGUIHandler(TElement node, Rect headerRect, TreeNodeInfo info);
 
         public object Key;
         public GUIContent Label;
@@ -265,12 +265,12 @@ namespace EasyFramework.Editor
         public NodeChildrenGetterDelegate NodeChildrenGetter;
         public NodeStateGetterDelegate NodeStateGetter;
 
-        public OnTitleBarGUIDelegate OnTitleBarGUI;
-        public OnNodeTitleBarGUIDelegate OnNodeTitleBarGUI;
-        public OnNodeConveredTitleBarGUIDelegate OnNodeConveredTitleBarGUI;
+        public TitleBarGUIHandler OnTitleBarGUI;
+        public NodeTitleBarGUIHandler OnNodeTitleBarGUI;
+        public NodeConveredTitleBarGUIHandler OnNodeConveredTitleBarGUI;
 
-        public OnBeforeChildrenContentGUIDelegate OnBeforeChildrenContentGUI;
-        public OnAfterChildrenContentGUIDelegate OnAfterChildrenContentGUI;
+        public BeforeChildrenContentGUIHandler OnBeforeChildrenContentGUI;
+        public AfterChildrenContentGUIHandler OnAfterChildrenContentGUI;
 
         public TreeGroupConfig()
         {

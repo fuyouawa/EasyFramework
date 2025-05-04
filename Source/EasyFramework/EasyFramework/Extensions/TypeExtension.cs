@@ -8,7 +8,7 @@ namespace EasyFramework
 {
     public static class TypeExtension
     {
-        private static readonly Dictionary<Type, string> TypeAliases = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> TypeAliasesByType = new Dictionary<Type, string>
         {
             { typeof(void), "void" },
             { typeof(bool), "bool" },
@@ -30,7 +30,7 @@ namespace EasyFramework
 
         public static string GetAliases(this Type t)
         {
-            if (TypeAliases.TryGetValue(t, out string alias))
+            if (TypeAliasesByType.TryGetValue(t, out string alias))
             {
                 return alias;
             }

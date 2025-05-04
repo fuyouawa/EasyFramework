@@ -8,14 +8,14 @@ namespace EasyFramework.Serialization
     {
         internal IMembersWithSerializerGetter MembersWithSerializerGetter { get; }
 
-        public MemberFilterDelegate MemberFilter { get; }
+        public MemberFilter MemberFilter { get; }
 
         public EasySerializeSettings()
             : this(MemberFilterPresets.Default)
         {
         }
 
-        public EasySerializeSettings(MemberFilterDelegate memberFilter)
+        public EasySerializeSettings(MemberFilter memberFilter)
         {
             MemberFilter = memberFilter;
             MembersWithSerializerGetter = new MembersWithSerializerGetter(MemberFilter);

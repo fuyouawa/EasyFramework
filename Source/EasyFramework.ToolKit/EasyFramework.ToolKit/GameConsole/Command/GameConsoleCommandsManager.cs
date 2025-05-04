@@ -8,7 +8,7 @@ namespace EasyFramework.ToolKit
     public class GameConsoleCommandsManager : Singleton<GameConsoleCommandsManager>
     {
         private readonly Dictionary<string, GameConsoleCommand>
-            _commands = new Dictionary<string, GameConsoleCommand>();
+            _commandsByName = new Dictionary<string, GameConsoleCommand>();
 
         GameConsoleCommandsManager()
         {
@@ -32,18 +32,18 @@ namespace EasyFramework.ToolKit
             {
                 var attr = call.GetCustomAttribute<GameConsoleCommandAttribute>();
                 var example = examples.GetValueOrDefault(attr.Name);
-                _commands[attr.Name] = new GameConsoleCommand(call, example);
+                _commandsByName[attr.Name] = new GameConsoleCommand(call, example);
             }
         }
 
         public GameConsoleCommand[] GetCommands()
         {
-            return _commands.Values.ToArray();
+            return _commandsByName.Values.ToArray();
         }
 
         public GameConsoleCommand GetCommand(string name)
         {
-            return _commands.GetValueOrDefault(name.Trim());
+            return _commandsByName.GetValueOrDefault(name.Trim());
         }
     }
 }

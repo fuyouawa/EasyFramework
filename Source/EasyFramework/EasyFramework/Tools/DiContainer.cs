@@ -6,7 +6,7 @@ namespace EasyFramework
 {
     public class DiContainer
     {
-        private readonly Dictionary<Type, object> _instances = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> _instancesByType = new Dictionary<Type, object>();
 
         public void Bind<T>(T instance)
         {
@@ -15,7 +15,7 @@ namespace EasyFramework
 
         public void Bind(object instance, Type type)
         {
-            _instances[type] = instance;
+            _instancesByType[type] = instance;
         }
 
         public T Resolve<T>() where T : class
@@ -25,15 +25,15 @@ namespace EasyFramework
 
         public object Resolve(Type type)
         {
-            return _instances.GetValueOrDefault(type);
+            return _instancesByType.GetValueOrDefault(type);
         }
 
         public IEnumerable<T> ResolveAll<T>()
         {
             var type = typeof(T);
-            return _instances.Values.Where(instance => type.IsInstanceOfType(instance)).Cast<T>();
+            return _instancesByType.Values.Where(instance => type.IsInstanceOfType(instance)).Cast<T>();
         }
 
-        public void Clear() => _instances.Clear();
+        public void Clear() => _instancesByType.Clear();
     }
 }

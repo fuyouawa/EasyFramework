@@ -9,7 +9,7 @@
             有SerializeField特性的成员，并且忽略访问修饰符
             </summary>
         </member>
-        <member name="F:EasyFramework.Serialization.EasySerializersManager.ConcreteSerializerTypesDict">
+        <member name="F:EasyFramework.Serialization.EasySerializersManager.ConcreteSerializerTypesByArgType">
             <summary>
             具体类型的序列化
             </summary>

@@ -19,7 +19,7 @@ namespace EasyFramework
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="stateId">当前状态</param>
-    public delegate void OnStateChangeDelegate<in T>(T stateId);
+    public delegate void StateChangedHandler<in T>(T stateId);
 
     public abstract class AbstractState : IState
     {

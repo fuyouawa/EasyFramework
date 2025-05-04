@@ -466,7 +466,7 @@
             <para>确保会在Unity线程触发</para>
             </summary>
         </member>
-        <member name="T:EasyFramework.OnStateChangeDelegate`1">
+        <member name="T:EasyFramework.StateChangedHandler`1">
             <summary>
             当状态更改完成的回调
             </summary>
@@ -478,7 +478,7 @@
             当状态更改完的的回调
             </summary>
         </member>
-        <member name="T:EasyFramework.EventHandlerDelegate`1">
+        <member name="T:EasyFramework.EasyEventHandler`1">
             <summary>
             事件处理器
             </summary>
@@ -486,7 +486,7 @@
             <param name="sender">发送者</param>
             <param name="e">事件参数</param>
         </member>
-        <member name="T:EasyFramework.EventTriggerExtensionDelegate">
+        <member name="T:EasyFramework.EventTriggerWrapper">
             <summary>
             <para>事件处理器的触发行为扩展</para>
             <para>可以使用该委托实现例如：确保在UI线程调用事件处理器</para>
@@ -500,7 +500,7 @@
             <para>当RegisterEasyEventSubscriber时会使用该特性</para>
             </summary>
         </member>
-        <member name="M:EasyFramework.EventManager.RegisterSubscriber(System.Object)">
+        <member name="M:EasyFramework.EasyEventManager.RegisterSubscriber(System.Object)">
             <summary>
             注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
             </summary>
@@ -508,7 +508,7 @@
             <returns></returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:EasyFramework.EventManager.Register``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
+        <member name="M:EasyFramework.EasyEventManager.Register``1(System.Object,EasyFramework.EasyEventHandler{``0})">
             <summary>
             注册事件处理器
             </summary>
@@ -516,7 +516,7 @@
             <param name="target"></param>
             <param name="handler"></param>
         </member>
-        <member name="M:EasyFramework.EventManager.UnregisterSubscriber(System.Object,System.Boolean)">
+        <member name="M:EasyFramework.EasyEventManager.UnregisterSubscriber(System.Object,System.Boolean)">
             <summary>
             取消注册target中所有事件处理器
             </summary>
@@ -524,7 +524,7 @@
             <param name="includeBaseClass">包含基类的事件处理器</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EventManager.Unregister``1(System.Object,EasyFramework.EventHandlerDelegate{``0})">
+        <member name="M:EasyFramework.EasyEventManager.Unregister``1(System.Object,EasyFramework.EasyEventHandler{``0})">
             <summary>
             取消注册事件处理器
             </summary>
@@ -533,7 +533,7 @@
             <param name="handler"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.EventManager.SendEvent``1(System.Object,``0)">
+        <member name="M:EasyFramework.EasyEventManager.SendEvent``1(System.Object,``0)">
             <summary>
             <para>触发事件</para>
             <para>注意：在事件处理器中触发事件要谨慎，处理不当可能会死锁</para>

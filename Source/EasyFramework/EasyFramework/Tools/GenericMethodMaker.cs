@@ -7,19 +7,19 @@ namespace EasyFramework
     public class GenericMethodMaker
     {
         private readonly MethodInfo _genericMethod;
-        private readonly Dictionary<Type[], MethodInfo> _methodCache = new Dictionary<Type[], MethodInfo>();
+        private readonly Dictionary<Type[], MethodInfo> _methodCacheByTypeArgs = new Dictionary<Type[], MethodInfo>();
 
         public GenericMethodMaker(MethodInfo genericMethod)
         {
             _genericMethod = genericMethod;
         }
 
-        public MethodInfo Get(params Type[] genericTypes)
+        public MethodInfo Get(params Type[] typeArgs)
         {
-            if (!_methodCache.TryGetValue(genericTypes, out var method))
+            if (!_methodCacheByTypeArgs.TryGetValue(typeArgs, out var method))
             {
-                method = _genericMethod.MakeGenericMethod(genericTypes);
-                _methodCache[genericTypes] = method;
+                method = _genericMethod.MakeGenericMethod(typeArgs);
+                _methodCacheByTypeArgs[typeArgs] = method;
             }
             return method;
         }

@@ -254,8 +254,8 @@ namespace EasyFramework.Editor
             IEnumerable<T> collection,
             GUIContent label,
             GUIContent btnLabel,
-            OnConfirmedDelegate<T> onConfirmed,
-            [CanBeNull] MenuItemNameGetterDelegate<T> menuItemNameGetter = null,
+            ConfirmationHandler<T> onConfirmed,
+            [CanBeNull] MenuItemNameGetter<T> menuItemNameGetter = null,
             params GUILayoutOption[] options)
         {
             TempSelectorDropdownConfig.Label = label;
@@ -406,7 +406,7 @@ namespace EasyFramework.Editor
         private static readonly FoldoutGroupConfig s_tempFoldoutGroupConfig = new FoldoutGroupConfig();
 
         public static bool FoldoutGroup(object key, GUIContent label,
-            bool expand, OnContentGUIDelegate onContentGUI)
+            bool expand, ContentGUIHandler onContentGUI)
         {
             s_tempFoldoutGroupConfig.Key = key;
             s_tempFoldoutGroupConfig.Label = label;
@@ -496,14 +496,14 @@ namespace EasyFramework.Editor
             BoxGroup(config, out var rect);
         }
 
-        public static void BoxGroup(GUIContent label, OnContentGUIDelegate onContentGUI)
+        public static void BoxGroup(GUIContent label, ContentGUIHandler onContentGUI)
         {
             BoxGroup(label, onContentGUI, out _);
         }
 
         private static readonly BoxGroupConfig s_tempBoxGroupConfig = new BoxGroupConfig();
 
-        public static void BoxGroup(GUIContent label, OnContentGUIDelegate onContentGUI, out Rect headerRect)
+        public static void BoxGroup(GUIContent label, ContentGUIHandler onContentGUI, out Rect headerRect)
         {
             s_tempBoxGroupConfig.Label = label;
             s_tempBoxGroupConfig.OnContentGUI = onContentGUI;

@@ -8,14 +8,14 @@ namespace EasyFramework.Editor
     public static class MonoScriptExtension
     {
         private static MonoScript[] s_allScriptsCache;
-        private static readonly Dictionary<Type, MonoScript> ScriptsCache = new Dictionary<Type, MonoScript>(); 
+        private static readonly Dictionary<Type, MonoScript> ScriptsCacheByType = new Dictionary<Type, MonoScript>(); 
 
         public static MonoScript GetMonoScript(this Type type)
         {
-            if (!ScriptsCache.TryGetValue(type, out var script))
+            if (!ScriptsCacheByType.TryGetValue(type, out var script))
             {
                 script = InternalGetMonoScript(type);
-                ScriptsCache[type] = script;
+                ScriptsCacheByType[type] = script;
             }
             return script;
         }

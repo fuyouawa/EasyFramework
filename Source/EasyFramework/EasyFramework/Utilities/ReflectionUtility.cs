@@ -26,13 +26,13 @@ namespace EasyFramework
             return null;
         }
         
-        private static readonly Dictionary<string, Type> TypeSearchCache = new Dictionary<string, Type>();
+        private static readonly Dictionary<string, Type> TypeByFullName = new Dictionary<string, Type>();
         public static Type FindTypeWithCache(string fullname)
         {
-            if (!TypeSearchCache.TryGetValue(fullname, out var type))
+            if (!TypeByFullName.TryGetValue(fullname, out var type))
             {
                 type = FindType(fullname);
-                TypeSearchCache.Add(fullname, type);
+                TypeByFullName.Add(fullname, type);
             }
             return type;
         }
@@ -44,7 +44,7 @@ namespace EasyFramework
                 if (type.FullName == null)
                     throw new ArgumentException($"The fullname of type '{type}' is null!");
 
-                TypeSearchCache[type.FullName] = type;
+                TypeByFullName[type.FullName] = type;
             }
         }
 

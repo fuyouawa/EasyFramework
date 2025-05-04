@@ -17,12 +17,12 @@ namespace EasyFramework
         public bool Active { get; protected set; }
         public bool IsInitialized { get; protected set; }
 
-        protected readonly Dictionary<T, IState> States = new Dictionary<T, IState>();
+        protected readonly Dictionary<T, IState> StatesById = new Dictionary<T, IState>();
 
         /// <summary>
         /// 当状态更改完的的回调
         /// </summary>
-        public event OnStateChangeDelegate<T> OnStateChanged;
+        public event StateChangedHandler<T> OnStateChanged;
 
         public StateMachine()
         {
@@ -33,7 +33,7 @@ namespace EasyFramework
             if (IsInitialized)
                 return;
 
-            foreach (var state in States.Values)
+            foreach (var state in StatesById.Values)
             {
                 state.Initialize();
             }
@@ -41,7 +41,7 @@ namespace EasyFramework
 
         public IState[] GetStates()
         {
-            return States.Values.ToArray();
+            return StatesById.Values.ToArray();
         }
 
         public virtual void Update()
@@ -71,7 +71,7 @@ namespace EasyFramework
 
         public virtual IState GetState(T stateId)
         {
-            return States.GetValueOrDefault(stateId);
+            return StatesById.GetValueOrDefault(stateId);
         }
 
         public virtual void SetState(T stateId, IState state)
@@ -81,7 +81,7 @@ namespace EasyFramework
             //     throw new InvalidOperationException(
             //         $"The state id '{stateId}' already has a corresponding state '{state.GetType().Name}'");
             // }
-            States[stateId] = state;
+            StatesById[stateId] = state;
             if (IsInitialized && state.IsInitialized)
             {
                 state.Initialize();
@@ -91,7 +91,7 @@ namespace EasyFramework
 
         public virtual IFluentState FluentState(T stateId)
         {
-            if (States.TryGetValue(stateId, out var state))
+            if (StatesById.TryGetValue(stateId, out var state))
             {
                 if (state.GetType().HasInterface(typeof(IFluentState)))
                 {
@@ -131,7 +131,7 @@ namespace EasyFramework
             CurrentState?.Exit();
 
             PreviousState = CurrentState;
-            if (States.TryGetValue(stateId, out var state))
+            if (StatesById.TryGetValue(stateId, out var state))
             {
                 CurrentState = state;
 
@@ -163,7 +163,7 @@ namespace EasyFramework
 
         public IEnumerator<KeyValuePair<T, IState>> GetEnumerator()
         {
-            return States.GetEnumerator();
+            return StatesById.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

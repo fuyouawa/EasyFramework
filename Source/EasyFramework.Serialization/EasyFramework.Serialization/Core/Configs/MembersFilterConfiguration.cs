@@ -134,7 +134,7 @@ namespace EasyFramework.Serialization
             ExcludeTypes = new ExcludeTypesConfiguration(this, _excludeTypes);
         }
 
-        public MemberFilterDelegate CreateFilter()
+        public MemberFilter CreateFilter()
         {
             var fieldGetterFlags = _memberFilterFlags;
             var excludeTypes = _excludeTypes.ToArray();
