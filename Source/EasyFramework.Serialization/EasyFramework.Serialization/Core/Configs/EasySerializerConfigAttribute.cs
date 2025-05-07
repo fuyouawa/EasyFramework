@@ -5,6 +5,8 @@ namespace EasyFramework.Serialization
     [AttributeUsage(AttributeTargets.Class)]
     public class EasySerializerConfigAttribute : Attribute
     {
+        public static readonly EasySerializerConfigAttribute Default = new EasySerializerConfigAttribute();
+
         public int Priority { get; set; }
         public bool AllowInherit { get; set; }
 

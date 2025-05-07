@@ -265,5 +265,157 @@ namespace EasyFramework.Core
         {
             return $"{type.Name} ({type.Namespace})";
         }
+
+        public static bool IsImplementsOpenGenericType(this System.Type candidateType, System.Type openGenericType)
+        {
+            return openGenericType.IsInterface
+                ? candidateType.IsImplementsOpenGenericInterface(openGenericType)
+                : candidateType.IsImplementsOpenGenericClass(openGenericType);
+        }
+
+        public static bool IsImplementsOpenGenericClass(this Type derivedType, Type openGenericClassType)
+        {
+            return derivedType.GetArgumentsOfInheritedOpenGenericClass(openGenericClassType).IsNotNullOrEmpty();
+        }
+
+        public static bool IsImplementsOpenGenericInterface(this Type candidateType, Type genericInterfaceType)
+        {
+            return candidateType.GetArgumentsOfInheritedOpenGenericInterface(genericInterfaceType).IsNotNullOrEmpty();
+        }
+
+        public static Type[] GetArgumentsOfInheritedOpenGenericType(this Type candidateType, Type openGenericType)
+        {
+            if (candidateType == null || openGenericType == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (openGenericType.IsInterface)
+                return candidateType.GetArgumentsOfInheritedOpenGenericInterface(openGenericType);
+            return candidateType.GetArgumentsOfInheritedOpenGenericClass(openGenericType);
+        }
+
+        public static Type[] GetArgumentsOfInheritedOpenGenericInterface(this Type candidateType,
+            Type openGenericInterfaceType)
+        {
+            if (candidateType == null || openGenericInterfaceType == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (!openGenericInterfaceType.IsGenericTypeDefinition && !openGenericInterfaceType.IsInterface)
+            {
+                throw new ArgumentException("The type " + openGenericInterfaceType.Name +
+                                            " is not a generic type definition and an interface.");
+            }
+
+            if (candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() == openGenericInterfaceType)
+            {
+                return candidateType.GetGenericArguments();
+            }
+
+            foreach (var i in candidateType.GetInterfaces())
+            {
+                Type[] result;
+                if (i.IsGenericType &&
+                    (result = i.GetArgumentsOfInheritedOpenGenericInterface(openGenericInterfaceType)) != null)
+                {
+                    return result;
+                }
+            }
+
+            return new Type[] { };
+        }
+
+        public static Type[] GetArgumentsOfInheritedOpenGenericClass(this Type candidateType, Type openGenericClassType)
+        {
+            if (candidateType == null || openGenericClassType == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            if (!openGenericClassType.IsGenericTypeDefinition)
+            {
+                throw new ArgumentException("Type " + openGenericClassType.Name + " is not a generic type definition.");
+            }
+
+            while (candidateType != null && candidateType != typeof(object))
+            {
+                if (candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() == openGenericClassType)
+                {
+                    return candidateType.GetGenericArguments();
+                }
+
+                candidateType = candidateType.BaseType;
+            }
+
+            return new Type[] { };
+        }
+
+        /// <summary>
+        /// <para>根据源类型（可能包含泛型参数）和目标类型，从目标类型中提取出原类型缺失的泛型参数类型。</para>
+        /// <para>如果源类型是个泛型参数，则直接返回目标类型。</para>
+        /// </summary>
+        /// <param name="sourceType"></param>
+        /// <param name="targetType"></param>
+        /// <param name="allowInheritance">是否允许通过继承关系匹配泛型定义。</param>
+        /// <returns></returns>
+        public static Type[] ResolveMissingGenericTypeArguments(this Type sourceType, Type targetType, bool allowInheritance)
+        {
+            if (sourceType == null || targetType == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            // 如果一个是数组另一个不是，或者数组维度不一致，则不兼容
+            if (sourceType.IsArray != targetType.IsArray ||
+                sourceType.IsSZArray != targetType.IsSZArray)
+            {
+                return new Type[] { };
+            }
+            
+            // 如果是一维数组，直接返回目标元素类型
+            if (targetType.IsArray)
+            {
+                return new[] { targetType.GetElementType() };
+            }
+
+            if (sourceType.IsGenericParameter)
+            {
+                return new Type[] { targetType };
+            }
+            
+            if (!sourceType.IsGenericType)
+            {
+                return new Type[] { };
+            }
+
+            if (!targetType.IsGenericType || sourceType.GetGenericTypeDefinition() != targetType.GetGenericTypeDefinition())
+            {
+                if (!allowInheritance)
+                {
+                    return new Type[] { };
+                }
+            }
+
+            var sourceArgs = sourceType.GetGenericArguments();
+            var targetArgs = targetType.GetArgumentsOfInheritedOpenGenericType(sourceType.GetGenericTypeDefinition());
+            if (targetArgs.Length == 0)
+            {
+                return new Type[] { };
+            }
+            Assert.True(sourceArgs.Length == targetArgs.Length);
+
+            var missingArgs = new List<Type>();
+            for (int i = 0; i < sourceArgs.Length; i++)
+            {
+                if (sourceArgs[i].IsGenericParameter)
+                {
+                    missingArgs.Add(targetArgs[i]);
+                }
+            }
+
+            return missingArgs.ToArray();
+        }
     }
 }

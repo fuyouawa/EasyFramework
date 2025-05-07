@@ -461,6 +461,16 @@
             <param name="rect">The original <see cref="T:UnityEngine.Rect" />.</param>
             <returns><c>true</c> if the <see cref="T:UnityEngine.Rect" /> is equal to (0, 0, 0, 0) or (0, 0, 1, 1); otherwise <c>false</c>.</returns>
         </member>
+        <member name="M:EasyFramework.Core.TypeExtension.ResolveMissingGenericTypeArguments(System.Type,System.Type,System.Boolean)">
+            <summary>
+            <para>根据源类型（可能包含泛型参数）和目标类型，从目标类型中提取出原类型缺失的泛型参数类型。</para>
+            <para>如果源类型是个泛型参数，则直接返回目标类型。</para>
+            </summary>
+            <param name="sourceType"></param>
+            <param name="targetType"></param>
+            <param name="allowInheritance">是否允许通过继承关系匹配泛型定义。</param>
+            <returns></returns>
+        </member>
         <member name="M:EasyFramework.Core.IFromRegisterEvent.InUnityThread">
             <summary>
             <para>确保会在Unity线程触发</para>
