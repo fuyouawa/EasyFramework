@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
-using EasyFramework;
+using EasyFramework.Core;
 using UnityEditor;
 using UnityEngine;
 

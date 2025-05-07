@@ -3,6 +3,7 @@ using Sirenix.OdinInspector.Editor;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using EasyFramework.Core;
 using EasyFramework.Editor;
 using UnityEditor;
 using UnityEngine;

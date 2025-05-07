@@ -1,4 +1,5 @@
 using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 
 namespace EasyFramework.Serialization
 {

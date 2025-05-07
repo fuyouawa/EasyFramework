@@ -1,4 +1,5 @@
 using System;
+using EasyFramework.Core;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
 using UnityEngine;

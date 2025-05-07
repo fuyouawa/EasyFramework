@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 using UnityEngine;
 
 namespace EasyFramework.Serialization

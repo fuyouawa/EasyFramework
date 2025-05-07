@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using EasyFramework.Core;
 using UnityEngine;
 using UnityEngine.UI;
 

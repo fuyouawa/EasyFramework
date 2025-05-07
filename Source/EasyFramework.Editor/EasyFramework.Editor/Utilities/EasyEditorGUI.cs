@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using System.Reflection;
+using EasyFramework.Core;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
 

@@ -1,4 +1,5 @@
 using System;
+using EasyFramework.Core;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit

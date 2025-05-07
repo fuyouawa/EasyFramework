@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
+using EasyFramework.Core;
 
 namespace EasyFramework.ToolKit
 {

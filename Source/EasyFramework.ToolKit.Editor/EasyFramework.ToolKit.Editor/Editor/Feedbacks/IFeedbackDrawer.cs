@@ -1,3 +1,4 @@
+using EasyFramework.Core;
 using EasyFramework.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;

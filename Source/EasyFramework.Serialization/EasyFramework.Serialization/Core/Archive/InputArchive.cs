@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 
 namespace EasyFramework.Serialization
 {

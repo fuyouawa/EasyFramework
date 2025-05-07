@@ -2,6 +2,7 @@ using EasyFramework.Serialization;
 using System.Reflection;
 using System.Text;
 using System;
+using EasyFramework.Core;
 
 namespace EasyFramework.ToolKit
 {

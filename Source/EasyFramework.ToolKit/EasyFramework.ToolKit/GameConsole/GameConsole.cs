@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using EasyFramework.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

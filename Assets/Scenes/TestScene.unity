@@ -1297,6 +1297,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1661679143}
   - component: {fileID: 1661679145}
+  - component: {fileID: 1661679146}
   m_Layer: 0
   m_Name: sdf
   m_TagString: Untagged
@@ -1337,6 +1338,47 @@ MonoBehaviour:
     _any:
       _serializedData: 2801070000003400350033003500330034003500
       _serializedUnityObjects: []
+--- !u!114 &1661679146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661679142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _feedbacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  _initializeMode: 0
+  _autoInitialization: 1
+  _autoPlayOnStart: 0
+  _autoPlayOnEnable: 0
+  _canPlay: 1
+  _canPlayWhileAlreadyPlaying: 0
+  _canMultiPlay: 0
 --- !u!1 &1691742404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,14 +1600,6 @@ MonoBehaviour:
         _any:
           _serializedData: 280106000000350036003700350036003700
           _serializedUnityObjects: []
-  TestEvent:
-    _methodPickers:
-    - _serializedTargetMemberType: 0
-      _serializedTargetMemberData: 
-      _serializedUnityObjects:
-      - {fileID: 1888331991}
-      - {fileID: 0}
-      _parameters: []
   _testController: {fileID: 0}
   Dsfgdfg: {fileID: 0}
   Dsfgdfgs3r: {fileID: 0}

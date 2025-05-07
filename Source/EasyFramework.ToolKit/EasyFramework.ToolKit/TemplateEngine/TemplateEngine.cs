@@ -1,6 +1,5 @@
 using System;
-using System.Text;
-using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 using EasyFramework.Serialization;
 
 namespace EasyFramework.ToolKit

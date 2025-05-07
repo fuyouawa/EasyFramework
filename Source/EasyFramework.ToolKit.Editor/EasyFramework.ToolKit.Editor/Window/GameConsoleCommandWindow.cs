@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using EasyFramework.Core;
 using EasyFramework.Editor;
 using EasyFramework.Serialization;
 using Sirenix.OdinInspector;

@@ -48,7 +48,7 @@ namespace EasyFramework.Serialization
                             Member = m,
                             ValueGetter = MemberAccessor.GetMemberValueGetter(m),
                             ValueSetter = MemberAccessor.GetMemberValueSetter(m),
-                            Serializer = EasySerializersManager.GetSerializer(mtype)
+                            Serializer = EasySerializersManager.Instance.GetSerializer(mtype)
                         };
                     });
 

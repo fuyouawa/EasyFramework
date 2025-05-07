@@ -1,3 +1,4 @@
+using EasyFramework.Core;
 using UnityEditor;
 using UnityEngine;
 

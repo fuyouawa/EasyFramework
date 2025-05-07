@@ -1,4 +1,5 @@
 using System;
+using EasyFramework.Core;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;

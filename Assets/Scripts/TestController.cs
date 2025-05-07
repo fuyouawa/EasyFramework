@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using EasyFramework;
+using EasyFramework.Core;
+using EasyFramework.ToolKit;
 using UnityEngine;
 
 public partial class TestController : MonoBehaviour

@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using EasyFramework.Core;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit

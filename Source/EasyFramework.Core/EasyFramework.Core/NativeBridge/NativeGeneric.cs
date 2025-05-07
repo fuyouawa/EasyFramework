@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using System;
 
-namespace EasyFramework.Core
+namespace EasyFramework.Core.Internal
 {
     public enum NativeErrorCode
     {

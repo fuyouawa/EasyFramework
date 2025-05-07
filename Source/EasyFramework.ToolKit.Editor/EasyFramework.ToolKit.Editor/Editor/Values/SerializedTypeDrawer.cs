@@ -1,0 +1,13 @@
+using Sirenix.OdinInspector.Editor;
+using UnityEngine;
+
+namespace EasyFramework.ToolKit.Editor
+{
+    public class SerializedTypeDrawer : OdinValueDrawer<SerializedType>
+    {
+        protected override void DrawPropertyLayout(GUIContent label)
+        {
+            Property.Children[0].Draw(label);
+        }
+    }
+}

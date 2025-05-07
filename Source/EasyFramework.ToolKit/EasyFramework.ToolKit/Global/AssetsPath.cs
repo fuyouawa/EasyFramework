@@ -1,3 +1,5 @@
+using EasyFramework.Core;
+
 namespace EasyFramework.ToolKit
 {
     internal static class AssetsPath

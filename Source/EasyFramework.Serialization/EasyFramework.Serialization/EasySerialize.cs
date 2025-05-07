@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 using UnityEngine;
 
 namespace EasyFramework.Serialization
@@ -87,7 +88,7 @@ namespace EasyFramework.Serialization
 
         private static EasySerializer GetSerializerWithThrow(Type type)
         {
-            var serializer = EasySerializersManager.GetSerializer(type);
+            var serializer = EasySerializersManager.Instance.GetSerializer(type);
             if (serializer == null)
             {
                 throw new ArgumentException(
@@ -104,7 +105,7 @@ namespace EasyFramework.Serialization
             if (settings != CurrentSettings)
             {
                 CurrentSettings = settings;
-                EasySerializersManager.ClearCache();
+                EasySerializersManager.Instance.ClearCache();
             }
         }
 

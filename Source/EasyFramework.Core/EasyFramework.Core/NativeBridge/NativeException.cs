@@ -1,6 +1,6 @@
 using System;
 
-namespace EasyFramework.Core
+namespace EasyFramework.Core.Internal
 {
     public class NativeException : Exception
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using EasyFramework.Core;
 
 namespace EasyFramework.Serialization
 {
@@ -62,23 +63,25 @@ namespace EasyFramework.Serialization
         }
     }
 
-    public static class EasySerializersManager
+    public class EasySerializersManager
     {
         #region Initialization
+
+        public static EasySerializersManager Instance { get; } = new EasySerializersManager();
 
         /// <summary>
         /// 具体类型的序列化
         /// </summary>
-        private static readonly Dictionary<Type, HashSet<Type>> ConcreteSerializerTypesByArgType =
+        private readonly Dictionary<Type, HashSet<Type>> ConcreteSerializerTypesByArgType =
             new Dictionary<Type, HashSet<Type>>();
 
         /// <summary>
         /// 泛型序列化的信息存储
         /// </summary>
-        private static readonly HashSet<GenericSerializerInfo> GenericSerializerInfos =
+        private readonly HashSet<GenericSerializerInfo> GenericSerializerInfos =
             new HashSet<GenericSerializerInfo>();
 
-        private static void RegisterConcreteSerializerType(Type serializerType, Type argType)
+        private void RegisterConcreteSerializerType(Type serializerType, Type argType)
         {
             if (!ConcreteSerializerTypesByArgType.TryGetValue(argType, out var list))
             {
@@ -90,7 +93,7 @@ namespace EasyFramework.Serialization
             Debug.Assert(suc);
         }
 
-        private static void RegisterGenericSerializerType(Type serializerType, Type argType)
+        private void RegisterGenericSerializerType(Type serializerType, Type argType)
         {
             var attr = serializerType.GetCustomAttribute<EasySerializerConfigAttribute>() ??
                        new EasySerializerConfigAttribute();
@@ -98,7 +101,7 @@ namespace EasyFramework.Serialization
             Debug.Assert(suc);
         }
 
-        private static void RegisterSerializerType(Type serializerType)
+        private void RegisterSerializerType(Type serializerType)
         {
             var interfaceType = serializerType.GetInterface("IEasySerializer`1");
             var argType = interfaceType.GetGenericArguments()[0];
@@ -113,9 +116,9 @@ namespace EasyFramework.Serialization
             }
         }
 
-        private static bool s_initializedSerializers = false;
+        private bool s_initializedSerializers = false;
 
-        private static void EnsureInitializeSerializers()
+        private void EnsureInitializeSerializers()
         {
             if (!s_initializedSerializers)
             {
@@ -138,10 +141,10 @@ namespace EasyFramework.Serialization
 
         #region FindSerializerImpl
 
-        private static readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesByValueType =
+        private readonly Dictionary<Type, List<SerializerStore>> ConcreteSerializerCachesByValueType =
             new Dictionary<Type, List<SerializerStore>>();
 
-        private static SerializerStore? FindSerializerInSerializersDict(Type valueType)
+        private SerializerStore? FindSerializerInSerializersDict(Type valueType)
         {
             if (!ConcreteSerializerCachesByValueType.TryGetValue(valueType, out var list))
             {
@@ -176,7 +179,7 @@ namespace EasyFramework.Serialization
             return null;
         }
 
-        private static Type[] GetNeededGenericTypes(Type srcType, Type destType, bool allocInherit)
+        private Type[] GetNeededGenericTypes(Type srcType, Type destType, bool allocInherit)
         {
             if (srcType.IsArray != destType.IsArray ||
                 srcType.IsSZArray != destType.IsSZArray)
@@ -218,7 +221,7 @@ namespace EasyFramework.Serialization
             return typeArgs;
         }
 
-        private static SerializerStore? FindSerializerInGenericSerializers(Type valueType, int? lastMaxPriority)
+        private SerializerStore? FindSerializerInGenericSerializers(Type valueType, int? lastMaxPriority)
         {
             var serializes = new List<SerializerStore>();
             foreach (var info in GenericSerializerInfos)
@@ -265,10 +268,10 @@ namespace EasyFramework.Serialization
 
         #region GetSerializer
 
-        private static readonly Dictionary<Type, SerializerStore> SerializerCacheByValueType =
+        private readonly Dictionary<Type, SerializerStore> SerializerCacheByValueType =
             new Dictionary<Type, SerializerStore>();
 
-        private static SerializerStore? GetSerializerImpl(Type valueType)
+        private SerializerStore? GetSerializerImpl(Type valueType)
         {
             EnsureInitializeSerializers();
 
@@ -302,7 +305,7 @@ namespace EasyFramework.Serialization
             return serializer;
         }
 
-        public static EasySerializer GetSerializer(Type valueType)
+        public EasySerializer GetSerializer(Type valueType)
         {
             var info = GetSerializerImpl(valueType);
             if (info.HasValue)
@@ -313,13 +316,13 @@ namespace EasyFramework.Serialization
             return null;
         }
 
-        public static EasySerializer<T> GetSerializer<T>()
+        public EasySerializer<T> GetSerializer<T>()
         {
             var serializer = GetSerializer(typeof(T));
             return (EasySerializer<T>)serializer;
         }
 
-        public static void ClearCache()
+        public void ClearCache()
         {
             ConcreteSerializerCachesByValueType.Clear();
             SerializerCacheByValueType.Clear();
