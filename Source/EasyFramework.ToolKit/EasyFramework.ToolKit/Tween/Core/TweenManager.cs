@@ -86,17 +86,17 @@ namespace EasyFramework.ToolKit
         public AbstractTweener GetTweener(Type valueType)
         {
             var tweener = GetTweenerType(valueType)?.CreateInstance<AbstractTweener>();
-            if (tweener == null)
-                return null;
-
-            tweener.Reset();
-            TweenController.Instance.Attach(tweener);
             return tweener;
         }
 
         public AbstractTweener<T> GetTweener<T>()
         {
             return (AbstractTweener<T>)GetTweener(typeof(T));
+        }
+
+        public TweenSequence GetSequence()
+        {
+            return new TweenSequence();
         }
     }
 }

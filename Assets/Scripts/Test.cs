@@ -1,17 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using EasyFramework;
 using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using Unity.Profiling;
 using UnityEngine;
-using UnityEngine.Profiling;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
-using EasyTween = EasyFramework.ToolKit.EasyTween;
 
 public class Test : MonoBehaviour
 {
@@ -37,12 +30,14 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            int i = 0;
-            EasyTween.To(() => i, val =>
-            {
-                i = val;
-                Debug.Log(val);
-            }, 10, 3f);
+            var seq = Tween.Sequence();
+            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 4f));      // 4s内线性缓动到(10, 10, 0)
+
+            seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f)
+                .SetEaseMode(EaseMode.InSine));                             // 2s内Sine曲线缓动到(0, 10, 0)
+
+            seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f)
+                .SetDurationMode(DurationMode.Speed));                      // 2m/s的速度线性缓动到(0, 0, 0)
         }
     }
 
@@ -66,7 +61,6 @@ public class Test : MonoBehaviour
         public string asdf = "$65dfg";
         public float asdzx = 34.5f;
         public double sadxz = 2345.56;
-        public Ease ease = Ease.Linear;
 
         public class MyClass2
         {

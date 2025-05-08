@@ -16,7 +16,8 @@ namespace EasyFramework.ToolKit
         /// </summary>
         Normal,
         /// <summary>
-        /// 速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。
+        /// <para>速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。</para>
+        /// <para>注意：使用此模式后，Tween.Duration()将返回null，除非该Tweener的第一帧被调用了。</para>
         /// </summary>
         Speed
     }
@@ -33,18 +34,32 @@ namespace EasyFramework.ToolKit
         protected internal EaseMode EaseMode { get; set; }
         protected internal DurationMode DurationMode { get; set; }
 
-        protected override float GetDuration()
+        private float? _actualDuration;
+
+        protected override float? ActualDuration
         {
-            switch (DurationMode)
+            get
             {
-                case DurationMode.Normal:
-                    return _duration;
-                case DurationMode.Speed:
-                    if (CurrentState == TweenState.Idle)
-                        throw new InvalidOperationException("The duration in the duration mode 'Speed' can only be obtained after started.");
-                    return GetDistance(_startValue, _endValue) * _duration;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                if (_actualDuration.HasValue)
+                {
+                    return _actualDuration.Value;
+                }
+
+                switch (DurationMode)
+                {
+                    case DurationMode.Normal:
+                        _actualDuration = _duration;
+                        break;
+                    case DurationMode.Speed:
+                        if (CurrentState == TweenState.Idle)
+                            return null;
+                        _actualDuration = GetDistance(_startValue, _endValue) / _duration;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                return _actualDuration;
             }
         }
 
@@ -53,10 +68,7 @@ namespace EasyFramework.ToolKit
         internal void SetDuration(float duration)
         {
             _duration = duration;
-            if (OwnerSequence != null)
-            {
-                OwnerSequence.RefreshDuration();
-            }
+            _actualDuration = null;
         }
 
         protected override void OnReset()
@@ -84,11 +96,11 @@ namespace EasyFramework.ToolKit
 
         protected override void OnPlaying(float time)
         {
-            var curValue = GetCurrentValue(time, _duration, _startValue, _endValue);
+            var curValue = GetCurrentValue(time, GetActualDuration(), _startValue, _endValue);
             _setter(curValue);
         }
 
-        protected abstract object GetCurrentValue(float time, float duration, object startValue, object endValue);
+        protected abstract object GetCurrentValue(float time, float? duration, object startValue, object endValue);
     }
 
     public abstract class AbstractTweener<T> : AbstractTweener
@@ -103,12 +115,12 @@ namespace EasyFramework.ToolKit
             return GetDistance((T)startValue, (T)endValue);
         }
 
-        protected override object GetCurrentValue(float time, float duration, object startValue, object endValue)
+        protected override object GetCurrentValue(float time, float? duration, object startValue, object endValue)
         {
             return GetCurrentValue(time, duration, (T)startValue, (T)endValue);
         }
 
         protected abstract float GetDistance(T startValue, T endValue);
-        protected abstract T GetCurrentValue(float time, float duration, T startValue, T endValue);
+        protected abstract T GetCurrentValue(float time, float? duration, T startValue, T endValue);
     }
 }

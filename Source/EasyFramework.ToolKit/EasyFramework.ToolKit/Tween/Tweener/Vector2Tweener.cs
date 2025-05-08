@@ -8,37 +8,20 @@ namespace EasyFramework.ToolKit
     {
         protected override float GetDistance(Vector2 startValue, Vector2 endValue)
         {
-            return Mathf.Max(
-                (endValue.x - startValue.x).Abs(),
-                (endValue.y - startValue.y).Abs()
-            );
+            return Vector2.Distance(startValue, endValue);
         }
 
-        protected override Vector2 GetCurrentValue(float time, float duration, Vector2 startValue, Vector2 endValue)
+        protected override Vector2 GetCurrentValue(float time, float? duration, Vector2 startValue, Vector2 endValue)
         {
-            var t = MathUtility.Remap(time, 0f, duration, 0f, 1f);
+            Assert.True(duration.HasValue);
 
-            float x;
-            float y;
-            switch (DurationMode)
-            {
-                case DurationMode.Normal:
-                    x = TweenUtility.EaseValue(EaseMode, t, startValue.x, endValue.x);
-                    y = TweenUtility.EaseValue(EaseMode, t, startValue.y, endValue.y);
-                    break;
-                case DurationMode.Speed:
-                {
-                    var dist = GetDistance(startValue, endValue);
-                    x = TweenUtility.EaseValue(EaseMode, t, startValue.x, startValue.x + dist * endValue.x.Sign());
-                    y = TweenUtility.EaseValue(EaseMode, t, startValue.y, startValue.y + dist * endValue.y.Sign());
-                    x = x.Clamp(startValue.x, endValue.x);
-                    y = y.Clamp(startValue.y, endValue.y);
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-            return new Vector2(x, y);
+            var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
+
+            var dist = Vector2.Distance(startValue, endValue);
+            var dir = (endValue - startValue).normalized;
+            var curDist = TweenUtility.EaseValue(EaseMode, t, 0f, dist);
+
+            return startValue + curDist * dir;
         }
     }
 }

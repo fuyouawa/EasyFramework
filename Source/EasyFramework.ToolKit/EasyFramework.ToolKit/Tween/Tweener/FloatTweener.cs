@@ -9,9 +9,11 @@ namespace EasyFramework.ToolKit
             return (endValue - startValue).Abs();
         }
 
-        protected override float GetCurrentValue(float time, float duration, float startValue, float endValue)
+        protected override float GetCurrentValue(float time, float? duration, float startValue, float endValue)
         {
-            var t = MathUtility.Remap(time, 0f, duration, 0f, 1f);
+            Assert.True(duration.HasValue);
+
+            var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
             var res = TweenUtility.EaseValue(EaseMode, t, startValue, endValue);
             return res;
         }

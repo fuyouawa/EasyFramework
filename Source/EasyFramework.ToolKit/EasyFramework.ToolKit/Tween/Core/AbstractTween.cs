@@ -23,7 +23,15 @@ namespace EasyFramework.ToolKit
 
         internal string Id { get; set; }
 
-        internal float Duration => GetDuration();
+        internal float? GetActualDuration() => ActualDuration;
+
+        /// <summary>
+        /// 获取实际的持续时间，返回null代表无法判断具体持续时间。
+        /// </summary>
+        /// <returns></returns>
+        protected virtual float? ActualDuration => null;
+
+        internal float? LastPlayTime { get; private set; }
 
         internal float Delay { get; set; }
 
@@ -39,15 +47,19 @@ namespace EasyFramework.ToolKit
 
         internal event TweenEventHandler OnKill;
 
-        internal Sequence OwnerSequence { get; set; }
+        internal TweenSequence OwnerSequence { get; set; }
 
         internal bool PendingKill { get; set; }
 
-        protected abstract float GetDuration();
-        
         private readonly StateMachine<TweenState> _state = new StateMachine<TweenState>();
         private bool _pause;
         private float _playElapsedTime;
+
+        protected AbstractTween()
+        {
+            Reset();
+            TweenController.Instance.Attach(this);
+        }
 
         internal void Reset()
         {
@@ -82,6 +94,7 @@ namespace EasyFramework.ToolKit
             {
                 _state.ChangeState(TweenState.Playing);
             }
+
             _state.OnStateChanged += OnStateChanged;
         }
 
@@ -155,9 +168,9 @@ namespace EasyFramework.ToolKit
                 else
                 {
                     var time = _playElapsedTime - Delay;
-                    if (time > Duration)
+                    if (ActualDuration.HasValue && time > ActualDuration.Value)
                     {
-                        _state.ChangeState(TweenState.Completed);
+                        Complete();
                     }
                     else
                     {
@@ -174,6 +187,13 @@ namespace EasyFramework.ToolKit
             _state.ChangeState(TweenState.Killed);
         }
 
+        internal void Complete()
+        {
+            LastPlayTime = Mathf.Max(_playElapsedTime - Delay, 0f);
+
+            _state.ChangeState(TweenState.Completed);
+        }
+
         internal void Pause()
         {
             _pause = true;
@@ -184,8 +204,14 @@ namespace EasyFramework.ToolKit
             _pause = false;
         }
 
-        protected virtual void OnReset() {}
-        protected virtual void OnStart() {}
+        protected virtual void OnReset()
+        {
+        }
+
+        protected virtual void OnStart()
+        {
+        }
+
         protected abstract void OnPlaying(float time);
     }
 }

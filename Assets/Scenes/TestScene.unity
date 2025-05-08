@@ -426,6 +426,109 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658613848}
   m_CullTransparentMesh: 1
+--- !u!1 &790981259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 790981262}
+  - component: {fileID: 790981261}
+  - component: {fileID: 790981260}
+  m_Layer: 0
+  m_Name: Circle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &790981260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790981259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfd0bd82ef69b54ba53afbaea6a7851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Js:
+    _type:
+      _serializedData: System.String, mscorlib
+    _any:
+      _serializedData: 280103000000330034003500
+      _serializedUnityObjects: []
+--- !u!212 &790981261
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790981259}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &790981262
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790981259}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1048080887
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,213 +857,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1661679142
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1661679143}
-  - component: {fileID: 1661679145}
-  - component: {fileID: 1661679146}
-  m_Layer: 0
-  m_Name: sdf
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1661679143
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661679142}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1500.037, y: 836.9015, z: -4.032467}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1661679145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661679142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bfd0bd82ef69b54ba53afbaea6a7851, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Js:
-    _type:
-      _serializedData: System.String, mscorlib
-    _any:
-      _serializedData: 2801070000003400350033003500330034003500
-      _serializedUnityObjects: []
---- !u!114 &1661679146
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1661679142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 1661679142}
-    - {fileID: 1661679146}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _feedbacks
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
-        EasyFramework.ToolKit]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 1|EasyFramework.Modules.GameObjectInvokeMethodFeedback, EasyFramework.Modules
-    - Name: Label
-      Entry: 6
-      Data: 
-    - Name: Enable
-      Entry: 5
-      Data: true
-    - Name: DelayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: Blocking
-      Entry: 5
-      Data: false
-    - Name: RepeatForever
-      Entry: 5
-      Data: false
-    - Name: AmountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: IntervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: Picker
-      Entry: 7
-      Data: 2|EasyFramework.ToolKit.MethodPicker, EasyFramework.ToolKit
-    - Name: _serializedTargetMemberType
-      Entry: 3
-      Data: 3
-    - Name: _serializedTargetMemberData
-      Entry: 7
-      Data: 3|System.Byte[], mscorlib
-    - Name: 
-      Entry: 14
-      Data: 022f00000000012d000000530079007300740065006d002e005200650066006c0065006300740069006f006e002e00520075006e00740069006d0065004d006500740068006f00640049006e0066006f002c0020006d00730063006f0072006c00690062000000000001010d0000006400650063006c006100720069006e00670054007900700065002f01000000011c000000530079007300740065006d002e00520075006e00740069006d00650054007900700065002c0020006d00730063006f0072006c00690062000100000028013600000045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074002e0046006500650064006200610063006b0073002c00200045006100730079004600720061006d00650077006f0072006b002e0054006f006f006c004b00690074000527010a0000006d006500740068006f0064004e0061006d006500011e0000007300650074005f00430061006e0050006c00610079005700680069006c00650041006c007200650061006400790050006c006100790069006e0067000101090000007300690067006e00610074007500720065002f020000000117000000530079007300740065006d002e0054007900700065005b005d002c0020006d00730063006f0072006c00690062000200000006010000000000000002300100000003000000280118000000530079007300740065006d002e0042006f006f006c00650061006e002c0020006d00730063006f0072006c006900620005070505
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _serializedUnityObjects
-      Entry: 7
-      Data: 4|System.Collections.Generic.List`1[[UnityEngine.Object, UnityEngine.CoreModule]],
-        mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _parameters
-      Entry: 7
-      Data: 5|System.Collections.Generic.List`1[[EasyFramework.ToolKit.MethodPicker+Parameter,
-        EasyFramework.ToolKit]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 1
-    - Name: 
-      Entry: 7
-      Data: 6|EasyFramework.ToolKit.MethodPicker+Parameter, EasyFramework.ToolKit
-    - Name: Name
-      Entry: 1
-      Data: value
-    - Name: Value
-      Entry: 7
-      Data: 7|EasyFramework.ToolKit.SerializedVariant, EasyFramework.ToolKit
-    - Name: _type
-      Entry: 7
-      Data: 8|EasyFramework.ToolKit.SerializedType, EasyFramework.ToolKit
-    - Name: _serializedData
-      Entry: 1
-      Data: System.Boolean, mscorlib
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: _any
-      Entry: 7
-      Data: 9|EasyFramework.ToolKit.SerializedAny, EasyFramework.ToolKit
-    - Name: _serializedData
-      Entry: 6
-      Data: 
-    - Name: _serializedUnityObjects
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  _initializeMode: 0
-  _autoInitialization: 1
-  _autoPlayOnStart: 0
-  _autoPlayOnEnable: 0
-  _canPlay: 1
-  _canPlayWhileAlreadyPlaying: 0
-  _canMultiPlay: 0
 --- !u!1 &1691742404
 GameObject:
   m_ObjectHideFlags: 0
@@ -1621,4 +1517,4 @@ SceneRoots:
   - {fileID: 1953207288}
   - {fileID: 1924209944}
   - {fileID: 1530885787}
-  - {fileID: 1661679143}
+  - {fileID: 790981262}
