@@ -9,36 +9,30 @@ namespace EasyFramework.Serialization
 {
     public class EasySerializersManager : Singleton<EasySerializersManager>
     {
-        private bool _initialized = false;
         private readonly TypeMatcher _serializerTypeMatcher = new TypeMatcher();
 
         EasySerializersManager()
         {
         }
 
-        private void EnsureInitializeSerializers()
+        protected override void OnSingletonInit()
         {
-            if (!_initialized)
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(asm => asm.GetTypes())
+                .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract &&
+                            t.HasInterface(typeof(IEasySerializer)))
+                .ToArray();
+
+            _serializerTypeMatcher.SetTypeMatchIndices(types.Select(type =>
             {
-                var types = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(asm => asm.GetTypes())
-                    .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract &&
-                                t.GetInterface("IEasySerializer`1") != null)
-                    .ToArray();
-
-                _serializerTypeMatcher.SetTypeMatchIndexs(types.Select(type =>
-                {
-                    var config = type.GetCustomAttribute<EasySerializerConfigAttribute>();
-                    config ??= EasySerializerConfigAttribute.Default;
+                var config = type.GetCustomAttribute<EasySerializerConfigAttribute>();
+                config ??= EasySerializerConfigAttribute.Default;
                     
-                    var argType = type.GetArgumentsOfInheritedOpenGenericInterface(typeof(IEasySerializer<>));
-                    return new TypeMatchIndex(type, config.Priority, argType);
-                }));
+                var argType = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasySerializer<>));
+                return new TypeMatchIndex(type, config.Priority, argType);
+            }));
 
-                _serializerTypeMatcher.AddMatchRule(GetMatchedSerializerType);
-
-                _initialized = true;
-            }
+            _serializerTypeMatcher.AddMatchRule(GetMatchedSerializerType);
         }
 
         private Type GetMatchedSerializerType(TypeMatchIndex matchIndex, Type[] targets, ref bool stopMatch)
@@ -76,13 +70,11 @@ namespace EasyFramework.Serialization
             }
         }
 
-        private readonly Dictionary<Type, EasySerializer> _serializerCacheByValueType =
-            new Dictionary<Type, EasySerializer>();
+        private readonly Dictionary<Type, IEasySerializer> _serializerCacheByValueType =
+            new Dictionary<Type, IEasySerializer>();
 
-        public EasySerializer GetSerializer(Type valueType)
+        internal IEasySerializer GetSerializer(Type valueType)
         {
-            EnsureInitializeSerializers();
-
             if (_serializerCacheByValueType.TryGetValue(valueType, out var serializer))
             {
                 return serializer;
@@ -91,7 +83,7 @@ namespace EasyFramework.Serialization
             var results = _serializerTypeMatcher.Match(new[] { valueType });
             foreach (var result in results)
             {
-                var inst = result.MatchedType.CreateInstance<EasySerializer>();
+                var inst = result.MatchedType.CreateInstance<IEasySerializer>();
                 if (inst.CanSerialize(valueType))
                 {
                     serializer = inst;

@@ -9,7 +9,9 @@ namespace EasyFramework.ToolKit
         Idle,
         DelayAfterPlay,
         Playing,
-        Paused
+        Paused,
+        Completed,
+        Killed,
     }
 
     public delegate void TweenEventHandler();
@@ -25,17 +27,21 @@ namespace EasyFramework.ToolKit
 
         internal float Delay { get; set; }
 
+        internal int Loop { get; set; }
+
         internal TweenState CurrentState => _state.CurrentStateId;
 
         internal event TweenEventHandler OnPlay;
 
         internal event TweenEventHandler OnPause;
 
-        internal event TweenEventHandler OnComplete;
+        internal event TweenEventHandler OnCompleted;
 
         internal event TweenEventHandler OnKill;
 
         internal Sequence OwnerSequence { get; set; }
+
+        internal bool PendingKill { get; set; }
 
         protected abstract float GetDuration();
         
@@ -47,26 +53,61 @@ namespace EasyFramework.ToolKit
         {
             Id = string.Empty;
             Delay = 0f;
+            Loop = 1;
             OwnerSequence = null;
 
             OnPlay = null;
             OnPause = null;
-            OnComplete = null;
+            OnCompleted = null;
             OnKill = null;
 
             _pause = false;
             _playElapsedTime = 0f;
             _state.StartState(TweenState.Idle);
+            _state.OnStateChanged -= OnStateChanged;
 
             OnReset();
         }
 
 
-        internal void Initialize()
+        internal void Start()
         {
             _playElapsedTime = 0f;
-            OnInit();
-            _state.ChangeState(TweenState.DelayAfterPlay);
+            OnStart();
+            if (Delay > 0)
+            {
+                _state.ChangeState(TweenState.DelayAfterPlay);
+            }
+            else
+            {
+                _state.ChangeState(TweenState.Playing);
+            }
+            _state.OnStateChanged += OnStateChanged;
+        }
+
+        protected virtual void OnStateChanged(TweenState state)
+        {
+            switch (state)
+            {
+                case TweenState.Idle:
+                    break;
+                case TweenState.DelayAfterPlay:
+                    break;
+                case TweenState.Playing:
+                    OnPlay?.Invoke();
+                    break;
+                case TweenState.Paused:
+                    OnPause?.Invoke();
+                    break;
+                case TweenState.Completed:
+                    OnCompleted?.Invoke();
+                    break;
+                case TweenState.Killed:
+                    OnKill?.Invoke();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
         }
 
         internal void Update()
@@ -75,6 +116,11 @@ namespace EasyFramework.ToolKit
             if (stateId == TweenState.Idle)
             {
                 throw new InvalidOperationException("Tween must be initialize first.");
+            }
+
+            if (stateId == TweenState.Completed)
+            {
+                throw new InvalidOperationException("The tween has been finished.");
             }
 
             if (stateId == TweenState.Paused)
@@ -104,7 +150,6 @@ namespace EasyFramework.ToolKit
                     if (_playElapsedTime > Delay)
                     {
                         _state.ChangeState(TweenState.Playing);
-                        OnPlay?.Invoke();
                     }
                 }
                 else
@@ -112,9 +157,7 @@ namespace EasyFramework.ToolKit
                     var time = _playElapsedTime - Delay;
                     if (time > Duration)
                     {
-                        _state.ChangeState(TweenState.Idle);
-                        OnComplete?.Invoke();
-                        OnKill?.Invoke();
+                        _state.ChangeState(TweenState.Completed);
                     }
                     else
                     {
@@ -124,6 +167,11 @@ namespace EasyFramework.ToolKit
 
                 _playElapsedTime += Time.deltaTime;
             }
+        }
+
+        internal void Kill()
+        {
+            _state.ChangeState(TweenState.Killed);
         }
 
         internal void Pause()
@@ -137,7 +185,7 @@ namespace EasyFramework.ToolKit
         }
 
         protected virtual void OnReset() {}
-        protected virtual void OnInit() {}
+        protected virtual void OnStart() {}
         protected abstract void OnPlaying(float time);
     }
 }

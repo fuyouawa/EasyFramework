@@ -139,132 +139,142 @@
             <para>匹配时会先判断返回的Type数组长度是否与参数数量相同，然后逐个参数匹配是否符合，如果有Type为null代表不限制该参数的类型。</para>
             </summary>
         </member>
-        <member name="T:EasyFramework.ToolKit.Ease">
+        <member name="F:EasyFramework.ToolKit.DurationMode.Normal">
+            <summary>
+            正常模式，在“持续时间”内从“起始值”缓动到“结束值”。
+            </summary>
+        </member>
+        <member name="F:EasyFramework.ToolKit.DurationMode.Speed">
+            <summary>
+            速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.EaseMode">
             <summary>
             缓动函数类型枚举，用于控制插值动画的速率变化曲线。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.Linear">
+        <member name="F:EasyFramework.ToolKit.EaseMode.Linear">
             <summary>
             线性匀速过渡，无加速度。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InSine">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InSine">
             <summary>
             使用正弦函数起始缓慢，逐渐加速。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutSine">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutSine">
             <summary>
             使用正弦函数起始快速，逐渐减速。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutSine">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutSine">
             <summary>
             使用正弦函数在开始和结束时都较缓慢，中间加速。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InQuad">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InQuad">
             <summary>
             二次函数缓动，起始缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutQuad">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutQuad">
             <summary>
             二次函数缓动，结束缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutQuad">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutQuad">
             <summary>
             二次函数缓动，开始和结束都缓慢，中间加速。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InCubic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InCubic">
             <summary>
             三次函数缓动，起始缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutCubic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutCubic">
             <summary>
             三次函数缓动，结束缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutCubic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutCubic">
             <summary>
             三次函数缓动，开始和结束都缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InQuart">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InQuart">
             <summary>
             四次函数缓动，起始缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutQuart">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutQuart">
             <summary>
             四次函数缓动，结束缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutQuart">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutQuart">
             <summary>
             四次函数缓动，开始和结束都缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InQuint">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InQuint">
             <summary>
             五次函数缓动，起始缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutQuint">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutQuint">
             <summary>
             五次函数缓动，结束缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutQuint">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutQuint">
             <summary>
             五次函数缓动，开始和结束都缓慢。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InBack">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InBack">
             <summary>
             向后拉动再向前加速的动画，具有“超前”效果。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutBack">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutBack">
             <summary>
             向前滑动并“超出”目标后回弹的动画。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutBack">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutBack">
             <summary>
             起始和终点都有回弹的动画，形成前后“超出”效果。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InElastic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InElastic">
             <summary>
             起始具有弹簧震荡效果，逐渐进入动画。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutElastic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutElastic">
             <summary>
             动画结束时产生弹簧震荡回弹效果。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutElastic">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutElastic">
             <summary>
             动画开始和结束都具有弹簧震荡效果。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InBounce">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InBounce">
             <summary>
             动画开始像球落地一样反弹，逐渐收敛。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.OutBounce">
+        <member name="F:EasyFramework.ToolKit.EaseMode.OutBounce">
             <summary>
             动画结束像球落地一样反弹，逐渐停止。
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.Ease.InOutBounce">
+        <member name="F:EasyFramework.ToolKit.EaseMode.InOutBounce">
             <summary>
             动画开始和结束都带有弹跳效果。
             </summary>

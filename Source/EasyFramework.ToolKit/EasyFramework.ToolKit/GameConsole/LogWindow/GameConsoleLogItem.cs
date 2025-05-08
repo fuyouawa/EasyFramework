@@ -68,7 +68,7 @@ namespace EasyFramework.ToolKit
             const string logSign = "EasyFramework.ToolKit\\Log\\Core\\Log.cs";
 
             // 判断是否来自日志
-            if (frames.Any(f => f.GetFileName().Is(x => x != null && x.Contains(logSign))))
+            if (frames.Any(f => f.GetFileName()?.Contains(logSign) == true))
             {
                 // 去除日志栈帧
                 for (int i = 0; i < frames.Length; i++)

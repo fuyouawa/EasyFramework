@@ -12,7 +12,7 @@ namespace EasyFramework.Serialization
         public MemberInfo Member;
         public Func<object, object> ValueGetter;
         public Action<object, object> ValueSetter;
-        public EasySerializer Serializer;
+        public IEasySerializer Serializer;
     }
 
     internal interface IMembersWithSerializerGetter

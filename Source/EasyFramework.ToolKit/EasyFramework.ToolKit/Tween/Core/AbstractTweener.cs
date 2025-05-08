@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
@@ -7,6 +8,18 @@ namespace EasyFramework.ToolKit
 
     public delegate T TweenGetter<T>();
     public delegate void TweenSetter<T>(T val);
+
+    public enum DurationMode
+    {
+        /// <summary>
+        /// 正常模式，在“持续时间”内从“起始值”缓动到“结束值”。
+        /// </summary>
+        Normal,
+        /// <summary>
+        /// 速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。
+        /// </summary>
+        Speed
+    }
 
     public abstract class AbstractTweener : AbstractTween
     {
@@ -17,12 +30,25 @@ namespace EasyFramework.ToolKit
         private TweenSetter _setter;
 
         private float _duration;
-        internal Ease Ease { get; set; }
+        protected internal EaseMode EaseMode { get; set; }
+        protected internal DurationMode DurationMode { get; set; }
 
         protected override float GetDuration()
         {
-            return _duration;
+            switch (DurationMode)
+            {
+                case DurationMode.Normal:
+                    return _duration;
+                case DurationMode.Speed:
+                    if (CurrentState == TweenState.Idle)
+                        throw new InvalidOperationException("The duration in the duration mode 'Speed' can only be obtained after started.");
+                    return GetDistance(_startValue, _endValue) * _duration;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
+
+        protected abstract float GetDistance(object startValue, object endValue);
 
         internal void SetDuration(float duration)
         {
@@ -51,7 +77,7 @@ namespace EasyFramework.ToolKit
             _endValue = endValue;
         }
 
-        protected override void OnInit()
+        protected override void OnStart()
         {
             _startValue = _getter();
         }
@@ -72,11 +98,17 @@ namespace EasyFramework.ToolKit
             Apply(typeof(T), () => getter(), val => setter((T)val), endValue);
         }
 
+        protected override float GetDistance(object startValue, object endValue)
+        {
+            return GetDistance((T)startValue, (T)endValue);
+        }
+
         protected override object GetCurrentValue(float time, float duration, object startValue, object endValue)
         {
             return GetCurrentValue(time, duration, (T)startValue, (T)endValue);
         }
 
+        protected abstract float GetDistance(T startValue, T endValue);
         protected abstract T GetCurrentValue(float time, float duration, T startValue, T endValue);
     }
 }

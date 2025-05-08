@@ -41,7 +41,7 @@ namespace EasyFramework.Serialization
                 using (var arch = GetOutputArchive(serializationData.Format, ios))
                 {
                     var serializer = GetSerializerWithThrow(valueType);
-                    ((IEasySerializer)serializer).IsRoot = true;
+                    serializer.IsRoot = true;
 
                     serializer.Process(ref value, valueType, arch);
 
@@ -77,7 +77,7 @@ namespace EasyFramework.Serialization
                     arch.SetupReferencedUnityObjects(serializationData.ReferencedUnityObjects);
 
                     var serializer = GetSerializerWithThrow(type);
-                    ((IEasySerializer)serializer).IsRoot = true;
+                    serializer.IsRoot = true;
 
                     serializer.Process(ref res, type, arch);
                 }
@@ -86,7 +86,7 @@ namespace EasyFramework.Serialization
             return res;
         }
 
-        private static EasySerializer GetSerializerWithThrow(Type type)
+        private static IEasySerializer GetSerializerWithThrow(Type type)
         {
             var serializer = EasySerializersManager.Instance.GetSerializer(type);
             if (serializer == null)

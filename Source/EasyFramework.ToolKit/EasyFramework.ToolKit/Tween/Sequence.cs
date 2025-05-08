@@ -10,9 +10,7 @@ namespace EasyFramework.ToolKit
         class TweenNode
         {
             private List<AbstractTween> _tweens;
-            public IReadOnlyList<AbstractTween> Tweens => _tweens;
             public float Duration { get; private set; }
-            public bool IsComplete { get; private set; }
             public Sequence Owner { get; }
 
             public TweenNode(Sequence owner)
@@ -26,6 +24,7 @@ namespace EasyFramework.ToolKit
                 {
                     throw new Exception("Only one sequence can be added to a tween");
                 }
+                TweenController.Instance.Detach(tween);
                 tween.OwnerSequence = Owner;
 
                 if (tween.Duration > Duration)
@@ -40,31 +39,45 @@ namespace EasyFramework.ToolKit
                 Duration = _tweens.Max(tween => tween.Duration);
             }
 
-            public void Init()
+            public bool IsAllCompleted()
             {
-                foreach (var tween in _tweens)
-                {
-                    tween.Initialize();
-                }
+                return !_tweens.Any(tween => tween.CurrentState != TweenState.Completed || tween.Loop > 0);
             }
 
             public void Update()
             {
-                Assert.False(IsComplete);
-
-                bool isAllCompleted = true;
                 foreach (var tween in _tweens)
                 {
-                    if (tween.CurrentState != TweenState.Idle)
+                    if (tween.PendingKill)
+                        continue;
+
+                    if (tween.CurrentState == TweenState.Idle)
                     {
-                        isAllCompleted = false;
-                        tween.Update();
+                        tween.Start();
+                    }
+                    tween.Update();
+
+                    if (tween.CurrentState == TweenState.Completed)
+                    {
+                        tween.Loop--;
+                        
+                        if (tween.Loop > 0)
+                        {
+                            tween.Start();
+                        }
+                        else
+                        {
+                            tween.PendingKill = true;
+                        }
                     }
                 }
+            }
 
-                if (isAllCompleted)
+            public void Kill()
+            {
+                foreach (var tween in _tweens)
                 {
-                    IsComplete = true;
+                    tween.Kill();
                 }
             }
         }
@@ -126,9 +139,10 @@ namespace EasyFramework.ToolKit
 
             var node = _tweenNodes[_currentNodeIndex];
             node.Update();
-            if (node.IsComplete)
+
+            if (node.IsAllCompleted())
             {
-                _currentNodeIndex++;
+                node.Kill();
             }
         }
     }

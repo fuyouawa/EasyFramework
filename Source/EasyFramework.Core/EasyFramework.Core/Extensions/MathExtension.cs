@@ -8,6 +8,7 @@ namespace EasyFramework.Core
         {
             return (float)System.Math.Round(value, decimals);
         }
+
         public static float Round(this float value)
         {
             return (float)System.Math.Round(value);
@@ -16,6 +17,31 @@ namespace EasyFramework.Core
         public static float Abs(this float value)
         {
             return Mathf.Abs(value);
+        }
+
+        public static int Abs(this int value)
+        {
+            return Mathf.Abs(value);
+        }
+
+        public static int Sign(this int value)
+        {
+            return value >= 0 ? 1 : -1;
+        }
+
+        public static int Clamp(this int value, int min, int max)
+        {
+            return Mathf.Clamp(value, min, max);
+        }
+
+        public static float Clamp(this float value, float min, float max)
+        {
+            return Mathf.Clamp(value, min, max);
+        }
+
+        public static float Sign(this float value)
+        {
+            return Mathf.Sign(value);
         }
 
         public static int FloorToInt(this float value)

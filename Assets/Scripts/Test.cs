@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using EasyTween = EasyFramework.ToolKit.EasyTween;
 
 public class Test : MonoBehaviour
 {
@@ -30,6 +31,19 @@ public class Test : MonoBehaviour
             .WriteTo.UnityConsole()
             .WriteTo.GameConsole()
             .CreateLogger();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            int i = 0;
+            EasyTween.To(() => i, val =>
+            {
+                i = val;
+                Debug.Log(val);
+            }, 10, 3f);
+        }
     }
 
     public void TestLog(InputField input)

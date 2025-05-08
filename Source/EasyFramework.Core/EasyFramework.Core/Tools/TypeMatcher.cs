@@ -39,26 +39,47 @@ namespace EasyFramework.Core
 
     public class TypeMatcher
     {
-        private TypeMatchIndex[] _matchIndices;
+        private List<TypeMatchIndex> _matchIndices;
         private readonly List<TypeMatchRule> _matchRules = new List<TypeMatchRule>();
 
-        public void SetTypeMatchIndexs(IEnumerable<TypeMatchIndex> matchIndices)
+        private readonly Dictionary<Type[], TypeMatchResult[]> _matchResultsCacheByTargets = new Dictionary<Type[], TypeMatchResult[]>();
+
+        public void AddTypeMatchIndices(IEnumerable<TypeMatchIndex> matchIndices)
         {
-            _matchIndices = matchIndices.ToArray();
+            _matchIndices.AddRange(matchIndices);
+            ClearCache();
+        }
+
+        public void SetTypeMatchIndices(IEnumerable<TypeMatchIndex> matchIndices)
+        {
+            _matchIndices = matchIndices.ToList();
+            ClearCache();
         }
 
         public void AddMatchRule(TypeMatchRule rule)
         {
             _matchRules.Add(rule);
+            ClearCache();
         }
 
         public void RemoveMatchRule(TypeMatchRule rule)
         {
             _matchRules.Remove(rule);
+            ClearCache();
+        }
+
+        private void ClearCache()
+        {
+            _matchResultsCacheByTargets.Clear();
         }
 
         public TypeMatchResult[] Match(Type[] targets)
         {
+            if (_matchResultsCacheByTargets.TryGetValue(targets, out var ret))
+            {
+                return ret;
+            }
+
             var results = new List<TypeMatchResult>();
 
             foreach (var index in _matchIndices)
@@ -78,9 +99,11 @@ namespace EasyFramework.Core
                 }
             }
 
-            return results
+            ret = results
                 .OrderByDescending(result => result.MatchIndex.Priority)
                 .ToArray();
+            _matchResultsCacheByTargets[targets] = ret;
+            return ret;
         }
     }
 }

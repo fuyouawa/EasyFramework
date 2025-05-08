@@ -3,7 +3,7 @@ namespace EasyFramework.ToolKit
     /// <summary>
     /// 缓动函数类型枚举，用于控制插值动画的速率变化曲线。
     /// </summary>
-    public enum Ease
+    public enum EaseMode
     {
         /// <summary>
         /// 线性匀速过渡，无加速度。
