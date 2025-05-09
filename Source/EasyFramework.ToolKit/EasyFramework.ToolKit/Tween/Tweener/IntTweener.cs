@@ -13,10 +13,16 @@ namespace EasyFramework.ToolKit
 
         protected override int GetCurrentValue(float time, float? duration, int startValue, int endValue)
         {
-            Assert.True(duration.HasValue);
+            if (SecondaryEaseType == SecondaryEaseType.QuadraticBezier)
+            {
+                throw new InvalidOperationException("Bezier curves only support vector tweener.");
+            }
 
+            Assert.True(duration.HasValue);
+            
             var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
-            var res = TweenUtility.EaseValue(EaseMode, t, startValue, endValue);
+            var easedT = TweenUtility.EaseTime(EaseType, t);
+            var res = Mathf.Lerp(startValue, endValue, easedT);
             return Mathf.RoundToInt(res);
         }
     }

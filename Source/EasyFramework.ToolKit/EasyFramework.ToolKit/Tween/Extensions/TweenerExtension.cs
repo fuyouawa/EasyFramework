@@ -2,9 +2,19 @@ namespace EasyFramework.ToolKit
 {
     public static class TweenerExtension
     {
-        public static AbstractTweener SetEaseMode(this AbstractTweener tweener, EaseMode easeMode)
+        public static AbstractTweener SetEase(this AbstractTweener tweener, EaseType easeType,
+            IEaseConfig easeConfig = null)
         {
-            tweener.EaseMode = easeMode;
+            tweener.EaseType = easeType;
+            tweener.EaseConfig = easeConfig;
+            return tweener;
+        }
+
+        public static AbstractTweener SetSecondaryEase(this AbstractTweener tweener, SecondaryEaseType easeType,
+            ISecondaryEaseConfig easeConfig = null)
+        {
+            tweener.SecondaryEaseType = easeType;
+            tweener.SecondaryEaseConfig = easeConfig;
             return tweener;
         }
 

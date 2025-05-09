@@ -1,9 +1,11 @@
+using UnityEngine;
+
 namespace EasyFramework.ToolKit
 {
     /// <summary>
     /// 缓动函数类型枚举，用于控制插值动画的速率变化曲线。
     /// </summary>
-    public enum EaseMode
+    public enum EaseType
     {
         /// <summary>
         /// 线性匀速过渡，无加速度。
@@ -129,5 +131,41 @@ namespace EasyFramework.ToolKit
         /// 动画开始和结束都带有弹跳效果。
         /// </summary>
         InOutBounce,
+    }
+
+    /// <summary>
+    /// 次级缓动函数类型枚举，用于为<see cref="EaseType"/>增加次级效果。
+    /// </summary>
+    public enum SecondaryEaseType
+    {
+        None,
+
+        /// <summary>
+        /// <para>二次贝塞尔缓动曲线，用于通过控制点实现自定义缓动轨迹。</para>
+        /// <para>需要配合 <see cref="QuadraticBezierEaseConfig"/> 配置使用</para>
+        /// <para>仅适用于支持 <c>Vector</c> 类型的 Tweener。</para>
+        /// </summary>
+        QuadraticBezier,
+    }
+
+    public interface IEaseConfig
+    {
+    }
+
+    public interface ISecondaryEaseConfig
+    {
+    }
+
+
+    public class QuadraticBezierEaseConfig : ISecondaryEaseConfig
+    {
+        public Vector3 ControlPoint;
+        public bool RelativeToStartPoint;
+
+        public QuadraticBezierEaseConfig(Vector3 controlPoint, bool relativeToStartPoint = true)
+        {
+            ControlPoint = controlPoint;
+            RelativeToStartPoint = relativeToStartPoint;
+        }
     }
 }

@@ -36,10 +36,17 @@ public class Test : MonoBehaviour
                 .SetLoop(6, LoopType.Yoyo));
 
             seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f)
-                .SetEaseMode(EaseMode.InSine));                             // 2s内Sine曲线缓动到(0, 10, 0)
+                .SetEase(EaseType.InSine));                                 // 2s内Sine曲线缓动到(0, 10, 0)
 
             seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f)
                 .SetDuration(DurationMode.Speed));                          // 2m/s的速度线性缓动到(0, 0, 0)
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            transform.MovePos(new Vector3(10, 10, 0), 4f)
+                .SetEase(EaseType.InSine)
+                .SetSecondaryEase(SecondaryEaseType.QuadraticBezier, new QuadraticBezierEaseConfig(new Vector3(-5, 5, 0)));
         }
     }
 

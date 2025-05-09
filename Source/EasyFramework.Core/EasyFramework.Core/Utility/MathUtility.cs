@@ -152,5 +152,12 @@ namespace EasyFramework.Core
                    2 * (1 - t) * t * controlPoint +
                    Mathf.Pow(t, 2) * endPoint;
         }
+
+        public static Vector3 QuadraticBezierCurve(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, float t)
+        {
+            return Mathf.Pow(1 - t, 2) * startPoint +
+                   2 * (1 - t) * t * controlPoint +
+                   Mathf.Pow(t, 2) * endPoint;
+        }
     }
 }

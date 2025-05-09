@@ -45,7 +45,11 @@ namespace EasyFramework.ToolKit
         private float _duration;
 
         protected internal LoopType LoopType { get; set; }
-        protected internal EaseMode EaseMode { get; set; }
+        protected internal EaseType EaseType { get; set; }
+        protected internal IEaseConfig EaseConfig { get; set; }
+        protected internal SecondaryEaseType SecondaryEaseType { get; set; }
+        protected internal ISecondaryEaseConfig SecondaryEaseConfig { get; set; }
+
         protected internal DurationMode DurationMode { get; set; }
 
         private float? _actualDuration;
