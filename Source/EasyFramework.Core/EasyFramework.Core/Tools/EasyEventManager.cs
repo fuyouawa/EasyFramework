@@ -48,11 +48,7 @@ namespace EasyFramework.Core
                 _handlesByTarget[target] = handlers;
             }
 
-            var suc = handlers.Add(handler);
-            if (!suc)
-            {
-                throw new ArgumentException($"You can't register an event handler({handler}) repeatedly");
-            }
+            handlers.Add(handler);
         }
 
         public void AddTriggerWrapper(Delegate handler, EventTriggerWrapper wrapper)
@@ -67,11 +63,6 @@ namespace EasyFramework.Core
             }
 
             _eventTriggerWrapperByHandler[handler] = w;
-        }
-
-        public EventTriggerWrapper GetTriggerWrapper(Delegate handler)
-        {
-            return _eventTriggerWrapperByHandler.GetValueOrDefault(handler);
         }
 
         public bool RemoveHandler(object target, Delegate handler)

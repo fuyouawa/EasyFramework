@@ -27,14 +27,14 @@ namespace EasyFramework.Core
                 ctor = Array.Find(ctorInfos, c => c.GetParameters().Length == 0);
                 if (ctor == null)
                     throw new Exception(
-                        $"The singleton of {type} must have a parameterless constructor!");
+                        $"Singleton '{type}' must have a parameterless constructor!");
             }
             // 如果基类不是抽象类
             else
             {
                 // 限制不能有公开构造函数
                 if (type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length != 0)
-                    throw new Exception($"The singleton of {type} cannot have a public constructor!");
+                    throw new Exception($"Singleton '{type}' cannot have a public constructor!");
 
                 var ctorInfos = type.GetConstructors(BindingFlagsHelper.NonPublicInstance());
 
@@ -42,20 +42,20 @@ namespace EasyFramework.Core
                 ctor = Array.Find(ctorInfos, c => c.GetParameters().Length == 0);
                 if (ctor == null)
                     throw new Exception(
-                        $"The singleton of {type} must have a nonpublic, parameterless constructor!");
+                        $"Singleton '{type}' must have a nonpublic, parameterless constructor!");
             }
 
             var inst = ctor.Invoke(null) as T;
             if (inst == null)
             {
-                throw new Exception($"The instance of {type} construct failed!");
+                throw new Exception($"Singleton '{type}' construct failed!");
             }
 
             inst.OnSingletonInit();
             var suc = Singletons.Add(inst);
             if (!suc)
             {
-                throw new Exception($"The singleton of {type} is not unique!");
+                throw new Exception($"Singleton '{type}' is not unique!");
             }
 
             return inst;

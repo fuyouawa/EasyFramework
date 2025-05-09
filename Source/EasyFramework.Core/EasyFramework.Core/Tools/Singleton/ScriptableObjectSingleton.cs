@@ -14,14 +14,14 @@ namespace EasyFramework.Core
                 if (!assetDirectory.Contains("/editor/", StringComparison.OrdinalIgnoreCase))
                 {
                     throw new ArgumentException(
-                        $"\"{assetDirectory + '/' + assetName}\"'s resource path must be under the Resources directory！");
+                        $"The path '{assetDirectory}/{assetName}' must be inside a 'Resources' folder.");
                 }
                 else
                 {
                     if (!Application.isEditor)
                     {
                         throw new ArgumentException(
-                            $"The editor asserts of \"{assetDirectory + '/' + assetName}\" can only be loaded in edit mode!");
+                            $"The editor asserts '{assetDirectory}/{assetName}' can only be loaded in edit mode!");
                     }
                 }
             }
@@ -41,7 +41,7 @@ namespace EasyFramework.Core
         {
             if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException($"\"{assetName}\"'s resource path must be under the Resources directory！");
+                throw new ArgumentException($"The path '{assetName}' must be inside a 'Resources' folder.");
             }
 
             string resourcesPath = assetDirectory;
@@ -55,8 +55,9 @@ namespace EasyFramework.Core
 
             if (instance == null)
             {
-                throw new Exception($"Load ScriptableObject of {typeof(T).Name} failed！");
+                throw new Exception($"Load ScriptableObject '{typeof(T).Name}' failed！");
             }
+
             instance.OnSingletonInit(SingletonInitialModes.Load);
 
             return instance;
@@ -116,7 +117,8 @@ namespace EasyFramework.Core
                     s_assetPathAttribute = typeof(T).GetCustomAttribute<ScriptableObjectSingletonAssetPathAttribute>();
                     if (s_assetPathAttribute == null)
                     {
-                        throw new Exception($"The class of {typeof(T).Name} must define a \"ScriptableObjectSingletonAssetPath\" Attribute!");
+                        throw new Exception(
+                            $"Type {typeof(T).Name} must define a 'ScriptableObjectSingletonAssetPath' Attribute!");
                     }
                 }
 
@@ -142,7 +144,6 @@ namespace EasyFramework.Core
 
         public virtual void OnSingletonInit(SingletonInitialModes mode)
         {
-            
         }
     }
 }

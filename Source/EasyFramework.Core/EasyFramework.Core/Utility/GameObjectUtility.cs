@@ -12,7 +12,7 @@ namespace EasyFramework.Core
                 return null;
 
             if (parent == null)
-                throw new ArgumentException("The parameter 'parent' cannot be null");
+                throw new ArgumentNullException(nameof(parent));
 
             var hierarchy = path.Split('/');
 

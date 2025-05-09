@@ -45,10 +45,8 @@ namespace EasyFramework.ToolKit
         private float _duration;
 
         protected internal LoopType LoopType { get; set; }
-        protected internal EaseType EaseType { get; set; }
-        protected internal IEaseConfig EaseConfig { get; set; }
-        protected internal SecondaryEaseType SecondaryEaseType { get; set; }
-        protected internal ISecondaryEaseConfig SecondaryEaseConfig { get; set; }
+        protected internal IEase Ease { get; set; }
+        protected internal ISecondaryEase SecondaryEase { get; set; }
 
         protected internal DurationMode DurationMode { get; set; }
 
@@ -109,6 +107,8 @@ namespace EasyFramework.ToolKit
 
         protected override void OnStart()
         {
+            base.OnStart();
+
             if (IsInLoop)
             {
                 switch (LoopType)
@@ -126,10 +126,24 @@ namespace EasyFramework.ToolKit
             {
                 _startValue = _getter();
             }
+
+            if (Ease == null)
+            {
+                Ease = EaseFactory.Linear();
+            }
         }
 
         protected override void OnPlaying(float time)
         {
+            if (SecondaryEase != null)
+            {
+                if (!SecondaryEase.CanEase(_valueType))
+                {
+                    throw new InvalidOperationException(
+                        $"Tweener '{GetType()}' cannot use the secondary ease of type '{SecondaryEase.GetType()}'");
+                }
+            }
+
             var curValue = GetCurrentValue(time, GetActualDuration(), _startValue, _endValue);
             _setter(curValue);
         }

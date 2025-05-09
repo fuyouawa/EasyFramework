@@ -76,7 +76,7 @@ namespace EasyFramework.ToolKit
         {
             if (argText.IsNullOrWhiteSpace() && !Attribute.OptionalParameter)
             {
-                throw new ArgumentException($"The command '{Attribute.Name}' argument cannot be empty!");
+                throw new ArgumentException($"Command '{Attribute.Name}' argument cannot be empty!");
             }
 
             object arg;
@@ -92,7 +92,7 @@ namespace EasyFramework.ToolKit
                 else if (type.IsBoolean())
                     arg = argText == "True";
                 else
-                    throw new NotImplementedException($"The arg type '{typeof(T)}' is not implemented!");
+                    throw new NotImplementedException($"Argument type of '{typeof(T)}' is not implemented!");
             }
             else
             {

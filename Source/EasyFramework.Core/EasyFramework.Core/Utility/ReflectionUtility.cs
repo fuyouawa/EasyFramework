@@ -26,30 +26,6 @@ namespace EasyFramework.Core
             return null;
         }
 
-        private static readonly Dictionary<string, Type> TypeByFullName = new Dictionary<string, Type>();
-
-        public static Type FindTypeWithCache(string fullname)
-        {
-            if (!TypeByFullName.TryGetValue(fullname, out var type))
-            {
-                type = FindType(fullname);
-                TypeByFullName.Add(fullname, type);
-            }
-
-            return type;
-        }
-
-        public static void PreBuildTypeSearchCache(IEnumerable<Type> types)
-        {
-            foreach (var type in types)
-            {
-                if (type.FullName == null)
-                    throw new ArgumentException($"The fullname of type '{type}' is null!");
-
-                TypeByFullName[type.FullName] = type;
-            }
-        }
-
         public static IEnumerable<Type> GetAssemblyTypes()
         {
             return AppDomain.CurrentDomain.GetAssemblies()

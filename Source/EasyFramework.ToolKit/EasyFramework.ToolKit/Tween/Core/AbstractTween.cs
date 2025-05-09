@@ -133,14 +133,11 @@ namespace EasyFramework.ToolKit
         internal void Update()
         {
             var stateId = _state.CurrentStateId;
-            if (stateId == TweenState.Idle)
-            {
-                throw new InvalidOperationException("Tween must be initialize first.");
-            }
+            Assert.True(stateId != TweenState.Idle);
 
             if (stateId == TweenState.Completed)
             {
-                throw new InvalidOperationException("The tween has been finished.");
+                return;
             }
 
             if (stateId == TweenState.Paused)

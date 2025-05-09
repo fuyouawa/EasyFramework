@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace EasyFramework.Core
 {
@@ -68,7 +69,7 @@ namespace EasyFramework.Core
         public static T CreateInstance<T>(this Type type)
         {
             if (!typeof(T).IsAssignableFrom(type))
-                throw new ArgumentException($"泛型T({typeof(T).Name})必须可以被参数type({type.Name})转换");
+                throw new ArgumentException($"Generic type '{typeof(T)}' must be convertible by '{type}'");
             return (T)CreateInstance(type);
         }
 
@@ -149,7 +150,7 @@ namespace EasyFramework.Core
             var property = type.GetProperty(propertyName, flags);
             if (property == null)
             {
-                throw new ArgumentException($"类型:\"{type.FullName}\"没有BindingFlags为:{flags}的属性:\"{propertyName}\"");
+                throw new ArgumentException($"Property '{propertyName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             return (T)property.GetValue(target, null);
@@ -199,7 +200,7 @@ namespace EasyFramework.Core
 
             if (method == null)
             {
-                throw new ArgumentException($"类型\"{type}\"中没有名为\"{methodName}\"并且\"{flags}\"的函数!");
+                throw new ArgumentException($"Method '{methodName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             return method.Invoke(target, args);
@@ -216,7 +217,7 @@ namespace EasyFramework.Core
             var e = type.GetEvent(eventName, flags);
             if (e == null)
             {
-                throw new ArgumentException($"类型\"{type}\"中没有名为\"{eventName}\"并且\"{flags}\"的事件!");
+                throw new ArgumentException($"Event '{eventName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             e.GetAddMethod().Invoke(target, new object[] { func });
@@ -305,8 +306,7 @@ namespace EasyFramework.Core
 
             if (!openGenericInterfaceType.IsGenericTypeDefinition && !openGenericInterfaceType.IsInterface)
             {
-                throw new ArgumentException("The type " + openGenericInterfaceType.Name +
-                                            " is not a generic type definition and an interface.");
+                throw new ArgumentException($"Type {openGenericInterfaceType.Name} is not a generic type definition and an interface.");
             }
 
             if (candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() == openGenericInterfaceType)
@@ -336,7 +336,7 @@ namespace EasyFramework.Core
 
             if (!openGenericClassType.IsGenericTypeDefinition)
             {
-                throw new ArgumentException("Type " + openGenericClassType.Name + " is not a generic type definition.");
+                throw new ArgumentException($"Type '{openGenericClassType.Name}' is not a generic type definition.");
             }
 
             while (candidateType != null && candidateType != typeof(object))
@@ -367,14 +367,12 @@ namespace EasyFramework.Core
                 throw new ArgumentNullException();
             }
 
-            // 如果一个是数组另一个不是，或者数组维度不一致，则不兼容
             if (sourceType.IsArray != targetType.IsArray ||
                 sourceType.IsSZArray != targetType.IsSZArray)
             {
                 return new Type[] { };
             }
             
-            // 如果是一维数组，直接返回目标元素类型
             if (targetType.IsArray)
             {
                 return new[] { targetType.GetElementType() };

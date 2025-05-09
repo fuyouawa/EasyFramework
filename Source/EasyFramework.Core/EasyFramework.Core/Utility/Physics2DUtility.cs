@@ -54,7 +54,7 @@ namespace EasyFramework.Core
             }
             else
             {
-                throw new ArgumentOutOfRangeException($"未知方向:{direction}");
+                throw new ArgumentOutOfRangeException($"Unknow direction '{direction}'");
             }
 
             return Physics2D.Raycast(
@@ -80,7 +80,7 @@ namespace EasyFramework.Core
 
             var total = new List<RaycastHit2D>();
 
-            if (VectorExtension.IsVertical(direction))
+            if (direction.IsVertical())
             {
                 total.Add(DirectedSegmentCast(p2, p3, direction, layerMask));
                 total.Add(DirectedSegmentCast(p4, p1, direction, layerMask));

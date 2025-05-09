@@ -89,7 +89,7 @@ namespace EasyFramework.Core
             get
             {
                 if (s_destroyed)
-                    throw new InvalidOperationException($"Use a singleton:\"{typeof(T)}\" that is already destroyed!");
+                    throw new InvalidOperationException($"Attempted to use a singleton of type '{typeof(T)}' that has already been destroyed.");
                 if (s_instance == null)
                     s_instance = SingletonCreator.CreateMonoSingleton<T>();
                 return s_instance;

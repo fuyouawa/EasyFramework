@@ -123,6 +123,7 @@ namespace EasyFramework.ToolKit
 
         protected override void OnStart()
         {
+            base.OnStart();
             _currentNodeIndex = 0;
         }
 

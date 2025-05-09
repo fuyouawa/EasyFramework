@@ -99,7 +99,7 @@ namespace EasyFramework.Core
                 }
 
                 throw new InvalidOperationException(
-                    $"The state id '{stateId}' already has a corresponding state '{state.GetType().Name}', " +
+                    $"The state id '{stateId}' already has a corresponding state '{state.GetType()}', " +
                     $"and it's not a fluent state.");
             }
 
@@ -156,7 +156,7 @@ namespace EasyFramework.Core
             if (CurrentState == null)
             {
                 throw new InvalidOperationException(
-                    $"The current state in the state machine '{GetType().Name}' is null, " +
+                    $"The current state in the state machine '{GetType()}' is null, " +
                     $"you must first call the 'StartState' method to set a starting state");
             }
         }
