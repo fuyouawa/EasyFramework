@@ -35,7 +35,7 @@ namespace EasyFramework.ToolKit
 
         internal float Delay { get; set; }
 
-        internal int Loop { get; set; }
+        internal int LoopCount { get; set; }
 
         internal TweenState CurrentState => _state.CurrentStateId;
 
@@ -50,6 +50,7 @@ namespace EasyFramework.ToolKit
         internal TweenSequence OwnerSequence { get; set; }
 
         internal bool PendingKill { get; set; }
+        protected internal bool IsInLoop { get; set; }
 
         private readonly StateMachine<TweenState> _state = new StateMachine<TweenState>();
         private bool _pause;
@@ -59,13 +60,15 @@ namespace EasyFramework.ToolKit
         {
             Reset();
             TweenController.Instance.Attach(this);
+
+            _state.OnStateChanged += OnStateChanged;
         }
 
         internal void Reset()
         {
             Id = string.Empty;
             Delay = 0f;
-            Loop = 1;
+            LoopCount = 1;
             OwnerSequence = null;
 
             OnPlay = null;
@@ -76,7 +79,6 @@ namespace EasyFramework.ToolKit
             _pause = false;
             _playElapsedTime = 0f;
             _state.StartState(TweenState.Idle);
-            _state.OnStateChanged -= OnStateChanged;
 
             OnReset();
         }
@@ -95,8 +97,13 @@ namespace EasyFramework.ToolKit
                 _state.ChangeState(TweenState.Playing);
             }
 
-            _state.OnStateChanged += OnStateChanged;
+            if (IsInLoop)
+            {
+                OnLoop();
+            }
         }
+
+        protected virtual void OnLoop() {}
 
         protected virtual void OnStateChanged(TweenState state)
         {

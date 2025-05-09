@@ -32,12 +32,14 @@ public class Test : MonoBehaviour
         {
             var seq = Tween.Sequence();
             seq.Append(transform.MovePos(new Vector3(10, 10, 0), 4f));      // 4s内线性缓动到(10, 10, 0)
+            seq.Join(transform.PlayLocalScale(Vector3.one * 0.5f, 1f)
+                .SetLoop(6, LoopType.Yoyo));
 
             seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f)
                 .SetEaseMode(EaseMode.InSine));                             // 2s内Sine曲线缓动到(0, 10, 0)
 
             seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f)
-                .SetDurationMode(DurationMode.Speed));                      // 2m/s的速度线性缓动到(0, 0, 0)
+                .SetDuration(DurationMode.Speed));                          // 2m/s的速度线性缓动到(0, 0, 0)
         }
     }
 

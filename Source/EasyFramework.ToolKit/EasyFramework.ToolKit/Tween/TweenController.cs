@@ -50,9 +50,10 @@ namespace EasyFramework.ToolKit
 
                 if (tween.CurrentState == TweenState.Completed)
                 {
-                    tween.Loop--;
-                    if (tween.Loop > 0)
+                    tween.LoopCount--;
+                    if (tween.LoopCount > 0)
                     {
+                        tween.IsInLoop = true;
                         tween.Start();
                     }
                     else

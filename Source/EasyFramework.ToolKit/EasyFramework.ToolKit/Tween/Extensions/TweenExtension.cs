@@ -31,5 +31,11 @@ namespace EasyFramework.ToolKit
             tween.Delay = delay;
             return tween;
         }
+
+        public static AbstractTween SetLoop(this AbstractTween tween, int loopCount)
+        {
+            tween.LoopCount = loopCount;
+            return tween;
+        }
     }
 }

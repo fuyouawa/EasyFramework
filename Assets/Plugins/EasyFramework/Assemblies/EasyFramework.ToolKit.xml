@@ -156,6 +156,16 @@
             <para>注意：使用此模式后，Tween.Duration()将返回null，除非该Tweener的第一帧被调用了。</para>
             </summary>
         </member>
+        <member name="F:EasyFramework.ToolKit.LoopType.Restart">
+            <summary>
+            每次循环都从起点重新开始（从A到B，再从A到B，...）
+            </summary>
+        </member>
+        <member name="F:EasyFramework.ToolKit.LoopType.Yoyo">
+            <summary>
+            每次循环都会反转方向（A到B，再B到A，再A到B...）
+            </summary>
+        </member>
         <member name="T:EasyFramework.ToolKit.EaseMode">
             <summary>
             缓动函数类型枚举，用于控制插值动画的速率变化曲线。

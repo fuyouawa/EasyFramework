@@ -29,7 +29,7 @@ namespace EasyFramework.ToolKit
 
         public bool IsAllCompleted()
         {
-            return !_tweens.Any(tween => tween.CurrentState != TweenState.Completed || tween.Loop > 0);
+            return !_tweens.Any(tween => tween.CurrentState != TweenState.Completed || tween.LoopCount > 0);
         }
 
         private bool _isStarted = false;
@@ -63,10 +63,11 @@ namespace EasyFramework.ToolKit
 
                 if (tween.CurrentState == TweenState.Completed)
                 {
-                    tween.Loop--;
+                    tween.LoopCount--;
 
-                    if (tween.Loop > 0)
+                    if (tween.LoopCount > 0)
                     {
+                        tween.IsInLoop = true;
                         tween.Start();
                     }
                     else
