@@ -11,20 +11,17 @@ namespace EasyFramework.ToolKit
             return Vector2.Distance(startValue, endValue);
         }
 
-        protected override Vector2 GetCurrentValue(float time, float? duration, Vector2 startValue, Vector2 endValue)
+        protected override Vector2 GetLinearValue(Vector2 startValue, Vector2 endValue, float t)
         {
-            Assert.True(duration.HasValue);
-
-            var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
-            var easedT = Ease.EaseTime(t);
-            
-            if (SecondaryEase != null)
-                return SecondaryEase.Ease(startValue, endValue, easedT);
-            
             var dist = Vector2.Distance(startValue, endValue);
             var dir = (endValue - startValue).normalized;
-            var curDist = Mathf.Lerp(0, dist, easedT);
+            var curDist = Mathf.Lerp(0, dist, t);
             return startValue + curDist * dir;
+        }
+
+        protected override Vector2 GetRelativeEndValue(Vector2 startValue, Vector2 relativeValue)
+        {
+            return startValue + relativeValue;
         }
     }
 }

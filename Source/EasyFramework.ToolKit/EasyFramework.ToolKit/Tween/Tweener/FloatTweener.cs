@@ -11,18 +11,14 @@ namespace EasyFramework.ToolKit
             return (endValue - startValue).Abs();
         }
 
-        protected override float GetCurrentValue(float time, float? duration, float startValue, float endValue)
+        protected override float GetLinearValue(float startValue, float endValue, float t)
         {
-            Assert.True(duration.HasValue);
+            return Mathf.Lerp(startValue, endValue, t);
+        }
 
-            var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
-            var easedT = Ease.EaseTime(t);
-
-            if (SecondaryEase != null)
-                return SecondaryEase.Ease(startValue, endValue, easedT);
-
-            var res = Mathf.Lerp(startValue, endValue, easedT);
-            return res;
+        protected override float GetRelativeEndValue(float startValue, float relativeValue)
+        {
+            return startValue + relativeValue;
         }
     }
 }

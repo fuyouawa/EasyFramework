@@ -8,9 +8,15 @@ namespace EasyFramework.ToolKit
             return tweener;
         }
 
-        public static AbstractTweener SetEase(this AbstractTweener tweener, ISecondaryEase secondaryEase)
+        public static AbstractTweener SetInterpolator(this AbstractTweener tweener, IInterpolator interpolator)
         {
-            tweener.SecondaryEase = secondaryEase;
+            tweener.Interpolator = interpolator;
+            return tweener;
+        }
+
+        public static AbstractTweener SetRelative(this AbstractTweener tweener, bool isRelative = true)
+        {
+            tweener.IsRelative = isRelative;
             return tweener;
         }
 

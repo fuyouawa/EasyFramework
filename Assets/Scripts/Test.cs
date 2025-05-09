@@ -46,7 +46,8 @@ public class Test : MonoBehaviour
         {
             transform.MovePos(new Vector3(10, 10, 0), 4f)
                 .SetEase(EaseFactory.InSine())
-                .SetEase(SecondaryEaseFactory.QuadraticBezier().SetControlPoint(new Vector3(-5, 5, 0)));
+                .SetInterpolator(InterpolatorFactory.QuadraticBezier()
+                    .SetControlPoint(new Vector3(-5, 5, 0)));
         }
     }
 

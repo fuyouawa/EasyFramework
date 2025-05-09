@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using EasyFramework.Core;
 
 namespace EasyFramework.ToolKit
 {
@@ -46,9 +47,10 @@ namespace EasyFramework.ToolKit
 
         protected internal LoopType LoopType { get; set; }
         protected internal IEase Ease { get; set; }
-        protected internal ISecondaryEase SecondaryEase { get; set; }
+        protected internal IInterpolator Interpolator { get; set; }
 
         protected internal DurationMode DurationMode { get; set; }
+        protected internal bool IsRelative { get; set; }
 
         private float? _actualDuration;
 
@@ -95,6 +97,7 @@ namespace EasyFramework.ToolKit
             _getter = null;
             _setter = null;
             _duration = 0f;
+            IsRelative = false;
         }
 
         internal void Apply(Type valueType, TweenGetter getter, TweenSetter setter, object endValue)
@@ -125,6 +128,10 @@ namespace EasyFramework.ToolKit
             else
             {
                 _startValue = _getter();
+                if (IsRelative)
+                {
+                    _endValue = GetRelativeEndValue(_startValue, _endValue);
+                }
             }
 
             if (Ease == null)
@@ -133,22 +140,35 @@ namespace EasyFramework.ToolKit
             }
         }
 
+        protected abstract object GetRelativeEndValue(object startValue, object relativeValue);
+
         protected override void OnPlaying(float time)
         {
-            if (SecondaryEase != null)
-            {
-                if (!SecondaryEase.CanEase(_valueType))
-                {
-                    throw new InvalidOperationException(
-                        $"Tweener '{GetType()}' cannot use the secondary ease of type '{SecondaryEase.GetType()}'");
-                }
-            }
-
             var curValue = GetCurrentValue(time, GetActualDuration(), _startValue, _endValue);
             _setter(curValue);
         }
 
-        protected abstract object GetCurrentValue(float time, float? duration, object startValue, object endValue);
+        protected virtual object GetCurrentValue(float time, float? duration, object startValue, object endValue)
+        {
+            Assert.True(duration.HasValue);
+
+            var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
+            var easedT = Ease.EaseTime(t);
+
+            if (Interpolator != null)
+            {
+                if (!Interpolator.CanInterpolate(_valueType))
+                {
+                    throw new InvalidOperationException(
+                        $"Tweener '{GetType()}' cannot use the interpolator of type '{Interpolator.GetType()}'");
+                }
+                return Interpolator.Interpolate(_valueType, startValue, endValue, easedT);
+            }
+            
+            return GetLinearValue(startValue, endValue, easedT);
+        }
+
+        protected abstract object GetLinearValue(object startValue, object endValue, float t);
     }
 
     public abstract class AbstractTweener<T> : AbstractTweener
@@ -162,13 +182,19 @@ namespace EasyFramework.ToolKit
         {
             return GetDistance((T)startValue, (T)endValue);
         }
-
-        protected override object GetCurrentValue(float time, float? duration, object startValue, object endValue)
+        
+        protected override object GetLinearValue(object startValue, object endValue, float t)
         {
-            return GetCurrentValue(time, duration, (T)startValue, (T)endValue);
+            return GetLinearValue((T)startValue, (T)endValue, t);
+        }
+
+        protected override object GetRelativeEndValue(object startValue, object relativeValue)
+        {
+            return GetRelativeEndValue((T)startValue, (T)relativeValue);
         }
 
         protected abstract float GetDistance(T startValue, T endValue);
-        protected abstract T GetCurrentValue(float time, float? duration, T startValue, T endValue);
+        protected abstract T GetLinearValue(T startValue, T endValue, float t);
+        protected abstract T GetRelativeEndValue(T startValue, T relativeValue);
     }
 }

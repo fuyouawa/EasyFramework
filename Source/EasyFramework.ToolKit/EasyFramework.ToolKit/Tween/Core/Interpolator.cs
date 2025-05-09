@@ -4,13 +4,11 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public interface ISecondaryEase
+    public interface IInterpolator
     {
-        bool CanEase(Type valueType);
+        bool CanInterpolate(Type valueType);
 
-        T Ease<T>(T startValue, T endValue, float easedTime) => (T)Ease(typeof(T), startValue, endValue, easedTime);
-
-        object Ease(Type valueType, object startValue, object endValue, float easedTime);
+        object Interpolate(Type valueType, object startValue, object endValue, float t);
     }
 
     public enum BezierControlPointRelativeTo
@@ -20,29 +18,29 @@ namespace EasyFramework.ToolKit
         EndPoint
     }
 
-    public class QuadraticBezierSecondaryEase : ISecondaryEase
+    public class QuadraticBezierInterpolator : IInterpolator
     {
         private Vector3 _controlPoint;
         private BezierControlPointRelativeTo _controlPointRelativeTo;
 
-        public QuadraticBezierSecondaryEase SetControlPoint(Vector3 point)
+        public QuadraticBezierInterpolator SetControlPoint(Vector3 point)
         {
             _controlPoint = point;
             return this;
         }
 
-        public QuadraticBezierSecondaryEase SetBezierControlRelative(BezierControlPointRelativeTo relativeTo)
+        public QuadraticBezierInterpolator SetControlPointRelative(BezierControlPointRelativeTo relativeTo)
         {
             _controlPointRelativeTo = relativeTo;
             return this;
         }
 
-        bool ISecondaryEase.CanEase(Type valueType)
+        bool IInterpolator.CanInterpolate(Type valueType)
         {
             return valueType == typeof(Vector2) || valueType == typeof(Vector3);
         }
 
-        object ISecondaryEase.Ease(Type valueType, object startValue, object endValue, float easedTime)
+        object IInterpolator.Interpolate(Type valueType, object startValue, object endValue, float t)
         {
             Vector3 startPoint;
             Vector3 endPoint;
@@ -72,7 +70,7 @@ namespace EasyFramework.ToolKit
                     throw new ArgumentOutOfRangeException();
             }
 
-            var curPos = MathUtility.QuadraticBezierCurve(startPoint, endPoint, controlPoint, easedTime);
+            var curPos = MathUtility.QuadraticBezierCurve(startPoint, endPoint, controlPoint, t);
 
             if (valueType == typeof(Vector2))
             {
@@ -82,14 +80,6 @@ namespace EasyFramework.ToolKit
             {
                 return curPos;
             }
-        }
-    }
-
-    public static class SecondaryEaseFactory
-    {
-        public static QuadraticBezierSecondaryEase QuadraticBezier()
-        {
-            return new QuadraticBezierSecondaryEase();
         }
     }
 }
