@@ -98,5 +98,10 @@ namespace EasyFramework.ToolKit
         {
             return new TweenSequence();
         }
+
+        public TweenCallback GetCallback()
+        {
+            return new TweenCallback();
+        }
     }
 }

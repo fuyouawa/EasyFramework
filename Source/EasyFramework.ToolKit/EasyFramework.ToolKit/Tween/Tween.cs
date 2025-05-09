@@ -18,6 +18,13 @@ namespace EasyFramework.ToolKit
             return TweenManager.Instance.GetSequence();
         }
 
+        public static TweenCallback Callback(Action callback)
+        {
+            var cb = TweenManager.Instance.GetCallback();
+            cb.Callback += callback;
+            return cb;
+        }
+
         /// <summary>
         /// <para>获取持续时间，返回null代表此时无法判断具体持续时间。</para>
         /// <para>如果是TweenSequence，只有运行完成了一次，才能确定那一次运行持续的时间，否则将始终返回null。</para>

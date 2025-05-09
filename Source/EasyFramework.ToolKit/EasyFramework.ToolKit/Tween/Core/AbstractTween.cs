@@ -14,13 +14,10 @@ namespace EasyFramework.ToolKit
         Killed,
     }
 
-    public delegate void TweenEventHandler();
+    public delegate void TweenEventHandler(AbstractTween tween);
 
-    public abstract class AbstractTween : ITweenClip
+    public abstract class AbstractTween
     {
-        internal TweenType Type { get; set; }
-        TweenType ITweenClip.Type => Type;
-
         internal string Id { get; set; }
 
         internal float? GetActualDuration() => ActualDuration;
@@ -38,7 +35,7 @@ namespace EasyFramework.ToolKit
         internal int LoopCount { get; set; }
 
         internal TweenState CurrentState => _state.CurrentStateId;
-
+        
         internal event TweenEventHandler OnPlay;
 
         internal event TweenEventHandler OnPause;
@@ -58,10 +55,9 @@ namespace EasyFramework.ToolKit
 
         protected AbstractTween()
         {
+            _state.OnStateChanged += OnStateChanged;
             Reset();
             TweenController.Instance.Attach(this);
-
-            _state.OnStateChanged += OnStateChanged;
         }
 
         internal void Reset()
@@ -83,11 +79,11 @@ namespace EasyFramework.ToolKit
             OnReset();
         }
 
-
         internal void Start()
         {
             _playElapsedTime = 0f;
             OnStart();
+
             if (Delay > 0)
             {
                 _state.ChangeState(TweenState.DelayAfterPlay);
@@ -114,16 +110,16 @@ namespace EasyFramework.ToolKit
                 case TweenState.DelayAfterPlay:
                     break;
                 case TweenState.Playing:
-                    OnPlay?.Invoke();
+                    OnPlay?.Invoke(this);
                     break;
                 case TweenState.Paused:
-                    OnPause?.Invoke();
+                    OnPause?.Invoke(this);
                     break;
                 case TweenState.Completed:
-                    OnCompleted?.Invoke();
+                    OnCompleted?.Invoke(this);
                     break;
                 case TweenState.Killed:
-                    OnKill?.Invoke();
+                    OnKill?.Invoke(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
