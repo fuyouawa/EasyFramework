@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using EasyFramework.Core;
 using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
+using EasyFramework.Tweening;
 using Sirenix.OdinInspector;
-using Sirenix.Utilities;
 using UnityEngine;
 
 // 定义泛型类
@@ -40,27 +40,28 @@ public class Test : MonoBehaviour
         {
             var seq = Tween.Sequence();
 
-            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 2f));          // 2s内线性缓动到(10, 10, 0)
+            seq.Append(transform.DoPos(new Vector3(10, 10, 0), 2f)      // 2s内线性缓动到(10, 10, 0)
+                .SetRelative());                                        // 使用相对模式，结束坐标改为：起始坐标 + (10, 10, 0)
 
             seq.Join(Tween.Callback(() => Debug.Log("Join Callback"))); // 调用回调 (与上一个片段同时调用)
 
-            seq.Join(transform.PlayLocalScale(Vector3.one * 0.5f, 0.5f) // 波动效果，持续一秒钟 (与上一个片段同时调用)
-                .SetLoop(6, LoopType.Yoyo)); // 循环6次（反转方向）
+            seq.Join(transform.DoLocalScale(Vector3.one * 0.5f, 0.5f)   // 波动效果，持续一秒钟 (与上一个片段同时调用)
+                .SetLoop(6, LoopType.Yoyo));                            // 循环6次（反转方向）
 
             // 这里会等待上一个片段完成后，再执行下一个片段
             // 第一个Append只持续2s，而波动效果的Join会持续0.5*6=3s
             // 所以会经过3s才会调用下面的Append
 
-            seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f) // 2s内移动到(0, 10, 0)
-                .SetEase(TweenerEase.InSine())); // 使用Sine曲线缓动效果
+            seq.Append(transform.DoPos(new Vector3(0, 10, 0), 2f)       // 2s内移动到(0, 10, 0)
+                .SetEase(Ease.InSine()));                               // 使用Sine曲线缓动效果
 
-            seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f) // 线性缓动到(0, 0, 0)
-                .SetDuration(DurationMode.Speed)); // 将持续时间变成速度，也就是2m/s
+            seq.Append(transform.DoPos(new Vector3(0, 0, 0), 4f)        // 线性缓动到(0, 0, 0)
+                .SetSpeedBase());                                       // 将持续时间变成速度，也就是4m/s
 
-            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 4f) // 4s内移动到(10, 10, 0)
-                .SetEase(TweenerEase.InSine()) // 使用Sine曲线缓动效果
-                .SetEffect(TweenerEffect.Bezier() // 使用二次贝塞尔曲线的内插效果
-                    .SetControlPoint(new Vector3(-5, 5, 0))));
+            seq.Append(transform.DoPos(new Vector3(10, 10, 0), 3f)      // 3s内移动到(10, 10, 0)
+                .SetEase(Ease.InSine())                                 // 使用Sine曲线缓动
+                .SetEffect(Effect.Bezier()                              // 使用二次贝塞尔曲线效果
+                   .SetControlPoint(new Vector3(-5, 5, 0))));
 
             seq.Append(Tween.Callback(() => Debug.Log("Finish All!")));
         }
