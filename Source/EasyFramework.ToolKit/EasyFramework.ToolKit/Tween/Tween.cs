@@ -5,12 +5,18 @@ namespace EasyFramework.ToolKit
 {
     public static class Tween
     {
-        public static AbstractTweener<T> To<T>(TweenGetter<T> getter, TweenSetter<T> setter, T endValue, float duration)
+        public static Tweener To(Type valueType, TweenGetter getter, TweenSetter setter, object endValue,
+            float duration)
         {
-            var tweener = TweenManager.Instance.GetTweener<T>();
-            tweener.Apply(getter, setter, endValue);
+            var tweener = TweenManager.Instance.GetTweener();
+            tweener.Apply(valueType, getter, setter, endValue);
             tweener.SetDuration(duration);
             return tweener;
+        }
+
+        public static Tweener To<T>(TweenGetter<T> getter, TweenSetter<T> setter, T endValue, float duration)
+        {
+            return To(typeof(T), () => getter(), val => setter((T)val), endValue, duration);
         }
 
         public static TweenSequence Sequence()
@@ -20,9 +26,7 @@ namespace EasyFramework.ToolKit
 
         public static TweenCallback Callback(Action callback)
         {
-            var cb = TweenManager.Instance.GetCallback();
-            cb.Callback += callback;
-            return cb;
+            return TweenManager.Instance.GetCallback().AddCallback(callback);
         }
 
         /// <summary>
@@ -45,7 +49,7 @@ namespace EasyFramework.ToolKit
             }
         }
 
-        internal static AbstractTweener PlaySpritesAnimImpl(Action<Sprite> spriteSetter, Sprite[] sprites, float duration)
+        internal static Tweener PlaySpritesAnimImpl(Action<Sprite> spriteSetter, Sprite[] sprites, float duration)
         {
             int index = 0;
             return To(() => index, x =>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace EasyFramework.Core
@@ -150,7 +151,8 @@ namespace EasyFramework.Core
             var property = type.GetProperty(propertyName, flags);
             if (property == null)
             {
-                throw new ArgumentException($"Property '{propertyName}' with binding flags '{flags}' was not found on type '{type}'");
+                throw new ArgumentException(
+                    $"Property '{propertyName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             return (T)property.GetValue(target, null);
@@ -200,7 +202,8 @@ namespace EasyFramework.Core
 
             if (method == null)
             {
-                throw new ArgumentException($"Method '{methodName}' with binding flags '{flags}' was not found on type '{type}'");
+                throw new ArgumentException(
+                    $"Method '{methodName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             return method.Invoke(target, args);
@@ -217,7 +220,8 @@ namespace EasyFramework.Core
             var e = type.GetEvent(eventName, flags);
             if (e == null)
             {
-                throw new ArgumentException($"Event '{eventName}' with binding flags '{flags}' was not found on type '{type}'");
+                throw new ArgumentException(
+                    $"Event '{eventName}' with binding flags '{flags}' was not found on type '{type}'");
             }
 
             e.GetAddMethod().Invoke(target, new object[] { func });
@@ -306,7 +310,8 @@ namespace EasyFramework.Core
 
             if (!openGenericInterfaceType.IsGenericTypeDefinition && !openGenericInterfaceType.IsInterface)
             {
-                throw new ArgumentException($"Type {openGenericInterfaceType.Name} is not a generic type definition and an interface.");
+                throw new ArgumentException(
+                    $"Type {openGenericInterfaceType.Name} is not a generic type definition and an interface.");
             }
 
             if (candidateType.IsGenericType && candidateType.GetGenericTypeDefinition() == openGenericInterfaceType)
@@ -314,14 +319,15 @@ namespace EasyFramework.Core
                 return candidateType.GetGenericArguments();
             }
 
-            foreach (var i in candidateType.GetInterfaces())
+            var interfaces = candidateType.GetInterfaces();
+            foreach (var i in interfaces)
             {
-                Type[] result;
-                if (i.IsGenericType &&
-                    (result = i.GetArgumentsOfInheritedOpenGenericInterface(openGenericInterfaceType)) != null)
-                {
+                if (!i.IsGenericType)
+                    continue;
+
+                var result = i.GetArgumentsOfInheritedOpenGenericInterface(openGenericInterfaceType);
+                if (result.IsNotNullOrEmpty())
                     return result;
-                }
             }
 
             return new Type[] { };
@@ -360,7 +366,8 @@ namespace EasyFramework.Core
         /// <param name="targetType"></param>
         /// <param name="allowInheritance">是否允许通过继承关系匹配泛型定义。</param>
         /// <returns></returns>
-        public static Type[] ResolveMissingGenericTypeArguments(this Type sourceType, Type targetType, bool allowInheritance)
+        public static Type[] ResolveMissingGenericTypeArguments(this Type sourceType, Type targetType,
+            bool allowInheritance)
         {
             if (sourceType == null || targetType == null)
             {
@@ -372,7 +379,7 @@ namespace EasyFramework.Core
             {
                 return new Type[] { };
             }
-            
+
             if (targetType.IsArray)
             {
                 return new[] { targetType.GetElementType() };
@@ -382,7 +389,7 @@ namespace EasyFramework.Core
             {
                 return new Type[] { targetType };
             }
-            
+
             if (!sourceType.IsGenericType)
             {
                 return new Type[] { };
@@ -402,6 +409,7 @@ namespace EasyFramework.Core
             {
                 return new Type[] { };
             }
+
             Assert.True(sourceArgs.Length == targetArgs.Length);
 
             var missingArgs = new List<Type>();
@@ -414,6 +422,380 @@ namespace EasyFramework.Core
             }
 
             return missingArgs.ToArray();
+        }
+
+        private static readonly Dictionary<Type, Type> GenericConstraintsSatisfactionInferredParameters =
+            new Dictionary<Type, Type>();
+
+        public static bool TryInferGenericArguments(this Type genericTypeDefinition, out Type[] inferredArguments,
+            params Type[] knownArguments)
+        {
+            if (genericTypeDefinition == null)
+            {
+                throw new ArgumentNullException("genericTypeDefinition");
+            }
+
+            if (knownArguments == null)
+            {
+                throw new ArgumentNullException("knownArguments");
+            }
+
+            if (!genericTypeDefinition.IsGenericType)
+            {
+                throw new ArgumentException("The genericTypeDefinition parameter must be a generic type.");
+            }
+
+            lock (GenericConstraintsSatisfactionInferredParameters)
+            {
+                Dictionary<Type, Type> matches = GenericConstraintsSatisfactionInferredParameters;
+                matches.Clear();
+
+                Type[] definitions = genericTypeDefinition.GetGenericArguments();
+
+                if (!genericTypeDefinition.IsGenericTypeDefinition)
+                {
+                    Type[] constructedParameters = definitions;
+                    genericTypeDefinition = genericTypeDefinition.GetGenericTypeDefinition();
+                    definitions = genericTypeDefinition.GetGenericArguments();
+
+                    int unknownCount = 0;
+
+                    for (int i = 0; i < constructedParameters.Length; i++)
+                    {
+                        if (!constructedParameters[i].IsGenericParameter)
+                        {
+                            matches[definitions[i]] = constructedParameters[i];
+                        }
+                        else
+                        {
+                            unknownCount++;
+                        }
+                    }
+
+                    if (unknownCount == knownArguments.Length)
+                    {
+                        int count = 0;
+
+                        for (int i = 0; i < constructedParameters.Length; i++)
+                        {
+                            if (constructedParameters[i].IsGenericParameter)
+                            {
+                                constructedParameters[i] = knownArguments[count++];
+                            }
+                        }
+
+                        if (genericTypeDefinition.AreGenericConstraintsSatisfiedBy(constructedParameters))
+                        {
+                            inferredArguments = constructedParameters;
+                            return true;
+                        }
+                    }
+                }
+
+                if (definitions.Length == knownArguments.Length &&
+                    genericTypeDefinition.AreGenericConstraintsSatisfiedBy(knownArguments))
+                {
+                    inferredArguments = knownArguments;
+                    return true;
+                }
+
+                foreach (var type in definitions)
+                {
+                    if (matches.ContainsKey(type)) continue;
+
+                    var constraints = type.GetGenericParameterConstraints();
+
+                    foreach (var constraint in constraints)
+                    {
+                        foreach (var parameter in knownArguments)
+                        {
+                            if (!constraint.IsGenericType)
+                            {
+                                continue;
+                            }
+
+                            Type constraintDefinition = constraint.GetGenericTypeDefinition();
+
+                            var constraintParams = constraint.GetGenericArguments();
+                            Type[] paramParams;
+
+                            if (parameter.IsGenericType && constraintDefinition == parameter.GetGenericTypeDefinition())
+                            {
+                                paramParams = parameter.GetGenericArguments();
+                            }
+                            else if (constraintDefinition.IsInterface || constraintDefinition.IsClass)
+                            {
+                                paramParams = parameter.GetArgumentsOfInheritedOpenGenericType(constraintDefinition);
+                            }
+                            else
+                            {
+                                continue;
+                            }
+
+                            matches[type] = parameter;
+
+                            for (int i = 0; i < constraintParams.Length; i++)
+                            {
+                                if (constraintParams[i].IsGenericParameter)
+                                {
+                                    matches[constraintParams[i]] = paramParams[i];
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (matches.Count == definitions.Length)
+                {
+                    inferredArguments = new Type[matches.Count];
+
+                    for (int i = 0; i < definitions.Length; i++)
+                    {
+                        inferredArguments[i] = matches[definitions[i]];
+                    }
+
+                    if (AreGenericConstraintsSatisfiedBy(genericTypeDefinition, inferredArguments))
+                    {
+                        return true;
+                    }
+                }
+
+                inferredArguments = null;
+                return false;
+            }
+        }
+
+        public static bool AreGenericConstraintsSatisfiedBy(this Type genericType, params Type[] parameters)
+        {
+            if (genericType == null)
+            {
+                throw new ArgumentNullException("genericType");
+            }
+
+            if (parameters == null)
+            {
+                throw new ArgumentNullException("parameters");
+            }
+
+            if (!genericType.IsGenericType)
+            {
+                throw new ArgumentException("The genericTypeDefinition parameter must be a generic type.");
+            }
+
+            return AreGenericConstraintsSatisfiedBy(genericType.GetGenericArguments(), parameters);
+        }
+
+        public static bool AreGenericConstraintsSatisfiedBy(Type[] definitions, Type[] parameters)
+        {
+            if (definitions.Length != parameters.Length)
+            {
+                return false;
+            }
+
+            lock (GenericConstraintsSatisfactionResolvedMap)
+            {
+                Dictionary<Type, Type> resolvedMap = GenericConstraintsSatisfactionResolvedMap;
+                resolvedMap.Clear();
+
+                for (int i = 0; i < definitions.Length; i++)
+                {
+                    Type definition = definitions[i];
+                    Type parameter = parameters[i];
+
+                    if (!definition.GenericParameterIsFulfilledBy(parameter, resolvedMap))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        private static readonly Dictionary<Type, Type> GenericConstraintsSatisfactionResolvedMap =
+            new Dictionary<Type, Type>();
+
+        public static bool GenericParameterIsFulfilledBy(this Type genericParameterDefinition, Type parameterType)
+        {
+            lock (GenericConstraintsSatisfactionResolvedMap)
+            {
+                GenericConstraintsSatisfactionResolvedMap.Clear();
+                return genericParameterDefinition.GenericParameterIsFulfilledBy(parameterType,
+                    GenericConstraintsSatisfactionResolvedMap);
+            }
+        }
+
+        private static readonly HashSet<Type> GenericConstraintsSatisfactionProcessedParams = new HashSet<Type>();
+
+        private static bool GenericParameterIsFulfilledBy(this Type genericParameterDefinition, Type parameterType,
+            Dictionary<Type, Type> resolvedMap, HashSet<Type> processedParams = null)
+        {
+            if (genericParameterDefinition == null)
+            {
+                throw new ArgumentNullException("genericParameterDefinition");
+            }
+
+            if (parameterType == null)
+            {
+                throw new ArgumentNullException("parameterType");
+            }
+
+            if (resolvedMap == null)
+            {
+                throw new ArgumentNullException("resolvedMap");
+            }
+
+            if (genericParameterDefinition.IsGenericParameter == false && genericParameterDefinition == parameterType)
+            {
+                return true;
+            }
+
+            if (genericParameterDefinition.IsGenericParameter == false)
+            {
+                return false;
+            }
+
+            if (processedParams == null)
+            {
+                processedParams =
+                    GenericConstraintsSatisfactionProcessedParams; // This is safe because we are currently holding the lock
+                processedParams.Clear();
+            }
+
+            processedParams.Add(genericParameterDefinition);
+
+            // First, check up on the special constraint flags
+            GenericParameterAttributes specialConstraints = genericParameterDefinition.GenericParameterAttributes;
+
+            if (specialConstraints != GenericParameterAttributes.None)
+            {
+                // Struct constraint (must not be nullable)
+                if ((specialConstraints & GenericParameterAttributes.NotNullableValueTypeConstraint) ==
+                    GenericParameterAttributes.NotNullableValueTypeConstraint)
+                {
+                    if (!parameterType.IsValueType || (parameterType.IsGenericType &&
+                                                       parameterType.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                    {
+                        return false;
+                    }
+                }
+                // Class constraint
+                else if ((specialConstraints & GenericParameterAttributes.ReferenceTypeConstraint) ==
+                         GenericParameterAttributes.ReferenceTypeConstraint)
+                {
+                    if (parameterType.IsValueType)
+                    {
+                        return false;
+                    }
+                }
+
+                // Must have a public parameterless constructor
+                if ((specialConstraints & GenericParameterAttributes.DefaultConstructorConstraint) ==
+                    GenericParameterAttributes.DefaultConstructorConstraint)
+                {
+                    if (parameterType.IsAbstract || (!parameterType.IsValueType &&
+                                                     parameterType.GetConstructor(Type.EmptyTypes) == null))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // If this parameter has already been resolved to a type, check if that resolved type is assignable with the argument type
+            if (resolvedMap.ContainsKey(genericParameterDefinition))
+            {
+                if (!parameterType.IsAssignableFrom(resolvedMap[genericParameterDefinition]))
+                {
+                    return false;
+                }
+            }
+
+            // Then, check up on the actual type constraints, of which there can be three kinds:
+            // Type inheritance, Interface implementation and fulfillment of another generic parameter.
+            Type[] constraints = genericParameterDefinition.GetGenericParameterConstraints();
+
+            for (int i = 0; i < constraints.Length; i++)
+            {
+                Type constraint = constraints[i];
+
+                // Replace resolved constraint parameters with their resolved types
+                if (constraint.IsGenericParameter && resolvedMap.ContainsKey(constraint))
+                {
+                    constraint = resolvedMap[constraint];
+                }
+
+                if (constraint.IsGenericParameter)
+                {
+                    if (!constraint.GenericParameterIsFulfilledBy(parameterType, resolvedMap, processedParams))
+                    {
+                        return false;
+                    }
+                }
+                else if (constraint.IsClass || constraint.IsInterface || constraint.IsValueType)
+                {
+                    if (constraint.IsGenericType)
+                    {
+                        Type constraintDefinition = constraint.GetGenericTypeDefinition();
+
+                        Type[] constraintParams = constraint.GetGenericArguments();
+                        Type[] paramParams;
+
+                        if (parameterType.IsGenericType &&
+                            constraintDefinition == parameterType.GetGenericTypeDefinition())
+                        {
+                            paramParams = parameterType.GetGenericArguments();
+                        }
+                        else
+                        {
+                            var o = parameterType.GetArgumentsOfInheritedOpenGenericType(constraintDefinition);
+                            if (o.IsNotNullOrEmpty())
+                            {
+                                paramParams = o;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+
+                        for (int j = 0; j < constraintParams.Length; j++)
+                        {
+                            var c = constraintParams[j];
+                            var p = paramParams[j];
+
+                            // Replace resolved constraint parameters with their resolved types
+                            if (c.IsGenericParameter && resolvedMap.ContainsKey(c))
+                            {
+                                c = resolvedMap[c];
+                            }
+
+                            if (c.IsGenericParameter)
+                            {
+                                if (!processedParams.Contains(c) &&
+                                    !GenericParameterIsFulfilledBy(c, p, resolvedMap, processedParams))
+                                {
+                                    return false;
+                                }
+                            }
+                            else if (c != p && !c.IsAssignableFrom(p))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    else if (!constraint.IsAssignableFrom(parameterType))
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Unknown parameter constraint type! " + constraint.GetNiceName());
+                }
+            }
+
+            resolvedMap[genericParameterDefinition] = parameterType;
+            return true;
         }
     }
 }

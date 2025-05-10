@@ -35,7 +35,7 @@ namespace EasyFramework.ToolKit
         Yoyo
     }
 
-    public abstract class AbstractTweener : AbstractTween
+    public class Tweener : AbstractTween
     {
         private object _startValue;
         private object _endValue;
@@ -46,12 +46,13 @@ namespace EasyFramework.ToolKit
         private float _duration;
 
         protected internal LoopType LoopType { get; set; }
-        protected internal IEase Ease { get; set; }
-        protected internal IInterpolator Interpolator { get; set; }
+        protected internal ITweenerEase Ease { get; set; }
 
         protected internal DurationMode DurationMode { get; set; }
         protected internal bool IsRelative { get; set; }
 
+        private ITweenerEffect _effect;
+        private ITweenerProcessor _processor;
         private float? _actualDuration;
 
         protected override float? ActualDuration
@@ -71,7 +72,7 @@ namespace EasyFramework.ToolKit
                     case DurationMode.Speed:
                         if (CurrentState == TweenState.Idle)
                             return null;
-                        _actualDuration = GetDistance(_startValue, _endValue) / _duration;
+                        _actualDuration = _processor.GetDistance() / _duration;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -80,8 +81,6 @@ namespace EasyFramework.ToolKit
                 return _actualDuration;
             }
         }
-
-        protected abstract float GetDistance(object startValue, object endValue);
 
         internal void SetDuration(float duration)
         {
@@ -98,6 +97,18 @@ namespace EasyFramework.ToolKit
             _setter = null;
             _duration = 0f;
             IsRelative = false;
+        }
+
+        internal void SetEffectWithUpdateProcessor(ITweenerEffect effect)
+        {
+            if (effect == _effect)
+                return;
+
+            if (_effect == null || effect.GetType() != _effect.GetType())
+            {
+                _processor = TweenManager.Instance.GetTweenerProcessor(_valueType, effect.GetType());
+            }
+            _effect = effect;
         }
 
         internal void Apply(Type valueType, TweenGetter getter, TweenSetter setter, object endValue)
@@ -130,71 +141,35 @@ namespace EasyFramework.ToolKit
                 _startValue = _getter();
                 if (IsRelative)
                 {
-                    _endValue = GetRelativeEndValue(_startValue, _endValue);
+                    _endValue = _processor.GetRelativeValue(_startValue, _endValue);
                 }
             }
 
             if (Ease == null)
             {
-                Ease = EaseFactory.Linear();
+                Ease = ToolKit.TweenerEase.Linear();
             }
-        }
 
-        protected abstract object GetRelativeEndValue(object startValue, object relativeValue);
+            if (_effect == null)
+            {
+                SetEffectWithUpdateProcessor(TweenerEffect.Linear());
+            }
+            
+            _processor.Context.Effect = _effect;
+            _processor.Context.StartValue = _startValue;
+            _processor.Context.EndValue = _endValue;
+            _processor.Initialize();
+        }
 
         protected override void OnPlaying(float time)
         {
-            var curValue = GetCurrentValue(time, GetActualDuration(), _startValue, _endValue);
-            _setter(curValue);
-        }
-
-        protected virtual object GetCurrentValue(float time, float? duration, object startValue, object endValue)
-        {
+            var duration = ActualDuration;
             Assert.True(duration.HasValue);
-
+            
             var t = MathUtility.Remap(time, 0f, duration.Value, 0f, 1f);
             var easedT = Ease.EaseTime(t);
-
-            if (Interpolator != null)
-            {
-                if (!Interpolator.CanInterpolate(_valueType))
-                {
-                    throw new InvalidOperationException(
-                        $"Tweener '{GetType()}' cannot use the interpolator of type '{Interpolator.GetType()}'");
-                }
-                return Interpolator.Interpolate(_valueType, startValue, endValue, easedT);
-            }
-            
-            return GetLinearValue(startValue, endValue, easedT);
+            var curValue = _processor.Process(easedT);
+            _setter(curValue);
         }
-
-        protected abstract object GetLinearValue(object startValue, object endValue, float t);
-    }
-
-    public abstract class AbstractTweener<T> : AbstractTweener
-    {
-        internal void Apply(TweenGetter<T> getter, TweenSetter<T> setter, T endValue)
-        {
-            Apply(typeof(T), () => getter(), val => setter((T)val), endValue);
-        }
-
-        protected override float GetDistance(object startValue, object endValue)
-        {
-            return GetDistance((T)startValue, (T)endValue);
-        }
-        
-        protected override object GetLinearValue(object startValue, object endValue, float t)
-        {
-            return GetLinearValue((T)startValue, (T)endValue, t);
-        }
-
-        protected override object GetRelativeEndValue(object startValue, object relativeValue)
-        {
-            return GetRelativeEndValue((T)startValue, (T)relativeValue);
-        }
-
-        protected abstract float GetDistance(T startValue, T endValue);
-        protected abstract T GetLinearValue(T startValue, T endValue, float t);
-        protected abstract T GetRelativeEndValue(T startValue, T relativeValue);
     }
 }

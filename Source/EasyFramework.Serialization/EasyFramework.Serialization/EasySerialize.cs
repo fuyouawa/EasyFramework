@@ -43,7 +43,7 @@ namespace EasyFramework.Serialization
                     var serializer = GetSerializerWithThrow(valueType);
                     serializer.IsRoot = true;
 
-                    serializer.Process(ref value, valueType, arch);
+                    serializer.Process(ref value, arch);
 
                     serializationData.ReferencedUnityObjects = arch.GetReferencedUnityObjects();
                 }
@@ -79,7 +79,7 @@ namespace EasyFramework.Serialization
                     var serializer = GetSerializerWithThrow(type);
                     serializer.IsRoot = true;
 
-                    serializer.Process(ref res, type, arch);
+                    serializer.Process(ref res, arch);
                 }
             }
             

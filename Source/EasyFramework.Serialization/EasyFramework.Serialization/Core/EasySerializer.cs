@@ -1,6 +1,4 @@
 using System;
-using System.Diagnostics;
-using EasyFramework.Core;
 
 namespace EasyFramework.Serialization
 {
@@ -8,8 +6,10 @@ namespace EasyFramework.Serialization
     {
         bool CanSerialize(Type valueType);
         bool IsRoot { get; set; }
-        void Process(ref object value, Type valueType, IArchive archive);
-        void Process(string name, ref object value, Type valueType, IArchive archive);
+        Type ValueType { get; }
+
+        void Process(ref object value, IArchive archive);
+        void Process(string name, ref object value, IArchive archive);
     }
 
     public abstract class EasySerializer<T> : IEasySerializer
@@ -25,20 +25,20 @@ namespace EasyFramework.Serialization
             set => IsRoot = value;
         }
 
-        void IEasySerializer.Process(ref object value, Type valueType, IArchive archive)
+        public Type ValueType => typeof(T);
+
+        void IEasySerializer.Process(ref object value, IArchive archive)
         {
-            ProcessImpl(null, ref value, valueType, archive);
+            ProcessImpl(null, ref value, archive);
         }
 
-        void IEasySerializer.Process(string name, ref object value, Type valueType, IArchive archive)
+        void IEasySerializer.Process(string name, ref object value, IArchive archive)
         {
-            ProcessImpl(name, ref value, valueType, archive);
+            ProcessImpl(name, ref value, archive);
         }
 
-        private void ProcessImpl(string name, ref object value, Type valueType, IArchive archive)
+        private void ProcessImpl(string name, ref object value, IArchive archive)
         {
-            Assert.True(typeof(T) == valueType);
-
             T val = default;
             if (archive.ArchiveIoType == ArchiveIoTypes.Output)
             {

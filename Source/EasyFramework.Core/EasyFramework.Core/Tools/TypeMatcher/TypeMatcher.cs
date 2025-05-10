@@ -44,6 +44,14 @@ namespace EasyFramework.Core
 
         private readonly Dictionary<Type[], TypeMatchResult[]> _matchResultsCacheByTargets = new Dictionary<Type[], TypeMatchResult[]>();
 
+        public TypeMatcher(bool addDefaultMatchRules = true)
+        {
+            if (addDefaultMatchRules)
+            {
+                AddDefaultMatchRules();
+            }
+        }
+
         public void AddTypeMatchIndices(IEnumerable<TypeMatchIndex> matchIndices)
         {
             _matchIndices.AddRange(matchIndices);
@@ -104,6 +112,15 @@ namespace EasyFramework.Core
                 .ToArray();
             _matchResultsCacheByTargets[targets] = ret;
             return ret;
+        }
+
+        private void AddDefaultMatchRules()
+        {
+            _matchRules.Add(DefaultTypeMatchRules.ExactMatch);
+            _matchRules.Add(DefaultTypeMatchRules.GenericSingleTargetMatch);
+            _matchRules.Add(DefaultTypeMatchRules.TargetsSatisfyGenericParameterConstraints);
+            _matchRules.Add(DefaultTypeMatchRules.GenericParameterInference);
+            _matchRules.Add(DefaultTypeMatchRules.NestedInSameGenericType);
         }
     }
 }

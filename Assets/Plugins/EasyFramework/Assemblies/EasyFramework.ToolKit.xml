@@ -145,6 +145,94 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.Linear">
+            <summary>
+            线性匀速过渡，无加速度。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InSine">
+            <summary>
+            使用正弦函数起始缓慢，逐渐加速。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.OutSine">
+            <summary>
+            使用正弦函数起始快速，逐渐减速。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InOutSine">
+            <summary>
+            使用正弦函数在开始和结束时都较缓慢，中间加速。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InQuad">
+            <summary>
+            二次函数缓动，起始缓慢。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.OutQuad">
+            <summary>
+            二次函数缓动，结束缓慢。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InOutQuad">
+            <summary>
+            二次函数缓动，开始和结束都缓慢，中间加速。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InBack">
+            <summary>
+            向后拉动再向前加速的动画，具有“超前”效果。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.OutBack">
+            <summary>
+            向前滑动并“超出”目标后回弹的动画。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InOutBack">
+            <summary>
+            起始和终点都有回弹的动画，形成前后“超出”效果。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InElastic">
+            <summary>
+            起始具有弹簧震荡效果，逐渐进入动画。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.OutElastic">
+            <summary>
+            动画结束时产生弹簧震荡回弹效果。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InOutElastic">
+            <summary>
+            动画开始和结束都具有弹簧震荡效果。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InBounce">
+            <summary>
+            动画开始像球落地一样反弹，逐渐收敛。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.OutBounce">
+            <summary>
+            动画结束像球落地一样反弹，逐渐停止。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.TweenerEase.InOutBounce">
+            <summary>
+            动画开始和结束都带有弹跳效果。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.Tween.Duration(EasyFramework.ToolKit.AbstractTween)">
+            <summary>
+            <para>获取持续时间，返回null代表此时无法判断具体持续时间。</para>
+            <para>如果是TweenSequence，只有运行完成了一次，才能确定那一次运行持续的时间，否则将始终返回null。</para>
+            </summary>
+            <param name="tween"></param>
+            <returns></returns>
+        </member>
         <member name="F:EasyFramework.ToolKit.DurationMode.Normal">
             <summary>
             正常模式，在“持续时间”内从“起始值”缓动到“结束值”。
@@ -165,94 +253,6 @@
             <summary>
             每次循环都会反转方向（A到B，再B到A，再A到B...）
             </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.Linear">
-            <summary>
-            线性匀速过渡，无加速度。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InSine">
-            <summary>
-            使用正弦函数起始缓慢，逐渐加速。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.OutSine">
-            <summary>
-            使用正弦函数起始快速，逐渐减速。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InOutSine">
-            <summary>
-            使用正弦函数在开始和结束时都较缓慢，中间加速。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InQuad">
-            <summary>
-            二次函数缓动，起始缓慢。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.OutQuad">
-            <summary>
-            二次函数缓动，结束缓慢。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InOutQuad">
-            <summary>
-            二次函数缓动，开始和结束都缓慢，中间加速。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InBack">
-            <summary>
-            向后拉动再向前加速的动画，具有“超前”效果。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.OutBack">
-            <summary>
-            向前滑动并“超出”目标后回弹的动画。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InOutBack">
-            <summary>
-            起始和终点都有回弹的动画，形成前后“超出”效果。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InElastic">
-            <summary>
-            起始具有弹簧震荡效果，逐渐进入动画。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.OutElastic">
-            <summary>
-            动画结束时产生弹簧震荡回弹效果。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InOutElastic">
-            <summary>
-            动画开始和结束都具有弹簧震荡效果。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InBounce">
-            <summary>
-            动画开始像球落地一样反弹，逐渐收敛。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.OutBounce">
-            <summary>
-            动画结束像球落地一样反弹，逐渐停止。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.EaseFactory.InOutBounce">
-            <summary>
-            动画开始和结束都带有弹跳效果。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.Tween.Duration(EasyFramework.ToolKit.AbstractTween)">
-            <summary>
-            <para>获取持续时间，返回null代表此时无法判断具体持续时间。</para>
-            <para>如果是TweenSequence，只有运行完成了一次，才能确定那一次运行持续的时间，否则将始终返回null。</para>
-            </summary>
-            <param name="tween"></param>
-            <returns></returns>
         </member>
         <member name="T:EasyFramework.ToolKit.EasyToggleTransition">
             <summary>

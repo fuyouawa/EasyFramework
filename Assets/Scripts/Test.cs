@@ -1,10 +1,18 @@
+using System;
 using System.Collections.Generic;
+using EasyFramework.Core;
 using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
-using Unity.Profiling;
+using Sirenix.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
+
+// 定义泛型类
+class Container<T1, T2> where T1 : IComparable<T2>
+{
+    public T1 Item1 { get; set; }
+    public T2 Item2 { get; set; }
+}
 
 public class Test : MonoBehaviour
 {
@@ -31,31 +39,65 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             var seq = Tween.Sequence();
-            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 4f));      // 4s内线性缓动到(10, 10, 0)
-            seq.Join(transform.PlayLocalScale(Vector3.one * 0.5f, 1f)
-                .SetLoop(6, LoopType.Yoyo));
 
-            seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f)
-                .SetEase(EaseFactory.InSine()));                            // 2s内Sine曲线缓动到(0, 10, 0)
+            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 2f));          // 2s内线性缓动到(10, 10, 0)
 
-            seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f)
-                .SetDuration(DurationMode.Speed));                          // 2m/s的速度线性缓动到(0, 0, 0)
+            seq.Join(Tween.Callback(() => Debug.Log("Join Callback"))); // 调用回调 (与上一个片段同时调用)
+
+            seq.Join(transform.PlayLocalScale(Vector3.one * 0.5f, 0.5f) // 波动效果，持续一秒钟 (与上一个片段同时调用)
+                .SetLoop(6, LoopType.Yoyo)); // 循环6次（反转方向）
+
+            // 这里会等待上一个片段完成后，再执行下一个片段
+            // 第一个Append只持续2s，而波动效果的Join会持续0.5*6=3s
+            // 所以会经过3s才会调用下面的Append
+
+            seq.Append(transform.MovePos(new Vector3(0, 10, 0), 2f) // 2s内移动到(0, 10, 0)
+                .SetEase(TweenerEase.InSine())); // 使用Sine曲线缓动效果
+
+            seq.Append(transform.MovePos(new Vector3(0, 0, 0), 2f) // 线性缓动到(0, 0, 0)
+                .SetDuration(DurationMode.Speed)); // 将持续时间变成速度，也就是2m/s
+
+            seq.Append(transform.MovePos(new Vector3(10, 10, 0), 4f) // 4s内移动到(10, 10, 0)
+                .SetEase(TweenerEase.InSine()) // 使用Sine曲线缓动效果
+                .SetEffect(TweenerEffect.Bezier() // 使用二次贝塞尔曲线的内插效果
+                    .SetControlPoint(new Vector3(-5, 5, 0))));
+
+            seq.Append(Tween.Callback(() => Debug.Log("Finish All!")));
         }
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            transform.MovePos(new Vector3(10, 10, 0), 4f)
-                .SetEase(EaseFactory.InSine())
-                .SetInterpolator(InterpolatorFactory.QuadraticBezier()
-                    .SetControlPoint(new Vector3(-5, 5, 0)));
+            var val = new MyClass();
+
+            var data = new EasySerializationData(EasyDataFormat.Json);
+
+            EasySerialize.To(val, ref data);
+            Debug.Log(data.StringData);
+            EasySerialize.From<MyClass>(ref data);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+// 使用示例
+            Type genericType = typeof(Container<,>);
+            Type[] knownParams = new Type[] { typeof(string) };
+            Type[] inferredParams;
+
+            if (genericType.TryInferGenericArguments(out inferredParams, knownParams))
+            {
+                Debug.Log("234");
+                // 输入：genericType = Container<,>, knownParams = [string]
+                // 输出：inferredParams = [string, string]
+                // 因为 T1 是 string，T2 必须是 string 的子类，而 string 是密封类
+            }
         }
     }
 
-    public void TestLog(InputField input)
-    {
-        Log.Info(input.text);
-    }
-
+    // public void TestLog(InputField input)
+    // {
+    //     Log.Info(input.text);
+    // }
+    //
     class MyClass
     {
         public List<MyClass2> bbss = new List<MyClass2>()
@@ -88,53 +130,53 @@ public class Test : MonoBehaviour
             new MyClass2(),
         };
     }
-
-    [GameConsoleCommand("jjbb")]
-    static void Command(JJ jk)
-    {
-    }
-
-    static ProfilerMarker s_profilerMarker = new ProfilerMarker("Serialize");
-
-    [Button]
-    public void TestLLLL()
-    {
-        var val = new MyClass();
-
-        var data = new EasySerializationData(EasyDataFormat.Json);
-        
-        EasySerialize.To(val, ref data);
-        EasySerialize.From<MyClass>(ref data);
-
-        // int count = 10000;
-        // var begin = DateTime.Now;
-        //
-        // s_profilerMarker.Begin(this);
-        // for (int i = 0; i < count; i++)
-        // {
-        //     EasySerialize.To(val, ref data);
-        // }
-        //
-        // s_profilerMarker.End();
-        //
-        // var end = DateTime.Now;
-        // var diff = end - begin;
-        // Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
-        // Debug.Log($"Serialize data: {data.StringData}");
-        //
-        //
-        // begin = DateTime.Now;
-        // for (int i = 0; i < count; i++)
-        // {
-        //     EasySerialize.From<MyClass>(ref data);
-        // }
-        //
-        // end = DateTime.Now;
-        // diff = end - begin;
-        // Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
-
-        // EasySerialize.To(val, ref data);
-        // var cls = EasySerialize.From<MyClass>(ref data);
-        // return;
-    }
+    //
+    // [GameConsoleCommand("jjbb")]
+    // static void Command(JJ jk)
+    // {
+    // }
+    //
+    // static ProfilerMarker s_profilerMarker = new ProfilerMarker("Serialize");
+    //
+    // [Button]
+    // public void TestLLLL()
+    // {
+    //     var val = new MyClass();
+    //
+    //     var data = new EasySerializationData(EasyDataFormat.Json);
+    //     
+    //     EasySerialize.To(val, ref data);
+    //     EasySerialize.From<MyClass>(ref data);
+    //
+    //     // int count = 10000;
+    //     // var begin = DateTime.Now;
+    //     //
+    //     // s_profilerMarker.Begin(this);
+    //     // for (int i = 0; i < count; i++)
+    //     // {
+    //     //     EasySerialize.To(val, ref data);
+    //     // }
+    //     //
+    //     // s_profilerMarker.End();
+    //     //
+    //     // var end = DateTime.Now;
+    //     // var diff = end - begin;
+    //     // Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+    //     // Debug.Log($"Serialize data: {data.StringData}");
+    //     //
+    //     //
+    //     // begin = DateTime.Now;
+    //     // for (int i = 0; i < count; i++)
+    //     // {
+    //     //     EasySerialize.From<MyClass>(ref data);
+    //     // }
+    //     //
+    //     // end = DateTime.Now;
+    //     // diff = end - begin;
+    //     // Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+    //
+    //     // EasySerialize.To(val, ref data);
+    //     // var cls = EasySerialize.From<MyClass>(ref data);
+    //     // return;
+    // }
 }

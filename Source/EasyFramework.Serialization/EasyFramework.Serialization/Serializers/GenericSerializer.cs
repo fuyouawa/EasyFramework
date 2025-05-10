@@ -56,7 +56,7 @@ namespace EasyFramework.Serialization
                     obj = getter(value);
                 }
 
-                serializer.Process(member.Name, ref obj, memberType, archive);
+                serializer.Process(member.Name, ref obj, archive);
 
                 if (archive.ArchiveIoType == ArchiveIoTypes.Input)
                 {

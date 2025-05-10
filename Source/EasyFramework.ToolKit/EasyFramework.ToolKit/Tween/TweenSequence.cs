@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace EasyFramework.ToolKit
 {
-    class TweenSequenceNode
+    class TweenSequenceClip
     {
         private readonly List<AbstractTween> _tweens = new List<AbstractTween>();
         public TweenSequence Owner { get; }
 
-        public TweenSequenceNode(TweenSequence owner)
+        public TweenSequenceClip(TweenSequence owner)
         {
             Owner = owner;
         }
@@ -89,7 +89,7 @@ namespace EasyFramework.ToolKit
 
     public class TweenSequence : AbstractTween
     {
-        private readonly List<TweenSequenceNode> _tweenNodes = new List<TweenSequenceNode>();
+        private readonly List<TweenSequenceClip> _tweenClips = new List<TweenSequenceClip>();
         private int _currentNodeIndex;
 
         private float? _actualDuration;
@@ -97,23 +97,23 @@ namespace EasyFramework.ToolKit
 
         protected override void OnReset()
         {
-            _tweenNodes.Clear();
+            _tweenClips.Clear();
             _currentNodeIndex = -1;
         }
 
-        public void Append(AbstractTween tween)
+        internal void AddTweenAsNewClip(AbstractTween tween)
         {
-            var node = new TweenSequenceNode(this);
+            var node = new TweenSequenceClip(this);
             node.AddTween(tween);
-            _tweenNodes.Add(node);
+            _tweenClips.Add(node);
         }
 
-        public void Join(AbstractTween tween)
+        internal void AddTweenToLastClip(AbstractTween tween)
         {
-            var node = _tweenNodes.LastOrDefault();
+            var node = _tweenClips.LastOrDefault();
             if (node == null)
             {
-                Append(tween);
+                AddTweenAsNewClip(tween);
             }
             else
             {
@@ -129,10 +129,10 @@ namespace EasyFramework.ToolKit
 
         protected override void OnPlaying(float time)
         {
-            if (_currentNodeIndex >= _tweenNodes.Count)
+            if (_currentNodeIndex >= _tweenClips.Count)
             {
                 _actualDuration = 0f;
-                foreach (var tweenNode in _tweenNodes)
+                foreach (var tweenNode in _tweenClips)
                 {
                     _actualDuration += tweenNode.GetDuration();
                 }
@@ -140,7 +140,7 @@ namespace EasyFramework.ToolKit
                 return;
             }
 
-            var node = _tweenNodes[_currentNodeIndex];
+            var node = _tweenClips[_currentNodeIndex];
             node.Update();
 
             if (node.IsAllCompleted())

@@ -86,7 +86,7 @@ namespace EasyFramework.Core
         #endregion
 
         #region Rectangle
-        
+
         /// <summary>
         /// 获取旋转后矩形的四个顶点
         /// </summary>
@@ -146,18 +146,29 @@ namespace EasyFramework.Core
 
         #endregion
 
-        public static Vector2 QuadraticBezierCurve(Vector2 startPoint, Vector2 endPoint, Vector2 controlPoint, float t)
+        public static Vector3 QuadraticBezierCurve(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, float t)
         {
             return Mathf.Pow(1 - t, 2) * startPoint +
                    2 * (1 - t) * t * controlPoint +
                    Mathf.Pow(t, 2) * endPoint;
         }
 
-        public static Vector3 QuadraticBezierCurve(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, float t)
+        public static float CalculateQuadraticBezierLength(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, int segments = 20)
         {
-            return Mathf.Pow(1 - t, 2) * startPoint +
-                   2 * (1 - t) * t * controlPoint +
-                   Mathf.Pow(t, 2) * endPoint;
+            float length = 0f;
+            Vector3 prevPoint = startPoint;
+
+            for (int i = 1; i <= segments; i++)
+            {
+                float t = i / (float)segments;
+                Vector3 point = Mathf.Pow(1 - t, 2) * startPoint +
+                                2 * (1 - t) * t * controlPoint +
+                                Mathf.Pow(t, 2) * endPoint;
+                length += Vector3.Distance(prevPoint, point);
+                prevPoint = point;
+            }
+
+            return length;
         }
     }
 }

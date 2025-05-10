@@ -9,7 +9,7 @@ namespace EasyFramework.Serialization
 {
     public class EasySerializersManager : Singleton<EasySerializersManager>
     {
-        private readonly TypeMatcher _serializerTypeMatcher = new TypeMatcher();
+        private readonly TypeMatcher _serializerTypeMatcher = new TypeMatcher(false);
 
         EasySerializersManager()
         {
@@ -39,7 +39,7 @@ namespace EasyFramework.Serialization
         {
             var valueType = targets[0];
             var argType = matchIndex.Targets[0];
-
+        
             // 如果参数不是泛型参数，并且是个不包含泛型参数的类型
             // 用于判断当前序列化器的参数必须是个具体类型
             if (!argType.IsGenericParameter && !argType.ContainsGenericParameters)
@@ -48,26 +48,24 @@ namespace EasyFramework.Serialization
                 {
                     return matchIndex.Type;
                 }
-
+        
                 return null;
             }
-
+        
             var config = matchIndex.Type.GetCustomAttribute<EasySerializerConfigAttribute>();
             config ??= EasySerializerConfigAttribute.Default;
-
+        
             var missingArgs = argType.ResolveMissingGenericTypeArguments(valueType, config.AllowInherit);
             if (missingArgs.Length == 0)
                 return null;
 
-            try
+            if (matchIndex.Type.AreGenericConstraintsSatisfiedBy(missingArgs))
             {
                 var serializeType = matchIndex.Type.MakeGenericType(missingArgs);
                 return serializeType;
             }
-            catch (Exception e)
-            {
-                return null;
-            }
+
+            return null;
         }
 
         private readonly Dictionary<Type, IEasySerializer> _serializerCacheByValueType =
