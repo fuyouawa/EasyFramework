@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EasyFramework.Tweening")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+027e085c305259298e0f31894c4c8c4bac4970d0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+603d63516e7b2c415096a78bb2ad03d1f81ba6cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("EasyFramework.Tweening")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EasyFramework.Tweening")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
