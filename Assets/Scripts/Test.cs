@@ -18,6 +18,8 @@ public class Test : MonoBehaviour
     [HideLabel, InlineProperty]
     public SerializedVariant Js = new SerializedVariant("345");
 
+    public EasyEvent<int> Jjj;
+
     void Awake()
     {
         Log.Logger = new LoggerConfiguration()

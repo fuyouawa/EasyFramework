@@ -2,6 +2,18 @@ namespace EasyFramework.Tweening
 {
     public static class TweenerExtension
     {
+        /// <summary>
+        /// 设置所属的unity对象，当对象销毁时也会停止该tweener
+        /// </summary>
+        /// <param name="tweener"></param>
+        /// <param name="unityObject"></param>
+        /// <returns></returns>
+        public static Tweener SetUnityObject(this Tweener tweener, UnityEngine.Object unityObject)
+        {
+            tweener.UnityObject = unityObject;
+            return tweener;
+        }
+
         public static Tweener SetEase(this Tweener tweener, ITweenerEase ease)
         {
             tweener.Ease = ease;

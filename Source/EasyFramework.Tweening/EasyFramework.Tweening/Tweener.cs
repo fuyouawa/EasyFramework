@@ -31,7 +31,26 @@ namespace EasyFramework.Tweening
         private TweenSetter _setter;
 
         private float _duration;
+        private bool _hasUnityObject;
 
+        private UnityEngine.Object _unityObject;
+        internal UnityEngine.Object UnityObject
+        {
+            get => _unityObject;
+            set
+            {
+                if (ReferenceEquals(value, null))
+                {
+                    _hasUnityObject = false;
+                    _unityObject = null;
+                }
+                else
+                {
+                    _hasUnityObject = true;
+                    _unityObject = value;
+                }
+            }
+        }
         protected internal LoopType LoopType { get; set; }
         protected internal ITweenerEase Ease { get; set; }
 
@@ -80,6 +99,8 @@ namespace EasyFramework.Tweening
             _getter = null;
             _setter = null;
             _duration = 0f;
+            _unityObject = null;
+            _hasUnityObject = false;
             IsRelative = false;
         }
 
@@ -107,6 +128,12 @@ namespace EasyFramework.Tweening
         {
             base.OnStart();
             
+            if (_hasUnityObject && _unityObject == null)
+            {
+                PendingKill = true;
+                return;
+            }
+
             if (Ease == null)
             {
                 Ease = Tweening.Ease.Linear();
@@ -147,6 +174,12 @@ namespace EasyFramework.Tweening
 
         protected override void OnPlaying(float time)
         {
+            if (_hasUnityObject && _unityObject == null)
+            {
+                PendingKill = true;
+                return;
+            }
+
             var duration = ActualDuration;
             Assert.True(duration.HasValue);
             

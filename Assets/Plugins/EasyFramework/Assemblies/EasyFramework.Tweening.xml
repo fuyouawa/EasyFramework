@@ -90,6 +90,14 @@
             动画开始和结束都带有弹跳效果。
             </summary>
         </member>
+        <member name="M:EasyFramework.Tweening.TweenerExtension.SetUnityObject(EasyFramework.Tweening.Tweener,UnityEngine.Object)">
+            <summary>
+            设置所属的unity对象，当对象销毁时也会停止该tweener
+            </summary>
+            <param name="tweener"></param>
+            <param name="unityObject"></param>
+            <returns></returns>
+        </member>
         <member name="M:EasyFramework.Tweening.TweenerExtension.SetSpeedBased(EasyFramework.Tweening.Tweener,System.Boolean)">
             <summary>
             <para>速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。</para>
