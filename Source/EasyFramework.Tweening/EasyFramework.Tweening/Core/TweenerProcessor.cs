@@ -2,7 +2,7 @@ using System;
 
 namespace EasyFramework.Tweening
 {
-    public class TweenerProcessorContext
+    internal class TweenerProcessorContext
     {
         public ITweenerEffect Effect { get; set; }
         public object StartValue { get; set; }

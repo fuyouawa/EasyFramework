@@ -7,6 +7,7 @@ namespace EasyFramework.Tweening
     public class TweenController : MonoSingleton<TweenController>
     {
         private readonly List<AbstractTween> _runningTweens = new List<AbstractTween>();
+        private readonly Dictionary<string, AbstractTween> _tweensById = new Dictionary<string, AbstractTween>();
 
         public void Attach(AbstractTween tween)
         {
@@ -16,6 +17,37 @@ namespace EasyFramework.Tweening
         public void Detach(AbstractTween tween)
         {
             _runningTweens.Remove(tween);
+        }
+
+        internal void RegisterTweenById(string id, AbstractTween tween)
+        {
+            if (id.IsNullOrEmpty())
+                return;
+
+            if (_tweensById.TryGetValue(id, out var existingTween))
+            {
+                if (existingTween != tween)
+                {
+                    _tweensById.Remove(id);
+                }
+            }
+            _tweensById[id] = tween;
+        }
+
+        internal void UnregisterTweenById(string id)
+        {
+            if (id.IsNullOrEmpty())
+                return;
+
+            _tweensById.Remove(id);
+        }
+
+        internal AbstractTween GetTweenById(string id)
+        {
+            if (id.IsNullOrEmpty())
+                return null;
+
+            return _tweensById.GetValueOrDefault(id);
         }
         
         private readonly List<AbstractTween> _pendingKillTweens = new List<AbstractTween>();
@@ -30,6 +62,18 @@ namespace EasyFramework.Tweening
 
         void Update()
         {
+            foreach (var tween in _runningTweens)
+            {
+                if (tween.PendingKill)
+                    continue;
+
+                if (tween.CurrentState == TweenState.Idle)
+                {
+                    tween.Start();
+                }
+                tween.Update();
+            }
+
             if (_pendingKillTweens.Count > 0)
             {
                 foreach (var tween in _pendingKillTweens)
@@ -38,30 +82,6 @@ namespace EasyFramework.Tweening
                     _runningTweens.Remove(tween);
                 }
                 _pendingKillTweens.Clear();
-            }
-
-            foreach (var tween in _runningTweens)
-            {
-                if (tween.CurrentState == TweenState.Idle)
-                {
-                    tween.Start();
-                }
-                tween.Update();
-
-                if (tween.CurrentState == TweenState.Completed)
-                {
-                    tween.LoopCount--;
-                    if (tween.LoopCount > 0)
-                    {
-                        tween.IsInLoop = true;
-                        tween.Start();
-                    }
-                    else
-                    {
-                        tween.PendingKill = true;
-                        _pendingKillTweens.Add(tween);
-                    }
-                }
             }
         }
     }

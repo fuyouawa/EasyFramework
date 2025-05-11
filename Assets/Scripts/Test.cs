@@ -7,12 +7,6 @@ using EasyFramework.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-// 定义泛型类
-class Container<T1, T2> where T1 : IComparable<T2>
-{
-    public T1 Item1 { get; set; }
-    public T2 Item2 { get; set; }
-}
 
 public class Test : MonoBehaviour
 {
@@ -40,31 +34,33 @@ public class Test : MonoBehaviour
         {
             var seq = Tween.Sequence();
 
-            seq.Append(transform.DoPos(new Vector3(10, 10, 0), 2f)      // 2s内线性缓动到(10, 10, 0)
+            seq.Append(transform.DoMove(new Vector3(10, 10, 0), 2f)     // 2s内线性缓动到(10, 10, 0)
                 .SetRelative());                                        // 使用相对模式，结束坐标改为：起始坐标 + (10, 10, 0)
 
             seq.Join(Tween.Callback(() => Debug.Log("Join Callback"))); // 调用回调 (与上一个片段同时调用)
 
-            seq.Join(transform.DoLocalScale(Vector3.one * 0.5f, 0.5f)   // 波动效果，持续一秒钟 (与上一个片段同时调用)
-                .SetLoop(6, LoopType.Yoyo));                            // 循环6次（反转方向）
+            seq.Join(transform.DoScale(Vector3.one * 0.5f, 0.5f)        // 波动效果，持续一秒钟 (与上一个片段同时调用)
+                .SetLoopType(LoopType.Yoyo)                             // 反转方向
+                .SetLoopCount(6));                                      // 循环6次
 
             // 这里会等待上一个片段完成后，再执行下一个片段
             // 第一个Append只持续2s，而波动效果的Join会持续0.5*6=3s
             // 所以会经过3s才会调用下面的Append
 
-            seq.Append(transform.DoPos(new Vector3(0, 10, 0), 2f)       // 2s内移动到(0, 10, 0)
+            seq.Append(transform.DoMove(new Vector3(0, 10, 0), 2f)      // 2s内移动到(0, 10, 0)
                 .SetEase(Ease.InSine()));                               // 使用Sine曲线缓动效果
 
-            seq.Append(transform.DoPos(new Vector3(0, 0, 0), 4f)        // 线性缓动到(0, 0, 0)
-                .SetSpeedBase());                                       // 将持续时间变成速度，也就是4m/s
+            seq.Append(transform.DoMove(new Vector3(0, 0, 0), 4f)       // 线性缓动到(0, 0, 0)
+                .SetSpeedBased());                                      // 将持续时间变成速度，也就是4m/s
 
-            seq.Append(transform.DoPos(new Vector3(10, 10, 0), 3f)      // 3s内移动到(10, 10, 0)
+            seq.Append(transform.DoMove(new Vector3(10, 10, 0), 3f)     // 3s内移动到(10, 10, 0)
                 .SetEase(Ease.InSine())                                 // 使用Sine曲线缓动
                 .SetEffect(Effect.Bezier()                              // 使用二次贝塞尔曲线效果
                    .SetControlPoint(new Vector3(-5, 5, 0))));
 
             seq.Append(Tween.Callback(() => Debug.Log("Finish All!")));
         }
+
 
         if (Input.GetKeyDown(KeyCode.A))
         {
@@ -79,18 +75,18 @@ public class Test : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-// 使用示例
-            Type genericType = typeof(Container<,>);
-            Type[] knownParams = new Type[] { typeof(string) };
-            Type[] inferredParams;
+            transform.DoMove(new Vector3(10, 10, 0), 2f) // 2s内线性缓动到(10, 10, 0)
+                .SetRelative();
 
-            if (genericType.TryInferGenericArguments(out inferredParams, knownParams))
-            {
-                Debug.Log("234");
-                // 输入：genericType = Container<,>, knownParams = [string]
-                // 输出：inferredParams = [string, string]
-                // 因为 T1 是 string，T2 必须是 string 的子类，而 string 是密封类
-            }
+            transform.DoScale(Vector3.one * 0.5f, 0.5f) // 波动效果，持续一秒钟 (与上一个片段同时调用)
+                .SetLoopType(LoopType.Yoyo)             // 反转方向
+                .SetInfiniteLoop()
+                .SetId("TTTT");
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Tween.Kill("TTTT");
         }
     }
 

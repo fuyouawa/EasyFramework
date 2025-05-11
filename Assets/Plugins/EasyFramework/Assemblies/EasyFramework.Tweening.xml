@@ -90,11 +90,18 @@
             动画开始和结束都带有弹跳效果。
             </summary>
         </member>
-        <member name="M:EasyFramework.Tweening.TweenerExtension.SetSpeedBase(EasyFramework.Tweening.Tweener,System.Boolean)">
+        <member name="M:EasyFramework.Tweening.TweenerExtension.SetSpeedBased(EasyFramework.Tweening.Tweener,System.Boolean)">
             <summary>
             <para>速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。</para>
             <para>注意：使用此模式后，Tween.Duration()将返回null，除非该Tweener的第一帧被调用了。</para>
             </summary>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.Interval(System.Single)">
+            <summary>
+            创建一个指定持续时间的间隔
+            </summary>
+            <param name="duration">间隔时间（秒）</param>
+            <returns>间隔Tween对象</returns>
         </member>
         <member name="M:EasyFramework.Tweening.Tween.Duration(EasyFramework.Tweening.AbstractTween)">
             <summary>
@@ -103,6 +110,41 @@
             </summary>
             <param name="tween"></param>
             <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.Duration(System.String)">
+            <summary>
+            <para>通过ID获取Tween的持续时间，返回null代表此时无法判断具体持续时间。</para>
+            <para>如果是TweenSequence，只有运行完成了一次，才能确定那一次运行持续的时间，否则将始终返回null。</para>
+            </summary>
+            <param name="id">Tween的ID</param>
+            <returns>如果找到对应的Tween则返回其持续时间，否则返回null</returns>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.IsPlaying(System.String)">
+            <summary>
+            通过ID检查Tween是否正在播放
+            </summary>
+            <param name="id">Tween的ID</param>
+            <returns>如果找到对应的Tween且正在播放则返回true，否则返回false</returns>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.IsActive(System.String)">
+            <summary>
+            通过ID检查Tween是否处于活动状态
+            </summary>
+            <param name="id">Tween的ID</param>
+            <returns>如果找到对应的Tween且处于活动状态则返回true，否则返回false</returns>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.Kill(System.String)">
+            <summary>
+            通过ID终止Tween
+            </summary>
+            <param name="id">Tween的ID</param>
+        </member>
+        <member name="M:EasyFramework.Tweening.Tween.GetById(System.String)">
+            <summary>
+            通过ID获取Tween实例
+            </summary>
+            <param name="id">Tween的ID</param>
+            <returns>如果找到则返回对应的Tween实例，否则返回null</returns>
         </member>
         <member name="F:EasyFramework.Tweening.LoopType.Restart">
             <summary>

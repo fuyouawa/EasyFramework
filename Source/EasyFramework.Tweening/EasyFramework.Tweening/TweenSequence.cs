@@ -27,18 +27,9 @@ namespace EasyFramework.Tweening
             _tweens.Add(tween);
         }
 
-        public bool IsAllCompleted()
+        public bool IsAllPendingKill()
         {
-            return !_tweens.Any(tween => tween.CurrentState != TweenState.Completed || tween.LoopCount > 0);
-        }
-
-        private bool _isStarted = false;
-        private void Start()
-        {
-            foreach (var tween in _tweens)
-            {
-                tween.Start();
-            }
+            return _tweens.All(tween => tween.PendingKill);
         }
 
         public float GetDuration()
@@ -48,33 +39,17 @@ namespace EasyFramework.Tweening
 
         public void Update()
         {
-            if (!_isStarted)
-            {
-                Start();
-                _isStarted = true;
-            }
-
             foreach (var tween in _tweens)
             {
                 if (tween.PendingKill)
                     continue;
+                
+                if (tween.CurrentState == TweenState.Idle)
+                {
+                    tween.Start();
+                }
 
                 tween.Update();
-
-                if (tween.CurrentState == TweenState.Completed)
-                {
-                    tween.LoopCount--;
-
-                    if (tween.LoopCount > 0)
-                    {
-                        tween.IsInLoop = true;
-                        tween.Start();
-                    }
-                    else
-                    {
-                        tween.PendingKill = true;
-                    }
-                }
             }
         }
 
@@ -143,7 +118,7 @@ namespace EasyFramework.Tweening
             var node = _tweenClips[_currentNodeIndex];
             node.Update();
 
-            if (node.IsAllCompleted())
+            if (node.IsAllPendingKill())
             {
                 node.Kill();
                 _currentNodeIndex++;

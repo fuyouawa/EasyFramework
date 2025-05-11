@@ -1,28 +1,76 @@
+using EasyFramework.Core;
 using UnityEngine;
 
 namespace EasyFramework.Tweening
 {
     public static class TweenerCoreModule
     {
-        public static Tweener DoLocalPos(this Transform transform, Vector3 endPos, float duration)
+        public static Tweener DoLocalMove(this Transform target, Vector3 to, float duration)
         {
-            return Tween.To(() => transform.localPosition, pos => transform.localPosition = pos, endPos, duration);
+            return Tween.To(() => target.localPosition, pos => target.localPosition = pos, to, duration);
         }
 
-        public static Tweener DoPos(this Transform transform, Vector3 endPos, float duration)
+        public static Tweener DoLocalMoveX(this Transform target, float to, float duration)
         {
-            return Tween.To(() => transform.position, pos => transform.position = pos, endPos, duration);
+            return Tween.To(() => target.localPosition.x,
+                x => target.localPosition = target.localPosition.NewX(x),
+                to, duration);
         }
 
-        public static Tweener DoLocalScale(this Transform transform, Vector3 endLocalScale, float duration)
+        public static Tweener DoLocalMoveY(this Transform target, float to, float duration)
         {
-            return Tween.To(() => transform.localScale, scale => transform.localScale = scale, endLocalScale, duration);
+            return Tween.To(() => target.localPosition.y,
+                y => target.localPosition = target.localPosition.NewY(y),
+                to, duration);
         }
 
-        public static Tweener DoSpritesAnim(this SpriteRenderer spriteRenderer, Sprite[] sprites,
+        public static Tweener DoLocalMoveZ(this Transform target, float to, float duration)
+        {
+            return Tween.To(() => target.localPosition.z,
+                z => target.localPosition = target.localPosition.NewZ(z),
+                to, duration);
+        }
+
+        public static Tweener DoMove(this Transform target, Vector3 to, float duration)
+        {
+            return Tween.To(() => target.position, pos => target.position = pos, to, duration);
+        }
+
+        public static Tweener DoMoveX(this Transform target, float to, float duration)
+        {
+            return Tween.To(() => target.position.x,
+                x => target.position = target.position.NewX(x),
+                to, duration);
+        }
+
+        public static Tweener DoMoveY(this Transform target, float to, float duration)
+        {
+            return Tween.To(() => target.position.y,
+                y => target.position = target.position.NewY(y),
+                to, duration);
+        }
+
+        public static Tweener DoMoveZ(this Transform target, float to, float duration)
+        {
+            return Tween.To(() => target.position.z,
+                z => target.position = target.position.NewZ(z),
+                to, duration);
+        }
+
+        public static Tweener DoScale(this Transform target, Vector3 to, float duration)
+        {
+            return Tween.To(() => target.localScale, scale => target.localScale = scale, to, duration);
+        }
+
+        public static Tweener DoScale(this Transform target, float to, float duration)
+        {
+            return target.DoScale(Vector3.one * to, duration);
+        }
+
+        public static Tweener DoSpritesAnim(this SpriteRenderer target, Sprite[] sprites,
             float duration)
         {
-            return Tween.PlaySpritesAnimImpl(sprite => spriteRenderer.sprite = sprite, sprites, duration);
+            return TweenUtility.PlaySpritesAnimImpl(sprite => target.sprite = sprite, sprites, duration);
         }
     }
 }

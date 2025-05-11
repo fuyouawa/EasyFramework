@@ -1,3 +1,6 @@
+using EasyFramework.Core;
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,15 +8,40 @@ namespace EasyFramework.Tweening
 {
     public static class TweenerUIModule
     {
-        public static Tweener DoArchoredPos(this RectTransform rectTransform, Vector2 endValue, float duration)
+        public static Tweener DoAnchorPos(this RectTransform target, Vector2 to, float duration)
         {
-            return Tween.To(() => rectTransform.anchoredPosition, pos => rectTransform.anchoredPosition = pos,
-                endValue, duration);
+            return Tween.To(() => target.anchoredPosition, pos => target.anchoredPosition = pos,
+                to, duration);
         }
 
-        public static Tweener DoSpritesAnim(this Image image, Sprite[] sprites, float duration)
+        public static Tweener DoAnchorPosX(this RectTransform target, float to, float duration)
         {
-            return Tween.PlaySpritesAnimImpl(sprite => image.sprite = sprite, sprites, duration);
+            return Tween.To(() => target.anchoredPosition.x,
+                x => target.anchoredPosition = target.anchoredPosition.NewX(x),
+                to, duration);
         }
+
+        public static Tweener DoAnchorPosY(this RectTransform target, float to, float duration)
+        {
+            return Tween.To(() => target.anchoredPosition.y,
+                y => target.anchoredPosition = target.anchoredPosition.NewY(y),
+                to, duration);
+        }
+
+        public static Tweener DoFade(this CanvasGroup target, float to, float duration)
+        {
+            return Tween.To(() => target.alpha, val => target.alpha = val, to, duration);
+        }
+
+        public static Tweener DoMaxVisibleCharacters(this TextMeshProUGUI target, int to, float duration)
+        {
+            return Tween.To(() => target.maxVisibleCharacters, val => target.maxVisibleCharacters = val, to, duration);
+        }
+
+        public static Tweener DoSpritesAnim(this Image target, Sprite[] sprites, float duration)
+        {
+            return TweenUtility.PlaySpritesAnimImpl(sprite => target.sprite = sprite, sprites, duration);
+        }
+
     }
 }

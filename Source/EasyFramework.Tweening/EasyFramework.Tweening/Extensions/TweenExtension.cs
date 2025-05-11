@@ -2,9 +2,15 @@ namespace EasyFramework.Tweening
 {
     public static class TweenExtension
     {
-        public static AbstractTween OnKill(this AbstractTween tween, TweenEventHandler handler)
+        public static AbstractTween SetId(this AbstractTween tween, string id)
         {
-            tween.OnKill += handler;
+            tween.Id = id;
+            return tween;
+        }
+
+        public static AbstractTween OnKilled(this AbstractTween tween, TweenEventHandler handler)
+        {
+            tween.OnKilled += handler;
             return tween;
         }
 
@@ -32,9 +38,15 @@ namespace EasyFramework.Tweening
             return tween;
         }
 
-        public static AbstractTween SetLoop(this AbstractTween tween, int loopCount)
+        public static AbstractTween SetLoopCount(this AbstractTween tween, int loopCount)
         {
             tween.LoopCount = loopCount;
+            return tween;
+        }
+
+        public static AbstractTween SetInfiniteLoop(this AbstractTween tween, bool infiniteLoop = true)
+        {
+            tween.InfiniteLoop = infiniteLoop;
             return tween;
         }
     }

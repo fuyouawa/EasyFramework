@@ -28,6 +28,12 @@ namespace EasyFramework.Tweening
             return this;
         }
 
+        public BezierTweenerEffect SetControlPoint(float x, float y, float z = 0)
+        {
+            ControlPoint = new Vector3(x, y, z);
+            return this;
+        }
+
         public BezierTweenerEffect SetControlPointRelative(BezierControlPointRelativeTo relativeTo)
         {
             ControlPointRelativeTo = relativeTo;

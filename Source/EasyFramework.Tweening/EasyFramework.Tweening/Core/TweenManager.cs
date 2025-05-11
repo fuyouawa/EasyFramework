@@ -70,5 +70,10 @@ namespace EasyFramework.Tweening
         {
             return new TweenCallback();
         }
+
+        public TweenInterval GetInterval()
+        {
+            return new TweenInterval();
+        }
     }
 }

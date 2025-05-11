@@ -35,7 +35,7 @@ namespace EasyFramework.Tweening
         protected internal LoopType LoopType { get; set; }
         protected internal ITweenerEase Ease { get; set; }
 
-        protected internal bool IsSpeedBase { get; set; }
+        protected internal bool IsSpeedBased { get; set; }
         protected internal bool IsRelative { get; set; }
 
         private ITweenerEffect _effect;
@@ -51,7 +51,7 @@ namespace EasyFramework.Tweening
                     return _actualDuration.Value;
                 }
 
-                if (IsSpeedBase)
+                if (IsSpeedBased)
                 {
                     if (CurrentState == TweenState.Idle)
                         return null;

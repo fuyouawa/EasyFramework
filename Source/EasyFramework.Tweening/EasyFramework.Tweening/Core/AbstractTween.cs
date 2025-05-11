@@ -18,7 +18,28 @@ namespace EasyFramework.Tweening
 
     public abstract class AbstractTween
     {
-        internal string Id { get; set; }
+        private string _id;
+        internal string Id 
+        { 
+            get => _id;
+            set
+            {
+                if (_id == value)
+                    return;
+
+                if (!string.IsNullOrEmpty(_id))
+                {
+                    TweenController.Instance.UnregisterTweenById(_id);
+                }
+
+                _id = value;
+
+                if (!string.IsNullOrEmpty(_id))
+                {
+                    TweenController.Instance.RegisterTweenById(_id, this);
+                }
+            }
+        }
 
         internal float? GetActualDuration() => ActualDuration;
 
@@ -32,6 +53,7 @@ namespace EasyFramework.Tweening
 
         internal float Delay { get; set; }
 
+        internal bool InfiniteLoop { get; set; }
         internal int LoopCount { get; set; }
 
         internal TweenState CurrentState => _state.CurrentStateId;
@@ -42,7 +64,7 @@ namespace EasyFramework.Tweening
 
         internal event TweenEventHandler OnCompleted;
 
-        internal event TweenEventHandler OnKill;
+        internal event TweenEventHandler OnKilled;
 
         internal TweenSequence OwnerSequence { get; set; }
 
@@ -64,13 +86,15 @@ namespace EasyFramework.Tweening
         {
             Id = string.Empty;
             Delay = 0f;
+            InfiniteLoop = false;
             LoopCount = 1;
             OwnerSequence = null;
+            LastPlayTime = null;
 
             OnPlay = null;
             OnPause = null;
             OnCompleted = null;
-            OnKill = null;
+            OnKilled = null;
 
             _pause = false;
             _playElapsedTime = 0f;
@@ -119,7 +143,7 @@ namespace EasyFramework.Tweening
                     OnCompleted?.Invoke(this);
                     break;
                 case TweenState.Killed:
-                    OnKill?.Invoke(this);
+                    OnKilled?.Invoke(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
@@ -184,14 +208,35 @@ namespace EasyFramework.Tweening
 
         internal void Kill()
         {
+            if (Id.IsNotNullOrEmpty())
+            {
+                TweenController.Instance.UnregisterTweenById(Id);
+            }
+
             _state.ChangeState(TweenState.Killed);
         }
 
         internal void Complete()
         {
             LastPlayTime = Mathf.Max(_playElapsedTime - Delay, 0f);
-
             _state.ChangeState(TweenState.Completed);
+
+            if (InfiniteLoop || LoopCount >= 2)
+            {
+                if (!InfiniteLoop)
+                    LoopCount--;
+
+                IsInLoop = true;
+                _state.ChangeState(TweenState.Idle);
+            }
+            else
+            {
+                PendingKill = true;
+                if (OwnerSequence == null)
+                {
+                    TweenController.Instance.AddPendingKill(this);
+                }
+            }
         }
 
         internal void Pause()

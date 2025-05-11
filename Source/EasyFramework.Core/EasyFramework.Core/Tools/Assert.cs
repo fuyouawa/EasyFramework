@@ -27,7 +27,6 @@ namespace EasyFramework.Core
         [Conditional("UNITY_ASSERTIONS")]
         public static void Condition([DoesNotReturnIf(false)] bool cond)
         {
-            Debug.Assert(cond);
             if (!cond)
             {
                 // if (Debugger.IsAttached)
