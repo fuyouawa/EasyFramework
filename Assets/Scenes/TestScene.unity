@@ -462,6 +462,10 @@ MonoBehaviour:
     _any:
       _serializedData: 280103000000330034003500
       _serializedUnityObjects: []
+  Jjj:
+    _unityEvent:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!212 &790981261
 SpriteRenderer:
   m_ObjectHideFlags: 0

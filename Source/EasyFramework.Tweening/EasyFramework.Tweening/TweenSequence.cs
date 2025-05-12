@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace EasyFramework.Tweening
 {
     class TweenSequenceClip
     {
-        private readonly List<AbstractTween> _tweens = new List<AbstractTween>();
+        private readonly List<AbstractTween> _totalTweens = new List<AbstractTween>();
+        private readonly RunningTweenList _runningTweens = new RunningTweenList();
         public TweenSequence Owner { get; }
 
         public TweenSequenceClip(TweenSequence owner)
@@ -24,48 +26,36 @@ namespace EasyFramework.Tweening
             TweenController.Instance.Detach(tween);
             tween.OwnerSequence = Owner;
 
-            _tweens.Add(tween);
+            _runningTweens.Add(tween);
+            _totalTweens.Add(tween);
         }
 
-        public bool IsAllPendingKill()
+
+        public void Kill()
         {
-            return _tweens.All(tween => tween.PendingKill);
+            _runningTweens.Kill();
         }
 
-        public float GetDuration()
+        public float? GetDuration()
         {
-            return _tweens.Max(tween => tween.GetActualDuration() ?? 0);
+            return _totalTweens.Max(tween => tween.GetActualDuration() ?? 0f);
         }
 
         public void Update()
         {
-            foreach (var tween in _tweens)
-            {
-                if (tween.PendingKill)
-                    continue;
-                
-                if (tween.CurrentState == TweenState.Idle)
-                {
-                    tween.Start();
-                }
-
-                tween.Update();
-            }
+            _runningTweens.Update();
         }
 
-        public void Kill()
+        public bool IsAllKilled()
         {
-            foreach (var tween in _tweens)
-            {
-                tween.Kill();
-            }
+            return _runningTweens.IsAllKilled();
         }
     }
 
     public class TweenSequence : AbstractTween
     {
         private readonly List<TweenSequenceClip> _tweenClips = new List<TweenSequenceClip>();
-        private int _currentNodeIndex;
+        private int _currentClipIndex;
 
         private float? _actualDuration;
         protected override float? ActualDuration => _actualDuration;
@@ -73,7 +63,7 @@ namespace EasyFramework.Tweening
         protected override void OnReset()
         {
             _tweenClips.Clear();
-            _currentNodeIndex = -1;
+            _currentClipIndex = -1;
         }
 
         internal void AddTweenAsNewClip(AbstractTween tween)
@@ -98,13 +88,12 @@ namespace EasyFramework.Tweening
 
         protected override void OnStart()
         {
-            base.OnStart();
-            _currentNodeIndex = 0;
+            _currentClipIndex = 0;
         }
 
         protected override void OnPlaying(float time)
         {
-            if (_currentNodeIndex >= _tweenClips.Count)
+            if (_currentClipIndex >= _tweenClips.Count)
             {
                 _actualDuration = 0f;
                 foreach (var tweenNode in _tweenClips)
@@ -115,13 +104,20 @@ namespace EasyFramework.Tweening
                 return;
             }
 
-            var node = _tweenClips[_currentNodeIndex];
+            var node = _tweenClips[_currentClipIndex];
             node.Update();
 
-            if (node.IsAllPendingKill())
+            if (node.IsAllKilled())
             {
-                node.Kill();
-                _currentNodeIndex++;
+                _currentClipIndex++;
+            }
+        }
+
+        protected override void OnKill()
+        {
+            for (int i = _currentClipIndex; i < _tweenClips.Count; i++)
+            {
+                _tweenClips[i].Kill();
             }
         }
     }

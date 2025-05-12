@@ -98,11 +98,7 @@ namespace EasyFramework.Tweening
 
         public static void Kill(AbstractTween tween)
         {
-            tween.PendingKill = true;
-            if (tween.OwnerSequence == null)
-            {
-                TweenController.Instance.AddPendingKill(tween);
-            }
+            tween.PendingKillSelf = true;
         }
 
         /// <summary>

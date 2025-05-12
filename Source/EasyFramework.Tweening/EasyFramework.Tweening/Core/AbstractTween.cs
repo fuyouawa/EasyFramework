@@ -68,8 +68,22 @@ namespace EasyFramework.Tweening
 
         internal TweenSequence OwnerSequence { get; set; }
 
-        internal bool PendingKill { get; set; }
+        internal bool PendingKillSelf { get; set; }
         protected internal bool IsInLoop { get; set; }
+
+        internal bool IsPendingKill()
+        {
+            if (PendingKillSelf)
+            {
+                return true;
+            }
+
+            if (OwnerSequence != null)
+            {
+                return OwnerSequence.IsPendingKill();
+            }
+            return false;
+        }
 
         private readonly StateMachine<TweenState> _state = new StateMachine<TweenState>();
         private bool _pause;
@@ -208,11 +222,12 @@ namespace EasyFramework.Tweening
 
         internal void Kill()
         {
+            OnKill();
+
             if (Id.IsNotNullOrEmpty())
             {
                 TweenController.Instance.UnregisterTweenById(Id);
             }
-
             _state.ChangeState(TweenState.Killed);
         }
 
@@ -231,11 +246,7 @@ namespace EasyFramework.Tweening
             }
             else
             {
-                PendingKill = true;
-                if (OwnerSequence == null)
-                {
-                    TweenController.Instance.AddPendingKill(this);
-                }
+                PendingKillSelf = true;
             }
         }
 
@@ -257,6 +268,20 @@ namespace EasyFramework.Tweening
         {
         }
 
+        protected virtual void OnKill()
+        {
+        }
+
         protected abstract void OnPlaying(float time);
+
+        public override string ToString()
+        {
+            if (Id.IsNotNullOrEmpty())
+            {
+                return Id;
+            }
+
+            return "<No ID>";
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace EasyFramework.Tweening
 
         protected override void OnStart()
         {
-            base.OnStart();
             Callback();
         }
 

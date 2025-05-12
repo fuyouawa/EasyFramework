@@ -126,11 +126,9 @@ namespace EasyFramework.Tweening
 
         protected override void OnStart()
         {
-            base.OnStart();
-            
             if (_hasUnityObject && _unityObject == null)
             {
-                PendingKill = true;
+                PendingKillSelf = true;
                 return;
             }
 
@@ -176,7 +174,7 @@ namespace EasyFramework.Tweening
         {
             if (_hasUnityObject && _unityObject == null)
             {
-                PendingKill = true;
+                PendingKillSelf = true;
                 return;
             }
 
