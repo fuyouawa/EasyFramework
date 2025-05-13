@@ -17,8 +17,11 @@ public class Test : MonoBehaviour
 
     [HideLabel, InlineProperty]
     public SerializedVariant Js = new SerializedVariant("345");
-
     public EasyEvent<int> Jjj;
+
+    public int Power = 2;
+
+    // public Vector2 SectionX;
 
     void Awake()
     {
@@ -36,29 +39,31 @@ public class Test : MonoBehaviour
         {
             var seq = Tween.Sequence();
 
-            seq.Append(transform.DoMove(new Vector3(10, 10, 0), 2f)     // 2s内线性缓动到(10, 10, 0)
-                .SetRelative());                                        // 使用相对模式，结束坐标改为：起始坐标 + (10, 10, 0)
-
-            seq.Join(Tween.Callback(() => Debug.Log("Join Callback"))); // 调用回调 (与上一个片段同时调用)
-
-            seq.Join(transform.DoScale(Vector3.one * 0.5f, 0.5f)        // 波动效果，持续一秒钟 (与上一个片段同时调用)
-                .SetLoopType(LoopType.Yoyo)                             // 反转方向
-                .SetLoopCount(6));                                      // 循环6次
-
-            // 这里会等待上一个片段完成后，再执行下一个片段
-            // 第一个Append只持续2s，而波动效果的Join会持续0.5*6=3s
-            // 所以会经过3s才会调用下面的Append
-
-            seq.Append(transform.DoMove(new Vector3(0, 10, 0), 2f)      // 2s内移动到(0, 10, 0)
-                .SetEase(Ease.InSine()));                               // 使用Sine曲线缓动效果
-
-            seq.Append(transform.DoMove(new Vector3(0, 0, 0), 4f)       // 线性缓动到(0, 0, 0)
-                .SetSpeedBased());                                      // 将持续时间变成速度，也就是4m/s
+            // seq.Append(transform.DoMove(new Vector3(10, 10, 0), 2f)     // 2s内线性缓动到(10, 10, 0)
+            //     .SetRelative());                                        // 使用相对模式，结束坐标改为：起始坐标 + (10, 10, 0)
+            //
+            // seq.Join(Tween.Callback(() => Debug.Log("Join Callback"))); // 调用回调 (与上一个片段同时调用)
+            //
+            // seq.Join(transform.DoScale(Vector3.one * 0.5f, 0.5f)        // 波动效果，持续一秒钟 (与上一个片段同时调用)
+            //     .SetLoopType(LoopType.Yoyo)                             // 反转方向
+            //     .SetLoopCount(6));                                      // 循环6次
+            //
+            // // 这里会等待上一个片段完成后，再执行下一个片段
+            // // 第一个Append只持续2s，而波动效果的Join会持续0.5*6=3s
+            // // 所以会经过3s才会调用下面的Append
+            //
+            // seq.Append(transform.DoMove(new Vector3(0, 10, 0), 2f)      // 2s内移动到(0, 10, 0)
+            //     .SetEase(Ease.InSine()));                               // 使用Sine曲线缓动效果
+            //
+            // seq.Append(transform.DoMove(new Vector3(0, 0, 0), 4f)       // 线性缓动到(0, 0, 0)
+            //     .SetSpeedBased());                                      // 将持续时间变成速度，也就是4m/s
 
             seq.Append(transform.DoMove(new Vector3(10, 10, 0), 3f)     // 3s内移动到(10, 10, 0)
-                .SetEase(Ease.InSine())                                 // 使用Sine曲线缓动
+                .SetRelative()
+                .SetEase(Ease.InExponential(Power))                     // 使用指数函数缓动
                 .SetEffect(Effect.Bezier()                              // 使用二次贝塞尔曲线效果
-                   .SetControlPoint(new Vector3(-5, 5, 0))));
+                   .SetControlPoint(new Vector3(-5, 5, 0))
+                   .SetControlPointRelative(BezierControlPointRelativeTo.StartPoint)));
 
             seq.Append(Tween.Callback(() => Debug.Log("Finish All!")));
         }

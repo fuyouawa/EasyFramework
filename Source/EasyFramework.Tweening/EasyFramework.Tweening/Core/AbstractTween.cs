@@ -206,8 +206,14 @@ namespace EasyFramework.Tweening
                 else
                 {
                     var time = _playElapsedTime - Delay;
-                    if (ActualDuration.HasValue && time > ActualDuration.Value)
+                    if (ActualDuration.HasValue && time >= ActualDuration.Value)
                     {
+                        // 减小运动误差
+                        if (!time.Approximately(ActualDuration.Value))
+                        {
+                            OnPlaying(ActualDuration.Value);
+                        }
+
                         Complete();
                     }
                     else

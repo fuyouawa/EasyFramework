@@ -24,12 +24,62 @@ namespace EasyFramework.Tweening
         }
     }
 
+    public class InExponentialTwennerEase : ITweenerEase
+    {
+        private float _power = 2;
+
+        public InExponentialTwennerEase SetPow(float pow)
+        {
+            _power = pow;
+            return this;
+        }
+
+        float ITweenerEase.EaseTime(float time)
+        {
+            return Mathf.Pow(time, _power);
+        }
+    }
+
+    public class OutExponentialTwennerEase : ITweenerEase
+    {
+        private float _power = 2;
+
+        public OutExponentialTwennerEase SetPow(float pow)
+        {
+            _power = pow;
+            return this;
+        }
+
+        float ITweenerEase.EaseTime(float time)
+        {
+            return 1f - Mathf.Pow(1f - time, _power);
+        }
+    }
+
+    public class InOutExponentialTwennerEase : ITweenerEase
+    {
+        private float _power = 2;
+
+        public InOutExponentialTwennerEase SetPow(float pow)
+        {
+            _power = pow;
+            return this;
+        }
+
+        float ITweenerEase.EaseTime(float time)
+        {
+            return time < 0.5f
+                ? Mathf.Pow(2f * time, _power) / 2f
+                : 1f - Mathf.Pow(2f - 2f * time, _power) / 2f;
+        }
+    }
+
     public static class Ease
     {
         /// <summary>
         /// 线性匀速过渡，无加速度。
         /// </summary>
-        public static GenericTweenerEase Linear()
+        public static ITweenerEase Linear()
         {
             return new GenericTweenerEase(time => time);
         }
@@ -37,7 +87,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 使用正弦函数起始缓慢，逐渐加速。
         /// </summary>
-        public static GenericTweenerEase InSine()
+        public static ITweenerEase InSine()
         {
             return new GenericTweenerEase(time => 1f - Mathf.Cos((time * Mathf.PI) / 2f));
         }
@@ -45,7 +95,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 使用正弦函数起始快速，逐渐减速。
         /// </summary>
-        public static GenericTweenerEase OutSine()
+        public static ITweenerEase OutSine()
         {
             return new GenericTweenerEase(time => Mathf.Sin((time * Mathf.PI) / 2f));
         }
@@ -53,7 +103,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 使用正弦函数在开始和结束时都较缓慢，中间加速。
         /// </summary>
-        public static GenericTweenerEase InOutSine()
+        public static ITweenerEase InOutSine()
         {
             return new GenericTweenerEase(time => -(Mathf.Cos(Mathf.PI * time) - 1f) / 2f);
         }
@@ -61,40 +111,139 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 二次函数缓动，起始缓慢。
         /// </summary>
-        public static GenericTweenerEase InQuad()
+        public static ITweenerEase InQuad()
         {
-            return new GenericTweenerEase(time => time * time);
+            return new InExponentialTwennerEase().SetPow(2f);
         }
 
         /// <summary>
         /// 二次函数缓动，结束缓慢。
         /// </summary>
-        public static GenericTweenerEase OutQuad()
+        public static ITweenerEase OutQuad()
         {
-            return new GenericTweenerEase(time => 1f - (1f - time) * (1f - time));
+            return new OutExponentialTwennerEase().SetPow(2f);
         }
 
         /// <summary>
         /// 二次函数缓动，开始和结束都缓慢，中间加速。
         /// </summary>
-        public static GenericTweenerEase InOutQuad()
+        public static ITweenerEase InOutQuad()
         {
-            return new GenericTweenerEase(time => time < 0.5f ? 2f * time * time : 1f - Mathf.Pow(-2f * time + 2f, 2f) / 2f);
+            return new InOutExponentialTwennerEase().SetPow(2f);
         }
 
         /// <summary>
-        /// 向后拉动再向前加速的动画，具有“超前”效果。
+        /// 三次函数缓动，起始缓慢。
         /// </summary>
-        public static GenericTweenerEase InBack()
+        public static ITweenerEase InCubic()
+        {
+            return new InExponentialTwennerEase().SetPow(3f);
+        }
+
+        /// <summary>
+        /// 三次函数缓动，结束缓慢。
+        /// </summary>
+        public static ITweenerEase OutCubic()
+        {
+            return new OutExponentialTwennerEase().SetPow(3f);
+        }
+
+        /// <summary>
+        /// 三次函数缓动，开始和结束都缓慢，中间加速。
+        /// </summary>
+        public static ITweenerEase InOutCubic()
+        {
+            return new InOutExponentialTwennerEase().SetPow(3f);
+        }
+
+        /// <summary>
+        /// 四次函数缓动，起始缓慢。
+        /// </summary>
+        public static ITweenerEase InQuart()
+        {
+            return new InExponentialTwennerEase().SetPow(4f);
+        }
+
+        /// <summary>
+        /// 四次函数缓动，结束缓慢。
+        /// </summary>
+        public static ITweenerEase OutQuart()
+        {
+            return new OutExponentialTwennerEase().SetPow(4f);
+        }
+
+        /// <summary>
+        /// 四次函数缓动，开始和结束都缓慢，中间加速。
+        /// </summary>
+        public static ITweenerEase InOutQuart()
+        {
+            return new InOutExponentialTwennerEase().SetPow(4f);
+        }
+
+        /// <summary>
+        /// 五次函数缓动，起始缓慢。
+        /// </summary>
+        public static ITweenerEase InQuint()
+        {
+            return new InExponentialTwennerEase().SetPow(5f);
+        }
+
+        /// <summary>
+        /// 五次函数缓动，结束缓慢。
+        /// </summary>
+        public static ITweenerEase OutQuint()
+        {
+            return new OutExponentialTwennerEase().SetPow(5f);
+        }
+
+        /// <summary>
+        /// 五次函数缓动，开始和结束都缓慢，中间加速。
+        /// </summary>
+        public static ITweenerEase InOutQuint()
+        {
+            return new InOutExponentialTwennerEase().SetPow(5f);
+        }
+
+        /// <summary>
+        /// 指数函数缓动，起始缓慢。
+        /// </summary>
+        /// <param name="power">指数次方</param>
+        public static ITweenerEase InExponential(float power)
+        {
+            return new InExponentialTwennerEase().SetPow(power);
+        }
+
+        /// <summary>
+        /// 指数函数缓动，结束缓慢。
+        /// </summary>
+        /// <param name="power">指数次方</param>
+        public static ITweenerEase OutExponential(float power)
+        {
+            return new OutExponentialTwennerEase().SetPow(power);
+        }
+
+        /// <summary>
+        /// 指数函数缓动，开始和结束都缓慢，中间加速。
+        /// </summary>
+        /// <param name="power">指数次方</param>
+        public static ITweenerEase InOutExponential(float power)
+        {
+            return new InOutExponentialTwennerEase().SetPow(power);
+        }
+
+        /// <summary>
+        /// 向后拉动再向前加速的动画。
+        /// </summary>
+        public static ITweenerEase InBack()
         {
             const float c1 = 1.70158f;
             return new GenericTweenerEase(time => c1 * time * time * time - c1 * time * time);
         }
 
         /// <summary>
-        /// 向前滑动并“超出”目标后回弹的动画。
+        /// 向前滑动并超出目标后回弹的动画。
         /// </summary>
-        public static GenericTweenerEase OutBack()
+        public static ITweenerEase OutBack()
         {
             const float c1 = 1.70158f;
             return new GenericTweenerEase(time =>
@@ -105,9 +254,9 @@ namespace EasyFramework.Tweening
         }
 
         /// <summary>
-        /// 起始和终点都有回弹的动画，形成前后“超出”效果。
+        /// 起始和终点都有回弹的动画。
         /// </summary>
-        public static GenericTweenerEase InOutBack()
+        public static ITweenerEase InOutBack()
         {
             const float c1 = 1.70158f * 1.525f;
             return new GenericTweenerEase(time => time < 0.5f
@@ -118,7 +267,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 起始具有弹簧震荡效果，逐渐进入动画。
         /// </summary>
-        public static GenericTweenerEase InElastic()
+        public static ITweenerEase InElastic()
         {
             return new GenericTweenerEase(time =>
             {
@@ -131,7 +280,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 动画结束时产生弹簧震荡回弹效果。
         /// </summary>
-        public static GenericTweenerEase OutElastic()
+        public static ITweenerEase OutElastic()
         {
             return new GenericTweenerEase(time =>
             {
@@ -144,7 +293,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 动画开始和结束都具有弹簧震荡效果。
         /// </summary>
-        public static GenericTweenerEase InOutElastic()
+        public static ITweenerEase InOutElastic()
         {
             return new GenericTweenerEase(time =>
             {
@@ -159,7 +308,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 动画开始像球落地一样反弹，逐渐收敛。
         /// </summary>
-        public static GenericTweenerEase InBounce()
+        public static ITweenerEase InBounce()
         {
             return new GenericTweenerEase(time => 1f - BounceEaseOut(1f - time));
         }
@@ -167,7 +316,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 动画结束像球落地一样反弹，逐渐停止。
         /// </summary>
-        public static GenericTweenerEase OutBounce()
+        public static ITweenerEase OutBounce()
         {
             return new GenericTweenerEase(time => BounceEaseOut(time));
         }
@@ -175,7 +324,7 @@ namespace EasyFramework.Tweening
         /// <summary>
         /// 动画开始和结束都带有弹跳效果。
         /// </summary>
-        public static GenericTweenerEase InOutBounce()
+        public static ITweenerEase InOutBounce()
         {
             return new GenericTweenerEase(time => time < 0.5f
                 ? (1f - BounceEaseOut(1f - 2f * time)) / 2f
