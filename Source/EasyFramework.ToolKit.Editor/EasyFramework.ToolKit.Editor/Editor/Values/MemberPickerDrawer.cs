@@ -16,26 +16,26 @@ namespace EasyFramework.ToolKit.Editor
     {
         private readonly Dictionary<string, MemberInfo> _membersBySignature = new Dictionary<string, MemberInfo>();
 
-        private InspectorProperty _propertyOfTargetObject;
-        private InspectorProperty _propertyOfTargetComponent;
-        private InspectorProperty _propertyOfTargetMember;
+        private InspectorProperty _targetObjectProperty;
+        private InspectorProperty _targetComponentProperty;
+        private InspectorProperty _targetMemberProperty;
 
         private GameObject TargetObject
         {
-            get => _propertyOfTargetObject.WeakSmartValue<GameObject>();
-            set => _propertyOfTargetObject.SetWeakSmartValue(value);
+            get => _targetObjectProperty.WeakSmartValue<GameObject>();
+            set => _targetObjectProperty.SetWeakSmartValue(value);
         }
 
         private Component TargetComponent
         {
-            get => _propertyOfTargetComponent.WeakSmartValue<Component>();
-            set => _propertyOfTargetComponent.SetWeakSmartValue(value);
+            get => _targetComponentProperty.WeakSmartValue<Component>();
+            set => _targetComponentProperty.SetWeakSmartValue(value);
         }
 
         private MemberInfo TargetMember
         {
-            get => _propertyOfTargetMember.WeakSmartValue<MemberInfo>();
-            set => _propertyOfTargetMember.SetWeakSmartValue(value);
+            get => _targetMemberProperty.WeakSmartValue<MemberInfo>();
+            set => _targetMemberProperty.SetWeakSmartValue(value);
         }
 
         protected override bool CanDrawValueProperty(InspectorProperty property)
@@ -45,11 +45,11 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void Initialize()
         {
-            _propertyOfTargetObject = Property.Children["_targetObject"];
-            _propertyOfTargetComponent = Property.Children["_targetComponent"];
-            _propertyOfTargetMember = Property.Children["_targetMember"];
+            _targetObjectProperty = Property.Children["_targetObject"];
+            _targetComponentProperty = Property.Children["_targetComponent"];
+            _targetMemberProperty = Property.Children["_targetMember"];
 
-            _propertyOfTargetObject.ValueEntry.OnValueChanged += i => OnTargetObjectChanged();
+            _targetObjectProperty.ValueEntry.OnValueChanged += i => OnTargetObjectChanged();
 
             RefreshTargetMember(TargetComponent);
         }

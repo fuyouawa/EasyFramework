@@ -8,7 +8,7 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewBinderEditorConfigDrawer : FoldoutValueDrawer<ViewBinderEditorConfig>
     {
-        private InspectorProperty _propertyOfComment;
+        private InspectorProperty _commentProperty;
 
         protected override void Initialize()
         {
@@ -20,7 +20,7 @@ namespace EasyFramework.ToolKit.Editor
 
             base.Initialize();
 
-            _propertyOfComment = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
+            _commentProperty = Property.Children[nameof(ViewBinderEditorConfig.Comment)];
         }
 
         protected override GUIContent GetLabel(GUIContent label)
@@ -109,7 +109,7 @@ namespace EasyFramework.ToolKit.Editor
                 EditorUtility.SetDirty(comp);
             }
 
-            _propertyOfComment.Draw(EditorHelper.TempContent("注释"));
+            _commentProperty.Draw(EditorHelper.TempContent("注释"));
         }
 
         private static Component GetTargetComponent(InspectorProperty property)

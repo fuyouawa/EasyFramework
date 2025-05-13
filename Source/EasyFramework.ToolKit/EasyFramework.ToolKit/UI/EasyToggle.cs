@@ -29,7 +29,7 @@ namespace EasyFramework.ToolKit
         /// <summary>
         /// Transition mode for the toggle.
         /// </summary>
-        public EasyToggleTransition EasyToggleTransition = EasyToggleTransition.Fade;
+        public EasyToggleTransition ToggleTransition = EasyToggleTransition.Fade;
 
         /// <summary>
         /// Graphic the toggle should be working with.
@@ -186,7 +186,7 @@ namespace EasyFramework.ToolKit
                 }
             }
             
-            PlayEffect(EasyToggleTransition == EasyToggleTransition.None);
+            PlayEffect(ToggleTransition == EasyToggleTransition.None);
             // Always send event when toggle is clicked, even if value didn't change
             // due to already active toggle in a toggle group being clicked.
             // Controls like Dropdown rely on this.

@@ -11,34 +11,34 @@ using EasyFramework.Core;
 namespace EasyFramework.ToolKit.Editor
 {
     [CustomEditor(typeof(Feedbacks))]
-    // [CanEditMultipleObjects]
+    [CanEditMultipleObjects]
     public class FeedbacksEditor : OdinEditor
     {
         private LocalPersistentContext<bool> _settingsExpandContext;
         private FoldoutGroupConfig _foldoutGroupConfig;
 
-        private InspectorProperty _propertyOfInitializeMode;
-        private InspectorProperty _propertyOfAutoInitialization;
-        private InspectorProperty _propertyOfAutoPlayOnStart;
-        private InspectorProperty _propertyOfAutoPlayOnEnable;
-        private InspectorProperty _propertyOfCanPlay;
-        private InspectorProperty _propertyOfCanPlayWhileAlreadyPlaying;
-        private InspectorProperty _propertyOfCanMultiPlay;
-        private InspectorProperty _propertyOfsFeedback;
+        private InspectorProperty _initializeModeProperty;
+        private InspectorProperty _autoInitializationProperty;
+        private InspectorProperty _autoPlayOnStartProperty;
+        private InspectorProperty _autoPlayOnEnableProperty;
+        private InspectorProperty _canPlayProperty;
+        private InspectorProperty _canPlayWhileAlreadyPlayingProperty;
+        private InspectorProperty _canMultiPlayProperty;
+        private InspectorProperty _feedbacksProperty;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             _settingsExpandContext = this.GetPersistent("Settings/Expand", false);
 
-            _propertyOfInitializeMode = Tree.RootProperty.Children["_initializeMode"];
-            _propertyOfAutoInitialization = Tree.RootProperty.Children["_autoInitialization"];
-            _propertyOfAutoPlayOnStart = Tree.RootProperty.Children["_autoPlayOnStart"];
-            _propertyOfAutoPlayOnEnable = Tree.RootProperty.Children["_autoPlayOnEnable"];
-            _propertyOfCanPlay = Tree.RootProperty.Children["_canPlay"];
-            _propertyOfCanPlayWhileAlreadyPlaying = Tree.RootProperty.Children["_canPlayWhileAlreadyPlaying"];
-            _propertyOfCanMultiPlay = Tree.RootProperty.Children["_canMultiPlay"];
-            _propertyOfsFeedback = Tree.RootProperty.Children["_feedbacks"];
+            _initializeModeProperty = Tree.RootProperty.Children["_initializeMode"];
+            _autoInitializationProperty = Tree.RootProperty.Children["_autoInitialization"];
+            _autoPlayOnStartProperty = Tree.RootProperty.Children["_autoPlayOnStart"];
+            _autoPlayOnEnableProperty = Tree.RootProperty.Children["_autoPlayOnEnable"];
+            _canPlayProperty = Tree.RootProperty.Children["_canPlay"];
+            _canPlayWhileAlreadyPlayingProperty = Tree.RootProperty.Children["_canPlayWhileAlreadyPlaying"];
+            _canMultiPlayProperty = Tree.RootProperty.Children["_canMultiPlay"];
+            _feedbacksProperty = Tree.RootProperty.Children["_feedbacks"];
 
             _foldoutGroupConfig = new FoldoutGroupConfig(
                 this, new GUIContent("反馈设置"),
@@ -50,17 +50,17 @@ namespace EasyFramework.ToolKit.Editor
         {
             EasyEditorGUI.Title("初始化");
 
-            _propertyOfInitializeMode.DrawEx("初始化模式");
-            _propertyOfAutoInitialization.DrawEx("自动初始化", "确保播放前所有s都初始化Feedback");
-            _propertyOfAutoPlayOnStart.DrawEx("开始时自动播放", "在开始时自动播放一次");
-            _propertyOfAutoPlayOnEnable.DrawEx("启用时自动播放", "在启用时自动播放一次");
+            _initializeModeProperty.DrawEx("初始化模式");
+            _autoInitializationProperty.DrawEx("自动初始化", "确保播放前所有s都初始化Feedback");
+            _autoPlayOnStartProperty.DrawEx("开始时自动播放", "在开始时自动播放一次");
+            _autoPlayOnEnableProperty.DrawEx("启用时自动播放", "在启用时自动播放一次");
 
             EasyEditorGUI.Title("播放");
             
-            _propertyOfCanPlay.DrawEx("是否可以播放", "是否可以播放");
-            _propertyOfCanPlayWhileAlreadyPlaying.DrawEx("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放");
+            _canPlayProperty.DrawEx("是否可以播放", "是否可以播放");
+            _canPlayWhileAlreadyPlayingProperty.DrawEx("播放时是否可以继续播放", "在当前Play还没结束时是否可以开始新的播放");
             
-            _propertyOfCanMultiPlay.DrawEx("是否可以多重播放",
+            _canMultiPlayProperty.DrawEx("是否可以多重播放",
                 "是否可以同时存在多个播放\n" +
                 "注意：反馈的OnStop只会在最后一个播放结束时调用Feedback");
         }
@@ -69,14 +69,12 @@ namespace EasyFramework.ToolKit.Editor
         {
             Tree.BeginDraw(true);
 
-            var feedbacks = (Feedbacks)target;
-
             _foldoutGroupConfig.Expand = _settingsExpandContext.Value;
             _settingsExpandContext.Value = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
 
             // SirenixEditorGUI.BeginBox();
 
-            _propertyOfsFeedback.DrawEx("反馈列表");
+            _feedbacksProperty.DrawEx("反馈列表");
 
             var btnHeight = EditorGUIUtility.singleLineHeight;
             if (GUILayout.Button(
@@ -91,22 +89,25 @@ namespace EasyFramework.ToolKit.Editor
             EasyEditorGUI.Title("反馈调试");
             EditorGUI.BeginDisabledGroup(!EditorApplication.isPlaying);
             EditorGUILayout.BeginHorizontal();
-            EditorGUI.BeginDisabledGroup(feedbacks.IsInitialized);
+            
+            var feedbacksTargets = targets.Cast<Feedbacks>().ToArray();
+
+            EditorGUI.BeginDisabledGroup(feedbacksTargets.All(feedbacks => feedbacks.IsInitialized));
             if (SirenixEditorGUI.SDFIconButton("初始化", btnHeight, SdfIconType.Tools))
             {
-                feedbacks.Initialize();
+                feedbacksTargets.ForEach(feedbacks => feedbacks.Initialize());
             }
 
             EditorGUI.EndDisabledGroup();
 
             if (SirenixEditorGUI.SDFIconButton("播放", btnHeight, SdfIconType.Play))
             {
-                feedbacks.Play();
+                feedbacksTargets.ForEach(feedbacks => feedbacks.Play());
             }
 
             if (SirenixEditorGUI.SDFIconButton("停止", btnHeight, SdfIconType.Stop))
             {
-                feedbacks.Stop();
+                feedbacksTargets.ForEach(feedbacks => feedbacks.Stop());
             }
 
             EditorGUILayout.EndHorizontal();
@@ -137,17 +138,20 @@ namespace EasyFramework.ToolKit.Editor
 
         private void DoAddFeedback()
         {
-            var feedbacks = (Feedbacks)target;
+            var feedbacksTargets = targets.Cast<Feedbacks>().ToArray();
 
             void OnConfirm(Type t)
             {
-                var inst = t.CreateInstance<IFeedback>();
-                if (feedbacks.IsInitialized)
+                foreach (var feedbacks in feedbacksTargets)
                 {
-                    inst.Initialize();
-                }
+                    var inst = t.CreateInstance<IFeedback>();
+                    if (feedbacks.IsInitialized)
+                    {
+                        inst.Initialize();
+                    }
 
-                feedbacks.AddFeedback(inst);
+                    feedbacks.AddFeedback(inst);
+                }
             }
 
             EasyEditorGUI.ShowSelectorInPopup(AllTypesFeedback, new PopupSelectorConfig(value => OnConfirm((Type)value))

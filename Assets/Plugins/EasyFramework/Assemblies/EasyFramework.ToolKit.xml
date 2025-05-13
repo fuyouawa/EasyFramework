@@ -154,7 +154,7 @@
             Fade the toggle in / out smoothly.
             </summary>
         </member>
-        <member name="F:EasyFramework.ToolKit.EasyToggle.EasyToggleTransition">
+        <member name="F:EasyFramework.ToolKit.EasyToggle.ToggleTransition">
             <summary>
             Transition mode for the toggle.
             </summary>

@@ -7,11 +7,11 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewBinderConfigDrawer : OdinValueDrawer<ViewBinderConfig>
     {
-        private InspectorProperty _propertyOfEditorConfig;
+        private InspectorProperty _editorConfigProperty;
 
         protected override void Initialize()
         {
-            _propertyOfEditorConfig = Property.Children[nameof(ViewBinderConfig.EditorConfig)];
+            _editorConfigProperty = Property.Children[nameof(ViewBinderConfig.EditorConfig)];
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
@@ -46,7 +46,7 @@ namespace EasyFramework.ToolKit.Editor
                 hasChange = true;
             }
 
-            _propertyOfEditorConfig.Draw(GUIContent.none);
+            _editorConfigProperty.Draw(GUIContent.none);
 
             if (GUILayout.Button("恢复默认值"))
             {

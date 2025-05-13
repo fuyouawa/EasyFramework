@@ -14,7 +14,7 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class MethodPickerDrawer : MemberPickerDrawer<MethodPicker>
     {
-        private InspectorProperty _propertyOfParameters;
+        private InspectorProperty _parametersProperty;
         private MethodPickerSettingsAttribute _settings;
         private string _error;
 
@@ -22,7 +22,7 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override void Initialize()
         {
-            _propertyOfParameters = Property.Children["_parameters"];
+            _parametersProperty = Property.Children["_parameters"];
             _settings = Property.GetAttribute<MethodPickerSettingsAttribute>()
                         ?? new MethodPickerSettingsAttribute();
             _limitParameterTypesResolver = ValueResolver.Get<object>(Property, _settings.LimitParameterTypesGetter);
@@ -45,9 +45,9 @@ namespace EasyFramework.ToolKit.Editor
 
             base.DrawPropertyLayout(label);
 
-            if (_propertyOfParameters.WeakSmartValue<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
+            if (_parametersProperty.WeakSmartValue<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
             {
-                _propertyOfParameters.Draw();
+                _parametersProperty.Draw();
             }
         }
 
@@ -100,7 +100,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var newMethod = member as MethodInfo;
 
-            var parameters = _propertyOfParameters.WeakSmartValue<List<MethodPicker.Parameter>>();
+            var parameters = _parametersProperty.WeakSmartValue<List<MethodPicker.Parameter>>();
             if (newMethod != null)
             {
                 var ps = newMethod.GetParameters();
@@ -126,7 +126,7 @@ namespace EasyFramework.ToolKit.Editor
                     p2.Value.Type = p.ParameterType;
                 }
                 // EasyEditorHelper.ForceRebuildInspectors();
-                _propertyOfParameters.RefreshSetup();
+                _parametersProperty.RefreshSetup();
             }
             else
             {

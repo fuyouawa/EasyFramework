@@ -12,11 +12,11 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewControllerEditorConfigDrawer : OdinValueDrawer<ViewControllerEditorConfig>
     {
-        private InspectorProperty _propertyOfOtherBindersList;
+        private InspectorProperty _otherBindersListProperty;
 
         protected override void Initialize()
         {
-            _propertyOfOtherBindersList = Property.Children[nameof(ViewControllerEditorConfig.OtherBindersList)];
+            _otherBindersListProperty = Property.Children[nameof(ViewControllerEditorConfig.OtherBindersList)];
         }
 
         protected override void DrawPropertyLayout(GUIContent label)
@@ -121,7 +121,7 @@ namespace EasyFramework.ToolKit.Editor
 
             EasyEditorGUI.Title("扩展设置");
 
-            _propertyOfOtherBindersList.Draw(EditorHelper.TempContent("其他绑定列表"));
+            _otherBindersListProperty.Draw(EditorHelper.TempContent("其他绑定列表"));
 
             if (GUILayout.Button("添加其他绑定"))
             {
