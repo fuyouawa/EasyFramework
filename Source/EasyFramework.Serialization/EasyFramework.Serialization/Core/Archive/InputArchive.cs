@@ -15,7 +15,7 @@ namespace EasyFramework.Serialization
             _archive = archive;
         }
 
-        public ArchiveIoTypes ArchiveIoType => ArchiveIoTypes.Input;
+        public ArchiveIoType ArchiveIoType => ArchiveIoType.Input;
         public abstract ArchiveTypes ArchiveType { get; }
 
         public void SetupReferencedUnityObjects(List<UnityEngine.Object> referencedUnityObjects)

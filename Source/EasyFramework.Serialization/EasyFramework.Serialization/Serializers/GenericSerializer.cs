@@ -42,6 +42,7 @@ namespace EasyFramework.Serialization
                 }
             }
 
+            var archiveIoType = archive.ArchiveIoType;
             foreach (var memberWithSerializer in _memberWithSerializersCache)
             {
                 var memberType = memberWithSerializer.MemberType;
@@ -50,7 +51,7 @@ namespace EasyFramework.Serialization
                 var serializer = memberWithSerializer.Serializer;
 
                 object obj = null;
-                if (archive.ArchiveIoType == ArchiveIoTypes.Output)
+                if (archiveIoType == ArchiveIoType.Output)
                 {
                     var getter = memberWithSerializer.ValueGetter;
                     if (getter == null)
@@ -63,7 +64,7 @@ namespace EasyFramework.Serialization
 
                 serializer.Process(memberName, ref obj, archive);
 
-                if (archive.ArchiveIoType == ArchiveIoTypes.Input)
+                if (archiveIoType == ArchiveIoType.Input)
                 {
                     var setter = memberWithSerializer.ValueSetter;
                     if (setter == null)

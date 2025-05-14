@@ -154,7 +154,7 @@ public class Test : MonoBehaviour
             begin = DateTime.Now;
             for (int i = 0; i < count; i++)
             {
-                EasySerialize.From<MyClass>(ref data);
+                var cls = EasySerialize.From<MyClass>(ref data);
             }
             
             end = DateTime.Now;
@@ -199,13 +199,38 @@ public class Test : MonoBehaviour
     //     Log.Info(input.text);
     // }
     //
+
+    public enum TestEnum
+    {
+        JJB,
+        KKAAm,
+        AS
+    }
+
     class MyClass
     {
+        public List<MyClass2> bbss = new List<MyClass2>()
+        {
+            new MyClass2(),
+            new MyClass2(),
+            new MyClass2(),
+            new MyClass2(),
+            new MyClass2(),
+            new MyClass2(),
+        };
+
         public int jks = 100;
         public string sss = "234545";
         public string asdf = "$65dfg";
         public float asdzx = 34.5f;
         public double sadxz = 2345.56;
+
+        public TestEnum JJAS = TestEnum.JJB;
+        public TestEnum JJAAS = TestEnum.KKAAm;
+        public TestEnum JJAS3 = TestEnum.AS;
+
+        public Type KKAsq = typeof(MyClass);
+        public Type KKAs = typeof(MyClass);
 
         public class MyClass2
         {
@@ -215,9 +240,12 @@ public class Test : MonoBehaviour
         }
 
         public MyClass2 cc2 = new MyClass2();
+        public MyClass2 cc2a = new MyClass2();
+        public MyClass2 cc2c = new MyClass2();
 
         public MyClass2[] cc3 = new MyClass2[]
         {
+            new MyClass2(),
             new MyClass2(),
             new MyClass2(),
             new MyClass2(),

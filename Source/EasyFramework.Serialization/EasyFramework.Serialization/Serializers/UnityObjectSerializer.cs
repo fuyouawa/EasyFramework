@@ -19,7 +19,7 @@ namespace EasyFramework.Serialization
             archive.SetNextName(name);
             archive.Process(ref unityObject);
 
-            if (archive.ArchiveIoType == ArchiveIoTypes.Input)
+            if (archive.ArchiveIoType == ArchiveIoType.Input)
             {
                 value = unityObject as T;
             }

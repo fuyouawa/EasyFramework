@@ -10,12 +10,14 @@ namespace EasyFramework.Serialization
             archive.SetNextName(name);
 
             string typeName = null;
-            if (archive.ArchiveIoType == ArchiveIoTypes.Output)
+            var archiveIoType = archive.ArchiveIoType;
+
+            if (archiveIoType == ArchiveIoType.Output)
                 typeName = TypeToName(value);
 
             archive.Process(ref typeName);
 
-            if (archive.ArchiveIoType == ArchiveIoTypes.Input)
+            if (archiveIoType == ArchiveIoType.Input)
                 value = NameToType(typeName);
         }
 

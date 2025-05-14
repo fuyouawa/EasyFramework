@@ -15,7 +15,7 @@ namespace EasyFramework.Serialization
             var sizeTag = new SizeTag(value == null ? 0 : (uint)value.Count);
             archive.Process(ref sizeTag);
 
-            if (archive.ArchiveIoType == ArchiveIoTypes.Output)
+            if (archive.ArchiveIoType == ArchiveIoType.Output)
             {
                 if (value == null)
                     return;
@@ -29,7 +29,7 @@ namespace EasyFramework.Serialization
             }
             else
             {
-                var total = new List<T>();
+                var total = new List<T>((int)sizeTag.Size);
                 for (int i = 0; i < sizeTag.Size; i++)
                 {
                     T item = default;

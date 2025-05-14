@@ -331,7 +331,7 @@ namespace EasyFramework.Core.Internal
 
         #region Unsafety
         
-        internal const string DllName = "EasyFramework.Native.dll";
+        internal const string DllName = "EasyFramework.Native";
 
         /* Archive */
 

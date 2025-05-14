@@ -40,14 +40,16 @@ namespace EasyFramework.Serialization
         private void ProcessImpl(string name, ref object value, IArchive archive)
         {
             T val = default;
-            if (archive.ArchiveIoType == ArchiveIoTypes.Output)
+
+            var archiveIoType = archive.ArchiveIoType;
+            if (archiveIoType == ArchiveIoType.Output)
             {
                 val = (T)value;
             }
 
             Process(name, ref val, archive);
 
-            if (archive.ArchiveIoType == ArchiveIoTypes.Input)
+            if (archiveIoType == ArchiveIoType.Input)
             {
                 value = val;
             }

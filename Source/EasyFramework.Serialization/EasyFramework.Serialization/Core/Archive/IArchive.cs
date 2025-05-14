@@ -2,7 +2,7 @@ using System;
 
 namespace EasyFramework.Serialization
 {
-    public enum ArchiveIoTypes
+    public enum ArchiveIoType
     {
         Input,
         Output
@@ -38,7 +38,7 @@ namespace EasyFramework.Serialization
 
     public interface IArchive : IDisposable
     {
-        ArchiveIoTypes ArchiveIoType { get; }
+        ArchiveIoType ArchiveIoType { get; }
         ArchiveTypes ArchiveType { get; }
 
         void SetNextName(string name);
