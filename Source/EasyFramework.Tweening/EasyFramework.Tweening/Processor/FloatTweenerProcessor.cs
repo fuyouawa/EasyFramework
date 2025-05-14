@@ -16,9 +16,9 @@ namespace EasyFramework.Tweening
             return (Context.EndValue - Context.StartValue).Abs();
         }
 
-        protected override float OnProcess(float time)
+        protected override float OnProcess(float normalizedTime)
         {
-            return Mathf.Lerp(Context.StartValue, Context.EndValue, time);
+            return Mathf.Lerp(Context.StartValue, Context.EndValue, normalizedTime);
         }
     }
 }

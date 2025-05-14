@@ -24,9 +24,9 @@ namespace EasyFramework.Tweening
             return _distance;
         }
 
-        protected override Vector3 OnProcess(float time)
+        protected override Vector3 OnProcess(float normalizedTime)
         {
-            var curDist = Mathf.Lerp(0, _distance, time);
+            var curDist = Mathf.Lerp(0, _distance, normalizedTime);
             return Context.StartValue + curDist * _direction;
         }
     }
@@ -59,12 +59,12 @@ namespace EasyFramework.Tweening
 
         protected override float GetDistance()
         {
-            return MathUtility.CalculateQuadraticBezierLength(Context.StartValue, Context.EndValue, _controlPoint);
+            return MathUtility.CalculateQuadraticBezierLength(Context.StartValue, _controlPoint, Context.EndValue);
         }
 
-        protected override Vector3 OnProcess(float time)
+        protected override Vector3 OnProcess(float normalizedTime)
         {
-            var curPos = MathUtility.QuadraticBezierCurve(Context.StartValue, Context.EndValue, _controlPoint, time);
+            var curPos = MathUtility.QuadraticBezierCurve(normalizedTime, Context.StartValue, _controlPoint, Context.EndValue);
             return curPos;
         }
     }

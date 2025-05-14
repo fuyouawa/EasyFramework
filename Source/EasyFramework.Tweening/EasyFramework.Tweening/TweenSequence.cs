@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyFramework.Core;
 using UnityEngine;
 
 namespace EasyFramework.Tweening
@@ -100,6 +101,7 @@ namespace EasyFramework.Tweening
                 {
                     _actualDuration += tweenNode.GetDuration();
                 }
+
                 Complete();
                 return;
             }
@@ -115,7 +117,8 @@ namespace EasyFramework.Tweening
 
         protected override void OnKill()
         {
-            for (int i = _currentClipIndex; i < _tweenClips.Count; i++)
+            var i = _currentClipIndex.Clamp(0, _currentClipIndex);
+            for (; i < _tweenClips.Count; i++)
             {
                 _tweenClips[i].Kill();
             }

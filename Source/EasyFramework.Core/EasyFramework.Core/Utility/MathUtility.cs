@@ -146,14 +146,14 @@ namespace EasyFramework.Core
 
         #endregion
 
-        public static Vector3 QuadraticBezierCurve(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, float t)
+        public static Vector3 QuadraticBezierCurve(float normalizedTime, Vector3 startPoint, Vector3 controlPoint, Vector3 endPoint)
         {
-            return Mathf.Pow(1 - t, 2) * startPoint +
-                   2 * (1 - t) * t * controlPoint +
-                   Mathf.Pow(t, 2) * endPoint;
+            return Mathf.Pow(1 - normalizedTime, 2) * startPoint +
+                   2 * (1 - normalizedTime) * normalizedTime * controlPoint +
+                   Mathf.Pow(normalizedTime, 2) * endPoint;
         }
 
-        public static float CalculateQuadraticBezierLength(Vector3 startPoint, Vector3 endPoint, Vector3 controlPoint, int segments = 20)
+        public static float CalculateQuadraticBezierLength(Vector3 startPoint, Vector3 controlPoint, Vector3 endPoint, int segments = 20)
         {
             float length = 0f;
             Vector3 prevPoint = startPoint;

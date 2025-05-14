@@ -55,7 +55,7 @@ namespace EasyFramework.ToolKit
         /// <summary>
         /// Allow for delegate-based subscriptions for faster events than 'eventReceiver', and allowing for multiple receivers.
         /// </summary>
-        public UnityEvent<bool> OnValueChanged;
+        public EasyEvent<bool> OnValueChanged;
 
         // Whether the toggle is on
         [Tooltip("Is the toggle currently on or off?")]

@@ -27,7 +27,7 @@ namespace EasyFramework.Tweening
         object GetRelativeValue(object value, object relative);
         float GetDistance();
         void Initialize();
-        object Process(float time);
+        object Process(float normalizedTime);
     }
 
     public abstract class AbstractTweenerProcessor<TValue, TEffect> : ITweenerProcessor
@@ -63,9 +63,9 @@ namespace EasyFramework.Tweening
             OnInit();
         }
 
-        object ITweenerProcessor.Process(float time)
+        object ITweenerProcessor.Process(float normalizedTime)
         {
-            return OnProcess(time);
+            return OnProcess(normalizedTime);
         }
 
         protected virtual bool CanProcess(Type valueType) => true;
@@ -74,6 +74,6 @@ namespace EasyFramework.Tweening
         protected TweenerProcessorContext<TValue, TEffect> Context { get; } = new TweenerProcessorContext<TValue, TEffect>();
         protected abstract float GetDistance();
         protected virtual void OnInit() {}
-        protected abstract TValue OnProcess(float time);
+        protected abstract TValue OnProcess(float normalizedTime);
     }
 }

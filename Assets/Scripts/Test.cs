@@ -5,7 +5,9 @@ using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using EasyFramework.Tweening;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Test : MonoBehaviour
@@ -21,6 +23,8 @@ public class Test : MonoBehaviour
 
     public int Power = 2;
 
+    [SerializeField]
+    private EasySerializationData _data;
     // public Vector2 SectionX;
 
     void Awake()
@@ -64,7 +68,6 @@ public class Test : MonoBehaviour
                 .SetEffect(Effect.Bezier()                              // 使用二次贝塞尔曲线效果
                    .SetControlPoint(new Vector3(-5, 5, 0))
                    .SetControlPointRelative(BezierControlPointRelativeTo.StartPoint)));
-
             seq.Append(Tween.Callback(() => Debug.Log("Finish All!")));
         }
 
@@ -94,6 +97,100 @@ public class Test : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.D))
         {
             Tween.Kill("TTTT");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            var val = new MyClass();
+            
+            var data = new EasySerializationData(EasyDataFormat.Binary);
+            
+            int count = 10000;
+            var begin = DateTime.Now;
+            
+            for (int i = 0; i < count; i++)
+            {
+                EasySerialize.To(val, ref data);
+            }
+            
+            var end = DateTime.Now;
+            var diff = end - begin;
+            Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+            Debug.Log($"Serialize data length: {data.BinaryData.Length}");
+            
+            
+            begin = DateTime.Now;
+            for (int i = 0; i < count; i++)
+            {
+                EasySerialize.From<MyClass>(ref data);
+            }
+            
+            end = DateTime.Now;
+            diff = end - begin;
+            Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            var val = new MyClass();
+            
+            var data = new EasySerializationData(EasyDataFormat.Json);
+            
+            int count = 10000;
+            var begin = DateTime.Now;
+            
+            for (int i = 0; i < count; i++)
+            {
+                EasySerialize.To(val, ref data);
+            }
+            
+            var end = DateTime.Now;
+            var diff = end - begin;
+            Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+            Debug.Log($"Serialize data length: {data.StringData.Length} | data: {data.StringData}");
+            
+            
+            begin = DateTime.Now;
+            for (int i = 0; i < count; i++)
+            {
+                EasySerialize.From<MyClass>(ref data);
+            }
+            
+            end = DateTime.Now;
+            diff = end - begin;
+            Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+
+            _data = data;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            var val = new MyClass();
+            
+            int count = 10000;
+            var begin = DateTime.Now;
+
+            byte[] bytes = {};
+            for (int i = 0; i < count; i++)
+            {
+                bytes = SerializationUtility.SerializeValue(val, DataFormat.Binary, out _);
+            }
+            
+            var end = DateTime.Now;
+            var diff = end - begin;
+            Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+            Debug.Log($"Serialize data length: {bytes.Length}");
+            
+            begin = DateTime.Now;
+            for (int i = 0; i < count; i++)
+            {
+                SerializationUtility.DeserializeValue<MyClass>(bytes, DataFormat.Binary);
+            }
+            
+            end = DateTime.Now;
+            diff = end - begin;
+            Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
         }
     }
 
