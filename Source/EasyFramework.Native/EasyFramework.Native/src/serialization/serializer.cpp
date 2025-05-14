@@ -1,5 +1,5 @@
 #include "serializer.h"
-#include "stream_wrapper.hpp"
+#include "generic/stream_wrapper.hpp"
 #include "archive_wrapper.hpp"
 
 OutputArchive AllocBinaryOutputArchive(IoStream stream) {

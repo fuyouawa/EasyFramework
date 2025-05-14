@@ -296,9 +296,8 @@ class JsonOutputArchiveWrapper : public TemplateOutputArchiveWrapper<cereal::JSO
 public:
     JsonOutputArchiveWrapper(std::ostream& stream)
         : TemplateOutputArchiveWrapper(ArchiveType::Json, archive_),
-          archive_(stream, cereal::JSONOutputArchive::Options::NoIndent())
+          archive_(stream, cereal::JSONOutputArchive::Options::Compact())
     {
-        archive_.itsWriter.SetFormatOptions(rapidjson::kFormatSingleLineArray);
     }
 
     void StartNodeImpl() override {

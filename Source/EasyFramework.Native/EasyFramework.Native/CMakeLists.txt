@@ -1,0 +1,29 @@
+set(EASYFRAMWRORKNATIVE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include" CACHE STRING "EasyFramework.Native header dir")
+set(EASYFRAMWRORKNATIVE_LIB EasyFramework.Native CACHE STRING "million lib")
+
+file(GLOB_RECURSE PRIVATE_HEADERS 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.hpp)
+source_group("Private Header Files" FILES ${PRIVATE_HEADERS})
+    
+file(GLOB_RECURSE PUBLIC_HEADERS 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/**/*.hpp)
+source_group("Public Header Files" FILES ${PUBLIC_HEADERS})
+
+file(GLOB SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/**/*.cpp)
+    
+add_library(${EASYFRAMWRORKNATIVE_LIB} SHARED ${SRC} ${PRIVATE_HEADERS} ${PUBLIC_HEADERS})
+
+target_include_directories(${EASYFRAMWRORKNATIVE_LIB} PUBLIC ${EASYFRAMWRORKNATIVE_HEADER_DIR})
+target_include_directories(${EASYFRAMWRORKNATIVE_LIB} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+target_link_libraries(${EASYFRAMWRORKNATIVE_LIB} PRIVATE ${CEREAL_LIB})
+target_link_libraries(${EASYFRAMWRORKNATIVE_LIB} PRIVATE ${INJA_LIB})
+target_link_libraries(${EASYFRAMWRORKNATIVE_LIB} PRIVATE ${CPPCODEC_LIB})

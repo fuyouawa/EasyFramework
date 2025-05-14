@@ -31,7 +31,7 @@
 *.out
 *.app
 
-.vs/
-x64/
-x64/
-vcpkg_installed/
+/x64
+/.vs
+/out
+/bin

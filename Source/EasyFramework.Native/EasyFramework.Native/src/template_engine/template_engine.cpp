@@ -3,7 +3,7 @@
 #include <inja/inja.hpp>
 #include <nlohmann/json.hpp>
 
-#include "stream_wrapper.hpp"
+#include "generic/stream_wrapper.hpp"
 
 namespace {
     inja::Environment* GetEnvironment(const TemplateEngineEnvironment& environment) {
