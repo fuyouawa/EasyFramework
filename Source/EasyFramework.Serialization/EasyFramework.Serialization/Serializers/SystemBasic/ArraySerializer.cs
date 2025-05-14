@@ -24,8 +24,8 @@ namespace EasyFramework.Serialization
 
                 foreach (var item in value)
                 {
-                    var i = item;
-                    Serializer.Process(ref i, archive);
+                    var tmp = item;
+                    Serializer.Process(ref tmp, archive);
                 }
             }
             else

@@ -20,10 +20,11 @@ namespace EasyFramework.Serialization
                 if (value == null)
                     return;
 
-                foreach (var item in value)
+                var count = value.Count;
+                for (int i = 0; i < count; i++)
                 {
-                    var i = item;
-                    Serializer.Process(ref i, archive);
+                    var item = value[i];
+                    Serializer.Process(ref item, archive);
                 }
             }
             else

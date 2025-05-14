@@ -201,14 +201,6 @@ public class Test : MonoBehaviour
     //
     class MyClass
     {
-        public List<MyClass2> bbss = new List<MyClass2>()
-        {
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-        };
-
         public int jks = 100;
         public string sss = "234545";
         public string asdf = "$65dfg";

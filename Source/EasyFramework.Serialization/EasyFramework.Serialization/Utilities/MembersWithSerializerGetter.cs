@@ -10,6 +10,7 @@ namespace EasyFramework.Serialization
     {
         public Type MemberType;
         public MemberInfo Member;
+        public string MemberName;
         public Func<object, object> ValueGetter;
         public Action<object, object> ValueSetter;
         public IEasySerializer Serializer;
@@ -17,13 +18,13 @@ namespace EasyFramework.Serialization
 
     internal interface IMembersWithSerializerGetter
     {
-        List<MemberWithSerializer> Get(Type targetType);
+        MemberWithSerializer[] Get(Type targetType);
     }
 
     internal class MembersWithSerializerGetter : IMembersWithSerializerGetter
     {
         private readonly MemberFilter _filter;
-        private readonly Dictionary<Type, List<MemberWithSerializer>> _memberWithSerializersByClassType = new Dictionary<Type, List<MemberWithSerializer>>();
+        private readonly Dictionary<Type, MemberWithSerializer[]> _memberWithSerializersByClassType = new Dictionary<Type, MemberWithSerializer[]>();
 
         private static readonly BindingFlags AllBinding =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -33,9 +34,9 @@ namespace EasyFramework.Serialization
             _filter = filter;
         }
 
-        public List<MemberWithSerializer> Get(Type targetType)
+        public MemberWithSerializer[] Get(Type targetType)
         {
-            if (!_memberWithSerializersByClassType.TryGetValue(targetType, out var list))
+            if (!_memberWithSerializersByClassType.TryGetValue(targetType, out var array))
             {
                 var members = targetType.GetMembers(AllBinding)
                     .Where(m => _filter(m))
@@ -46,17 +47,18 @@ namespace EasyFramework.Serialization
                         {
                             MemberType = mtype,
                             Member = m,
+                            MemberName = m.Name,
                             ValueGetter = MemberAccessor.GetMemberValueGetter(m),
                             ValueSetter = MemberAccessor.GetMemberValueSetter(m),
                             Serializer = EasySerializersManager.Instance.GetSerializer(mtype)
                         };
                     });
 
-                list = new List<MemberWithSerializer>(members);
-                _memberWithSerializersByClassType[targetType] = list;
+                array = members.ToArray();
+                _memberWithSerializersByClassType[targetType] = array;
             }
 
-            return list;
+            return array;
         }
     }
 }
