@@ -30,7 +30,7 @@ namespace EasyFramework.Modules
         
         [FoldoutGroup("粒子系统设置")]
         [LabelText("持续时间")]
-        public float Duration = 0f;
+        public float Duration = 1f;
 
         [FoldoutGroup("粒子系统设置")]
         [LabelText("初始化时停止系统")]

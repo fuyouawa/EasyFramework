@@ -209,29 +209,57 @@ public class Test : MonoBehaviour
 
     class MyClass
     {
-        public List<MyClass2> bbss = new List<MyClass2>()
-        {
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-        };
+        // public List<MyClass2> bbss = new List<MyClass2>()
+        // {
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        // };
 
         public int jks = 100;
-        public string sss = "234545";
-        public string asdf = "$65dfg";
+        public int jks1 = 10012;
+        public int jks2 = 104560;
+        public int jks3 = 100;
+        public int jks4 = 1008768;
+        public int jks5 = 107890;
+        public int jks6 = 102340;
+        public string sss = "2345dgfdfg45";
+        public string asdf = "$65sdfsdfg";
+        public string asdf1 = "$65dfg";
+        public string asdf32 = "$65dfgdfg";
+        public string asdf3 = "$65dfg";
+        public string asdf4 = "$65dfg";
+        public string asdf5 = "$65dfgdfgddfg";
+        public string asdf6= "$65dfg";
         public float asdzx = 34.5f;
-        public double sadxz = 2345.56;
-
-        public TestEnum JJAS = TestEnum.JJB;
-        public TestEnum JJAAS = TestEnum.KKAAm;
-        public TestEnum JJAS3 = TestEnum.AS;
-
-        public Type KKAsq = typeof(MyClass);
-        public Type KKAs = typeof(MyClass);
-
+        public double sadxz = 2345.33356;
+        public float asdzxq = 34.5f;
+        public double sadxz12 = 234465.766;
+        public float asdzx1 = 34.5567f;
+        public double sadxz124 = 2345345.56;
+        
+        // public TestEnum JJAS = TestEnum.JJB;
+        // public TestEnum JJAAS = TestEnum.KKAAm;
+        // public TestEnum JJAS3 = TestEnum.AS;
+        //
+        // public Type KKAsq = typeof(MyClass);
+        // public Type KKAs = typeof(MyClass);
+        //
+        // public MyClass2 cc2 = new MyClass2();
+        // public MyClass2 cc2a = new MyClass2();
+        // public MyClass2 cc2c = new MyClass2();
+        //
+        // public MyClass2[] cc3 = new MyClass2[]
+        // {
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        //     new MyClass2(),
+        // };
         public class MyClass2
         {
             public int jks = 100;
@@ -239,17 +267,6 @@ public class Test : MonoBehaviour
             public float asdzx = 34.5f;
         }
 
-        public MyClass2 cc2 = new MyClass2();
-        public MyClass2 cc2a = new MyClass2();
-        public MyClass2 cc2c = new MyClass2();
-
-        public MyClass2[] cc3 = new MyClass2[]
-        {
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-            new MyClass2(),
-        };
     }
     //
     // [GameConsoleCommand("jjbb")]

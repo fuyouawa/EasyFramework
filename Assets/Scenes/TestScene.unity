@@ -395,6 +395,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 567812357}
+  - component: {fileID: 567812358}
   m_Layer: 0
   m_Name: GameObject (2)
   m_TagString: Untagged
@@ -417,6 +418,95 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &567812358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567812356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _feedbacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|EasyFramework.Modules.DebugLogFeedback, EasyFramework.Modules
+    - Name: Label
+      Entry: 6
+      Data: 
+    - Name: Enable
+      Entry: 5
+      Data: true
+    - Name: DelayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: Blocking
+      Entry: 5
+      Data: false
+    - Name: RepeatForever
+      Entry: 5
+      Data: false
+    - Name: AmountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: IntervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Message
+      Entry: 1
+      Data: HelloWorld!
+    - Name: LogOnInit
+      Entry: 5
+      Data: true
+    - Name: MessageOnInit
+      Entry: 1
+      Data: OnInit
+    - Name: LogOnStop
+      Entry: 5
+      Data: false
+    - Name: MessageOnStop
+      Entry: 1
+      Data: OnStop
+    - Name: LogOnReset
+      Entry: 5
+      Data: false
+    - Name: MessageOnReset
+      Entry: 1
+      Data: OnReset
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  _initializeMode: 0
+  _autoInitialization: 1
+  _autoPlayOnStart: 0
+  _autoPlayOnEnable: 0
+  _canPlay: 1
+  _canPlayWhileAlreadyPlaying: 0
+  _canMultiPlay: 0
 --- !u!1 &625820158
 GameObject:
   m_ObjectHideFlags: 0

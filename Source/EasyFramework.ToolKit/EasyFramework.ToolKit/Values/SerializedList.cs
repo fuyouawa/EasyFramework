@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit
 {
@@ -29,6 +30,12 @@ namespace EasyFramework.ToolKit
         public SerializedList(IEnumerable<T> collection)
         {
             _collection = new List<T>(collection);
+        }
+
+        protected override void OnDeserializeData(ref byte[] serializedData, ref List<Object> serializedUnityObjects)
+        {
+            base.OnDeserializeData(ref serializedData, ref serializedUnityObjects);
+            Value ??= new List<T>();
         }
     }
 }

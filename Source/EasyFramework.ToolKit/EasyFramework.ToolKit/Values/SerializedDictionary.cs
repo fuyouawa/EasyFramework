@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 namespace EasyFramework.ToolKit
 {
@@ -35,6 +36,12 @@ namespace EasyFramework.ToolKit
         public SerializedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
         {
             _collection = new Dictionary<TKey, TValue>(collection);
+        }
+
+        protected override void OnDeserializeData(ref byte[] serializedData, ref List<Object> serializedUnityObjects)
+        {
+            base.OnDeserializeData(ref serializedData, ref serializedUnityObjects);
+            Value ??= new Dictionary<TKey, TValue>();
         }
     }
 }
