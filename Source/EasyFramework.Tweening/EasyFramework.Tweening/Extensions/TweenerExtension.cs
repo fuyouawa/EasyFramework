@@ -8,31 +8,31 @@ namespace EasyFramework.Tweening
         /// <param name="tweener"></param>
         /// <param name="unityObject"></param>
         /// <returns></returns>
-        public static Tweener SetUnityObject(this Tweener tweener, UnityEngine.Object unityObject)
+        public static T SetUnityObject<T>(this T tweener, UnityEngine.Object unityObject) where T : Tweener
         {
             tweener.UnityObject = unityObject;
             return tweener;
         }
 
-        public static Tweener SetEase(this Tweener tweener, ITweenerEase ease)
+        public static T SetEase<T>(this T tweener, ITweenerEase ease) where T : Tweener
         {
             tweener.Ease = ease;
             return tweener;
         }
 
-        public static Tweener SetEffect(this Tweener tweener, ITweenerEffect effect)
+        public static T SetEffect<T>(this T tweener, ITweenerEffect effect) where T : Tweener
         {
             tweener.SetEffectWithUpdateProcessor(effect);
             return tweener;
         }
 
-        public static Tweener SetRelative(this Tweener tweener, bool isRelative = true)
+        public static T SetRelative<T>(this T tweener, bool isRelative = true) where T : Tweener
         {
             tweener.IsRelative = isRelative;
             return tweener;
         }
 
-        public static Tweener SetDuration(this Tweener tweener, float duration)
+        public static T SetDuration<T>(this T tweener, float duration) where T : Tweener
         {
             tweener.SetDuration(duration);
             return tweener;
@@ -42,13 +42,13 @@ namespace EasyFramework.Tweening
         /// <para>速度模式，将“持续时间”的值变成“速度”，从“起始值”开始每秒增加“速度”直到“结束值”。</para>
         /// <para>注意：使用此模式后，Tween.Duration()将返回null，除非该Tweener的第一帧被调用了。</para>
         /// </summary>
-        public static Tweener SetSpeedBased(this Tweener tweener, bool isSpeedBased = true)
+        public static T SetSpeedBased<T>(this T tweener, bool isSpeedBased = true) where T : Tweener
         {
             tweener.IsSpeedBased = isSpeedBased;
             return tweener;
         }
 
-        public static Tweener SetLoopType(this Tweener tweener, LoopType loopType)
+        public static T SetLoopType<T>(this T tweener, LoopType loopType) where T : Tweener
         {
             tweener.LoopType = loopType;
             return tweener;
