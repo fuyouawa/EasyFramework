@@ -1,45 +1,24 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
-using EasyFramework.ToolKit;
 using UnityEngine;
 
-namespace EasyFramework.Modules
+namespace EasyFramework.ToolKit
 {
     [Serializable, InlineProperty, HideReferenceObjectPicker]
     public abstract class AbstractFeedback : IFeedback
     {
-        [LabelText("标签")]
-        public string Label;
-        
-        [LabelText("启用")]
-        public bool Enable = true;
+        [SerializeField] private string _label;
+        [SerializeField] private bool _enable = true;
 
-        [FoldoutGroup("反馈设置")]
-        [LabelText("播放前延迟")]
-        [Tooltip("在正式Play前经过多少时间的延迟(s)")]
-        public float DelayBeforePlay;
+        [SerializeField] private float _delayBeforePlay;
+        [SerializeField] private bool _blocking;
+        [SerializeField] private bool _repeatForever = false;
 
-        [FoldoutGroup("反馈设置")]
-        [LabelText("阻塞")]
-        [Tooltip("是否会阻塞反馈运行")]
-        public bool Blocking;
+        [HideIf(nameof(_repeatForever))]
+        [SerializeField] private int _amountOfRepeat = 1;
 
-        [FoldoutGroup("反馈设置")]
-        [LabelText("无限重复")]
-        [Tooltip("无限重复播放")]
-        public bool RepeatForever = false;
-
-        [FoldoutGroup("反馈设置")]
-        [HideIf(nameof(RepeatForever))]
-        [LabelText("重复次数")]
-        [Tooltip("重复播放的次数")]
-        public int AmountOfRepeat = 1;
-
-        [FoldoutGroup("反馈设置")]
-        [LabelText("重复间隔")]
-        [Tooltip("每次循环播放的间隔")]
-        public float IntervalBetweenRepeats = 0f;
+        [SerializeField] private float _intervalBetweenRepeats = 0f;
 
         public virtual string Tip => string.Empty;
 
@@ -50,16 +29,16 @@ namespace EasyFramework.Modules
 
         bool IFeedback.Enable
         {
-            get => Enable;
-            set => Enable = value;
+            get => _enable;
+            set => _enable = value;
         }
 
-        string IFeedback.Label => Label;
+        string IFeedback.Label => _label;
 
 
         protected virtual IEnumerator Pause => null;
 
-        protected bool IsInitialized = false;
+        private bool _isInitialized = false;
         private Coroutine _lastPlayCoroutine;
         private int _playCount = 0;
 
@@ -78,13 +57,14 @@ namespace EasyFramework.Modules
             IsPlaying = true;
             TimeSincePlay = Time.time;
 
-            if (!Blocking)
+            if (!_blocking)
             {
                 if (!Owner.CanMultiPlay)
                 {
                     if (_lastPlayCoroutine != null)
                         StopCoroutine(_lastPlayCoroutine);
                 }
+
                 _lastPlayCoroutine = StartCoroutine(FeedbackPlayCo());
             }
             else
@@ -99,7 +79,7 @@ namespace EasyFramework.Modules
             if (!IsPlaying)
                 return;
             IsPlaying = false;
-            
+
             if (_lastPlayCoroutine != null)
                 StopCoroutine(_lastPlayCoroutine);
             _playCount = 0;
@@ -109,8 +89,8 @@ namespace EasyFramework.Modules
 
         public virtual void Initialize()
         {
-            if (IsInitialized) return;
-            IsInitialized = true;
+            if (_isInitialized) return;
+            _isInitialized = true;
 
             OnFeedbackInit();
         }
@@ -118,12 +98,12 @@ namespace EasyFramework.Modules
         protected virtual IEnumerator FeedbackPlayCo()
         {
             _playCount++;
-            if (DelayBeforePlay > 0f)
+            if (_delayBeforePlay > 0f)
             {
-                yield return new WaitForSeconds(DelayBeforePlay);
+                yield return new WaitForSeconds(_delayBeforePlay);
             }
 
-            var loop = Mathf.Max(AmountOfRepeat, 1);
+            var loop = Mathf.Max(_amountOfRepeat, 1);
             while (loop > 0 && IsPlaying)
             {
                 if (!IsPlaying)
@@ -144,16 +124,15 @@ namespace EasyFramework.Modules
                     yield return new WaitForSeconds(d);
                 }
 
-                if (!RepeatForever)
+                if (!_repeatForever)
                 {
                     loop--;
                 }
 
-                if (loop > 0 && IntervalBetweenRepeats > 0)
+                if (loop > 0 && _intervalBetweenRepeats > 0)
                 {
-                    yield return new WaitForSeconds(IntervalBetweenRepeats);
+                    yield return new WaitForSeconds(_intervalBetweenRepeats);
                 }
-
             }
 
             _playCount--;
@@ -163,19 +142,29 @@ namespace EasyFramework.Modules
             }
         }
 
-        protected virtual void OnFeedbackInit() { }
+        protected virtual void OnFeedbackInit()
+        {
+        }
 
-        protected virtual void OnFeedbackReset() { }
+        protected virtual void OnFeedbackReset()
+        {
+        }
 
         protected abstract void OnFeedbackPlay();
 
         protected abstract void OnFeedbackStop();
 
-        public virtual void OnDestroy() { }
+        public virtual void OnDestroy()
+        {
+        }
 
-        public virtual void OnEnable() { }
+        public virtual void OnEnable()
+        {
+        }
 
-        public virtual void OnDisable() { }
+        public virtual void OnDisable()
+        {
+        }
 
         public virtual float GetDuration()
         {
@@ -202,8 +191,16 @@ namespace EasyFramework.Modules
             Owner.CoroutineHelper.StopAllCoroutines();
         }
 
-        public virtual void OnDrawGizmos() { }
-        public virtual void OnDrawGizmosSelected() { }
-        public virtual void OnValidate() { }
+        public virtual void OnDrawGizmos()
+        {
+        }
+
+        public virtual void OnDrawGizmosSelected()
+        {
+        }
+
+        public virtual void OnValidate()
+        {
+        }
     }
 }
