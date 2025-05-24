@@ -45,7 +45,7 @@ namespace EasyFramework.ToolKit.Editor
 
             base.DrawPropertyLayout(label);
 
-            if (_parametersProperty.WeakSmartValue<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
+            if (_parametersProperty.ValueEntry.WeakSmartValueT<List<MethodPicker.Parameter>>().IsNotNullOrEmpty())
             {
                 _parametersProperty.Draw();
             }
@@ -100,7 +100,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var newMethod = member as MethodInfo;
 
-            var parameters = _parametersProperty.WeakSmartValue<List<MethodPicker.Parameter>>();
+            var parameters = _parametersProperty.ValueEntry.WeakSmartValueT<List<MethodPicker.Parameter>>();
             if (newMethod != null)
             {
                 var ps = newMethod.GetParameters();

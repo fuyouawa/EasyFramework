@@ -28,11 +28,13 @@ namespace EasyFramework.ToolKit.Editor
             public Type BaseType;
 
             [LabelText("绑定器分组类型")]
-            public ViewControllerBindersGroupType BindersGroupType;
+            public ViewControllerConfig.GroupType BindersGroupType;
 
             [LabelText("绑定器分组名称")]
-            [ShowIf("@BindersGroupType != ViewControllerBindersGroupType.None")]
+            [ShowIf(nameof(ShowBindersGroupName))]
             public string BindersGroupName;
+
+            private bool ShowBindersGroupName => BindersGroupType != ViewControllerConfig.GroupType.None;
         }
 
         [TitleEx("默认值设置")] public DefaultSettings Default;

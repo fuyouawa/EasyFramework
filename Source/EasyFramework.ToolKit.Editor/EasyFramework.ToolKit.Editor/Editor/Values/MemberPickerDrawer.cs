@@ -22,20 +22,20 @@ namespace EasyFramework.ToolKit.Editor
 
         private GameObject TargetObject
         {
-            get => _targetObjectProperty.WeakSmartValue<GameObject>();
-            set => _targetObjectProperty.SetWeakSmartValue(value);
+            get => _targetObjectProperty.ValueEntry.WeakSmartValueT<GameObject>();
+            set => _targetObjectProperty.ValueEntry.WeakSmartValue = value;
         }
 
         private Component TargetComponent
         {
-            get => _targetComponentProperty.WeakSmartValue<Component>();
-            set => _targetComponentProperty.SetWeakSmartValue(value);
+            get => _targetComponentProperty.ValueEntry.WeakSmartValueT<Component>();
+            set => _targetComponentProperty.ValueEntry.WeakSmartValue = value;
         }
 
         private MemberInfo TargetMember
         {
-            get => _targetMemberProperty.WeakSmartValue<MemberInfo>();
-            set => _targetMemberProperty.SetWeakSmartValue(value);
+            get => _targetMemberProperty.ValueEntry.WeakSmartValueT<MemberInfo>();
+            set => _targetMemberProperty.ValueEntry.WeakSmartValue = value;
         }
 
         protected override bool CanDrawValueProperty(InspectorProperty property)

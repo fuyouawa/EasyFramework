@@ -49,7 +49,8 @@ namespace EasyFramework.ToolKit.Editor
             _labelProperty.DrawEx("标签");
             _enableProperty.DrawEx("启用");
 
-            _foldoutGroupConfig.Expand = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
+            _foldoutGroupConfig.Expand = _delayBeforePlayProperty.State.Expanded;
+            _delayBeforePlayProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
 
             foreach (var child in Property.Children)
             {

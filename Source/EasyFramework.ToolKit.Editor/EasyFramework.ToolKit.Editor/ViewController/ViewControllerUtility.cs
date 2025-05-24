@@ -61,10 +61,10 @@ namespace EasyFramework.ToolKit.Editor
 
         public static void Bind(IViewController controller)
         {
-            var cfg = controller.Config.EditorConfig;
+            var cfg = controller.Config;
             var originComp = (Component)controller;
 
-            var classType = ReflectionUtility.FindType(cfg.Namespace, cfg.ScriptName);
+            var classType = ReflectionUtility.FindType(cfg.Namespace, cfg.GetScriptName(originComp));
             Debug.Assert(classType != null);
 
             Component newComp;
@@ -76,18 +76,11 @@ namespace EasyFramework.ToolKit.Editor
                     newComp = originComp.gameObject.AddComponent(classType);
                     var newCtrl = ((IViewController)newComp);
                     newCtrl.Config = controller.Config;
-                    newCtrl.Config.EditorConfig.IsJustBound = true;
                 }
             }
             else
             {
                 newComp = originComp;
-            }
-
-            var binders = controller.GetAllBinders();
-            foreach (var binder in binders)
-            {
-                binder.Config.OwnerController = newComp;
             }
 
             InternalBind((IViewController)newComp);
@@ -112,11 +105,6 @@ namespace EasyFramework.ToolKit.Editor
             foreach (var binder in binders)
             {
                 var comp = (Component)binder;
-                if (binder.Config.OwnerController != null)
-                {
-                    Debug.Assert(binder.Config.OwnerController == (Component)controller);
-                }
-
                 var bindName = binder.GetBindName();
                 var f = fields.FirstOrDefault(f => f.Name == bindName);
                 if (f == null)
@@ -134,7 +122,7 @@ namespace EasyFramework.ToolKit.Editor
                     return;
                 }
 
-                if (binder.Config.EditorConfig.GetBindType() != f.FieldType)
+                if (binder.GetBindType() != f.FieldType)
                 {
                     EditorUtility.DisplayDialog("错误",
                         $"绑定失败：绑定器 '{comp.gameObject.name}' 的绑定类型与控制器中实际的类型不相同，需要重新生成代码", "确认");
@@ -145,61 +133,30 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        public static string GetScriptName(this IViewController controller)
+        public static List<ViewBinder> GetAllBinders(this IViewController controller)
         {
-            var cfg = controller.Config.EditorConfig;
-            var comp = (Component)controller;
-            var name = cfg.ScriptName;
+            var total = new List<ViewBinder>();
 
-            if (cfg.AutoScriptName)
-            {
-                name = comp.gameObject.name;
-            }
-
-            return name;
-        }
-
-        public static List<IViewBinder> GetOtherBinders(this IViewController controller)
-        {
-            return controller.Config.EditorConfig.OtherBindersList
-                .SelectMany(b => b.Targets.Collection)
-                .Where(c => c != null && c.Binder != null)
-                .Select(c => (IViewBinder)c.Binder)
-                .ToList();
-        }
-
-        public static List<IViewBinder> GetAllBinders(this IViewController controller)
-        {
-            var total = new List<IViewBinder>();
-
-            total.AddRange(GetChildrenBinders(controller));
-            total.AddRange(GetOtherBinders(controller));
+            total.AddRange(GameObject.FindObjectsOfType<ViewBinder>(true)
+                .Where(binder => binder.OwningController == controller));
 
             return total;
         }
 
-        public static List<IViewBinder> GetChildrenBinders(this IViewController controller)
-        {
-            var comp = (Component)controller;
-            return comp.transform.GetComponentsInChildren<IViewBinder>(true)
-                .Where(b => b.Config.OwnerController == comp)
-                .ToList();
-        }
-
-        public static void UseDefault(this IViewController controller)
-        {
-            var settings = ViewControllerSettings.Instance;
-
-            var comp = (Component)controller;
-            var cfg = controller.Config.EditorConfig;
-
-            cfg.ScriptName = comp.gameObject.name;
-            cfg.GenerateDir = settings.Default.GenerateDir;
-            cfg.Namespace = settings.Default.Namespace;
-            cfg.BaseClass = settings.Default.BaseType;
-            cfg.BindersGroupType = settings.Default.BindersGroupType;
-            cfg.BindersGroupName = settings.Default.BindersGroupName;
-        }
+        // public static void UseDefault(this IViewController controller)
+        // {
+        //     var settings = ViewControllerSettings.Instance;
+        //
+        //     var comp = (Component)controller;
+        //     var cfg = controller.Config;
+        //
+        //     cfg.ScriptName = comp.gameObject.name;
+        //     cfg.GenerateDir = settings.Default.GenerateDir;
+        //     cfg.Namespace = settings.Default.Namespace;
+        //     cfg.BaseClass = settings.Default.BaseType;
+        //     cfg.BindersGroupType = settings.Default.BindersGroupType;
+        //     cfg.BindersGroupName = settings.Default.BindersGroupName;
+        // }
 
 
         [MenuItem("GameObject/EasyFramework/Add ViewController", false)]

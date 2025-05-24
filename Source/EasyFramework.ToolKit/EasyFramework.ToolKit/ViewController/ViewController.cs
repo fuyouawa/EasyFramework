@@ -1,64 +1,82 @@
 using System;
 using System.Collections.Generic;
+using EasyFramework.Core;
 using EasyFramework.Serialization;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public enum ViewControllerBindersGroupType
-    {
-        None,
-        Title,
-        Foldout
-    }
-
     [Serializable]
-    public class ViewControllerEditorConfig : ISerializationCallbackReceiver
+    public class ViewControllerConfig : ISerializationCallbackReceiver
     {
-        public bool IsInitialized;
-        public string GenerateDir;
-        public string Namespace;
-        public bool AutoScriptName = true;
-        public string ScriptName;
-        public List<OtherViewBinders> OtherBindersList;
-        public Type BaseClass;
+        public enum GroupType
+        {
+            None,
+            Title,
+            Foldout
+        }
 
-        public ViewControllerBindersGroupType BindersGroupType;
-        public string BindersGroupName;
-        public bool IsJustBound = true;
+        [SerializeField] private string _generateDirectory;
+        [SerializeField] private string _namespace;
+        [SerializeField] private bool _autoScriptName = true;
+        [SerializeField] private string _scriptName;
+        [SerializeField] private Type _baseClass;
+
+        [SerializeField] private GroupType _bindersGroupType;
+        [SerializeField] private string _bindersGroupName;
+
+        [SerializeField] private bool _isInitialized;
 
         [SerializeField, HideInInspector]
-        private EasySerializationData _serializationData;
+        private EasySerializationData _serializedData;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            EasySerialize.To(this, ref _serializationData);
+            _serializedData.Format = EasyDataFormat.Json;
+            EasySerialize.To(this, ref _serializedData);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            var obj = EasySerialize.From<ViewControllerEditorConfig>(ref _serializationData);
+            if (_serializedData.GetData().IsNullOrEmpty())
+            {
+                return;
+            }
+
+            var obj = EasySerialize.From<ViewControllerConfig>(ref _serializedData);
             if (obj != null)
             {
-                IsInitialized = obj.IsInitialized;
-                GenerateDir = obj.GenerateDir;
-                Namespace = obj.Namespace;
-                AutoScriptName = obj.AutoScriptName;
-                ScriptName = obj.ScriptName;
-                OtherBindersList = obj.OtherBindersList;
-                BaseClass = obj.BaseClass;
-                BindersGroupType = obj.BindersGroupType;
-                BindersGroupName = obj.BindersGroupName;
-                IsJustBound = obj.IsJustBound;
+                _isInitialized = obj._isInitialized;
+                _generateDirectory = obj._generateDirectory;
+                _namespace = obj._namespace;
+                _autoScriptName = obj._autoScriptName;
+                _scriptName = obj._scriptName;
+                _baseClass = obj._baseClass;
+                _bindersGroupType = obj._bindersGroupType;
+                _bindersGroupName = obj._bindersGroupName;
             }
         }
-    }
 
-    [Serializable]
-    public class ViewControllerConfig
-    {
-        public ViewControllerEditorConfig EditorConfig;
+        public string Namespace => _namespace;
+        public string GenerateDirectory => _generateDirectory;
+        public Type BaseClass => _baseClass;
+        public GroupType BindersGroupType => _bindersGroupType;
+        public string BindersGroupName => _bindersGroupName;
+
+
+        public string GetScriptName(Component component)
+        {
+            var name = _scriptName;
+
+            if (_autoScriptName)
+            {
+                name = component.gameObject.name;
+            }
+
+            return name;
+        }
     }
 
     public interface IViewController

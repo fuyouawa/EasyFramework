@@ -11,7 +11,7 @@ namespace EasyFramework.ToolKit.Editor
 {
     public class ViewControllerBuilder
     {
-        private readonly ViewControllerEditorConfig _cfg;
+        private readonly ViewControllerConfig _cfg;
         private readonly Component _component;
         private readonly IViewController _controller;
         private readonly ViewControllerSettings _settings;
@@ -20,19 +20,19 @@ namespace EasyFramework.ToolKit.Editor
         {
             _controller = controller;
             _component = (Component)controller;
-            _cfg = _controller.Config.EditorConfig;
+            _cfg = _controller.Config;
             _settings = ViewControllerSettings.Instance;
         }
 
         public void Build()
         {
-            var dir = Path.Combine(Application.dataPath, _cfg.GenerateDir);
+            var dir = Path.Combine(Application.dataPath, _cfg.GenerateDirectory);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
             }
 
-            var path = Path.Combine(dir, _controller.GetScriptName());
+            var path = Path.Combine(dir, _cfg.GetScriptName(_component));
             var designerPath = path + ".Designer.cs";
             path += ".cs";
 
@@ -44,7 +44,7 @@ namespace EasyFramework.ToolKit.Editor
 
         public bool Check()
         {
-            string error = ViewControllerUtility.GetIdentifierError("类名", _cfg.ScriptName);
+            string error = ViewControllerUtility.GetIdentifierError("类名", _cfg.GetScriptName(_component));
             if (error.IsNotNullOrEmpty())
             {
                 EditorUtility.DisplayDialog("错误", $"类名不规范：{error}", "确认");
@@ -124,7 +124,7 @@ public partial class {{ ClassName }} : {{ BaseClassName }}
                 : _settings.ClassTemplate;
             var body = engine.Render(CsBodyTemplate, new
             {
-                ClassName = _controller.GetScriptName(),
+                ClassName = _cfg.GetScriptName(_component),
                 BaseClassName = _cfg.BaseClass.Name,
                 ClassTemplate = classTemplate
             });
@@ -177,17 +177,17 @@ public partial class {{ ClassName }} : IViewController
                 typeof(AutoBindingAttribute),
             };
             allTypes.AddRange(binders
-                .Select(b => b.Config.EditorConfig.GetBindType())
+                .Select(b => b.GetBindType())
                 .Where(t => t.Namespace != _cfg.Namespace));
 
             switch (_cfg.BindersGroupType)
             {
-                case ViewControllerBindersGroupType.None:
+                case ViewControllerConfig.GroupType.None:
                     break;
-                case ViewControllerBindersGroupType.Title:
+                case ViewControllerConfig.GroupType.Title:
                     allTypes.Add(typeof(TitleGroupAttribute));
                     break;
-                case ViewControllerBindersGroupType.Foldout:
+                case ViewControllerConfig.GroupType.Foldout:
                     allTypes.Add(typeof(FoldoutGroupAttribute));
                     break;
                 default:
@@ -201,9 +201,7 @@ public partial class {{ ClassName }} : IViewController
 
             var fields = binders.Select(b =>
             {
-                var cfg = b.Config.EditorConfig;
-
-                var access = cfg.BindAccess switch
+                var access = b.BindAccess switch
                 {
                     ViewBindAccess.Public => "public",
                     ViewBindAccess.Protected => "protected",
@@ -213,9 +211,9 @@ public partial class {{ ClassName }} : IViewController
                 return new
                 {
                     Access = access,
-                    Type = cfg.GetBindType().Name,
+                    Type = b.GetBindType().Name,
                     Name = b.GetBindName(),
-                    Comment = cfg.GetComment()
+                    Comment = b.GetComment()
                 };
             }).ToArray();
 
@@ -238,12 +236,12 @@ public partial class {{ ClassName }} : IViewController
                 };
                 switch (_cfg.BindersGroupType)
                 {
-                    case ViewControllerBindersGroupType.None:
+                    case ViewControllerConfig.GroupType.None:
                         break;
-                    case ViewControllerBindersGroupType.Title:
+                    case ViewControllerConfig.GroupType.Title:
                         attributes.Add($"TitleGroup(\"{_cfg.BindersGroupName}\")");
                         break;
-                    case ViewControllerBindersGroupType.Foldout:
+                    case ViewControllerConfig.GroupType.Foldout:
                         attributes.Add($"FoldoutGroup(\"{_cfg.BindersGroupName}\")");
                         break;
                     default:
@@ -258,7 +256,7 @@ public partial class {{ ClassName }} : IViewController
 
             var bodyData = new
             {
-                ClassName = _controller.GetScriptName(),
+                ClassName = _cfg.GetScriptName(_component),
                 Fields = AddIndent(string.Join("\n\n", fieldStatements))
             };
 
