@@ -20,22 +20,6 @@ namespace EasyFramework.Editor
             }
         }
 
-        public static bool IsAllSameWeakValues(this IPropertyValueEntry valueEntry)
-        {
-            if (valueEntry.WeakValues.Count == 0)
-                return true;
-
-            var fst = valueEntry.WeakValues[0];
-            for (int i = 1; i < valueEntry.WeakValues.Count; i++)
-            {
-                if (!fst.Equals(valueEntry.WeakValues[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public static void DrawEx(this InspectorProperty property, string label)
         {
             property.Draw(EditorHelper.TempContent(label));

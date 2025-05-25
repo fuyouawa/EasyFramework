@@ -252,7 +252,7 @@ namespace EasyFramework.Editor
         private static readonly SelectorDropdownConfig TempSelectorDropdownConfig = new SelectorDropdownConfig();
 
         public static IEnumerable<T> DrawSelectorDropdown<T>(
-            IEnumerable<T> collection,
+            Func<IEnumerable<T>> collectionGetter,
             GUIContent label,
             GUIContent btnLabel,
             ConfirmationHandler<T> onConfirmed,
@@ -271,11 +271,11 @@ namespace EasyFramework.Editor
                 TempSelectorDropdownConfig.MenuItemNameGetter = null;
             }
 
-            return DrawSelectorDropdown(collection, TempSelectorDropdownConfig, options);
+            return DrawSelectorDropdown(collectionGetter, TempSelectorDropdownConfig, options);
         }
 
         public static IEnumerable<T> DrawSelectorDropdown<T>(
-            IEnumerable<T> collection,
+            Func<IEnumerable<T>> collectionGetter,
             SelectorDropdownConfig config,
             params GUILayoutOption[] options)
         {
@@ -296,7 +296,7 @@ namespace EasyFramework.Editor
                 Title = config.Title
             };
             return OdinSelector<T>.DrawSelectorDropdown(config.Label, config.BtnLabel,
-                rect => ShowSelectorInPopup(rect, rect.width, collection, copyConfig),
+                rect => ShowSelectorInPopup(rect, rect.width, collectionGetter(), copyConfig),
                 config.ReturnValuesOnSelectionChange, config.Style, options);
         }
 

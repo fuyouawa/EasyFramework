@@ -11,7 +11,7 @@ namespace EasyFramework.ToolKit.Editor
 {
     [EditorSettingsAssetPath]
     [ShowOdinSerializedPropertiesInInspector]
-    public class ViewBinderSettings : ScriptableObjectSingleton<ViewBinderSettings>, ISerializationCallbackReceiver
+    public class BinderSettings : ScriptableObjectSingleton<BinderSettings>, ISerializationCallbackReceiver
     {
         [HideLabel, InlineProperty, HideReferenceObjectPicker]
         public struct DefaultSettings
@@ -19,7 +19,7 @@ namespace EasyFramework.ToolKit.Editor
             [LabelText("绑定游戏对象")]
             public bool BindGameObject;
             [LabelText("绑定权限")]
-            public ViewBindAccess BindAccess;
+            public Binder.Access BindAccess;
             [LabelText("自动绑定名称")]
             public bool AutoBindName;
             [LabelText("处理绑定命名")]
@@ -43,12 +43,12 @@ namespace EasyFramework.ToolKit.Editor
         [TitleEx("优先级设置")]
         [LabelText("优先级列表")]
         [ValueDropdown(nameof(GetTypesDropdown))]
-        public List<Type> Priorities;
+        public Type[] PriorityTypes = new Type[]{};
 
         public int IndexByPriorityOf(Type type, bool checkDerive, bool checkBase)
         {
             int i = 0;
-            foreach (var t in Priorities)
+            foreach (var t in PriorityTypes)
             {
                 if (t == type)
                     return i;
@@ -57,7 +57,7 @@ namespace EasyFramework.ToolKit.Editor
             }
 
             i = 0;
-            foreach (var t in Priorities)
+            foreach (var t in PriorityTypes)
             {
                 if (checkDerive)
                 {

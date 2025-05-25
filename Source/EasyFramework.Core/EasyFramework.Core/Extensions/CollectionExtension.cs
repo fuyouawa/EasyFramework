@@ -6,6 +6,36 @@ namespace EasyFramework.Core
 {
     public static class CollectionExtension
     {
+        public static bool AllSame<T>(this IEnumerable<T> enumerator)
+        {
+            return enumerator.AllSame((a, b) => EqualityComparer<T>.Default.Equals(a, b));
+        }
+
+        public static bool AllSame<T>(this IEnumerable<T> enumerator, Func<T, T, bool> comparison)
+        {
+            if (enumerator == null)
+                throw new ArgumentNullException(nameof(enumerator));
+
+            T fst = default;
+            bool hasFst = false;
+            foreach (var value in enumerator)
+            {
+                if (!hasFst)
+                {
+                    fst = value;
+                    hasFst = true;
+                }
+                else
+                {
+                    if (!comparison(fst, value))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public static void ForEach<T>(this IEnumerable<T> enumerator, Action<T> callback)
         {
             foreach (var elem in enumerator)
@@ -41,14 +71,6 @@ namespace EasyFramework.Core
         public static bool IsNotNullOrEmpty<T>(this IEnumerable<T> source)
         {
             return !source.IsNullOrEmpty();
-        }
-
-        public static void AddRange<T>(this IList<T> source, IEnumerable<T> enumerable)
-        {
-            foreach (var e in enumerable)
-            {
-                source.Add(e);
-            }
         }
 
         public static T[,] To2dArray<T>(this IList<T> source, int rows, int columns)

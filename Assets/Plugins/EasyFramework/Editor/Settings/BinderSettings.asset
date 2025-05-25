@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1019805633, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
-  m_Name: ViewBinderSettings
+  m_Script: {fileID: 773976078, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
+  m_Name: BinderSettings
   m_EditorClassIdentifier: 
   _serializationData:
     SerializedFormat: 2
@@ -23,7 +23,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Default
       Entry: 7
-      Data: EasyFramework.ToolKit.Editor.ViewBinderSettings+DefaultSettings, EasyFramework.ToolKit.Editor
+      Data: EasyFramework.ToolKit.Editor.BinderSettings+DefaultSettings, EasyFramework.ToolKit.Editor
     - Name: BindGameObject
       Entry: 5
       Data: false
@@ -48,9 +48,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: Priorities
+    - Name: PriorityTypes
       Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[System.Type, mscorlib]], mscorlib
+      Data: 0|System.Type[], mscorlib
     - Name: 
       Entry: 12
       Data: 30
@@ -59,7 +59,7 @@ MonoBehaviour:
       Data: 1|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: EasyFramework.ToolKit.IViewController, EasyFramework.ToolKit
+      Data: EasyFramework.Core.IController, EasyFramework.Core
     - Name: 
       Entry: 8
       Data: 

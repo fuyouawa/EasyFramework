@@ -9,22 +9,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -591875126, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
-  m_Name: ViewControllerSettings
+  m_Script: {fileID: 783100925, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
+  m_Name: BuilderSettings
   m_EditorClassIdentifier: 
-  AutoIndent: 1
-  ClassTemplate: 'void Start()
+  IndentSpace: 4
+  AutoIndentTemplate: 1
+  ControllerScriptTypeTemplate: 'void Awake()
 
     {
 
     }
 
 
-    void Update()
+    void Start()
+
+    {
+
+    }
+
+
+    void
+    Update()
 
     {
 
     }'
+  UIPanelScriptTypeTemplate: 
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -36,8 +46,7 @@ MonoBehaviour:
     SerializationNodes:
     - Name: Default
       Entry: 7
-      Data: EasyFramework.ToolKit.Editor.ViewControllerSettings+DefaultSettings,
-        EasyFramework.ToolKit.Editor
+      Data: EasyFramework.ToolKit.Editor.BuilderSettings+DefaultSettings, EasyFramework.ToolKit.Editor
     - Name: GenerateDir
       Entry: 1
       Data: Scripts

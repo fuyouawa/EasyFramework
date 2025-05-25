@@ -122,6 +122,315 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &104906747
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104906748}
+  - component: {fileID: 104906750}
+  - component: {fileID: 104906749}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &104906748
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104906747}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 12.061515, y: -8.6687565, z: 0.007849652}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 616372402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &104906749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104906747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 896430155, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _bindComponentType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.Transform, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specificBindType
+      Entry: 9
+      Data: 0
+  _owningBuilders: []
+  _bindGameObject: 0
+  _bindAccess: 0
+  _bindName: GameObject (2)
+  _autoBindName: 0
+  _processBindName: 0
+  _useDocumentComment: 0
+  _autoAddParaToComment: 0
+  _comment: 
+  _isInitialized: 1
+--- !u!114 &104906750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104906747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _feedbacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 1|EasyFramework.Modules.DebugLogFeedback, EasyFramework.Modules
+    - Name: _label
+      Entry: 6
+      Data: 
+    - Name: _enable
+      Entry: 5
+      Data: true
+    - Name: _delayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: _blocking
+      Entry: 5
+      Data: false
+    - Name: _repeatForever
+      Entry: 5
+      Data: false
+    - Name: _amountOfRepeat
+      Entry: 3
+      Data: 0
+    - Name: _intervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Message
+      Entry: 1
+      Data: HelloWorld!
+    - Name: LogOnInit
+      Entry: 5
+      Data: true
+    - Name: MessageOnInit
+      Entry: 1
+      Data: OnInit
+    - Name: LogOnStop
+      Entry: 5
+      Data: false
+    - Name: MessageOnStop
+      Entry: 1
+      Data: OnStop
+    - Name: LogOnReset
+      Entry: 5
+      Data: false
+    - Name: MessageOnReset
+      Entry: 1
+      Data: OnReset
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|EasyFramework.Modules.AudioSourceFeedback, EasyFramework.Modules
+    - Name: _label
+      Entry: 6
+      Data: 
+    - Name: _enable
+      Entry: 5
+      Data: true
+    - Name: _delayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: _blocking
+      Entry: 5
+      Data: false
+    - Name: _repeatForever
+      Entry: 5
+      Data: false
+    - Name: _amountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: _intervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Target
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 3|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VolumeRange
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: PitchRange
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  _initializeMode: 0
+  _autoInitialization: 1
+  _autoPlayOnStart: 0
+  _autoPlayOnEnable: 0
+  _canPlay: 1
+  _canPlayWhileAlreadyPlaying: 0
+  _canMultiPlay: 0
+--- !u!1 &223184081
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 223184082}
+  - component: {fileID: 223184083}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &223184082
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223184081}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.221515, y: -2.4587574, z: 0.007849652}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 616372402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &223184083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223184081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 896430155, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _bindComponentType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.Transform, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specificBindType
+      Entry: 9
+      Data: 0
+  _owningBuilders: []
+  _bindGameObject: 0
+  _bindAccess: 0
+  _bindName: GameObject (1)
+  _autoBindName: 0
+  _processBindName: 0
+  _useDocumentComment: 0
+  _autoAddParaToComment: 0
+  _comment: 
+  _isInitialized: 1
 --- !u!1 &338439737
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +695,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &567812356
+--- !u!1 &616372400
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -394,295 +703,70 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 567812357}
-  - component: {fileID: 567812358}
-  - component: {fileID: 567812359}
+  - component: {fileID: 616372402}
+  - component: {fileID: 616372401}
   m_Layer: 0
-  m_Name: GameObject (2)
+  m_Name: ppp (1)
   m_TagString: Untagged
-  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &567812357
+--- !u!114 &616372401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616372400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 80606583, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _baseClass
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+  _generateDirectory: 
+  _namespace: 
+  _autoScriptName: 1
+  _scriptName: ppp (1)
+  _bindersGroupType: 0
+  _bindersGroupName: 
+  _buildScriptType: 0
+  _isInitialized: 1
+--- !u!4 &616372402
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 567812356}
+  m_GameObject: {fileID: 616372400}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.37, y: 15.34, z: -0.059132937}
+  m_LocalPosition: {x: 7.308486, y: 24.008757, z: -0.06698259}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 223184082}
+  - {fileID: 104906748}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &567812358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 567812356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _feedbacks
-      Entry: 7
-      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
-        EasyFramework.ToolKit]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 2
-    - Name: 
-      Entry: 7
-      Data: 1|EasyFramework.Modules.DebugLogFeedback, EasyFramework.Modules
-    - Name: _label
-      Entry: 6
-      Data: 
-    - Name: _enable
-      Entry: 5
-      Data: true
-    - Name: _delayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: _blocking
-      Entry: 5
-      Data: false
-    - Name: _repeatForever
-      Entry: 5
-      Data: false
-    - Name: _amountOfRepeat
-      Entry: 3
-      Data: 0
-    - Name: _intervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: Message
-      Entry: 1
-      Data: HelloWorld!
-    - Name: LogOnInit
-      Entry: 5
-      Data: true
-    - Name: MessageOnInit
-      Entry: 1
-      Data: OnInit
-    - Name: LogOnStop
-      Entry: 5
-      Data: false
-    - Name: MessageOnStop
-      Entry: 1
-      Data: OnStop
-    - Name: LogOnReset
-      Entry: 5
-      Data: false
-    - Name: MessageOnReset
-      Entry: 1
-      Data: OnReset
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 2|EasyFramework.Modules.AudioSourceFeedback, EasyFramework.Modules
-    - Name: _label
-      Entry: 6
-      Data: 
-    - Name: _enable
-      Entry: 5
-      Data: true
-    - Name: _delayBeforePlay
-      Entry: 4
-      Data: 0
-    - Name: _blocking
-      Entry: 5
-      Data: false
-    - Name: _repeatForever
-      Entry: 5
-      Data: false
-    - Name: _amountOfRepeat
-      Entry: 3
-      Data: 1
-    - Name: _intervalBetweenRepeats
-      Entry: 4
-      Data: 0
-    - Name: Target
-      Entry: 6
-      Data: 
-    - Name: Mode
-      Entry: 3
-      Data: 0
-    - Name: RandomSfx
-      Entry: 7
-      Data: 3|UnityEngine.AudioClip[], UnityEngine.AudioModule
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: VolumeRange
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: PitchRange
-      Entry: 7
-      Data: UnityEngine.Vector2, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-  _initializeMode: 0
-  _autoInitialization: 1
-  _autoPlayOnStart: 0
-  _autoPlayOnEnable: 0
-  _canPlay: 1
-  _canPlayWhileAlreadyPlaying: 0
-  _canMultiPlay: 0
---- !u!114 &567812359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 567812356}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _bindComponentType
-      Entry: 6
-      Data: 
-    - Name: _specificBindType
-      Entry: 6
-      Data: 
-  _owningController: {fileID: 0}
-  _bindGameObject: 0
-  _bindAccess: 0
-  _bindName: 
-  _autoBindName: 1
-  _processBindName: 1
-  _useDocumentComment: 1
-  _autoAddParaToComment: 1
-  _comment: 
-  _isInitialized: 0
---- !u!1 &625820158
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 625820159}
-  - component: {fileID: 625820160}
-  m_Layer: 0
-  m_Name: GameObject (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &625820159
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625820158}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18.53, y: 21.55, z: -0.059132937}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &625820160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 625820158}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -2047072638, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: _bindComponentType
-      Entry: 6
-      Data: 
-    - Name: _specificBindType
-      Entry: 6
-      Data: 
-  _owningController: {fileID: 0}
-  _bindGameObject: 0
-  _bindAccess: 0
-  _bindName: 
-  _autoBindName: 1
-  _processBindName: 1
-  _useDocumentComment: 1
-  _autoAddParaToComment: 1
-  _comment: 
-  _isInitialized: 0
 --- !u!1 &647823039
 GameObject:
   m_ObjectHideFlags: 0
@@ -895,6 +979,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658613848}
   m_CullTransparentMesh: 1
+--- !u!1 &686857313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 686857314}
+  - component: {fileID: 686857315}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &686857314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686857313}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.221515, y: -2.4587574, z: 0.007849652}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1899658402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &686857315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686857313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 896430155, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _bindComponentType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.Transform, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specificBindType
+      Entry: 9
+      Data: 0
+  _owningBuilders:
+  - {fileID: 1899658401}
+  _bindGameObject: 0
+  _bindAccess: 2
+  _bindName: GameObject (1)
+  _autoBindName: 1
+  _processBindName: 1
+  _useDocumentComment: 0
+  _autoAddParaToComment: 0
+  _comment: 
+  _isInitialized: 1
 --- !u!1 &790981259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,11 +1297,246 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartPoint: {fileID: 1254602105}
-  ControlPoint: {fileID: 625820159}
-  EndPoint: {fileID: 567812357}
+  ControlPoint: {fileID: 0}
+  EndPoint: {fileID: 0}
   CurveColor: {r: 1, g: 0, b: 0, a: 1}
   AuxiliaryLineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   Segments: 20
+--- !u!1 &1294517727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1294517728}
+  - component: {fileID: 1294517730}
+  - component: {fileID: 1294517729}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1294517728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294517727}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 12.061515, y: -8.6687565, z: 0.007849652}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1899658402}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1294517729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294517727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 896430155, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _bindComponentType
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.Transform, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _specificBindType
+      Entry: 9
+      Data: 0
+  _owningBuilders:
+  - {fileID: 1899658401}
+  _bindGameObject: 0
+  _bindAccess: 2
+  _bindName: GameObject (2)
+  _autoBindName: 1
+  _processBindName: 1
+  _useDocumentComment: 0
+  _autoAddParaToComment: 0
+  _comment: 
+  _isInitialized: 1
+--- !u!114 &1294517730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294517727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 200991518, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _feedbacks
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[EasyFramework.ToolKit.IFeedback,
+        EasyFramework.ToolKit]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 1|EasyFramework.Modules.DebugLogFeedback, EasyFramework.Modules
+    - Name: _label
+      Entry: 6
+      Data: 
+    - Name: _enable
+      Entry: 5
+      Data: true
+    - Name: _delayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: _blocking
+      Entry: 5
+      Data: false
+    - Name: _repeatForever
+      Entry: 5
+      Data: false
+    - Name: _amountOfRepeat
+      Entry: 3
+      Data: 0
+    - Name: _intervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Message
+      Entry: 1
+      Data: HelloWorld!
+    - Name: LogOnInit
+      Entry: 5
+      Data: true
+    - Name: MessageOnInit
+      Entry: 1
+      Data: OnInit
+    - Name: LogOnStop
+      Entry: 5
+      Data: false
+    - Name: MessageOnStop
+      Entry: 1
+      Data: OnStop
+    - Name: LogOnReset
+      Entry: 5
+      Data: false
+    - Name: MessageOnReset
+      Entry: 1
+      Data: OnReset
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|EasyFramework.Modules.AudioSourceFeedback, EasyFramework.Modules
+    - Name: _label
+      Entry: 6
+      Data: 
+    - Name: _enable
+      Entry: 5
+      Data: true
+    - Name: _delayBeforePlay
+      Entry: 4
+      Data: 0
+    - Name: _blocking
+      Entry: 5
+      Data: false
+    - Name: _repeatForever
+      Entry: 5
+      Data: false
+    - Name: _amountOfRepeat
+      Entry: 3
+      Data: 1
+    - Name: _intervalBetweenRepeats
+      Entry: 4
+      Data: 0
+    - Name: Target
+      Entry: 6
+      Data: 
+    - Name: Mode
+      Entry: 3
+      Data: 0
+    - Name: RandomSfx
+      Entry: 7
+      Data: 3|UnityEngine.AudioClip[], UnityEngine.AudioModule
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: VolumeRange
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: PitchRange
+      Entry: 7
+      Data: UnityEngine.Vector2, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  _initializeMode: 0
+  _autoInitialization: 1
+  _autoPlayOnStart: 0
+  _autoPlayOnEnable: 0
+  _canPlay: 1
+  _canPlayWhileAlreadyPlaying: 0
+  _canMultiPlay: 0
 --- !u!1 &1317861728
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,7 +1715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
-    SerializedBytes: 
+    SerializedBytes: []
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -1339,6 +1734,7 @@ MonoBehaviour:
     - Name: _specificBindType
       Entry: 6
       Data: 
+  _noOwningController: 0
   _owningController: {fileID: 0}
   _bindGameObject: 0
   _bindAccess: 2
@@ -1706,6 +2102,78 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.5}
   m_SizeDelta: {x: -20, y: -13}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1899658400
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1899658402}
+  - component: {fileID: 1899658401}
+  m_Layer: 0
+  m_Name: ppp (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1899658401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899658400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 80606583, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _baseClass
+      Entry: 7
+      Data: 0|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
+    - Name: 
+      Entry: 8
+      Data: 
+  _generateDirectory: 
+  _namespace: 
+  _autoScriptName: 1
+  _scriptName: ppp (1)
+  _bindersGroupType: 1
+  _bindersGroupName: Bindings
+  _buildScriptType: 1
+  _isInitialized: 1
+--- !u!4 &1899658402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899658400}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.308486, y: 24.008757, z: -0.06698259}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 686857314}
+  - {fileID: 1294517728}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1924209944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2461,6 +2929,6 @@ SceneRoots:
   - {fileID: 1530885787}
   - {fileID: 790981262}
   - {fileID: 1254602105}
-  - {fileID: 625820159}
-  - {fileID: 567812357}
   - {fileID: 1381697624}
+  - {fileID: 616372402}
+  - {fileID: 1899658402}

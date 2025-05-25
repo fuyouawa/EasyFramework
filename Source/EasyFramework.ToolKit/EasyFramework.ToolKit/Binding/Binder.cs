@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using EasyFramework.Core;
-using EasyFramework.Serialization;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -12,29 +10,29 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     [Conditional("UNITY_EDITOR")]
-    public class AutoBindingAttribute : PropertyAttribute
+    public class BindingAttribute : PropertyAttribute
     {
-        public AutoBindingAttribute()
+        public BindingAttribute()
         {
         }
     }
 
-    public enum ViewBindAccess
+    public sealed class Binder : SerializedMonoBehaviour
     {
-        Public,
-        Protected,
-        Private
-    }
+        public enum Access
+        {
+            Public,
+            Protected,
+            Private
+        }
 
-    public class ViewBinder : SerializedMonoBehaviour
-    {
-        [SerializeField] private bool _noOwningController;
-        [SerializeField] private Component _owningController;
+        [SerializeField] private Builder[] _owningBuilders = new Builder[]{};
+
         [SerializeField] private bool _bindGameObject;
         [NonSerialized, OdinSerialize] private Type _bindComponentType;
         [NonSerialized, OdinSerialize] private Type _specificBindType;
 
-        [SerializeField] private ViewBindAccess _bindAccess;
+        [SerializeField] private Access _bindAccess;
 
         [SerializeField] private string _bindName;
         [SerializeField] private bool _autoBindName = true;
@@ -50,8 +48,8 @@ namespace EasyFramework.ToolKit
 
         [SerializeField] private bool _isInitialized;
 
-        public ViewBindAccess BindAccess => _bindAccess;
-        public IViewController OwningController => _noOwningController ? null : (IViewController)_owningController;
+        public Access BindAccess => _bindAccess;
+        public Builder[] OwningBuilders => _owningBuilders;
 
         private bool ShowAutoAddParaToComment => _useDocumentComment;
 
@@ -112,13 +110,13 @@ namespace EasyFramework.ToolKit
             return _specificBindType;
         }
 
-        private static string ProcessName(string name, ViewBindAccess access)
+        private static string ProcessName(string name, Access access)
         {
             if (name.IsNullOrWhiteSpace())
                 return name;
 
             //TODO 更多情况的处理
-            if (access == ViewBindAccess.Public)
+            if (access == Access.Public)
             {
                 return char.ToUpper(name[0]) + name[1..];
             }

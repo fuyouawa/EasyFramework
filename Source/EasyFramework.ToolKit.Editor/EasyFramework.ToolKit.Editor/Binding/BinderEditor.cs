@@ -3,18 +3,16 @@ using System.Linq;
 using EasyFramework.Core;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
-using Sirenix.OdinInspector.Editor.StateUpdaters;
 using UnityEditor;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    [CustomEditor(typeof(ViewBinder))]
+    [CustomEditor(typeof(Binder))]
     [CanEditMultipleObjects]
-    public class ViewBinderEditor : OdinEditor
+    public class BinderEditor : OdinEditor
     {
-        private InspectorProperty _noOwningControllerProperty;
-        private InspectorProperty _owningControllerProperty;
+        private InspectorProperty _owningBuildersProperty;
         private InspectorProperty _bindGameObjectProperty;
         private InspectorProperty _bindComponentTypeProperty;
         private InspectorProperty _specificBindTypeProperty;
@@ -27,14 +25,10 @@ namespace EasyFramework.ToolKit.Editor
         private InspectorProperty _commentProperty;
         private InspectorProperty _isInitializedProperty;
 
-        private FoldoutGroupConfig _foldoutGroupConfig;
-
         protected override void OnEnable()
         {
             base.OnEnable();
-            _noOwningControllerProperty = Tree.RootProperty.Children["_noOwningController"];
-            _owningControllerProperty = Tree.RootProperty.Children["_owningController"];
-
+            _owningBuildersProperty = Tree.RootProperty.Children["_owningBuilders"];
             _bindGameObjectProperty = Tree.RootProperty.Children["_bindGameObject"];
             _bindComponentTypeProperty = Tree.RootProperty.Children["_bindComponentType"];
             _specificBindTypeProperty = Tree.RootProperty.Children["_specificBindType"];
@@ -46,9 +40,6 @@ namespace EasyFramework.ToolKit.Editor
             _autoAddParaToCommentProperty = Tree.RootProperty.Children["_autoAddParaToComment"];
             _commentProperty = Tree.RootProperty.Children["_comment"];
             _isInitializedProperty = Tree.RootProperty.Children["_isInitialized"];
-
-            _foldoutGroupConfig =
-                new FoldoutGroupConfig(_bindGameObjectProperty, new GUIContent("绑定配置"), true, DrawSettings);
         }
 
         private void UnInitializeAll()
@@ -59,8 +50,8 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        
-        public static Type[] GetBindableComponentTypes(ViewBinder binder)
+
+        public static Type[] GetBindableComponentTypes(Binder binder)
         {
             var types = binder.GetComponents<Component>()
                 .Where(comp => comp != null)
@@ -85,37 +76,38 @@ namespace EasyFramework.ToolKit.Editor
 
         public static Type GetDefaultSpecialType(Type bindType)
         {
-            var settings = ViewBinderSettings.Instance;
+            var settings = BinderSettings.Instance;
             var types = GetSpecficableBindTypes(bindType);
-            foreach (var priority in settings.Priorities)
+            foreach (var priority in settings.PriorityTypes)
             {
                 if (types.Contains(priority))
                 {
                     return priority;
                 }
             }
+
             return types.FirstOrDefault();
         }
 
-        public static Type[] GetSortedBindableComponentTypes(ViewBinder binder)
+        public static Type[] GetSortedBindableComponentTypes(Binder binder)
         {
-            var settings = ViewBinderSettings.Instance;
+            var settings = BinderSettings.Instance;
             var types = GetBindableComponentTypes(binder);
             Array.Sort(types, (a, b) =>
             {
                 var indexA = settings.IndexByPriorityOf(a, false, true);
                 var indexB = settings.IndexByPriorityOf(b, false, true);
-            
+
                 if (indexA < 0 && indexB >= 0)
                 {
                     return 1;
                 }
-            
+
                 if (indexB < 0 && indexA >= 0)
                 {
                     return -1;
                 }
-            
+
                 return indexA.CompareTo(indexB);
             });
             return types;
@@ -123,33 +115,22 @@ namespace EasyFramework.ToolKit.Editor
 
         private void EnsureInitialize()
         {
-            var settings = ViewBinderSettings.Instance;
+            var settings = BinderSettings.Instance;
             for (int i = 0; i < targets.Length; i++)
             {
-                var binder = (ViewBinder)targets[i];
+                var binder = (Binder)targets[i];
                 if (!(bool)_isInitializedProperty.ValueEntry.WeakValues[i])
                 {
-                    var owners = binder.GetComponentsInParent(typeof(IViewController)).ToArray();
-                    Component o = null;
-                    if (owners.Length > 0)
-                    {
-                        o = owners[0];
-                        // 如果游戏对象相同，说明是既持有Controller又持有Binder
-                        // 绑定再上一级的controller(如果有)
-                        if (o.gameObject == binder.gameObject)
-                        {
-                            if (owners.Length > 1)
-                                o = owners[1];
-                        }
-                    }
-
-                    _owningControllerProperty.ValueEntry.WeakValues[i] = o;
+                    var b = binder.GetComponentInParent<Builder>();
+                    _owningBuildersProperty.ValueEntry.WeakValues[i] = b == null
+                        ? new Builder[] { }
+                        : new Builder[] { b };
 
                     _bindNameProperty.ValueEntry.WeakValues[i] = binder.gameObject.name;
 
                     var bindType = GetSortedBindableComponentTypes(binder).FirstOrDefault();
                     _bindComponentTypeProperty.ValueEntry.WeakValues[i] = bindType;
-                    
+
                     _specificBindTypeProperty.ValueEntry.WeakValues[i] = GetDefaultSpecialType(bindType);
 
                     _bindGameObjectProperty.ValueEntry.WeakValues[i] = settings.Default.BindGameObject;
@@ -171,104 +152,62 @@ namespace EasyFramework.ToolKit.Editor
 
             EnsureInitialize();
 
-            _noOwningControllerProperty.DrawEx("不指定拥有者");
+            EasyEditorGUI.Title("绑定设置");
+            _owningBuildersProperty.DrawEx("绑定列表");
 
-            if (_noOwningControllerProperty.ValueEntry.WeakSmartValueT<bool>())
+            _bindGameObjectProperty.DrawEx("绑定游戏对象");
+
+            if (!_bindGameObjectProperty.ValueEntry.WeakSmartValueT<bool>())
             {
                 GUIContent btnLabel;
-                if (_owningControllerProperty.ValueEntry.IsAllSameWeakValues())
+                if (_bindComponentTypeProperty.ValueEntry.WeakValues.Cast<Type>().AllSame())
                 {
-                    var o = (Component)_owningControllerProperty.ValueEntry.WeakSmartValue;
-                    btnLabel = o == null
+                    var type = (Type)_bindComponentTypeProperty.ValueEntry.WeakSmartValue;
+                    btnLabel = type == null
                         ? EditorHelper.NoneSelectorBtnLabel
-                        : EditorHelper.TempContent2(o.gameObject.name);
+                        : EditorHelper.TempContent2(type.GetNiceName());
                 }
                 else
                 {
                     btnLabel = EditorHelper.TempContent2("一");
                 }
 
-                var parentCtrls = targets.Cast<ViewBinder>()
-                    .Select(binder => binder.GetComponentsInParent(typeof(IViewController), true))
-                    .Aggregate((a, b) => a.Intersect(b).ToArray());
+                EasyEditorGUI.DrawSelectorDropdown(
+                    () => targets.Cast<Binder>()
+                        .Select(GetSortedBindableComponentTypes)
+                        .Aggregate((a, b) => a.Intersect(b).ToArray()),
+                    EditorHelper.TempContent("绑定组件"),
+                    btnLabel,
+                    t =>
+                    {
+                        _bindComponentTypeProperty.ValueEntry.SetAllWeakValues(t);
+                        _specificBindTypeProperty.ValueEntry.SetAllWeakValues(GetDefaultSpecialType(t));
+                    });
+
+
+                if (_specificBindTypeProperty.ValueEntry.WeakValues.Cast<Type>().AllSame())
+                {
+                    var type = (Type)_specificBindTypeProperty.ValueEntry.WeakSmartValue;
+
+                    btnLabel = type == null
+                        ? EditorHelper.NoneSelectorBtnLabel
+                        : EditorHelper.TempContent2(type.GetNiceName());
+                }
+                else
+                {
+                    btnLabel = EditorHelper.TempContent2("一");
+                }
 
                 EasyEditorGUI.DrawSelectorDropdown(
-                    parentCtrls,
-                    EditorHelper.TempContent("拥有者"),
+                    () => targets.Cast<Binder>()
+                        .Select((binder, i) =>
+                            GetSpecficableBindTypes(((Type)_bindComponentTypeProperty.ValueEntry.WeakValues[i])))
+                        .Aggregate((a, b) => a.Intersect(b).ToArray()),
+                    EditorHelper.TempContent("指定要绑定的类型"),
                     btnLabel,
-                    comp =>
-                    {
-                        _owningControllerProperty.ValueEntry.SetAllWeakValues(comp);
-                    });
+                    t => { _specificBindTypeProperty.ValueEntry.SetAllWeakValues(t); });
             }
 
-            _foldoutGroupConfig.Expand = _bindGameObjectProperty.State.Expanded;
-            _bindGameObjectProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(_foldoutGroupConfig);
-
-            Tree.EndDraw();
-        }
-
-        private void DrawSettings(Rect headerRect)
-        {
-            _bindGameObjectProperty.DrawEx("绑定游戏对象");
-
-            if (!_bindGameObjectProperty.ValueEntry.WeakSmartValueT<bool>())
-            {
-            GUIContent btnLabel;
-            if (_bindComponentTypeProperty.ValueEntry.IsAllSameWeakValues())
-            {
-                var type = (Type)_bindComponentTypeProperty.ValueEntry.WeakSmartValue;
-                btnLabel = type == null
-                    ? EditorHelper.NoneSelectorBtnLabel
-                    : EditorHelper.TempContent2(type.GetNiceName());
-            }
-            else
-            {
-                btnLabel = EditorHelper.TempContent2("一");
-            }
-
-            var types = targets.Cast<ViewBinder>()
-                .Select(GetSortedBindableComponentTypes)
-                .Aggregate((a, b) => a.Intersect(b).ToArray());
-            
-            EasyEditorGUI.DrawSelectorDropdown(
-                types,
-                EditorHelper.TempContent("绑定组件"),
-                btnLabel,
-                t =>
-                {
-                    _bindComponentTypeProperty.ValueEntry.SetAllWeakValues(t);
-                    _specificBindTypeProperty.ValueEntry.SetAllWeakValues(GetDefaultSpecialType(t));
-                });
-
-
-            if (_specificBindTypeProperty.ValueEntry.IsAllSameWeakValues())
-            {
-                var type = (Type)_specificBindTypeProperty.ValueEntry.WeakSmartValue;
-
-                btnLabel = type == null
-                    ? EditorHelper.NoneSelectorBtnLabel
-                    : EditorHelper.TempContent2(type.GetNiceName());
-            }
-            else
-            {
-                btnLabel = EditorHelper.TempContent2("一");
-            }
-
-            types = targets.Cast<ViewBinder>()
-                .Select((binder, i) => GetSpecficableBindTypes(((Type)_bindComponentTypeProperty.ValueEntry.WeakValues[i])))
-                .Aggregate((a, b) => a.Intersect(b).ToArray());
-
-            EasyEditorGUI.DrawSelectorDropdown(
-                types,
-                EditorHelper.TempContent("指定要绑定的类型"),
-                btnLabel,
-                t =>
-                {
-                    _specificBindTypeProperty.ValueEntry.SetAllWeakValues(t);
-                });
-            }
-            
             _bindAccessProperty.DrawEx("访问权限");
             _bindNameProperty.DrawEx("绑定名称");
             _autoBindNameProperty.DrawEx("自动绑定名称", "绑定名称与游戏对象名称相同");
@@ -279,20 +218,13 @@ namespace EasyFramework.ToolKit.Editor
 
             string reallyName = null;
 
-            foreach (var binder in targets.Cast<ViewBinder>())
+            if (targets.Cast<Binder>().AllSame())
             {
-                if (reallyName == null)
-                {
-                    reallyName = binder.GetBindName();
-                }
-                else
-                {
-                    if (reallyName != binder.GetBindName())
-                    {
-                        reallyName = "一";
-                        break;
-                    }
-                }
+                reallyName = ((Binder)target).GetBindName();
+            }
+            else
+            {
+                reallyName = "一";
             }
 
             EditorGUILayout.TextField("实际变量名称", reallyName);
@@ -304,6 +236,13 @@ namespace EasyFramework.ToolKit.Editor
             _useDocumentCommentProperty.DrawEx("使用文档注释");
             _autoAddParaToCommentProperty.DrawEx("自动添加注释段落");
             _commentProperty.DrawEx("注释");
+
+            if (GUILayout.Button("恢复默认值"))
+            {
+                UnInitializeAll();
+            }
+
+            Tree.EndDraw();
         }
     }
 }
