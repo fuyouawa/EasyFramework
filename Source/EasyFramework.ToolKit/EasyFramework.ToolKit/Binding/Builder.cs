@@ -28,38 +28,48 @@ namespace EasyFramework.ToolKit
         [SerializeField] private string _generateDirectory;
 
         [SerializeField] private string _namespace;
-        [SerializeField] private bool _autoScriptName = true;
+        [SerializeField] private bool _useGameObjectName = true;
+        [ShowIf(nameof(ShowScriptName))]
         [SerializeField] private string _scriptName;
-        [NonSerialized, OdinSerialize] private Type _baseClass;
+
+        [SerializeField] private ScriptType _buildScriptType;
+        [NonSerialized, OdinSerialize] private Type _controllerBaseClass;
+        [NonSerialized, OdinSerialize] private Type _uiPanelBaseClass;
+        [NonSerialized, OdinSerialize] private Type _architectureType;
 
         [SerializeField] private GroupType _bindersGroupType;
 
         [ShowIf(nameof(ShowBindersGroupName))]
         [SerializeField] private string _bindersGroupName;
 
-        [SerializeField] private ScriptType _buildScriptType;
-
         [SerializeField] private bool _isInitialized;
 
         public string Namespace => _namespace;
         public string GenerateDirectory => _generateDirectory;
-        public Type BaseClass => _baseClass;
+        public Type BaseClass => _buildScriptType switch
+        {
+            ScriptType.UIPanel => _uiPanelBaseClass,
+            ScriptType.Controller => _controllerBaseClass,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         public GroupType BindersGroupType => _bindersGroupType;
         public string BindersGroupName => _bindersGroupName;
         public ScriptType BuildScriptType => _buildScriptType;
-        
+        public Type ArchitectureType => _architectureType;
+
+        private bool ShowScriptName => !_useGameObjectName;
         private bool ShowBindersGroupName => _bindersGroupType != GroupType.None;
 
         public string GetScriptName()
         {
             var scriptName = _scriptName;
 
-            if (_autoScriptName)
+            if (_useGameObjectName)
             {
                 scriptName = gameObject.name;
             }
 
-            return scriptName;
+            return scriptName.Trim();
         }
 
         public bool IsBuild()
@@ -126,6 +136,30 @@ namespace EasyFramework.ToolKit
                     f.SetValue(component, bindObject);
                 }
             }
+        }
+
+        public bool IsValidScriptName()
+        {
+            var scriptName = GetScriptName();
+            if (scriptName.IsNullOrEmpty())
+                return false;
+
+            if (!char.IsLetter(scriptName[0]) && scriptName[0] != '_')
+            {
+                return false;
+            }
+            if (scriptName.Length == 1)
+                return true;
+
+            var other = scriptName[1..];
+            foreach (var ch in other)
+            {
+                if (!char.IsLetterOrDigit(ch) && ch != '_')
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

@@ -23,6 +23,6 @@ namespace EasyFramework.Editor
             return s_tempContent2;
         }
 
-        public static readonly GUIContent NoneSelectorBtnLabel = new GUIContent("<None>");
+        public static readonly GUIContent NoneSelectorBtnLabel = new GUIContent("null");
     }
 }

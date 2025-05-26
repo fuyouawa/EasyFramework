@@ -5,6 +5,7 @@ using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -14,26 +15,34 @@ namespace EasyFramework.ToolKit.Editor
     {
         private InspectorProperty _generateDirectoryProperty;
         private InspectorProperty _namespaceProperty;
-        private InspectorProperty _autoScriptNameProperty;
+        private InspectorProperty _useGameObjectNameProperty;
         private InspectorProperty _scriptNameProperty;
-        private InspectorProperty _baseClassProperty;
+        private InspectorProperty _controllerBaseClassProperty;
+        private InspectorProperty _uiPanelBaseClassProperty;
+        private InspectorProperty _architectureTypeProperty;
         private InspectorProperty _bindersGroupTypeProperty;
         private InspectorProperty _bindersGroupNameProperty;
         private InspectorProperty _buildScriptTypeProperty;
         private InspectorProperty _isInitializedProperty;
+
+        private FoldoutGroupConfig _foldoutGroupConfig;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             _generateDirectoryProperty = Tree.RootProperty.Children["_generateDirectory"];
             _namespaceProperty = Tree.RootProperty.Children["_namespace"];
-            _autoScriptNameProperty = Tree.RootProperty.Children["_autoScriptName"];
+            _useGameObjectNameProperty = Tree.RootProperty.Children["_useGameObjectName"];
             _scriptNameProperty = Tree.RootProperty.Children["_scriptName"];
-            _baseClassProperty = Tree.RootProperty.Children["_baseClass"];
+            _controllerBaseClassProperty = Tree.RootProperty.Children["_controllerBaseClass"];
+            _uiPanelBaseClassProperty = Tree.RootProperty.Children["_uiPanelBaseClass"];
+            _architectureTypeProperty = Tree.RootProperty.Children["_architectureType"];
             _bindersGroupTypeProperty = Tree.RootProperty.Children["_bindersGroupType"];
             _bindersGroupNameProperty = Tree.RootProperty.Children["_bindersGroupName"];
             _buildScriptTypeProperty = Tree.RootProperty.Children["_buildScriptType"];
             _isInitializedProperty = Tree.RootProperty.Children["_isInitialized"];
+
+            _foldoutGroupConfig = new FoldoutGroupConfig(_generateDirectoryProperty, new GUIContent("代码生成配置"), false, DrawSettings);
         }
 
         private void UnInitializeAll()
@@ -53,11 +62,14 @@ namespace EasyFramework.ToolKit.Editor
                 {
                     var comp = (Builder)targets[i];
                     _scriptNameProperty.ValueEntry.WeakValues[i] = comp.gameObject.name;
-                    _generateDirectoryProperty.ValueEntry.WeakValues[i] = settings.Default.GenerateDir;
-                    _namespaceProperty.ValueEntry.WeakValues[i] = settings.Default.Namespace;
-                    _baseClassProperty.ValueEntry.WeakValues[i] = settings.Default.BaseType;
-                    _bindersGroupTypeProperty.ValueEntry.WeakValues[i] = settings.Default.BindersGroupType;
-                    _bindersGroupNameProperty.ValueEntry.WeakValues[i] = settings.Default.BindersGroupName;
+                    _useGameObjectNameProperty.ValueEntry.WeakValues[i] = true;
+                    _generateDirectoryProperty.ValueEntry.WeakValues[i] = settings.DefaultGenerateDirectory;
+                    _namespaceProperty.ValueEntry.WeakValues[i] = settings.DefaultNamespace;
+                    _controllerBaseClassProperty.ValueEntry.WeakValues[i] = settings.DefaultControllerBaseType;
+                    _uiPanelBaseClassProperty.ValueEntry.WeakValues[i] = settings.DefaultUIPanelBaseType;
+                    _architectureTypeProperty.ValueEntry.WeakValues[i] = settings.DefaultArchitectureType;
+                    _bindersGroupTypeProperty.ValueEntry.WeakValues[i] = settings.DefaultBindersGroupType;
+                    _bindersGroupNameProperty.ValueEntry.WeakValues[i] = settings.DefaultBindersGroupName;
 
                     _isInitializedProperty.ValueEntry.WeakValues[i] = true;
                 }
@@ -70,109 +82,33 @@ namespace EasyFramework.ToolKit.Editor
 
             EnsureInitialize();
 
-            bool hasBuilded = false;
-            for (int i = 0; i < targets.Length; i++)
-            {
-                var builder = (Builder)targets[i];
+            _generateDirectoryProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(
+                _generateDirectoryProperty,
+                "代码生成配置",
+                _generateDirectoryProperty.State.Expanded,
+                DrawSettings);
 
-                if (builder.IsBuild())
-                {
-                    var classType = builder.TryGetScriptType();
-
-                    _scriptNameProperty.ValueEntry.WeakValues[i] = classType.Name;
-                    _autoScriptNameProperty.ValueEntry.WeakValues[i] = classType.Name == builder.gameObject.name;
-                    _baseClassProperty.ValueEntry.WeakValues[i] = classType.BaseType;
-                    _namespaceProperty.ValueEntry.WeakValues[i] = classType.Namespace;
-                    var monoScript = classType.GetMonoScript();
-                    var path = AssetDatabase.GetAssetPath(monoScript);
-                    var dir = path[..path.LastIndexOf('/')];
-                    dir = dir["Assets/".Length..];
-                    _generateDirectoryProperty.ValueEntry.WeakValues[i] = dir;
-
-                    hasBuilded = true;
-                }
-            }
-
-            EasyEditorGUI.Title("代码生成设置");
-            EditorGUI.BeginDisabledGroup(hasBuilded);
-
-            _generateDirectoryProperty.DrawEx("代码生成目录");
-            _namespaceProperty.DrawEx("命名空间");
-            _autoScriptNameProperty.DrawEx("自动命名", "类名与游戏对象的名称相同");
-            _scriptNameProperty.DrawEx("生成脚本名");
-
-            string reallyScriptName = null;
-            for (int i = 0; i < targets.Length; i++)
-            {
-                var builder = (Builder)targets[i];
-                if (reallyScriptName == null)
-                {
-                    reallyScriptName = builder.GetScriptName();
-                }
-                else
-                {
-                    if (reallyScriptName != builder.GetScriptName())
-                    {
-                        reallyScriptName = "一";
-                    }
-                }
-            }
-
-            EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.TextField("实际生成脚本名", reallyScriptName);
-            EditorGUI.EndDisabledGroup();
-
-            GUIContent btnLabel;
-            if (_baseClassProperty.ValueEntry.WeakValues.Cast<Type>().AllSame())
-            {
-                var type = (Type)_baseClassProperty.ValueEntry.WeakSmartValue;
-
-                btnLabel = type == null
-                    ? EditorHelper.NoneSelectorBtnLabel
-                    : EditorHelper.TempContent2(type.ToString());
-            }
-            else
-            {
-                btnLabel = EditorHelper.TempContent2("一");
-            }
-
-            EasyEditorGUI.DrawSelectorDropdown(
-                () => BuilderSettings.BaseTypes,
-                EditorHelper.TempContent("脚本基类"),
-                btnLabel,
-                t => { _baseClassProperty.ValueEntry.SetAllWeakValues(t); });
-
-            EditorGUI.EndDisabledGroup();
-
-            _bindersGroupTypeProperty.DrawEx("绑定器分组类型");
-            _bindersGroupNameProperty.DrawEx("绑定器分组名称");
-
-            if (!hasBuilded)
-            {
-                if (GUILayout.Button("恢复默认值"))
-                {
-                    UnInitializeAll();
-                }
-            }
-
-            EasyEditorGUI.Title("代码生成");
-
-            _buildScriptTypeProperty.DrawEx("脚本类型");
+            EasyEditorGUI.Title("代码生成操作");
 
             EditorGUI.BeginDisabledGroup(!targets.Cast<Builder>().Any(CodeBuild.CanBuild));
             if (GUILayout.Button("生成脚本"))
             {
                 foreach (var builder in targets.Cast<Builder>())
                 {
+                    if (!builder.IsValidScriptName())
+                    {
+                        EditorUtility.DisplayDialog("错误", "脚本名称不规范！", "确认");
+                        continue;
+                    }
                     CodeBuild.TryBuild(builder);
                 }
             }
             EditorGUI.EndDisabledGroup();
 
             EditorGUI.BeginDisabledGroup(targets.Length != 1);
-            if (GUILayout.Button("复制声明"))
+            if (GUILayout.Button("复制字段声明代码"))
             {
-                
+                EditorGUIUtility.systemCopyBuffer = CodeBuild.GetIndentedBinderFieldsCode((Builder)target);
             }
             EditorGUI.EndDisabledGroup();
 
@@ -204,6 +140,104 @@ namespace EasyFramework.ToolKit.Editor
             EditorGUI.EndDisabledGroup();
 
             Tree.EndDraw();
+        }
+
+        private void DrawSettings(Rect headerRect)
+        {
+            _generateDirectoryProperty.DrawEx("代码生成目录");
+            _namespaceProperty.DrawEx("命名空间");
+            _useGameObjectNameProperty.DrawEx("使用游戏对象名称", "脚本名直接使用游戏对象名称");
+            _scriptNameProperty.DrawEx("生成脚本名");
+
+            string reallyScriptName = null;
+            for (int i = 0; i < targets.Length; i++)
+            {
+                var builder = (Builder)targets[i];
+                if (reallyScriptName == null)
+                {
+                    reallyScriptName = builder.GetScriptName();
+                }
+                else
+                {
+                    if (reallyScriptName != builder.GetScriptName())
+                    {
+                        reallyScriptName = "一";
+                    }
+                }
+            }
+
+            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.TextField("实际生成脚本名", reallyScriptName);
+            EditorGUI.EndDisabledGroup();
+            
+            _buildScriptTypeProperty.DrawEx("脚本类型");
+
+            if (_buildScriptTypeProperty.ValueEntry.WeakValues.Cast<Builder.ScriptType>().AllSame())
+            {
+                var scriptType = _buildScriptTypeProperty.ValueEntry.WeakSmartValueT<Builder.ScriptType>();
+                switch (scriptType)
+                {
+                    case Builder.ScriptType.UIPanel:
+                        //TODO UIPanel
+                        break;
+                    case Builder.ScriptType.Controller:
+                        EasyEditorGUI.DrawSelectorDropdown(
+                            () => BuilderSettings.BaseTypes,
+                            EditorHelper.TempContent("脚本基类"),
+                            _controllerBaseClassProperty.GetSmartLabel(),
+                            t => { _controllerBaseClassProperty.ValueEntry.SetAllWeakValues(t); });
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("脚本基类", "脚本类型冲突，无法选择");
+            }
+
+            EasyEditorGUI.DrawSelectorDropdown(
+                () => BuilderSettings.ArchitectureTypes,
+                EditorHelper.TempContent("架构"),
+                _architectureTypeProperty.GetSmartLabel(),
+                t => { _architectureTypeProperty.ValueEntry.SetAllWeakValues(t); });
+
+
+            _bindersGroupTypeProperty.DrawEx("绑定器分组类型");
+            _bindersGroupNameProperty.DrawEx("绑定器分组名称");
+
+            if (GUILayout.Button(EditorHelper.TempContent("自动赋值", "查找该游戏对象上继承了IController的组件，然后应用该组件的脚本信息。")))
+            {
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    var builder = (Builder)targets[i];
+                    var ctrl = builder.GetComponent(typeof(IController));
+                    if (ctrl == null)
+                        continue;
+
+                    var classType = ctrl.GetType();
+                    _scriptNameProperty.ValueEntry.WeakValues[i] = classType.Name;
+                    _useGameObjectNameProperty.ValueEntry.WeakValues[i] = classType.Name == builder.gameObject.name;
+
+                    if (classType.HasInterface(typeof(IController)))
+                    {
+                        _buildScriptTypeProperty.ValueEntry.WeakValues[i] = Builder.ScriptType.Controller;
+                        _controllerBaseClassProperty.ValueEntry.WeakValues[i] = classType.BaseType;
+                    }
+
+                    _namespaceProperty.ValueEntry.WeakValues[i] = classType.Namespace;
+                    var monoScript = classType.GetMonoScript();
+                    var path = AssetDatabase.GetAssetPath(monoScript);
+                    var dir = path[..path.LastIndexOf('/')];
+                    dir = dir["Assets/".Length..];
+                    _generateDirectoryProperty.ValueEntry.WeakValues[i] = dir;
+                }
+            }
+
+            if (GUILayout.Button("恢复默认值"))
+            {
+                UnInitializeAll();
+            }
         }
     }
 }

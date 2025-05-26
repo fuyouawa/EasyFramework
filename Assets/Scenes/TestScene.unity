@@ -192,7 +192,7 @@ MonoBehaviour:
   _bindGameObject: 0
   _bindAccess: 0
   _bindName: GameObject (2)
-  _autoBindName: 0
+  _useGameObjectName: 1
   _processBindName: 0
   _useDocumentComment: 0
   _autoAddParaToComment: 0
@@ -425,7 +425,7 @@ MonoBehaviour:
   _bindGameObject: 0
   _bindAccess: 0
   _bindName: GameObject (1)
-  _autoBindName: 0
+  _useGameObjectName: 1
   _processBindName: 0
   _useDocumentComment: 0
   _autoAddParaToComment: 0
@@ -733,22 +733,22 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _baseClass
-      Entry: 7
-      Data: 0|System.RuntimeType, mscorlib
-    - Name: 
-      Entry: 1
-      Data: UnityEngine.MonoBehaviour, UnityEngine.CoreModule
-    - Name: 
-      Entry: 8
+    - Name: _controllerBaseClass
+      Entry: 6
+      Data: 
+    - Name: _uiPanelBaseClass
+      Entry: 6
+      Data: 
+    - Name: _architectureType
+      Entry: 6
       Data: 
   _generateDirectory: 
   _namespace: 
-  _autoScriptName: 1
+  _useGameObjectName: 1
   _scriptName: ppp (1)
+  _buildScriptType: 0
   _bindersGroupType: 0
   _bindersGroupName: 
-  _buildScriptType: 0
   _isInitialized: 1
 --- !u!4 &616372402
 Transform:
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   _bindGameObject: 0
   _bindAccess: 2
   _bindName: GameObject (1)
-  _autoBindName: 1
+  _useGameObjectName: 1
   _processBindName: 1
   _useDocumentComment: 0
   _autoAddParaToComment: 0
@@ -1373,7 +1373,7 @@ MonoBehaviour:
   _bindGameObject: 0
   _bindAccess: 2
   _bindName: GameObject (2)
-  _autoBindName: 1
+  _useGameObjectName: 1
   _processBindName: 1
   _useDocumentComment: 0
   _autoAddParaToComment: 0
@@ -2112,8 +2112,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1899658402}
   - component: {fileID: 1899658401}
+  - component: {fileID: 1899658403}
   m_Layer: 0
-  m_Name: ppp (2)
+  m_Name: TestController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2140,7 +2141,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _baseClass
+    - Name: _controllerBaseClass
       Entry: 7
       Data: 0|System.RuntimeType, mscorlib
     - Name: 
@@ -2149,13 +2150,25 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  _generateDirectory: 
+    - Name: _uiPanelBaseClass
+      Entry: 9
+      Data: 0
+    - Name: _architectureType
+      Entry: 7
+      Data: 1|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: TestApp, Assembly-CSharp
+    - Name: 
+      Entry: 8
+      Data: 
+  _generateDirectory: Scripts
   _namespace: 
-  _autoScriptName: 1
-  _scriptName: ppp (1)
+  _useGameObjectName: 1
+  _scriptName: TestController
+  _buildScriptType: 1
   _bindersGroupType: 1
   _bindersGroupName: Bindings
-  _buildScriptType: 1
   _isInitialized: 1
 --- !u!4 &1899658402
 Transform:
@@ -2174,6 +2187,20 @@ Transform:
   - {fileID: 1294517728}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1899658403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899658400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0ffdbd9955ed648951f4335f30e865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gameObject1: {fileID: 686857314}
+  _gameObject2: {fileID: 1294517728}
 --- !u!1001 &1924209944
 PrefabInstance:
   m_ObjectHideFlags: 0

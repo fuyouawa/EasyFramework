@@ -20,47 +20,72 @@ namespace EasyFramework.ToolKit.Editor
         {
             get
             {
-                s_baseTypes ??= AppDomain.CurrentDomain.GetAssemblies()
+                return s_baseTypes ??= AppDomain.CurrentDomain.GetAssemblies()
                     .SelectMany(asm => asm.GetTypes())
                     .Where(t => t.IsSubclassOf(typeof(Component)) && !t.ContainsGenericParameters && t.IsPublic)
                     .ToArray();
-                return s_baseTypes;
+                ;
             }
         }
 
-        [InlineProperty, HideReferenceObjectPicker, HideLabel]
-        public struct DefaultSettings
+        private static Type[] s_architectureTypes;
+
+        public static Type[] ArchitectureTypes
         {
-            [LabelText("生成路径")]
-            [FolderPath(ParentFolder = "Assets")]
-            public string GenerateDir;
-
-            [LabelText("命名空间")]
-            public string Namespace;
-
-            [LabelText("基类")]
-            [ShowInInspector]
-            [ValueDropdown(nameof(GetBaseTypeDropdown))]
-            public Type BaseType;
-
-            [LabelText("绑定器分组类型")]
-            public Builder.GroupType BindersGroupType;
-
-            [LabelText("绑定器分组名称")]
-            [ShowIf(nameof(ShowBindersGroupName))]
-            public string BindersGroupName;
-
-            private bool ShowBindersGroupName => BindersGroupType != Builder.GroupType.None;
-
-            private IEnumerable GetBaseTypeDropdown()
+            get
             {
-                return BaseTypes;
+                return s_architectureTypes ??= AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(asm => asm.GetTypes())
+                    .Where(type =>
+                        type.IsImplementsOpenGenericType(typeof(Architecture<>)) && !type.IsAbstract &&
+                        !type.IsGenericType && type.IsPublic)
+                    .ToArray();
             }
         }
+
+        [Title("预设设置")]
+        [LabelText("代码生成路径预设")]
+        [FolderPath(ParentFolder = "Assets")]
+        public string[] GenerateDirectoryPresets = { "Scripts" };
+        [LabelText("命名空间预设")]
+        public string[] NamespacePresets = { };
 
         [Title("默认值设置")]
-        public DefaultSettings Default;
-        
+        [LabelText("生成路径")]
+        [ValueDropdown(nameof(GenerateDirectoryPresets))]
+        public string DefaultGenerateDirectory = "Scripts";
+
+        [LabelText("命名空间")]
+        [ValueDropdown(nameof(NamespacePresets))]
+        public string DefaultNamespace;
+
+        [LabelText("脚本类型")]
+        public Builder.ScriptType DefaultScriptType;
+
+        [LabelText("Controller基类类型")]
+        [ShowInInspector]
+        [ValueDropdown(nameof(BaseTypes))]
+        public Type DefaultControllerBaseType = typeof(MonoBehaviour);
+
+        [LabelText("UIPanel基类类型")]
+        [ShowInInspector]
+        [ValueDropdown(nameof(BaseTypes))]
+        public Type DefaultUIPanelBaseType = typeof(MonoBehaviour);
+
+        [LabelText("架构")]
+        [ShowInInspector]
+        [ValueDropdown(nameof(ArchitectureTypes))]
+        public Type DefaultArchitectureType;
+
+        [LabelText("绑定器分组类型")]
+        public Builder.GroupType DefaultBindersGroupType = Builder.GroupType.Title;
+
+        [LabelText("绑定器分组名称")]
+        [ShowIf(nameof(ShowDefaultBindersGroupName))]
+        public string DefaultBindersGroupName = "Binding";
+
+        private bool ShowDefaultBindersGroupName => DefaultBindersGroupType != Builder.GroupType.None;
+
         [Title("代码格式设置")]
         [LabelText("缩进空格数")]
         public int IndentSpace = 4;
@@ -69,13 +94,25 @@ namespace EasyFramework.ToolKit.Editor
         [LabelText("自动缩进")]
         public bool AutoIndentTemplate = true;
 
-        [LabelText("脚本生成类型：Controller")]
+        [LabelText("Controller脚本模板")]
         [TextArea(5, 10)]
-        public string ControllerScriptTypeTemplate;
+        public string ControllerScriptTemplate = @"
+void Awake()
+{
+}
 
-        [LabelText("脚本生成类型：UIPanel")]
+void Start()
+{
+}
+
+void Update()
+{
+}
+".Trim();
+
+        [LabelText("UIPanel脚本模板")]
         [TextArea(5, 10)]
-        public string UIPanelScriptTypeTemplate;
+        public string UIPanelScriptTemplate;
 
         public string GetIndent()
         {
@@ -84,6 +121,7 @@ namespace EasyFramework.ToolKit.Editor
             {
                 indent += " ";
             }
+
             return indent;
         }
 

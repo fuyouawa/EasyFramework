@@ -35,7 +35,7 @@ namespace EasyFramework.ToolKit
         [SerializeField] private Access _bindAccess;
 
         [SerializeField] private string _bindName;
-        [SerializeField] private bool _autoBindName = true;
+        [SerializeField] private bool _useGameObjectName = true;
         [SerializeField] private bool _processBindName = true;
 
         [SerializeField] private bool _useDocumentComment = true;
@@ -112,10 +112,14 @@ namespace EasyFramework.ToolKit
 
         private static string ProcessName(string name, Access access)
         {
+            name = name.Trim();
             if (name.IsNullOrWhiteSpace())
                 return name;
 
-            //TODO 更多情况的处理
+            name = name.Replace(" ", "");
+            name = name.Replace("(", "");
+            name = name.Replace(")", "");
+
             if (access == Access.Public)
             {
                 return char.ToUpper(name[0]) + name[1..];
@@ -129,7 +133,7 @@ namespace EasyFramework.ToolKit
         {
             var bindName = _bindName;
 
-            if (_autoBindName)
+            if (_useGameObjectName)
             {
                 bindName = gameObject.name;
             }

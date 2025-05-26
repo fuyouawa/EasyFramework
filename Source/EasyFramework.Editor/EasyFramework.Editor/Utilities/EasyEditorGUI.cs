@@ -406,11 +406,11 @@ namespace EasyFramework.Editor
 
         private static readonly FoldoutGroupConfig s_tempFoldoutGroupConfig = new FoldoutGroupConfig();
 
-        public static bool FoldoutGroup(object key, GUIContent label,
-            bool expand, ContentGUIHandler onContentGUI)
+        public static bool FoldoutGroup(object key, string label, bool expand, ContentGUIHandler onContentGUI)
         {
+            s_tempFoldoutGroupConfig.Label ??= new GUIContent();
             s_tempFoldoutGroupConfig.Key = key;
-            s_tempFoldoutGroupConfig.Label = label;
+            s_tempFoldoutGroupConfig.Label.text = label;
             s_tempFoldoutGroupConfig.Expand = expand;
             s_tempFoldoutGroupConfig.OnContentGUI = onContentGUI;
             return FoldoutGroup(s_tempFoldoutGroupConfig);

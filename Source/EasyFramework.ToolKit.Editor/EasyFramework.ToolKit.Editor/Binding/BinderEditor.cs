@@ -18,7 +18,7 @@ namespace EasyFramework.ToolKit.Editor
         private InspectorProperty _specificBindTypeProperty;
         private InspectorProperty _bindAccessProperty;
         private InspectorProperty _bindNameProperty;
-        private InspectorProperty _autoBindNameProperty;
+        private InspectorProperty _useGameObjectNameProperty;
         private InspectorProperty _processBindNameProperty;
         private InspectorProperty _useDocumentCommentProperty;
         private InspectorProperty _autoAddParaToCommentProperty;
@@ -34,7 +34,7 @@ namespace EasyFramework.ToolKit.Editor
             _specificBindTypeProperty = Tree.RootProperty.Children["_specificBindType"];
             _bindAccessProperty = Tree.RootProperty.Children["_bindAccess"];
             _bindNameProperty = Tree.RootProperty.Children["_bindName"];
-            _autoBindNameProperty = Tree.RootProperty.Children["_autoBindName"];
+            _useGameObjectNameProperty = Tree.RootProperty.Children["_useGameObjectName"];
             _processBindNameProperty = Tree.RootProperty.Children["_processBindName"];
             _useDocumentCommentProperty = Tree.RootProperty.Children["_useDocumentComment"];
             _autoAddParaToCommentProperty = Tree.RootProperty.Children["_autoAddParaToComment"];
@@ -133,13 +133,13 @@ namespace EasyFramework.ToolKit.Editor
 
                     _specificBindTypeProperty.ValueEntry.WeakValues[i] = GetDefaultSpecialType(bindType);
 
-                    _bindGameObjectProperty.ValueEntry.WeakValues[i] = settings.Default.BindGameObject;
-                    _bindAccessProperty.ValueEntry.WeakValues[i] = settings.Default.BindAccess;
-                    _autoBindNameProperty.ValueEntry.WeakValues[i] = settings.Default.AutoBindName;
-                    _processBindNameProperty.ValueEntry.WeakValues[i] = settings.Default.ProcessBindName;
-                    _useDocumentCommentProperty.ValueEntry.WeakValues[i] = settings.Default.UseDocumentComment;
-                    _autoAddParaToCommentProperty.ValueEntry.WeakValues[i] = settings.Default.AutoAddParaToComment;
-                    _commentProperty.ValueEntry.WeakValues[i] = settings.Default.Comment;
+                    _bindGameObjectProperty.ValueEntry.WeakValues[i] = settings.DefaultBindGameObject;
+                    _bindAccessProperty.ValueEntry.WeakValues[i] = settings.DefaultBindAccess;
+                    _useGameObjectNameProperty.ValueEntry.WeakValues[i] = settings.DefaultUseGameObjectName;
+                    _processBindNameProperty.ValueEntry.WeakValues[i] = settings.DefaultProcessBindName;
+                    _useDocumentCommentProperty.ValueEntry.WeakValues[i] = settings.DefaultUseDocumentComment;
+                    _autoAddParaToCommentProperty.ValueEntry.WeakValues[i] = settings.DefaultAutoAddParaToComment;
+                    _commentProperty.ValueEntry.WeakValues[i] = settings.DefaultComment;
 
                     _isInitializedProperty.ValueEntry.WeakValues[i] = true;
                 }
@@ -152,32 +152,29 @@ namespace EasyFramework.ToolKit.Editor
 
             EnsureInitialize();
 
-            EasyEditorGUI.Title("绑定设置");
             _owningBuildersProperty.DrawEx("绑定列表");
 
+            _bindGameObjectProperty.State.Expanded = EasyEditorGUI.FoldoutGroup(
+                _bindGameObjectProperty,
+                "绑定设置",
+                _bindGameObjectProperty.State.Expanded,
+                DrawSettings);
+
+            Tree.EndDraw();
+        }
+
+        private void DrawSettings(Rect headerRect)
+        {
             _bindGameObjectProperty.DrawEx("绑定游戏对象");
 
             if (!_bindGameObjectProperty.ValueEntry.WeakSmartValueT<bool>())
             {
-                GUIContent btnLabel;
-                if (_bindComponentTypeProperty.ValueEntry.WeakValues.Cast<Type>().AllSame())
-                {
-                    var type = (Type)_bindComponentTypeProperty.ValueEntry.WeakSmartValue;
-                    btnLabel = type == null
-                        ? EditorHelper.NoneSelectorBtnLabel
-                        : EditorHelper.TempContent2(type.GetNiceName());
-                }
-                else
-                {
-                    btnLabel = EditorHelper.TempContent2("一");
-                }
-
                 EasyEditorGUI.DrawSelectorDropdown(
                     () => targets.Cast<Binder>()
                         .Select(GetSortedBindableComponentTypes)
                         .Aggregate((a, b) => a.Intersect(b).ToArray()),
                     EditorHelper.TempContent("绑定组件"),
-                    btnLabel,
+                    _bindComponentTypeProperty.GetSmartLabel(),
                     t =>
                     {
                         _bindComponentTypeProperty.ValueEntry.SetAllWeakValues(t);
@@ -185,32 +182,19 @@ namespace EasyFramework.ToolKit.Editor
                     });
 
 
-                if (_specificBindTypeProperty.ValueEntry.WeakValues.Cast<Type>().AllSame())
-                {
-                    var type = (Type)_specificBindTypeProperty.ValueEntry.WeakSmartValue;
-
-                    btnLabel = type == null
-                        ? EditorHelper.NoneSelectorBtnLabel
-                        : EditorHelper.TempContent2(type.GetNiceName());
-                }
-                else
-                {
-                    btnLabel = EditorHelper.TempContent2("一");
-                }
-
                 EasyEditorGUI.DrawSelectorDropdown(
                     () => targets.Cast<Binder>()
                         .Select((binder, i) =>
                             GetSpecficableBindTypes(((Type)_bindComponentTypeProperty.ValueEntry.WeakValues[i])))
                         .Aggregate((a, b) => a.Intersect(b).ToArray()),
                     EditorHelper.TempContent("指定要绑定的类型"),
-                    btnLabel,
+                    _specificBindTypeProperty.GetSmartLabel(),
                     t => { _specificBindTypeProperty.ValueEntry.SetAllWeakValues(t); });
             }
 
             _bindAccessProperty.DrawEx("访问权限");
             _bindNameProperty.DrawEx("绑定名称");
-            _autoBindNameProperty.DrawEx("自动绑定名称", "绑定名称与游戏对象名称相同");
+            _useGameObjectNameProperty.DrawEx("使用游戏对象名称", "绑定名称与游戏对象名称相同");
 
             _processBindNameProperty.DrawEx("处理绑定命名");
 
@@ -241,8 +225,6 @@ namespace EasyFramework.ToolKit.Editor
             {
                 UnInitializeAll();
             }
-
-            Tree.EndDraw();
         }
     }
 }

@@ -12,9 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 783100925, guid: 486237abfc9f7044dab1b8cfef1b060c, type: 3}
   m_Name: BuilderSettings
   m_EditorClassIdentifier: 
+  GenerateDirectoryPresets:
+  - Scripts
+  NamespacePresets: []
+  DefaultGenerateDirectory: Scripts
+  DefaultNamespace: 
+  DefaultScriptType: 0
+  DefaultBindersGroupType: 1
+  DefaultBindersGroupName: Bindings
   IndentSpace: 4
   AutoIndentTemplate: 1
-  ControllerScriptTypeTemplate: 'void Awake()
+  ControllerScriptTemplate: 'void Awake()
 
     {
 
@@ -34,7 +42,7 @@ MonoBehaviour:
     {
 
     }'
-  UIPanelScriptTypeTemplate: 
+  UIPanelScriptTemplate: 
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -44,16 +52,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: Default
-      Entry: 7
-      Data: EasyFramework.ToolKit.Editor.BuilderSettings+DefaultSettings, EasyFramework.ToolKit.Editor
-    - Name: GenerateDir
-      Entry: 1
-      Data: Scripts
-    - Name: Namespace
-      Entry: 6
-      Data: 
-    - Name: BaseType
+    - Name: DefaultControllerBaseType
       Entry: 7
       Data: 0|System.RuntimeType, mscorlib
     - Name: 
@@ -62,12 +61,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: BindersGroupType
-      Entry: 3
-      Data: 1
-    - Name: BindersGroupName
-      Entry: 1
-      Data: Bindings
-    - Name: 
-      Entry: 8
+    - Name: DefaultUIPanelBaseType
+      Entry: 9
+      Data: 0
+    - Name: DefaultArchitectureType
+      Entry: 6
       Data: 

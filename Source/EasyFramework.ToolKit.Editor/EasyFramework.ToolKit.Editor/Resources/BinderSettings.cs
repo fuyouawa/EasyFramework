@@ -13,32 +13,27 @@ namespace EasyFramework.ToolKit.Editor
     [ShowOdinSerializedPropertiesInInspector]
     public class BinderSettings : ScriptableObjectSingleton<BinderSettings>, ISerializationCallbackReceiver
     {
-        [HideLabel, InlineProperty, HideReferenceObjectPicker]
-        public struct DefaultSettings
-        {
-            [LabelText("绑定游戏对象")]
-            public bool BindGameObject;
-            [LabelText("绑定权限")]
-            public Binder.Access BindAccess;
-            [LabelText("自动绑定名称")]
-            public bool AutoBindName;
-            [LabelText("处理绑定命名")]
-            public bool ProcessBindName;
-            [LabelText("使用文档注释")]
-            public bool UseDocumentComment;
-
-            [LabelText("自动添加注释段落")]
-            [ShowIf(nameof(ShowAutoAddParaToComment))]
-            public bool AutoAddParaToComment;
-
-            [LabelText("注释")]
-            public string Comment;
-
-            private bool ShowAutoAddParaToComment => UseDocumentComment;
-        }
-
         [TitleEx("默认值设置")]
-        public DefaultSettings Default;
+        
+        [LabelText("绑定游戏对象")]
+        public bool DefaultBindGameObject;
+        [LabelText("绑定权限")]
+        public Binder.Access DefaultBindAccess = Binder.Access.Private;
+        [LabelText("使用游戏对象名称")]
+        public bool DefaultUseGameObjectName = true;
+        [LabelText("处理绑定命名")]
+        public bool DefaultProcessBindName = true;
+        [LabelText("使用文档注释")]
+        public bool DefaultUseDocumentComment = true;
+
+        [LabelText("自动添加注释段落")]
+        [ShowIf(nameof(ShowDefaultAutoAddParaToComment))]
+        public bool DefaultAutoAddParaToComment = true;
+
+        [LabelText("注释")]
+        public string DefaultComment;
+
+        private bool ShowDefaultAutoAddParaToComment => DefaultUseDocumentComment;
 
         [TitleEx("优先级设置")]
         [LabelText("优先级列表")]
