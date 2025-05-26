@@ -5,7 +5,6 @@ using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -25,8 +24,6 @@ namespace EasyFramework.ToolKit.Editor
         private InspectorProperty _buildScriptTypeProperty;
         private InspectorProperty _isInitializedProperty;
 
-        private FoldoutGroupConfig _foldoutGroupConfig;
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -41,8 +38,6 @@ namespace EasyFramework.ToolKit.Editor
             _bindersGroupNameProperty = Tree.RootProperty.Children["_bindersGroupName"];
             _buildScriptTypeProperty = Tree.RootProperty.Children["_buildScriptType"];
             _isInitializedProperty = Tree.RootProperty.Children["_isInitialized"];
-
-            _foldoutGroupConfig = new FoldoutGroupConfig(_generateDirectoryProperty, new GUIContent("代码生成配置"), false, DrawSettings);
         }
 
         private void UnInitializeAll()
@@ -95,12 +90,14 @@ namespace EasyFramework.ToolKit.Editor
             {
                 foreach (var builder in targets.Cast<Builder>())
                 {
-                    if (!builder.IsValidScriptName())
+                    try
                     {
-                        EditorUtility.DisplayDialog("错误", "脚本名称不规范！", "确认");
-                        continue;
+                        CodeBuild.Build(builder);
                     }
-                    CodeBuild.TryBuild(builder);
+                    catch (Exception e)
+                    {
+                        EditorUtility.DisplayDialog("错误", $"生成脚本失败：{e.Message}", "确认");
+                    }
                 }
             }
             EditorGUI.EndDisabledGroup();
@@ -144,8 +141,18 @@ namespace EasyFramework.ToolKit.Editor
 
         private void DrawSettings(Rect headerRect)
         {
-            _generateDirectoryProperty.DrawEx("代码生成目录");
-            _namespaceProperty.DrawEx("命名空间");
+            EasyEditorGUI.DrawSelectorDropdown(
+                () => BuilderSettings.Instance.GenerateDirectoryPresets,
+                EditorHelper.TempContent("代码生成目录"),
+                _generateDirectoryProperty.GetSmartLabel(),
+                t => { _generateDirectoryProperty.ValueEntry.SetAllWeakValues(t); });
+            
+            EasyEditorGUI.DrawSelectorDropdown(
+                () => BuilderSettings.Instance.NamespacePresets,
+                EditorHelper.TempContent("命名空间"),
+                _namespaceProperty.GetSmartLabel(),
+                t => { _namespaceProperty.ValueEntry.SetAllWeakValues(t); });
+
             _useGameObjectNameProperty.DrawEx("使用游戏对象名称", "脚本名直接使用游戏对象名称");
             _scriptNameProperty.DrawEx("生成脚本名");
 
@@ -175,21 +182,24 @@ namespace EasyFramework.ToolKit.Editor
             if (_buildScriptTypeProperty.ValueEntry.WeakValues.Cast<Builder.ScriptType>().AllSame())
             {
                 var scriptType = _buildScriptTypeProperty.ValueEntry.WeakSmartValueT<Builder.ScriptType>();
+                InspectorProperty targetBaseClassProperty;
                 switch (scriptType)
                 {
                     case Builder.ScriptType.UIPanel:
-                        //TODO UIPanel
+                        targetBaseClassProperty = _uiPanelBaseClassProperty;
                         break;
                     case Builder.ScriptType.Controller:
-                        EasyEditorGUI.DrawSelectorDropdown(
-                            () => BuilderSettings.BaseTypes,
-                            EditorHelper.TempContent("脚本基类"),
-                            _controllerBaseClassProperty.GetSmartLabel(),
-                            t => { _controllerBaseClassProperty.ValueEntry.SetAllWeakValues(t); });
+                        targetBaseClassProperty = _controllerBaseClassProperty;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                EasyEditorGUI.DrawSelectorDropdown(
+                    () => BuilderSettings.BaseTypes,
+                    EditorHelper.TempContent("脚本基类"),
+                    targetBaseClassProperty.GetSmartLabel(),
+                    t => { targetBaseClassProperty.ValueEntry.SetAllWeakValues(t); });
             }
             else
             {

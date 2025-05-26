@@ -2112,7 +2112,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1899658402}
   - component: {fileID: 1899658401}
-  - component: {fileID: 1899658403}
   m_Layer: 0
   m_Name: TestController
   m_TagString: Untagged
@@ -2151,11 +2150,17 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: _uiPanelBaseClass
-      Entry: 9
-      Data: 0
-    - Name: _architectureType
       Entry: 7
       Data: 1|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: EasyFramework.UIKit.UIPanel, EasyFramework.UIKit
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: _architectureType
+      Entry: 7
+      Data: 2|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
       Data: TestApp, Assembly-CSharp
@@ -2166,9 +2171,9 @@ MonoBehaviour:
   _namespace: 
   _useGameObjectName: 1
   _scriptName: TestController
-  _buildScriptType: 1
+  _buildScriptType: 0
   _bindersGroupType: 1
-  _bindersGroupName: Bindings
+  _bindersGroupName: Binding
   _isInitialized: 1
 --- !u!4 &1899658402
 Transform:
@@ -2187,20 +2192,6 @@ Transform:
   - {fileID: 1294517728}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1899658403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1899658400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef0ffdbd9955ed648951f4335f30e865, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameObject1: {fileID: 686857314}
-  _gameObject2: {fileID: 1294517728}
 --- !u!1001 &1924209944
 PrefabInstance:
   m_ObjectHideFlags: 0

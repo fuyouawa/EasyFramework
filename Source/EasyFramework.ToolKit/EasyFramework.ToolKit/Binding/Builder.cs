@@ -137,29 +137,5 @@ namespace EasyFramework.ToolKit
                 }
             }
         }
-
-        public bool IsValidScriptName()
-        {
-            var scriptName = GetScriptName();
-            if (scriptName.IsNullOrEmpty())
-                return false;
-
-            if (!char.IsLetter(scriptName[0]) && scriptName[0] != '_')
-            {
-                return false;
-            }
-            if (scriptName.Length == 1)
-                return true;
-
-            var other = scriptName[1..];
-            foreach (var ch in other)
-            {
-                if (!char.IsLetterOrDigit(ch) && ch != '_')
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

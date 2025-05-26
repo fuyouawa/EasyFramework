@@ -1,11 +1,10 @@
 using System;
 using EasyFramework.Core;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine;
 
-namespace EasyFramework.ToolKit
+namespace EasyFramework.UIKit
 {
     /// <summary>
     /// Display settings for when a toggle is activated or deactivated.

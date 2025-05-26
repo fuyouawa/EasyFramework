@@ -19,7 +19,7 @@ MonoBehaviour:
   DefaultNamespace: 
   DefaultScriptType: 0
   DefaultBindersGroupType: 1
-  DefaultBindersGroupName: Bindings
+  DefaultBindersGroupName: Binding
   IndentSpace: 4
   AutoIndentTemplate: 1
   ControllerScriptTemplate: 'void Awake()
@@ -28,6 +28,7 @@ MonoBehaviour:
 
     }
 
+    
 
     void Start()
 
@@ -35,6 +36,7 @@ MonoBehaviour:
 
     }
 
+    
 
     void
     Update()
@@ -42,7 +44,20 @@ MonoBehaviour:
     {
 
     }'
-  UIPanelScriptTemplate: 
+  UIPanelScriptTemplate: 'protected override void OnOpen(IPanelData panelData)
+
+    {
+
+    }
+
+    
+
+    protected
+    override void OnClose()
+
+    {
+
+    }'
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -62,8 +77,14 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: DefaultUIPanelBaseType
-      Entry: 9
-      Data: 0
+      Entry: 7
+      Data: 1|System.RuntimeType, mscorlib
+    - Name: 
+      Entry: 1
+      Data: EasyFramework.UIKit.UIPanel, EasyFramework.UIKit
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: DefaultArchitectureType
       Entry: 6
       Data: 

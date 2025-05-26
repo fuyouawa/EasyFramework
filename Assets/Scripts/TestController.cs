@@ -1,30 +1,28 @@
 using System;
-using UnityEngine;
+using EasyFramework.UIKit;
 using EasyFramework.Core;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
-public class TestController : MonoBehaviour, IController
+public class TestController : UIPanel, IController
 {
     #region 绑定变量
     
-    [SerializeField, Binding, TitleGroup("Bindings")]
+    [SerializeField, Binding, TitleGroup("Binding")]
     private Transform _gameObject1;
     
-    [SerializeField, Binding, TitleGroup("Bindings")]
+    [SerializeField, Binding, TitleGroup("Binding")]
     private Transform _gameObject2;
     
     #endregion
 
-    void Awake()
+    protected override void OnOpen(IPanelData panelData)
     {
     }
     
-    void Start()
-    {
-    }
     
-    void Update()
+    protected override void OnClose()
     {
     }
 

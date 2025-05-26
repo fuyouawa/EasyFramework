@@ -70,7 +70,7 @@ namespace EasyFramework.ToolKit.Editor
         [LabelText("UIPanel基类类型")]
         [ShowInInspector]
         [ValueDropdown(nameof(BaseTypes))]
-        public Type DefaultUIPanelBaseType = typeof(MonoBehaviour);
+        public Type DefaultUIPanelBaseType = Type.GetType("EasyFramework.UIKit.UIPanel, EasyFramework.UIKit");
 
         [LabelText("架构")]
         [ShowInInspector]
@@ -112,7 +112,15 @@ void Update()
 
         [LabelText("UIPanel脚本模板")]
         [TextArea(5, 10)]
-        public string UIPanelScriptTemplate;
+        public string UIPanelScriptTemplate = @"
+protected override void OnOpen(IPanelData panelData)
+{
+}
+
+protected override void OnClose()
+{
+}
+".Trim();
 
         public string GetIndent()
         {

@@ -56,10 +56,10 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             return !File.Exists(path);
         }
 
-        public static bool TryBuild(Builder builder)
+        public static void Build(Builder builder)
         {
             if (!CanBuild(builder))
-                return false;
+                throw new Exception($"The target script '{builder.GetScriptName()}' already exists.");
 
             var settings = BuilderSettings.Instance;
             var dir = Application.dataPath + "/" + builder.GenerateDirectory;
@@ -68,7 +68,13 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 Directory.CreateDirectory(dir);
             }
 
-            var path = dir + "/" + builder.GetScriptName() + ".cs";
+            var scriptName = builder.GetScriptName();
+            if (!BindingUtility.IsValidIdentifier(scriptName))
+            {
+                throw new Exception($"The script name '{scriptName}' is invalid.");
+            }
+
+            var path = dir + "/" + scriptName + ".cs";
             var engine = new TemplateEngine();
 
             var types = new List<Type>()
@@ -134,7 +140,6 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             File.WriteAllText(path, code);
             // Debug.Log(code);
             AssetDatabase.Refresh();
-            return true;
         }
 
         public static string GetIndentedBinderFieldsCode(Builder builder)
@@ -158,11 +163,15 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             var engine = new TemplateEngine();
             if (builder.Namespace.IsNotNullOrWhiteSpace())
             {
+                if (!BindingUtility.IsValidIdentifier(builder.Namespace))
+                {
+                    throw new Exception($"The namespace '{builder.Namespace}' is invalid.");
+                }
                 code = engine.Render(CsNamespaceTemplate, new
                 {
                     Header = header,
                     Namespace = builder.Namespace.Trim(),
-                    Body = body
+                    Body = AddIndent(body)
                 });
             }
             else
@@ -199,11 +208,16 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                     Binder.Access.Private => "private",
                     _ => throw new ArgumentOutOfRangeException()
                 };
+                var bindName = b.GetBindName();
+                if (!BindingUtility.IsValidIdentifier(bindName))
+                {
+                    throw new Exception($"The binding field name '{bindName}' is invalid.");
+                }
                 return new
                 {
                     Access = access,
                     Type = b.GetBindType().Name,
-                    Name = b.GetBindName(),
+                    Name = bindName,
                     Comment = b.GetComment()
                 };
             }).ToArray();

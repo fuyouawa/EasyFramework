@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace EasyFramework.ToolKit.Editor
+namespace EasyFramework.UIKit.Editor
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(EasyToggleGroup))]

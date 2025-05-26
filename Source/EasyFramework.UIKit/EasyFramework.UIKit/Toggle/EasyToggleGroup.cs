@@ -4,7 +4,7 @@ using System.Linq;
 using EasyFramework.Core;
 using UnityEngine;
 
-namespace EasyFramework.ToolKit
+namespace EasyFramework.UIKit
 {
     public class EasyToggleGroup : MonoBehaviour
     {

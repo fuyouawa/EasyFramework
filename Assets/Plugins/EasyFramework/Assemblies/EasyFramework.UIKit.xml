@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyFramework.UIKit</name>
+    </assembly>
+    <members>
+        <member name="T:EasyFramework.UIKit.EasyToggleTransition">
+            <summary>
+            Display settings for when a toggle is activated or deactivated.
+            </summary>
+        </member>
+        <member name="F:EasyFramework.UIKit.EasyToggleTransition.None">
+            <summary>
+            Show / hide the toggle instantly
+            </summary>
+        </member>
+        <member name="F:EasyFramework.UIKit.EasyToggleTransition.Fade">
+            <summary>
+            Fade the toggle in / out smoothly.
+            </summary>
+        </member>
+        <member name="F:EasyFramework.UIKit.EasyToggle.ToggleTransition">
+            <summary>
+            Transition mode for the toggle.
+            </summary>
+        </member>
+        <member name="F:EasyFramework.UIKit.EasyToggle.Graphic">
+            <summary>
+            Graphic the toggle should be working with.
+            </summary>
+        </member>
+        <member name="P:EasyFramework.UIKit.EasyToggle.Group">
+            <summary>
+            Group the toggle belongs to.
+            </summary>
+        </member>
+        <member name="F:EasyFramework.UIKit.EasyToggle.OnValueChanged">
+            <summary>
+            Allow for delegate-based subscriptions for faster events than 'eventReceiver', and allowing for multiple receivers.
+            </summary>
+        </member>
+        <member name="P:EasyFramework.UIKit.EasyToggle.IsOn">
+            <summary>
+            Whether the toggle is currently active.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggle.SetIsOnWithoutNotify(System.Boolean)">
+            <summary>
+            Set isOn without invoking onValueChanged callback.
+            </summary>
+            <param name="value">New Value for isOn.</param>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggle.PlayEffect(System.Boolean)">
+            <summary>
+            Play the appropriate effect.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggle.Start">
+            <summary>
+            Assume the correct visual state.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggle.UnityEngine#EventSystems#IPointerClickHandler#OnPointerClick(UnityEngine.EventSystems.PointerEventData)">
+            <summary>
+            React to clicks.
+            </summary>
+        </member>
+        <member name="P:EasyFramework.UIKit.EasyToggleGroup.AllowSwitchOff">
+            <summary>
+            Is it allowed that no toggle is switched on?
+            </summary>
+            <remarks>
+            If this setting is enabled, pressing the toggle that is currently switched on will switch it off, so that no toggle is switched on. If this setting is disabled, pressing the toggle that is currently switched on will not change its state.
+            Note that even if allowSwitchOff is false, the Toggle Group will not enforce its constraint right away if no toggles in the group are switched on when the scene is loaded or when the group is instantiated. It will only prevent the user from switching a toggle off.
+            </remarks>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.Start">
+            <summary>
+            Because all the Toggles have registered themselves in the OnEnabled, Start should check to
+            make sure at least one Toggle is active in groups that do not AllowSwitchOff
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.NotifyToggleOn(EasyFramework.UIKit.EasyToggle,System.Boolean)">
+            <summary>
+            Notify the group that the given toggle is enabled.
+            </summary>
+            <param name="toggle">The toggle that got triggered on.</param>
+            <param name="sendCallback">If other toggles should send onValueChanged.</param>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.UnRegisterToggle(EasyFramework.UIKit.EasyToggle)">
+            <summary>
+            Unregister a toggle from the group.
+            </summary>
+            <param name="toggle">The toggle to remove.</param>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.RegisterToggle(EasyFramework.UIKit.EasyToggle)">
+            <summary>
+            Register a toggle with the toggle group so it is watched for changes and notified if another toggle in the group changes.
+            </summary>
+            <param name="toggle">The toggle to register with the group.</param>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.EnsureValidState">
+            <summary>
+            Ensure that the toggle group still has a valid state. This is only relevant when a ToggleGroup is Started
+            or a Toggle has been deleted from the group.
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.AnyTogglesOn">
+            <summary>
+            Are any of the toggles on?
+            </summary>
+            <returns>Are and of the toggles on?</returns>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.ActiveToggles">
+            <summary>
+            Returns the toggles in this group that are active.
+            </summary>
+            <returns>The active toggles in the group.</returns>
+            <remarks>
+            Toggles belonging to this group but are not active either because their GameObject is inactive or because the Toggle component is disabled, are not returned as part of the list.
+            </remarks>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.GetFirstActiveToggle">
+            <summary>
+            Returns the toggle that is the first in the list of active toggles.
+            </summary>
+            <returns>The first active toggle from m_Toggles</returns>
+            <remarks>
+            Get the active toggle for this group. As the group
+            </remarks>
+        </member>
+        <member name="M:EasyFramework.UIKit.EasyToggleGroup.SetAllTogglesOff(System.Boolean)">
+            <summary>
+            Switch all toggles off.
+            </summary>
+            <remarks>
+            This method can be used to switch all toggles off, regardless of whether the allowSwitchOff property is enabled or not.
+            </remarks>
+        </member>
+    </members>
+</doc>
