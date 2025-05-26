@@ -17,6 +17,7 @@ namespace EasyFramework.UIKit
     {
         Transform Transform { get; }
         PanelState State { get; }
+        int Order { get; internal set; }
         
         UniTask InitializeAsync();
 
