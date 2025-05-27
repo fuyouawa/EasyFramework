@@ -174,7 +174,7 @@ namespace EasyFramework.ToolKit.Editor
                         .Select(GetSortedBindableComponentTypes)
                         .Aggregate((a, b) => a.Intersect(b).ToArray()),
                     EditorHelper.TempContent("绑定组件"),
-                    _bindComponentTypeProperty.GetSmartLabel(),
+                    _bindComponentTypeProperty.GetSmartContent(),
                     t =>
                     {
                         _bindComponentTypeProperty.ValueEntry.SetAllWeakValues(t);
@@ -188,7 +188,7 @@ namespace EasyFramework.ToolKit.Editor
                             GetSpecficableBindTypes(((Type)_bindComponentTypeProperty.ValueEntry.WeakValues[i])))
                         .Aggregate((a, b) => a.Intersect(b).ToArray()),
                     EditorHelper.TempContent("指定要绑定的类型"),
-                    _specificBindTypeProperty.GetSmartLabel(),
+                    _specificBindTypeProperty.GetSmartContent(),
                     t => { _specificBindTypeProperty.ValueEntry.SetAllWeakValues(t); });
             }
 

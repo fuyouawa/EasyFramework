@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 using EasyFramework.Core;
+using EasyFramework.Core.Internal;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.Linq;
-using System.Reflection;
 using EasyFramework.Core;
 using JetBrains.Annotations;
 using Object = UnityEngine.Object;
@@ -14,6 +13,12 @@ namespace EasyFramework.Editor
 {
     public static class EasyEditorGUI
     {
+        #region Define
+
+        public static readonly GUIContent NoneSelectorBtnLabel = new GUIContent("");
+
+        #endregion
+
         #region Internal
 
         private struct ContextInfo

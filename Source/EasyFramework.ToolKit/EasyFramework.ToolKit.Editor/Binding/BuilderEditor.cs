@@ -146,13 +146,13 @@ namespace EasyFramework.ToolKit.Editor
             EasyEditorGUI.DrawSelectorDropdown(
                 () => BuilderSettings.Instance.GenerateDirectoryPresets,
                 EditorHelper.TempContent("代码生成目录"),
-                _generateDirectoryProperty.GetSmartLabel(),
+                _generateDirectoryProperty.GetSmartContent(),
                 t => { _generateDirectoryProperty.ValueEntry.SetAllWeakValues(t); });
             
             EasyEditorGUI.DrawSelectorDropdown(
                 () => BuilderSettings.Instance.NamespacePresets,
                 EditorHelper.TempContent("命名空间"),
-                _namespaceProperty.GetSmartLabel(),
+                _namespaceProperty.GetSmartContent(),
                 t => { _namespaceProperty.ValueEntry.SetAllWeakValues(t); });
 
             _useGameObjectNameProperty.DrawEx("使用游戏对象名称", "脚本名直接使用游戏对象名称");
@@ -200,7 +200,7 @@ namespace EasyFramework.ToolKit.Editor
                 EasyEditorGUI.DrawSelectorDropdown(
                     () => BuilderSettings.BaseTypes,
                     EditorHelper.TempContent("脚本基类"),
-                    targetBaseClassProperty.GetSmartLabel(),
+                    targetBaseClassProperty.GetSmartContent(),
                     t => { targetBaseClassProperty.ValueEntry.SetAllWeakValues(t); });
             }
             else
@@ -211,7 +211,7 @@ namespace EasyFramework.ToolKit.Editor
             EasyEditorGUI.DrawSelectorDropdown(
                 () => BuilderSettings.ArchitectureTypes,
                 EditorHelper.TempContent("架构"),
-                _architectureTypeProperty.GetSmartLabel(),
+                _architectureTypeProperty.GetSmartContent(),
                 t => { _architectureTypeProperty.ValueEntry.SetAllWeakValues(t); });
 
 

@@ -1,4 +1,5 @@
 using EasyFramework.Core;
+using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,24 +7,15 @@ namespace EasyFramework.Editor
 {
     public static class EditorWindowExtension
     {
-        public static void CenterWindowWithSizeRadio(this EditorWindow window, Vector2 windowSizeRadio)
+        public static void CenterWindowWithRadio(this EditorWindow window, float widthRadio, float heightRadio)
         {
-            var size = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-            size.x *= windowSizeRadio.x;
-            size.y *= windowSizeRadio.y;
-            window.CenterWindow(size);
+            var rect = GUIHelper.GetEditorWindowRect();
+            window.CenterWindow(rect.width * widthRadio, rect.height * heightRadio);
         }
 
-        public static void CenterWindow(this EditorWindow window, Vector2 windowSize)
+        public static void CenterWindow(this EditorWindow window, float width, float height)
         {
-            // var screenResolution = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
-            //
-            // var windowPosition = new Vector2(
-            //     (screenResolution.x - windowSize.x) / 2,
-            //     (screenResolution.y - windowSize.y) / 2
-            // );
-
-            window.position.AlignCenter(windowSize.x, windowSize.y);
+            window.position = GUIHelper.GetEditorWindowRect().AlignCenter(width, height);
         }
     }
 }

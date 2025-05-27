@@ -63,7 +63,7 @@ namespace EasyFramework.ToolKit.Editor
 
             var btnLabel = TargetComponent != null
                 ? EditorHelper.TempContent2(GetComponentName(TargetComponent))
-                : EditorHelper.NoneSelectorBtnLabel;
+                : EasyEditorGUI.NoneSelectorBtnLabel;
 
             EasyEditorGUI.DrawSelectorDropdown(
                 () => TargetObject != null
@@ -78,7 +78,7 @@ namespace EasyFramework.ToolKit.Editor
 
             btnLabel = TargetMember != null
                 ? EditorHelper.TempContent(GetMemberName(TargetMember))
-                : EditorHelper.NoneSelectorBtnLabel;
+                : EasyEditorGUI.NoneSelectorBtnLabel;
 
             EasyEditorGUI.DrawSelectorDropdown(
                 () => _membersBySignature.Values,

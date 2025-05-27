@@ -22,7 +22,5 @@ namespace EasyFramework.Editor
             s_tempContent2.tooltip = tooltip;
             return s_tempContent2;
         }
-
-        public static readonly GUIContent NoneSelectorBtnLabel = new GUIContent("null");
     }
 }

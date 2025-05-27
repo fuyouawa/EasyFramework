@@ -24,14 +24,14 @@ namespace EasyFramework.Editor
             }
         }
 
-        public static GUIContent GetSmartLabel(this InspectorProperty property)
+        public static GUIContent GetSmartContent(this InspectorProperty property)
         {
-            return property.GetSmartLabel(o => o.ToString());
+            return property.GetSmartContent(o => o.ToString());
         }
 
         private static readonly GUIContent SmartLabelCache = new GUIContent();
-        public static GUIContent GetSmartLabel(this InspectorProperty property,
-            Func<object, string> labelTextGetter, string conflictLabelText = "一")
+        public static GUIContent GetSmartContent(this InspectorProperty property,
+            Func<object, string> textGetter, string conflictText = "一")
         {
             if (property.ValueEntry.WeakValues.Cast<object>().AllSame())
             {
@@ -39,13 +39,13 @@ namespace EasyFramework.Editor
 
                 if (value == null)
                 {
-                    SmartLabelCache.text = EditorHelper.NoneSelectorBtnLabel.text;
-                    SmartLabelCache.tooltip = EditorHelper.NoneSelectorBtnLabel.tooltip;
-                    SmartLabelCache.image = EditorHelper.NoneSelectorBtnLabel.image;
+                    SmartLabelCache.text = EasyEditorGUI.NoneSelectorBtnLabel.text;
+                    SmartLabelCache.tooltip = EasyEditorGUI.NoneSelectorBtnLabel.tooltip;
+                    SmartLabelCache.image = EasyEditorGUI.NoneSelectorBtnLabel.image;
                 }
                 else
                 {
-                    SmartLabelCache.text = labelTextGetter(value);
+                    SmartLabelCache.text = textGetter(value);
                     SmartLabelCache.tooltip = null;
 
                     if (value is Type type)

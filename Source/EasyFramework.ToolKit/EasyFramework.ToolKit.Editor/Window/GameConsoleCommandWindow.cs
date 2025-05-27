@@ -22,7 +22,7 @@ namespace EasyFramework.ToolKit.Editor
             var window = GetWindow<GameConsoleCommandWindow>("GameConsole Commands");
             if (!isNew)
             {
-                window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
+                window.CenterWindowWithRadio(0.4f, 0.45f);
             }
         }
 

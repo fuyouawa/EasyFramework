@@ -33,7 +33,7 @@ namespace EasyFramework.ToolKit.Editor
             return true;
         }
 
-        [MenuItem("GameObject/EasyFramework/Add Binder")]
+        [MenuItem("GameObject/EasyFramework/Add Binder", false, -100)]
         private static void AddBinder()
         {
             foreach (var o in Selection.gameObjects)
@@ -47,7 +47,7 @@ namespace EasyFramework.ToolKit.Editor
             }
         }
 
-        [MenuItem("GameObject/EasyFramework/Add Builder")]
+        [MenuItem("GameObject/EasyFramework/Add Builder", false, -100)]
         private static void AddBuilder()
         {
             foreach (var o in Selection.gameObjects)

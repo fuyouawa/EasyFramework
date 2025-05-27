@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    public class EasyFrameworkSettingsWindow : OdinMenuEditorWindow
+    public class SettingsWindow : OdinMenuEditorWindow
     {
-        [MenuItem("Tools/EasyFramework/EasyFramework Settings")]
+        [MenuItem("Tools/EasyFramework/Settings/ToolKit")]
         public static void ShowWindow()
         {
-            var isNew = HasOpenInstances<EasyFrameworkSettingsWindow>();
-            var window = GetWindow<EasyFrameworkSettingsWindow>("EasyFramework Settings");
+            var isNew = HasOpenInstances<SettingsWindow>();
+            var window = GetWindow<SettingsWindow>("ToolKit");
             if (!isNew)
             {
-                window.CenterWindowWithSizeRadio(new Vector2(0.4f, 0.45f));
+                window.CenterWindowWithRadio(0.4f, 0.45f);
             }
         }
 
@@ -22,7 +22,6 @@ namespace EasyFramework.ToolKit.Editor
         {
             var tree = new OdinMenuTree(false)
             {
-                // { "Ui/UiTextPresets", UiTextPresetsSettings.Instance },
                 { "Editor/Binder", BinderSettings.Instance },
                 { "Editor/Builder", BuilderSettings.Instance }
             };
