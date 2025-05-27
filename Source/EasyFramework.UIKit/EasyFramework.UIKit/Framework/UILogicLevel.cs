@@ -34,14 +34,14 @@ namespace EasyFramework.UIKit
             _openedPanels.Remove(panel);
         }
 
-        public IPanel[] FindPanels(Type panelType)
+        public IPanel[] FindPanelsByType(Type panelType)
         {
-            return _openedPanels.Where(panel => panel.GetType() == panelType).ToArray();
+            return _openedPanels.Where(panel => panel.Info.PanelType == panelType).ToArray();
         }
 
-        public IPanel FindFirstPanel(Type panelType)
+        public IPanel FindFirstPanelByType(Type panelType)
         {
-            return _openedPanels.FirstOrDefault(panel => panel.GetType() == panelType);
+            return _openedPanels.FirstOrDefault(panel => panel.Info.PanelType == panelType);
         }
     }
 }

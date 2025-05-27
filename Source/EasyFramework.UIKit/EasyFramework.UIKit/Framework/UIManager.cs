@@ -2,14 +2,18 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using EasyFramework.Core;
+using UnityEngine;
 
 namespace EasyFramework.UIKit
 {
     public class UIManager : MonoSingleton<UIManager>
     {
         public static IPanelLoader DefaultPanelLoader = new DefaultPanelLoader();
-        
+
+        [SerializeField] private UIRoot _root;
         private readonly UILogicLevel[] _logicLevels;
+
+        public UIRoot Root => _root;
 
         private UIManager()
         {
@@ -36,6 +40,18 @@ namespace EasyFramework.UIKit
             };
         }
 
+        public async UniTask<T> OpenPanelAsync<T>(
+            string assetAddress = null,
+            UILevel level = UILevel.Common,
+            IPanelData panelData = null,
+            PanelOpenType panelOpenType = PanelOpenType.Single,
+            IPanelLoader panelLoader = null)
+            where T : class, IPanel
+        {
+            var panel = await OpenPanelAsync(typeof(T), assetAddress, level, panelData, panelOpenType, panelLoader);
+            return panel as T;
+        }
+
         public async UniTask<IPanel> OpenPanelAsync(
             Type panelType,
             string assetAddress = null,
@@ -50,15 +66,34 @@ namespace EasyFramework.UIKit
             IPanel panel = null;
             if (panelOpenType == PanelOpenType.Single)
             {
-                panel = logicLevel.FindFirstPanel(panelType);
+                panel = logicLevel.FindFirstPanelByType(panelType);
+
+                if (panel != null)
+                {
+                    if (panel.State == PanelState.Opened)
+                    {
+                        Debug.LogWarning($"Panel '{panelType}' has been opened.");
+                        return panel;
+                    }
+
+                    Assert.True(panel.State != PanelState.Killed);
+                }
             }
 
             if (panel == null)
             {
                 panelLoader ??= DefaultPanelLoader;
-                var inst = await panelLoader.LoadAsync(info);
+                var prefab = await panelLoader.LoadPrefabAsync(info);
+                var inst = await panelLoader.InstantiateAsync(prefab);
                 panel = inst.GetComponent<IPanel>();
-                logicLevel.PushPanel(panel);
+            }
+
+            panel.Info = info;
+            _root.SetPanelLevel(panel, level);
+            logicLevel.PushPanel(panel);
+
+            if (panel.State == PanelState.Uninitialized)
+            {
                 await panel.InitializeAsync();
             }
 

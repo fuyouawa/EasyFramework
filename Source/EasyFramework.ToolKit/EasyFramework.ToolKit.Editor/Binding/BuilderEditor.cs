@@ -4,6 +4,7 @@ using EasyFramework.Core;
 using EasyFramework.Editor;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit.Editor
@@ -127,6 +128,7 @@ namespace EasyFramework.ToolKit.Editor
                         }
 
                         builder.BindTo(comp);
+                        ComponentUtility.MoveComponentDown(builder);
                     }
                 }
                 catch (Exception e)

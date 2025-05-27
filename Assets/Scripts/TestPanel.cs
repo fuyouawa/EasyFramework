@@ -3,17 +3,21 @@ using EasyFramework.UIKit;
 using EasyFramework.Core;
 using EasyFramework.ToolKit;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
-public class TestController : UIPanel, IController
+public class TestPanel : UIPanel, IController
 {
     #region 绑定变量
     
     [SerializeField, Binding, TitleGroup("Binding")]
-    private Transform _gameObject1;
+    private TMP_Dropdown _dropdown;
     
     [SerializeField, Binding, TitleGroup("Binding")]
-    private Transform _gameObject2;
+    private TMP_InputField _testInput2;
+    
+    [SerializeField, Binding, TitleGroup("Binding")]
+    private TMP_InputField _testInput;
     
     #endregion
 

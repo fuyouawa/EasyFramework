@@ -83,6 +83,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 builder.BaseClass,
                 typeof(IController),
                 typeof(BindingAttribute),
+                typeof(SerializeField),
                 builder.ArchitectureType
             };
             switch (builder.BindersGroupType)

@@ -7,56 +7,65 @@ namespace EasyFramework.UIKit
 {
     public abstract class UIPanel : MonoBehaviour, IPanel
     {
-        protected UILevel Level
-        {
-            get
-            {
-                if (Order < (int)UILevel.Background)
-                {
-                    return UILevel.Lowest;
-                }
+        protected UILevel PanelLevel { get; private set; }
 
-                if (Order < (int)UILevel.Common)
-                {
-                    return UILevel.Background;
-                }
-                
-                if (Order < (int)UILevel.PopUI)
-                {
-                    return UILevel.Common;
-                }
-                
-                if (Order < (int)UILevel.Topest)
-                {
-                    return UILevel.PopUI;
-                }
-                
-                return UILevel.Topest;
-            }
+        protected int PanelOrder { get; private set; }
+
+        protected PanelInfo PanelInfo { get; private set; }
+
+        PanelInfo IPanel.Info
+        {
+            get => PanelInfo;
+            set => PanelInfo = value;
         }
-        protected int Order { get; private set; }
+
         protected PanelState PanelState { get; private set; }
-        protected UIManager Manager => UIManager.Instance;
 
         Transform IPanel.Transform => transform;
         PanelState IPanel.State => PanelState;
 
         int IPanel.Order
         {
-            get => Order;
-            set => Order = value;
+            get => PanelOrder;
+            set
+            {
+                PanelOrder = value;
+
+                if (PanelOrder < (int)UILevel.Background)
+                {
+                    PanelLevel = UILevel.Lowest;
+                }
+
+                if (PanelOrder < (int)UILevel.Common)
+                {
+                    PanelLevel = UILevel.Background;
+                }
+
+                if (PanelOrder < (int)UILevel.PopUI)
+                {
+                    PanelLevel = UILevel.Common;
+                }
+
+                if (PanelOrder < (int)UILevel.Topest)
+                {
+                    PanelLevel = UILevel.PopUI;
+                }
+
+                PanelLevel = UILevel.Topest;
+            }
         }
 
-        UniTask IPanel.InitializeAsync()
+        async UniTask IPanel.InitializeAsync()
         {
             PanelState = PanelState.Initializing;
-            return OnInitAsync();
+            await OnInitAsync();
+            PanelState = PanelState.Initialized;
         }
 
         void IPanel.Open(IPanelData panelData)
         {
-            PanelState = PanelState.Opening;
             OnOpen(panelData);
+            PanelState = PanelState.Opened;
         }
 
         void IPanel.Close()

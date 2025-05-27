@@ -7,8 +7,10 @@ namespace EasyFramework.UIKit
 
     public enum PanelState
     {
+        Uninitialized,
         Initializing,
-        Opening,
+        Initialized,
+        Opened,
         Closed,
         Killed
     }
@@ -18,9 +20,10 @@ namespace EasyFramework.UIKit
         Transform Transform { get; }
         PanelState State { get; }
         int Order { get; internal set; }
+        PanelInfo Info { get; internal set; }
         
         UniTask InitializeAsync();
-
+        
         void Open(IPanelData panelData);
 
         void Close();

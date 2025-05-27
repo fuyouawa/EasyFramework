@@ -1,4 +1,6 @@
 using EasyFramework.Core;
+using UnityEditor;
+using UnityEditor.SceneManagement;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -15,6 +17,7 @@ namespace EasyFramework.ToolKit.Editor
             {
                 return false;
             }
+
             if (identifier.Length == 1)
                 return true;
 
@@ -26,7 +29,36 @@ namespace EasyFramework.ToolKit.Editor
                     return false;
                 }
             }
+
             return true;
+        }
+
+        [MenuItem("GameObject/EasyFramework/Add Binder")]
+        private static void AddBinder()
+        {
+            foreach (var o in Selection.gameObjects)
+            {
+                if (o.GetComponent<Binder>() != null)
+                    continue;
+
+                o.AddComponent<Binder>();
+                EditorUtility.SetDirty(o);
+                EditorSceneManager.MarkSceneDirty(o.scene);
+            }
+        }
+
+        [MenuItem("GameObject/EasyFramework/Add Builder")]
+        private static void AddBuilder()
+        {
+            foreach (var o in Selection.gameObjects)
+            {
+                if (o.GetComponent<Builder>() != null)
+                    continue;
+
+                o.AddComponent<Builder>();
+                EditorUtility.SetDirty(o);
+                EditorSceneManager.MarkSceneDirty(o.scene);
+            }
         }
     }
 }

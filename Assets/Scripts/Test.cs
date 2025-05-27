@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using EasyFramework.Core;
 using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using EasyFramework.Tweening;
+using EasyFramework.UIKit;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
@@ -191,6 +193,11 @@ public class Test : MonoBehaviour
             end = DateTime.Now;
             diff = end - begin;
             Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            UIManager.Instance.OpenPanelAsync<TestPanel>().Forget();
         }
     }
 
