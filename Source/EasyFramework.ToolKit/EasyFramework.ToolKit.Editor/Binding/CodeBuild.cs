@@ -13,21 +13,17 @@ namespace EasyFramework.ToolKit.Editor
     {
         private static readonly string CsTemplate = @"
 {{ Header }}
+
 {{ Body }}
 ".TrimStart();
 
         private static readonly string CsNamespaceTemplate = @"
 {{ Header }}
+
 namespace {{ Namespace }}
 {
 {{ Body }}
 }
-".Trim();
-
-        private static readonly string CsHeaderTemplate = @"
-{%- for using in Usings -%}
-using {{ using }};
-{%- endfor -%}
 ".Trim();
 
         private static readonly string CsBodyTemplate = @"
@@ -75,7 +71,6 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             }
 
             var path = dir + "/" + scriptName + ".cs";
-            var engine = new TemplateEngine();
 
             var types = new List<Type>()
             {
@@ -99,15 +94,14 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
             types.AddRange(builder.GetOwnedBinders().Select(binder => binder.GetBindType()));
 
-            var header = engine.Render(CsHeaderTemplate, new
-            {
-                Usings = types
-                    .Where(type => type != null && type.Namespace.IsNotNullOrEmpty() && type.Namespace != builder.Namespace)
-                    .Select(type => type.Namespace)
-                    .Distinct().ToArray()
-            });
+            var header = string.Join("\n", types
+                .Where(type =>
+                    type != null && type.Namespace.IsNotNullOrEmpty() && type.Namespace != builder.Namespace)
+                .Select(type => $"using {type.Namespace};")
+                .Distinct());
 
             var binderFields = GetBinderFieldsCode(builder);
 
@@ -128,7 +122,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 : "throw new NotImplementedException();";
             arch = AddIndent(arch);
 
-            var body = engine.Render(CsBodyTemplate, new
+            var body = TemplateEngine.Render(CsBodyTemplate, new
             {
                 ClassName = builder.GetScriptName(),
                 BaseClassName = builder.BaseClass.Name,
@@ -138,8 +132,8 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             });
 
             var code = CombineCode(builder, header, body);
-            File.WriteAllText(path, code);
-            // Debug.Log(code);
+            // File.WriteAllText(path, code);
+            Debug.Log(code);
             AssetDatabase.Refresh();
         }
 
@@ -149,6 +143,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             {
                 return AddIndent(AddIndent(GetBinderFieldsCode(builder)));
             }
+
             return AddIndent(GetBinderFieldsCode(builder));
         }
 
@@ -161,14 +156,14 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
         private static string CombineCode(Builder builder, string header, string body)
         {
             string code;
-            var engine = new TemplateEngine();
             if (builder.Namespace.IsNotNullOrWhiteSpace())
             {
                 if (!BindingUtility.IsValidIdentifier(builder.Namespace))
                 {
                     throw new Exception($"The namespace '{builder.Namespace}' is invalid.");
                 }
-                code = engine.Render(CsNamespaceTemplate, new
+
+                code = TemplateEngine.Render(CsNamespaceTemplate, new
                 {
                     Header = header,
                     Namespace = builder.Namespace.Trim(),
@@ -177,7 +172,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             }
             else
             {
-                code = engine.Render(CsTemplate, new
+                code = TemplateEngine.Render(CsTemplate, new
                 {
                     Header = header,
                     Body = body
@@ -214,6 +209,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 {
                     throw new Exception($"The binding field name '{bindName}' is invalid.");
                 }
+
                 return new
                 {
                     Access = access,

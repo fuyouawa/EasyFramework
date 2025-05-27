@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using EasyFramework.Core;
-using EasyFramework.Serialization;
+// using EasyFramework.Serialization;
 using EasyFramework.ToolKit;
 using EasyFramework.Tweening;
 using EasyFramework.UIKit;
@@ -25,8 +25,8 @@ public class Test : MonoBehaviour
 
     public int Power = 2;
 
-    [SerializeField]
-    private EasySerializationData _data;
+    // [SerializeField]
+    // private EasySerializationData _data;
     // public Vector2 SectionX;
 
     void Awake()
@@ -78,11 +78,11 @@ public class Test : MonoBehaviour
         {
             var val = new MyClass();
 
-            var data = new EasySerializationData(EasyDataFormat.Json);
-
-            EasySerialize.To(val, ref data);
-            Debug.Log(data.StringData);
-            EasySerialize.From<MyClass>(ref data);
+            // var data = new EasySerializationData(EasyDataFormat.Json);
+            //
+            // EasySerialize.To(val, ref data);
+            // Debug.Log(data.StringData);
+            // EasySerialize.From<MyClass>(ref data);
         }
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -105,31 +105,31 @@ public class Test : MonoBehaviour
         {
             var val = new MyClass();
             
-            var data = new EasySerializationData(EasyDataFormat.Binary);
+            // var data = new EasySerializationData(EasyDataFormat.Binary);
+            //
+            // int count = 10000;
+            // var begin = DateTime.Now;
+            //
+            // for (int i = 0; i < count; i++)
+            // {
+            //     EasySerialize.To(val, ref data);
+            // }
+            //
+            // var end = DateTime.Now;
+            // var diff = end - begin;
+            // Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+            // Debug.Log($"Serialize data length: {data.BinaryData.Length}");
+            //
+            //
+            // begin = DateTime.Now;
+            // for (int i = 0; i < count; i++)
+            // {
+            //     EasySerialize.From<MyClass>(ref data);
+            // }
             
-            int count = 10000;
-            var begin = DateTime.Now;
-            
-            for (int i = 0; i < count; i++)
-            {
-                EasySerialize.To(val, ref data);
-            }
-            
-            var end = DateTime.Now;
-            var diff = end - begin;
-            Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
-            Debug.Log($"Serialize data length: {data.BinaryData.Length}");
-            
-            
-            begin = DateTime.Now;
-            for (int i = 0; i < count; i++)
-            {
-                EasySerialize.From<MyClass>(ref data);
-            }
-            
-            end = DateTime.Now;
-            diff = end - begin;
-            Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+            // end = DateTime.Now;
+            // diff = end - begin;
+            // Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
 
         }
 
@@ -137,33 +137,33 @@ public class Test : MonoBehaviour
         {
             var val = new MyClass();
             
-            var data = new EasySerializationData(EasyDataFormat.Json);
-            
-            int count = 10000;
-            var begin = DateTime.Now;
-            
-            for (int i = 0; i < count; i++)
-            {
-                EasySerialize.To(val, ref data);
-            }
-            
-            var end = DateTime.Now;
-            var diff = end - begin;
-            Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
-            Debug.Log($"Serialize data length: {data.StringData.Length} | data: {data.StringData}");
-            
-            
-            begin = DateTime.Now;
-            for (int i = 0; i < count; i++)
-            {
-                var cls = EasySerialize.From<MyClass>(ref data);
-            }
-            
-            end = DateTime.Now;
-            diff = end - begin;
-            Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
-
-            _data = data;
+            // var data = new EasySerializationData(EasyDataFormat.Json);
+            //
+            // int count = 10000;
+            // var begin = DateTime.Now;
+            //
+            // for (int i = 0; i < count; i++)
+            // {
+            //     EasySerialize.To(val, ref data);
+            // }
+            //
+            // var end = DateTime.Now;
+            // var diff = end - begin;
+            // Debug.Log($"Serialize {count} element use {diff.TotalSeconds} time");
+            // Debug.Log($"Serialize data length: {data.StringData.Length} | data: {data.StringData}");
+            //
+            //
+            // begin = DateTime.Now;
+            // for (int i = 0; i < count; i++)
+            // {
+            //     var cls = EasySerialize.From<MyClass>(ref data);
+            // }
+            //
+            // end = DateTime.Now;
+            // diff = end - begin;
+            // Debug.Log($"Deserialize {count} element use {diff.TotalSeconds} time");
+            //
+            // _data = data;
         }
 
         if (Input.GetKeyDown(KeyCode.E))

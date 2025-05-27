@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Text;
 using EasyFramework.Core;
 using EasyFramework.Editor;
-using EasyFramework.Serialization;
 using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Serialization;
 using UnityEditor;
 using UnityEngine;
+using SerializationUtility = Sirenix.Serialization.SerializationUtility;
 
 namespace EasyFramework.ToolKit.Editor
 {
@@ -86,9 +87,21 @@ namespace EasyFramework.ToolKit.Editor
                     }
                     else
                     {
-                        var data = new EasySerializationData(EasyDataFormat.Json);
-                        EasySerialize.To(Argument, paramType, ref data);
-                        Output += data.StringData;
+                        var method = typeof(SerializationUtility).GetMethods(BindingFlagsHelper.PublicStatic())
+                            .First(method =>
+                            {
+                                if (method.Name != "SerializeValue")
+                                    return false;
+                                var ps = method.GetParameters();
+                                if (ps.Length != 3)
+                                    return false;
+                                return ps[0].ParameterType.IsGenericParameter &&
+                                       ps[1].ParameterType == typeof(DataFormat);
+                            });
+                        var call = method.MakeGenericMethod(paramType);
+
+                        var data = (byte[])call.Invoke(null, new object[] { Argument, DataFormat.JSON, null });
+                        Output += Encoding.UTF8.GetString(data);
                     }
                 }
             }

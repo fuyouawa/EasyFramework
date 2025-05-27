@@ -1,19 +1,18 @@
 // using System;
 // using System.Collections.Generic;
-// using Sirenix.OdinInspector;
-// using TMPro;
+// using EasyFramework.Core;
 // using UnityEngine;
 //
 // namespace EasyFramework.ToolKit
 // {
-//     [Serializable, HideReferenceObjectPicker, InlineProperty]
+//     [Serializable]
 //     public class FontAssetPreset
 //     {
 //         public TMP_FontAsset FontAsset;
 //         public Material Material;
 //     }
 //
-//     [Serializable, HideReferenceObjectPicker, InlineProperty]
+//     [Serializable]
 //     public class TextPropertiesPreset
 //     {
 //         public float FontSize = 26;

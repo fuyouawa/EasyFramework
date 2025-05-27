@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using EasyFramework.Core;
 using Sirenix.OdinInspector.Editor;
@@ -13,8 +14,16 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override bool MemberFilter(MemberInfo member)
         {
-            if (!member.TryGetValueType(out var type))
+            Type type;
+            try
+            {
+                type = member.GetMemberType();
+            }
+            catch (Exception e)
+            {
                 return false;
+            }
+
             if (type == typeof(void))
                 return false;
             if (member is MethodInfo method)
@@ -32,8 +41,17 @@ namespace EasyFramework.ToolKit.Editor
 
         protected override bool MemberFilter(MemberInfo member)
         {
-            if (base.MemberFilter(member) && member.TryGetValueType(out var type))
+            if (base.MemberFilter(member))
             {
+                Type type;
+                try
+                {
+                    type = member.GetMemberType();
+                }
+                catch (Exception e)
+                {
+                    return false;
+                }
                 return type == typeof(TReturn);
             }
             return false;

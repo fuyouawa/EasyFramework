@@ -1,8 +1,8 @@
-using EasyFramework.Serialization;
 using System.Reflection;
 using System.Text;
 using System;
 using EasyFramework.Core;
+using Sirenix.Serialization;
 
 namespace EasyFramework.ToolKit
 {
@@ -96,8 +96,7 @@ namespace EasyFramework.ToolKit
             }
             else
             {
-                var data = new EasySerializationData(argText, EasyDataFormat.Json);
-                arg = EasySerialize.From<T>(ref data);
+                arg = SerializationUtility.DeserializeValue<T>(Encoding.UTF8.GetBytes(argText), DataFormat.JSON);
             }
 
             call.Invoke(this, new object[] { arg });

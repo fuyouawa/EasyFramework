@@ -1,65 +1,55 @@
 using System;
-using EasyFramework.Core.Internal;
-using EasyFramework.Serialization;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using EasyFramework.Core;
 
 namespace EasyFramework.ToolKit
 {
-    public class TemplateEngine : IDisposable
+    public static class TemplateEngine
     {
-        private readonly NativeTemplateEngineEnvironment _environment;
-
-        private static readonly EasySerializeSettings SerializeSettings = new EasySerializeSettings(MemberFilterPresets.AllPublicGettable);
-
-        public TemplateEngine()
+        private static string NormalizeKey(string key)
         {
-            try
-            {
-                _environment = NativeTemplateEngine.AllocTemplateEngineEnvironmentSafety();
-            }
-            catch (NativeException e)
-            {
-                if (e.ErrorCode == NativeErrorCode.TemplateEngineRenderFailed)
-                    throw new TemplateEngineException(e.Message);
-
-                throw;
-            }
+            // Handles snake_case, potential kebab-case in templates, and general case insensitivity
+            // by lowercasing and removing underscores and hyphens.
+            return key.Replace("_", "").Replace("-", "").ToLowerInvariant();
         }
 
-        public string Render<T>(string template, T data)
+        public static string Render(string template, object data)
         {
-            try
+            if (data == null)
             {
-                var jsonData = new EasySerializationData(EasyDataFormat.Json);
-                EasySerialize.To(data, ref jsonData, SerializeSettings);
-                if (string.IsNullOrEmpty(jsonData.StringData))
-                    return null;
-                var ios = NativeGeneric.AllocStringIoStreamSafety();
-                NativeTemplateEngine.RenderTemplateToStreamSafety(ios, _environment, template, jsonData.StringData);
-                var cBuf = NativeGeneric.GetIoStreamBufferSafety(ios);
-                return cBuf.ToStringWithFree();
+                throw new ArgumentNullException(nameof(data), "Data object cannot be null for template rendering.");
             }
-            catch (NativeException e)
-            {
-                if (e.ErrorCode == NativeErrorCode.TemplateEngineRenderFailed)
-                    throw new TemplateEngineException(e.Message);
 
-                throw;
-            }
-        }
+            var dict = data.GetType()
+                .GetMembers(BindingFlagsHelper.AllInstance())
+                .Where(member => member is FieldInfo || member is PropertyInfo)
+                .ToDictionary(member => member.Name, member => member.GetMemberValue(data));
 
-        public void Dispose()
-        {
-            try
-            {
-                NativeTemplateEngine.FreeTemplateEngineEnvironmentSafety(_environment);
-            }
-            catch (NativeException e)
-            {
-                if (e.ErrorCode == NativeErrorCode.TemplateEngineRenderFailed)
-                    throw new TemplateEngineException(e.Message);
+            // Regex to find placeholders like {{ key }}, {{key}}, {{ key_name }}
+            // It allows letters, numbers, and underscores in key names, surrounded by optional whitespace.
+            string pattern = @"{{\s*(?<keyName>[a-zA-Z0-9_]+)\s*}}";
 
-                throw;
-            }
+            string result = Regex.Replace(template, pattern, match =>
+            {
+                string keyFromTemplate = match.Groups["keyName"].Value;
+                string normalizedKeyFromTemplate = NormalizeKey(keyFromTemplate);
+
+                foreach (var kvp in dict)
+                {
+                    string normalizedDictKey = NormalizeKey(kvp.Key);
+                    if (normalizedDictKey == normalizedKeyFromTemplate)
+                    {
+                        return kvp.Value?.ToString() ?? string.Empty;
+                    }
+                }
+                // If no match is found, leave the tag as is in the template.
+                // This helps in debugging (e.g. misspelled variable names).
+                return match.Value;
+            });
+
+            return result;
         }
     }
 }

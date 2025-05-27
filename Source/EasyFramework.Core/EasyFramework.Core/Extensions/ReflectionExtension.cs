@@ -101,63 +101,40 @@ namespace EasyFramework.Core
             return string.Join(", ",
                 method.GetParameters().Select(x => $"{TypeExtension.GetAliases(x.ParameterType)} {x.Name}"));
         }
-
-
-        public static bool TryGetValueType(this MemberInfo member, out Type type)
-        {
-            if (member is MethodInfo m)
-            {
-                type = m.ReturnType;
-            }
-            else if (member is FieldInfo f)
-            {
-                type = f.FieldType;
-            }
-            else if (member is PropertyInfo p)
-            {
-                type = p.PropertyType;
-            }
-            else
-            {
-                type = null;
-                return false;
-            }
-            return true;
-        }
         
-        public static object GetObjectValue(this object obj, string name, BindingFlags flags)
-        {
-            var t = obj.GetType();
-            var f = t.GetField(name, flags);
-            if (f != null)
-            {
-                return f.GetValue(obj);
-            }
-            var p = t.GetProperty(name, flags);
-            if (p != null)
-            {
-                return p.GetValue(obj);
-            }
-
-            throw new ArgumentException($"No field or property name:{name}");
-        }
-        
-        public static Type GetObjectValueType(this object obj, string name, BindingFlags flags)
-        {
-            var t = obj.GetType();
-            var f = t.GetField(name, flags);
-            if (f != null)
-            {
-                return f.FieldType;
-            }
-            var p = t.GetProperty(name, flags);
-            if (p != null)
-            {
-                return p.PropertyType;
-            }
-
-            throw new ArgumentException($"No field or property name:{name}");
-        }
+        // public static object GetObjectValue(this object obj, string name, BindingFlags flags)
+        // {
+        //     var t = obj.GetType();
+        //     var f = t.GetField(name, flags);
+        //     if (f != null)
+        //     {
+        //         return f.GetValue(obj);
+        //     }
+        //     var p = t.GetProperty(name, flags);
+        //     if (p != null)
+        //     {
+        //         return p.GetValue(obj);
+        //     }
+        //
+        //     throw new ArgumentException($"No field or property name:{name}");
+        // }
+        //
+        // public static Type GetObjectValueType(this object obj, string name, BindingFlags flags)
+        // {
+        //     var t = obj.GetType();
+        //     var f = t.GetField(name, flags);
+        //     if (f != null)
+        //     {
+        //         return f.FieldType;
+        //     }
+        //     var p = t.GetProperty(name, flags);
+        //     if (p != null)
+        //     {
+        //         return p.PropertyType;
+        //     }
+        //
+        //     throw new ArgumentException($"No field or property name:{name}");
+        // }
         
         public static Type GetMemberType(this MemberInfo member)
         {
@@ -176,24 +153,39 @@ namespace EasyFramework.Core
                 return method.ReturnType;
             }
 
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
-        
-        public static void SetObjectValue(this object obj, string name, object val, BindingFlags flags)
+
+        public static object GetMemberValue(this MemberInfo member, object target)
         {
-            var t = obj.GetType();
-            var f = t.GetField(name, flags);
-            if (f != null)
+            if (member is FieldInfo field)
             {
-                f.SetValue(obj, val);
-            }
-            var p = t.GetProperty(name, flags);
-            if (p != null)
-            {
-                p.SetValue(obj, val);
+                return field.GetValue(target);
             }
 
-            throw new ArgumentException($"No field or property name:{name}");
+            if (member is PropertyInfo property)
+            {
+                return property.GetValue(target);
+            }
+
+            throw new NotSupportedException();
         }
+        
+        // public static void SetObjectValue(this object obj, string name, object val, BindingFlags flags)
+        // {
+        //     var t = obj.GetType();
+        //     var f = t.GetField(name, flags);
+        //     if (f != null)
+        //     {
+        //         f.SetValue(obj, val);
+        //     }
+        //     var p = t.GetProperty(name, flags);
+        //     if (p != null)
+        //     {
+        //         p.SetValue(obj, val);
+        //     }
+        //
+        //     throw new ArgumentException($"No field or property name:{name}");
+        // }
     }
 }
