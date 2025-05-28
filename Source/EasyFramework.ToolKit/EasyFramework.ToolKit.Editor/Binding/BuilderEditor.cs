@@ -129,6 +129,8 @@ namespace EasyFramework.ToolKit.Editor
 
                         builder.BindTo(comp);
                         ComponentUtility.MoveComponentDown(builder);
+
+                        EditorUtility.SetDirty(builder);
                     }
                 }
                 catch (Exception e)
@@ -143,6 +145,8 @@ namespace EasyFramework.ToolKit.Editor
 
         private void DrawSettings(Rect headerRect)
         {
+            EditorGUI.BeginChangeCheck();
+
             EasyEditorGUI.DrawSelectorDropdown(
                 () => BuilderSettings.Instance.GenerateDirectoryPresets,
                 EditorHelper.TempContent("代码生成目录"),
@@ -154,6 +158,14 @@ namespace EasyFramework.ToolKit.Editor
                 EditorHelper.TempContent("命名空间"),
                 _namespaceProperty.GetSmartContent(),
                 t => { _namespaceProperty.ValueEntry.SetAllWeakValues(t); });
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (var o in targets)
+                {
+                    EditorUtility.SetDirty(o);
+                }
+            }
 
             _useGameObjectNameProperty.DrawEx("使用游戏对象名称", "脚本名直接使用游戏对象名称");
             _scriptNameProperty.DrawEx("生成脚本名");
@@ -180,6 +192,8 @@ namespace EasyFramework.ToolKit.Editor
             EditorGUI.EndDisabledGroup();
             
             _buildScriptTypeProperty.DrawEx("脚本类型");
+
+            EditorGUI.BeginChangeCheck();
 
             if (_buildScriptTypeProperty.ValueEntry.WeakValues.Cast<Builder.ScriptType>().AllSame())
             {
@@ -213,6 +227,14 @@ namespace EasyFramework.ToolKit.Editor
                 EditorHelper.TempContent("架构"),
                 _architectureTypeProperty.GetSmartContent(),
                 t => { _architectureTypeProperty.ValueEntry.SetAllWeakValues(t); });
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (var o in targets)
+                {
+                    EditorUtility.SetDirty(o);
+                }
+            }
 
 
             _bindersGroupTypeProperty.DrawEx("绑定器分组类型");
@@ -243,6 +265,8 @@ namespace EasyFramework.ToolKit.Editor
                     var dir = path[..path.LastIndexOf('/')];
                     dir = dir["Assets/".Length..];
                     _generateDirectoryProperty.ValueEntry.WeakValues[i] = dir;
+
+                    EditorUtility.SetDirty(builder);
                 }
             }
 

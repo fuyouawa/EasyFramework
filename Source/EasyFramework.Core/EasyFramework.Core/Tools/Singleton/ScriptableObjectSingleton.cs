@@ -9,7 +9,8 @@ namespace EasyFramework.Core
         public static T GetScriptableObject<T>(string assetDirectory, string assetName)
             where T : ScriptableObject, IUnitySingleton
         {
-            if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
+            if (!assetDirectory.Equals("resources/", StringComparison.OrdinalIgnoreCase) &&
+                !assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
             {
                 if (!assetDirectory.Contains("/editor/", StringComparison.OrdinalIgnoreCase))
                 {
@@ -39,16 +40,15 @@ namespace EasyFramework.Core
         private static T InternalGetScriptableObject<T>(string assetDirectory, string assetName)
             where T : ScriptableObject, IUnitySingleton
         {
-            if (!assetDirectory.Contains("/resources/", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new ArgumentException($"The path '{assetName}' must be inside a 'Resources' folder.");
-            }
-
             string resourcesPath = assetDirectory;
             int i = resourcesPath.LastIndexOf("/resources/", StringComparison.OrdinalIgnoreCase);
             if (i >= 0)
             {
                 resourcesPath = resourcesPath[(i + "/resources/".Length)..];
+            }
+            else
+            {
+                resourcesPath = resourcesPath["resources/".Length..];
             }
 
             var instance = Resources.Load<T>(resourcesPath + assetName);

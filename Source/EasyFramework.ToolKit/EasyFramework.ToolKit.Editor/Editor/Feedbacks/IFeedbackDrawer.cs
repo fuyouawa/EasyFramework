@@ -21,7 +21,7 @@ namespace EasyFramework.ToolKit.Editor
                 width = IconWidth,
                 height = IconWidth
             };
-
+            
             value.Enable = EditorGUI.Toggle(buttonRect, value.Enable);
         }
 

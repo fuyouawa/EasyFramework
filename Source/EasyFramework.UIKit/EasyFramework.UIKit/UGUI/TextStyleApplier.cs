@@ -1,3 +1,4 @@
+using EasyFramework.Core;
 using TMPro;
 using UnityEngine;
 
@@ -8,6 +9,12 @@ namespace EasyFramework.UIKit
     public class TextStyleApplier : MonoBehaviour
     {
         [SerializeField] private string _styleName;
+        [SerializeField] private bool _ignoreFontAsset;
+        [SerializeField] private bool _ignoreFontMaterial;
+        [SerializeField] private bool _ignoreFontSize;
+        [SerializeField] private bool _ignoreFontColor;
+
+        private bool _isInitialized;
 
         public string StyleName
         {
@@ -24,6 +31,14 @@ namespace EasyFramework.UIKit
 
         void OnEnable()
         {
+            if (!_isInitialized)
+            {
+                if (_styleName.IsNullOrEmpty())
+                {
+                    _styleName = TextStyleLibrary.Instance.GetDefaultStyle()?.Name;
+                }
+                _isInitialized = true;
+            }
             ApplyStyle();
         }
 
@@ -43,10 +58,25 @@ namespace EasyFramework.UIKit
 
             if (style != null)
             {
-                _text.font = style.FontAsset;
-                _text.fontSharedMaterial = style.FontMaterial;
-                _text.fontSize = style.FontSize;
-                _text.color = style.FontColor;
+                if (!_ignoreFontAsset)
+                {
+                    _text.font = style.FontAsset;
+                }
+
+                if (!_ignoreFontMaterial)
+                {
+                    _text.fontSharedMaterial = style.FontMaterial;
+                }
+
+                if (!_ignoreFontSize)
+                {
+                    _text.fontSize = style.FontSize;
+                }
+
+                if (!_ignoreFontColor)
+                {
+                    _text.color = style.FontColor;
+                }
             }
         }
     }

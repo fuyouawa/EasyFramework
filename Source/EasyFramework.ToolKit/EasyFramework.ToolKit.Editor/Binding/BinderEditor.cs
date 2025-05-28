@@ -169,6 +169,7 @@ namespace EasyFramework.ToolKit.Editor
 
             if (!_bindGameObjectProperty.ValueEntry.WeakSmartValueT<bool>())
             {
+                EditorGUI.BeginChangeCheck();
                 EasyEditorGUI.DrawSelectorDropdown(
                     () => targets.Cast<Binder>()
                         .Select(GetSortedBindableComponentTypes)
@@ -190,6 +191,14 @@ namespace EasyFramework.ToolKit.Editor
                     EditorHelper.TempContent("指定要绑定的类型"),
                     _specificBindTypeProperty.GetSmartContent(),
                     t => { _specificBindTypeProperty.ValueEntry.SetAllWeakValues(t); });
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    foreach (var o in targets)
+                    {
+                        EditorUtility.SetDirty(o);
+                    }
+                }
             }
 
             _bindAccessProperty.DrawEx("访问权限");

@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EasyFramework.Core;
-using EasyFramework.Core.Internal;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.UIKit
 {
-    [SettingsAssetPath]
+    [ScriptableObjectSingletonAssetPath("Resources")]
     public class TextStyleLibrary : ScriptableObjectSingleton<TextStyleLibrary>
     {
         [SerializeField]

@@ -10,15 +10,26 @@ using UnityEngine;
 namespace EasyFramework.UIKit.Editor
 {
     [CustomEditor(typeof(TextStyleApplier))]
+    [CanEditMultipleObjects]
     public class TextStyleApplierEditor : OdinEditor
     {
         private InspectorProperty _styleNameProperty;
+        private InspectorProperty _ignoreFontAssetProperty;
+        private InspectorProperty _ignoreFontMaterialProperty;
+        private InspectorProperty _ignoreFontSizeProperty;
+        private InspectorProperty _ignoreFontColorProperty;
+
         private TextStyle _style;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             _styleNameProperty = Tree.RootProperty.Children["_styleName"];
+            _ignoreFontAssetProperty = Tree.RootProperty.Children["_ignoreFontAsset"];
+            _ignoreFontMaterialProperty = Tree.RootProperty.Children["_ignoreFontMaterial"];
+            _ignoreFontSizeProperty = Tree.RootProperty.Children["_ignoreFontSize"];
+            _ignoreFontColorProperty = Tree.RootProperty.Children["_ignoreFontColor"];
+
             _styleNameProperty.ValueEntry.OnValueChanged += _ => RefreshStyle();
             RefreshStyle();
         }
@@ -32,11 +43,24 @@ namespace EasyFramework.UIKit.Editor
         {
             Tree.BeginDraw(true);
 
+            EditorGUI.BeginChangeCheck();
             EasyEditorGUI.DrawSelectorDropdown(
                 () => TextStyleLibrary.Instance.Styles.Select(style => style.Name),
                 EditorHelper.TempContent("样式"),
                 _styleNameProperty.GetSmartContent(),
                 styleName => _styleNameProperty.ValueEntry.SetAllWeakValues(styleName));
+            if (EditorGUI.EndChangeCheck())
+            {
+                foreach (var o in targets)
+                {
+                    EditorUtility.SetDirty(o);
+                }
+            }
+
+            _ignoreFontAssetProperty.DrawEx("忽略字体资产");
+            _ignoreFontMaterialProperty.DrawEx("忽略字体材质");
+            _ignoreFontSizeProperty.DrawEx("忽略字体大小");
+            _ignoreFontColorProperty.DrawEx("忽略字体颜色");
 
             if (_style != null && _styleNameProperty.ValueEntry.WeakValues.Cast<string>().AllSame())
             {
