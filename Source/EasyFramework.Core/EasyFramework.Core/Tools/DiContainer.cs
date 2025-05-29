@@ -18,6 +18,16 @@ namespace EasyFramework.Core
             _instancesByType[type] = instance;
         }
 
+        public bool Unbind<T>()
+        {
+            return Unbind(typeof(T));
+        }
+
+        public bool Unbind(Type type)
+        {
+            return _instancesByType.Remove(type);
+        }
+
         public T Resolve<T>() where T : class
         {
             return Resolve(typeof(T)) as T;

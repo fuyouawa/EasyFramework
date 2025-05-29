@@ -471,10 +471,130 @@
             <param name="allowInheritance">是否允许通过继承关系匹配泛型定义。</param>
             <returns></returns>
         </member>
+        <member name="M:EasyFramework.Core.Architecture`1.OnSingletonInit">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.OnSingletonDispose">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.InitializeAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.DeinitializeAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.RegisterSystem``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.RegisterModel``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.RegisterUtility``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.IncrementalInitializeAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.IncrementalDeinitializeAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.DynamicRegisterSystem``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.DynamicUnregisterSystem``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.DynamicRegisterModel``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.DynamicUnregisterModel``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetSystem``1">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetModel``1">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetUtility``1">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetAllSystems">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetAllModels">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.GetAllUtilities">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.SendCommand(EasyFramework.Core.ICommand)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.SendQuery``1(EasyFramework.Core.IQuery{``0})">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.SendEvent``1(``0)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.RegisterEvent``1(EasyFramework.Core.EasyEventHandler{``0})">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.Core.Architecture`1.UnregisterEvent``1(EasyFramework.Core.EasyEventHandler{``0})">
+            <inheritdoc />
+        </member>
         <member name="M:EasyFramework.Core.IFromRegisterEvent.InUnityThread">
             <summary>
             <para>确保会在Unity线程触发</para>
             </summary>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.IncrementalInitializeAsync">
+            <summary>
+            增量异步初始化，用于初始化动态注册的System/Model。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.IncrementalDeinitializeAsync">
+            <summary>
+            增量异步反初始化化，用于反初始化动态取消注册的System/Model。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.DynamicRegisterSystem``1(``0)">
+            <summary>
+            <para>动态注册System，主要用于热更新场景下动态加载dll后注册System。</para>
+            <para>记得调用<see cref="M:EasyFramework.Core.IArchitecture.IncrementalInitializeAsync"/>进行初始化</para>
+            </summary>
+            <typeparam name="TSystem"></typeparam>
+            <param name="system"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.DynamicUnregisterSystem``1(``0)">
+            <summary>
+            <para>动态取消注册System，主要用于热更新场景下动态卸载dll前取消注册System。</para>
+            <para>记得调用<see cref="M:EasyFramework.Core.IArchitecture.IncrementalDeinitializeAsync"/>进行反初始化</para>
+            </summary>
+            <typeparam name="TSystem"></typeparam>
+            <param name="system"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.DynamicRegisterModel``1(``0)">
+            <summary>
+            <para>动态注册Model，主要用于热更新场景下动态加载dll后注册Model。</para>
+            <para>记得调用<see cref="M:EasyFramework.Core.IArchitecture.IncrementalInitializeAsync"/>进行初始化</para>
+            </summary>
+            <typeparam name="TModel"></typeparam>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.Core.IArchitecture.DynamicUnregisterModel``1(``0)">
+            <summary>
+            <para>动态取消注册Model，主要用于热更新场景下动态卸载dll前取消注册Model。</para>
+            <para>记得调用<see cref="M:EasyFramework.Core.IArchitecture.IncrementalDeinitializeAsync"/>进行反初始化</para>
+            </summary>
+            <typeparam name="TModel"></typeparam>
+            <param name="model"></param>
+            <returns></returns>
         </member>
         <member name="T:EasyFramework.Core.EasyEventHandler`1">
             <summary>

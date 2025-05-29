@@ -1,54 +1,34 @@
-using System.Threading.Tasks;
 using System;
-using System.Collections;
 
 namespace EasyFramework.Core
 {
-    public interface IUnityInvoker
+    [MonoSingletonConfig(MonoSingletonFlags.DontDestroyOnLoad)]
+    public class UnityMainThreadDispatcher : MonoSingleton<UnityMainThreadDispatcher>
     {
-        public void Enqueue(IEnumerator action);
-    }
+        private readonly object _lock = new object();
+        private Action _pendingActions;
 
-    public static class UnityInvoke
-    {
-        public static IUnityInvoker Invoker { get; set; }
-
-        public static Task InvokeAsync(Action action)
+        private UnityMainThreadDispatcher()
         {
-            var tcs = new TaskCompletionSource<bool>();
+        }
 
-            void WrappedAction()
+        public void Enquence(Action action)
+        {
+            lock (_lock)
             {
-                try
-                {
-                    action();
-                    tcs.TrySetResult(true);
-                }
-                catch (Exception ex)
-                {
-                    tcs.TrySetException(ex);
-                }
+                _pendingActions += action;
+            }
+        }
+
+        void Update()
+        {
+            Action temp;
+            lock (_lock)
+            {
+                temp = _pendingActions;
             }
 
-            Invoker.Enqueue(ActionWrapper(WrappedAction));
-            return tcs.Task;
+            temp?.Invoke();
         }
-
-        public static void Invoke(Action action)
-        {
-            Invoker.Enqueue(ActionWrapper(action));
-        }
-
-        public static void Invoke(IEnumerator action)
-        {
-            Invoker.Enqueue(action);
-        }
-
-        private static IEnumerator ActionWrapper(Action a)
-        {
-            a();
-            yield return null;
-        }
-
     }
 }

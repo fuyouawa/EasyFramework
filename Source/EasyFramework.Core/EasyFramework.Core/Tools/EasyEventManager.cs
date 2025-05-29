@@ -185,7 +185,7 @@ namespace EasyFramework.Core
                 {
                     lock (handlers)
                     {
-                        handlers.AddTriggerWrapper(handler, UnityInvoke.Invoke);
+                        handlers.AddTriggerWrapper(handler, UnityMainThreadDispatcher.Instance.Enquence);
                     }
                 });
         }

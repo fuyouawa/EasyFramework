@@ -14,8 +14,6 @@ namespace EasyFramework.Tweening
         Killed,
     }
 
-    public delegate void TweenEventHandler(AbstractTween tween);
-
     public abstract class AbstractTween
     {
         private string _id;
@@ -58,13 +56,6 @@ namespace EasyFramework.Tweening
 
         internal TweenState CurrentState => _state.CurrentStateId;
         
-        internal event TweenEventHandler OnPlay;
-
-        internal event TweenEventHandler OnPause;
-
-        internal event TweenEventHandler OnCompleted;
-
-        internal event TweenEventHandler OnKilled;
 
         internal TweenSequence OwnerSequence { get; set; }
 
@@ -88,6 +79,16 @@ namespace EasyFramework.Tweening
         private readonly StateMachine<TweenState> _state = new StateMachine<TweenState>();
         private bool _pause;
         private float _playElapsedTime;
+        private Action<AbstractTween> _onPlay;
+        private Action<AbstractTween> _onPause;
+        private Action<AbstractTween> _onComplete;
+        private Action<AbstractTween> _onKill;
+
+        public void AddPlayCallback(Action<AbstractTween> callback) => _onPlay += callback;
+        public void AddPauseCallback(Action<AbstractTween> callback) => _onPause += callback;
+        public void AddCompleteCallback(Action<AbstractTween> callback) => _onComplete += callback;
+        public void AddKillCallback(Action<AbstractTween> callback) => _onKill += callback;
+
 
         protected AbstractTween()
         {
@@ -105,10 +106,10 @@ namespace EasyFramework.Tweening
             OwnerSequence = null;
             LastPlayTime = null;
 
-            OnPlay = null;
-            OnPause = null;
-            OnCompleted = null;
-            OnKilled = null;
+            _onPlay = null;
+            _onPause = null;
+            _onComplete = null;
+            _onKill = null;
 
             _pause = false;
             _playElapsedTime = 0f;
@@ -148,16 +149,16 @@ namespace EasyFramework.Tweening
                 case TweenState.DelayAfterPlay:
                     break;
                 case TweenState.Playing:
-                    OnPlay?.Invoke(this);
+                    _onPlay?.Invoke(this);
                     break;
                 case TweenState.Paused:
-                    OnPause?.Invoke(this);
+                    _onPause?.Invoke(this);
                     break;
                 case TweenState.Completed:
-                    OnCompleted?.Invoke(this);
+                    _onComplete?.Invoke(this);
                     break;
                 case TweenState.Killed:
-                    OnKilled?.Invoke(this);
+                    _onKill?.Invoke(this);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);

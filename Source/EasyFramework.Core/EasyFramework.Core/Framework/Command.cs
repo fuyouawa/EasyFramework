@@ -1,3 +1,6 @@
+using System;
+using Cysharp.Threading.Tasks;
+
 namespace EasyFramework.Core
 {
     public interface ICanSendCommand : IBelongToArchitecture
@@ -6,58 +9,131 @@ namespace EasyFramework.Core
 
     public static class CanSendCommandExtension
     {
-        public static void SendCommand<T>(this ICanSendCommand self, T command) where T : ICommand
+        public static CommandHandle SendCommand(this ICanSendCommand self, ICommand command)
         {
             self.GetArchitecture().SendCommand(command);
-        }
-
-        public static void SendCommand<T>(this ICanSendCommand self) where T : class, ICommand, new()
-        {
-            using var cmd = EasyPool<T>.AllocScope();
-            self.SendCommand(cmd.Value);
-        }
-
-        public static TResult SendCommand<TResult>(this ICanSendCommand self, ICommand<TResult> command)
-        {
-            return self.GetArchitecture().SendCommand(command);
+            return new CommandHandle(command);
         }
     }
 
     public interface ICommand : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
         ICanSendEvent, ICanSendCommand, ICanGetUtility, ICanSendQuery
     {
-        void Execute();
-    }
-
-    public interface ICommand<TResult> : IBelongToArchitecture, ICanSetArchitecture, ICanGetSystem, ICanGetModel,
-        ICanSendEvent, ICanSendCommand, ICanGetUtility, ICanSendQuery
-    {
-        TResult Execute();
+        Action<Exception> ExceptionHandler { get; set; }
+        Func<object> Executer { get; set; }
+        Func<UniTask<object>> TaskExecuter { get; set; }
     }
 
     public abstract class AbstractCommand : ICommand
     {
         private IArchitecture _arch = null!;
+        private Func<object> _executer;
 
         IArchitecture IBelongToArchitecture.GetArchitecture() => _arch;
-
         void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
+        Action<Exception> ICommand.ExceptionHandler { get; set; }
 
-        void ICommand.Execute() => OnExecute();
+        Func<object> ICommand.Executer
+        {
+            get => _executer ??= Execute;
+            set => _executer = value;
+        }
+
+        Func<UniTask<object>> ICommand.TaskExecuter
+        {
+            get => null;
+            set { }
+        }
+
+        private object Execute()
+        {
+            OnExecute();
+            return null;
+        }
 
         protected abstract void OnExecute();
     }
 
-    public abstract class AbstractCommand<TResult> : ICommand<TResult>
+    public abstract class AbstractCommand<TResult> : ICommand
     {
-        private IArchitecture _arch;
+        private IArchitecture _arch = null!;
+        private Func<object> _executer;
 
         IArchitecture IBelongToArchitecture.GetArchitecture() => _arch;
-
         void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
+        Action<Exception> ICommand.ExceptionHandler { get; set; }
 
-        TResult ICommand<TResult>.Execute() => OnExecute();
+        Func<object> ICommand.Executer
+        {
+            get => _executer ??= Execute;
+            set => _executer = value;
+        }
+
+        Func<UniTask<object>> ICommand.TaskExecuter
+        {
+            get => null;
+            set { }
+        }
+
+        private object Execute() => OnExecute();
 
         protected abstract TResult OnExecute();
+    }
+
+
+    public abstract class AbstractCommandAsync : ICommand
+    {
+        private IArchitecture _arch = null!;
+        private Func<UniTask<object>> _taskExecuter;
+
+        IArchitecture IBelongToArchitecture.GetArchitecture() => _arch;
+        void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
+        Action<Exception> ICommand.ExceptionHandler { get; set; }
+
+        Func<object> ICommand.Executer
+        {
+            get => null;
+            set { }
+        }
+
+        Func<UniTask<object>> ICommand.TaskExecuter
+        {
+            get => _taskExecuter ?? ExecuteAsync;
+            set => _taskExecuter = value;
+        }
+        
+        private async UniTask<object> ExecuteAsync()
+        {
+            await OnExecuteAsync();
+            return null;
+        }
+
+        protected abstract UniTask OnExecuteAsync();
+    }
+
+    public abstract class AbstractCommandAsync<TResult> : ICommand
+    {
+        private IArchitecture _arch = null!;
+        private Func<UniTask<object>> _taskExecuter;
+
+        IArchitecture IBelongToArchitecture.GetArchitecture() => _arch;
+        void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
+        Action<Exception> ICommand.ExceptionHandler { get; set; }
+
+        Func<object> ICommand.Executer
+        {
+            get => null;
+            set { }
+        }
+
+        Func<UniTask<object>> ICommand.TaskExecuter
+        {
+            get => _taskExecuter ?? ExecuteAsync;
+            set => _taskExecuter = value;
+        }
+
+        private async UniTask<object> ExecuteAsync() => await OnExecuteAsync();
+
+        protected abstract UniTask<TResult> OnExecuteAsync();
     }
 }

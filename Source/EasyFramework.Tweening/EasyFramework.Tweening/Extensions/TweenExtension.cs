@@ -1,3 +1,5 @@
+using System;
+
 namespace EasyFramework.Tweening
 {
     public static class TweenExtension
@@ -8,27 +10,28 @@ namespace EasyFramework.Tweening
             return tween;
         }
 
-        public static T OnKilled<T>(this T tween, TweenEventHandler handler) where T : AbstractTween
+        public static T OnPlay<T>(this T tween, Action callback) where T : AbstractTween
         {
-            tween.OnKilled += handler;
+            tween.AddPlayCallback(_ => callback());
             return tween;
         }
 
-        public static T OnCompleted<T>(this T tween, TweenEventHandler handler) where T : AbstractTween
+        public static T OnPause<T>(this T tween, Action callback) where T : AbstractTween
         {
-            tween.OnCompleted += handler;
+            tween.AddPauseCallback(_ => callback());
             return tween;
         }
 
-        public static T OnPlay<T>(this T tween, TweenEventHandler handler) where T : AbstractTween
+        public static T OnComplete<T>(this T tween, Action callback) where T : AbstractTween
         {
-            tween.OnPlay += handler;
+            tween.AddCompleteCallback(_ => callback());
             return tween;
         }
 
-        public static T OnPause<T>(this T tween, TweenEventHandler handler) where T : AbstractTween
+
+        public static T OnKill<T>(this T tween, Action callback) where T : AbstractTween
         {
-            tween.OnPause += handler;
+            tween.AddKillCallback(_ => callback());
             return tween;
         }
 

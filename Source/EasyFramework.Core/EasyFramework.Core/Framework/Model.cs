@@ -50,7 +50,8 @@ namespace EasyFramework.Core
             _isDoing = true;
             await OnDeinitAsync();
             _isDoing = false;
-
+            
+            _arch = null;
             IsInitialized = false;
         }
 
