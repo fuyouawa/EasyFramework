@@ -53,9 +53,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _icon: {fileID: 194545306066625438}
-  _textMessage: {fileID: 6387542652513306661}
-  _textPosition: {fileID: 2473651559630924023}
-  _btnCopy: {fileID: 2075910120484275876}
+  _messageText: {fileID: 6387542652513306661}
+  _positionText: {fileID: 2473651559630924023}
+  _copyButton: {fileID: 2075910120484275876}
 --- !u!114 &5853293271656804134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 2473651559630924023}
   - component: {fileID: 2445079546445975066}
   m_Layer: 5
-  m_Name: TextPosition
+  m_Name: PositionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -117,8 +117,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 72.63889, y: -17.893333}
-  m_SizeDelta: {x: 145.27779, y: 0}
+  m_AnchoredPosition: {x: 74, y: -18.06}
+  m_SizeDelta: {x: 148, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8365334565532802105
 CanvasRenderer:
@@ -348,7 +348,7 @@ GameObject:
   - component: {fileID: 6387542652513306661}
   - component: {fileID: 6411438328362738274}
   m_Layer: 5
-  m_Name: TextMessage
+  m_Name: MessageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -370,8 +370,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 70.41667, y: -5.9722223}
-  m_SizeDelta: {x: 140.83334, y: 0}
+  m_AnchoredPosition: {x: 71.5, y: -6}
+  m_SizeDelta: {x: 143, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9091828760221860302
 CanvasRenderer:
@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 6480465148778895477}
   - component: {fileID: 2075910120484275876}
   m_Layer: 5
-  m_Name: BtnCopy
+  m_Name: CopyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 22292746}
   - component: {fileID: 11476740}
   m_Layer: 5
-  m_Name: TextInfoCount
+  m_Name: InfoCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 6206163888796261005}
   - component: {fileID: 3818929097168029510}
   m_Layer: 5
-  m_Name: BtnResize
+  m_Name: ResizeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -419,7 +419,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 22426080}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -977,7 +977,7 @@ GameObject:
   - component: {fileID: 11448508}
   - component: {fileID: 11477250}
   m_Layer: 5
-  m_Name: BtnClose
+  m_Name: CloseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1098,7 +1098,7 @@ GameObject:
   - component: {fileID: 11450122}
   - component: {fileID: 6487846325033934296}
   m_Layer: 5
-  m_Name: TextErrorCount
+  m_Name: ErrorCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1193,7 +1193,7 @@ GameObject:
   - component: {fileID: 11491814}
   - component: {fileID: 11437802}
   m_Layer: 5
-  m_Name: BtnCollapse
+  m_Name: CollapseButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1960,7 +1960,7 @@ GameObject:
   - component: {fileID: 22240830}
   - component: {fileID: 11411602}
   m_Layer: 5
-  m_Name: TextErrorCount
+  m_Name: ErrorCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2306,7 +2306,7 @@ GameObject:
   - component: {fileID: 11496004}
   - component: {fileID: 942354663699682173}
   m_Layer: 5
-  m_Name: TextWarnCount
+  m_Name: WarnCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2401,7 +2401,7 @@ GameObject:
   - component: {fileID: 11400274}
   - component: {fileID: 1105855069629641137}
   m_Layer: 5
-  m_Name: TextInfoCount
+  m_Name: InfoCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2527,7 +2527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 497.33, y: -57}
+  m_AnchoredPosition: {x: 611.08, y: -22}
   m_SizeDelta: {x: 72, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &22223402
@@ -2592,9 +2592,9 @@ MonoBehaviour:
   m_Script: {fileID: 910183022, guid: 087c42bfef7d96142b20fe1c6be96485, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textInfoCount: {fileID: 11476740}
-  _textWarnCount: {fileID: 11414436}
-  _textErrorCount: {fileID: 11411602}
+  _infoCountText: {fileID: 11476740}
+  _warnCountText: {fileID: 11414436}
+  _errorCountText: {fileID: 11411602}
 --- !u!114 &2099062713621726209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2749,18 +2749,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pageMaxNumber: 10
-  _btnClear: {fileID: 114466839828933532}
-  _inputSearch: {fileID: 114664465529608634}
-  _textInfoCount: {fileID: 11400274}
-  _textWarnCount: {fileID: 11496004}
-  _textErrorCount: {fileID: 11450122}
-  _btnCollapse: {fileID: 11437802}
-  _btnClose: {fileID: 11477250}
-  _inputCommand: {fileID: 114000010993257018}
-  _btnSendCommand: {fileID: 4802633512571326684}
-  _btnPrevPage: {fileID: 5975095727567193229}
-  _textPageNum: {fileID: 6177307624671652469}
-  _btnNextPage: {fileID: 4223504828683574822}
+  _clearButton: {fileID: 114466839828933532}
+  _searchInputField: {fileID: 114664465529608634}
+  _infoCountText: {fileID: 11400274}
+  _warnCountText: {fileID: 11496004}
+  _errorCountText: {fileID: 11450122}
+  _collapseButton: {fileID: 11437802}
+  _closeButton: {fileID: 11477250}
+  _commandInputField: {fileID: 114000010993257018}
+  _sendCommandButton: {fileID: 4802633512571326684}
+  _previousPageButton: {fileID: 5975095727567193229}
+  _pageNumberText: {fileID: 6177307624671652469}
+  _nextPageButton: {fileID: 4223504828683574822}
   _logsContainer: {fileID: 22400762}
 --- !u!1 &187566
 GameObject:
@@ -2927,7 +2927,7 @@ GameObject:
   - component: {fileID: 22260966}
   - component: {fileID: 11414436}
   m_Layer: 5
-  m_Name: TextWarnCount
+  m_Name: WarnCountText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3165,7 +3165,7 @@ GameObject:
   - component: {fileID: 114000013324539428}
   - component: {fileID: 114000010993257018}
   m_Layer: 5
-  m_Name: InputCommand
+  m_Name: CommandInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3646,7 +3646,7 @@ GameObject:
   - component: {fileID: 114677982133495580}
   - component: {fileID: 114664465529608634}
   m_Layer: 5
-  m_Name: Searchbar
+  m_Name: SearchInputField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4224,7 +4224,7 @@ GameObject:
   - component: {fileID: 114501864645789684}
   - component: {fileID: 114466839828933532}
   m_Layer: 5
-  m_Name: BtnClear
+  m_Name: ClearButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4494,7 +4494,7 @@ GameObject:
   - component: {fileID: 3788719268836381240}
   - component: {fileID: 3287144385047604863}
   m_Layer: 5
-  m_Name: Num
+  m_Name: NumberImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4571,7 +4571,7 @@ GameObject:
   - component: {fileID: 2532675717611125065}
   - component: {fileID: 4223504828683574822}
   m_Layer: 5
-  m_Name: BtnNext
+  m_Name: NextPageButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4692,7 +4692,7 @@ GameObject:
   - component: {fileID: 3438225433467435912}
   - component: {fileID: 5975095727567193229}
   m_Layer: 5
-  m_Name: BtnPrev
+  m_Name: PreviousPageButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4813,7 +4813,7 @@ GameObject:
   - component: {fileID: 6177307624671652469}
   - component: {fileID: 2289296503058266247}
   m_Layer: 5
-  m_Name: TextPageNum
+  m_Name: PageNumberText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5048,7 +5048,7 @@ GameObject:
   - component: {fileID: 5789392295861478952}
   - component: {fileID: 4802633512571326684}
   m_Layer: 5
-  m_Name: BtnSendCommand
+  m_Name: SendCommandButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5507,7 +5507,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6072667126465163102, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 145.27779
+      value: 139.03262
       objectReference: {fileID: 0}
     - target: {fileID: 6072667126465163102, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_SizeDelta.y
@@ -5515,11 +5515,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6072667126465163102, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 72.63889
+      value: 69.51631
       objectReference: {fileID: 0}
     - target: {fileID: 6072667126465163102, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -17.893333
+      value: -17.245602
       objectReference: {fileID: 0}
     - target: {fileID: 6866415043756738225, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchorMax.y
@@ -5627,7 +5627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9111820136477139616, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 140.83334
+      value: 134.30821
       objectReference: {fileID: 0}
     - target: {fileID: 9111820136477139616, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_SizeDelta.y
@@ -5635,11 +5635,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9111820136477139616, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 70.41667
+      value: 67.154106
       objectReference: {fileID: 0}
     - target: {fileID: 9111820136477139616, guid: 1673a85e5de39fc4d830327754cc1ecc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -5.9722223
+      value: -5.736783
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

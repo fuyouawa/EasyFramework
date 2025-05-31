@@ -10,23 +10,23 @@ namespace EasyFramework.ToolKit
     public class GameConsoleLogItem : MonoBehaviour
     {
         [SerializeField] private Image _icon;
-        [SerializeField] private Text _textMessage;
-        [SerializeField] private Text _textPosition;
-        [SerializeField] private Button _btnCopy;
+        [SerializeField] private Text _messageText;
+        [SerializeField] private Text _positionText;
+        [SerializeField] private Button _copyButton;
 
         void Awake()
         {
-            _btnCopy.onClick.AddListener(() =>
+            _copyButton.onClick.AddListener(() =>
             {
-                GUIUtility.systemCopyBuffer = _textMessage.text;
+                GUIUtility.systemCopyBuffer = _messageText.text;
             });
         }
 
         public void Clear()
         {
             _icon.sprite = null;
-            _textMessage.text = null;
-            _textPosition.text = null;
+            _messageText.text = null;
+            _positionText.text = null;
         }
 
         internal void Set(GameConsoleLogItemData data)
@@ -46,16 +46,16 @@ namespace EasyFramework.ToolKit
                     throw new ArgumentOutOfRangeException(nameof(data.LogType), data.LogType, null);
             }
 
-            _textMessage.text = $"[{data.Time:HH:mm:ss}] {data.Message}";
+            _messageText.text = $"[{data.Time:HH:mm:ss}] {data.Message}";
             var frame = GetFrame(data.StackTrace);
             if (frame == null)
             {
-                _textPosition.text = "";
+                _positionText.text = "";
             }
             else
             {
                 var method = frame.GetMethod();
-                _textPosition.text = $"{method.DeclaringType.FullName}.{method.Name} at ({frame.GetFileName()}:{frame.GetFileLineNumber()})";
+                _positionText.text = $"{method.DeclaringType.FullName}.{method.Name} at ({frame.GetFileName()}:{frame.GetFileLineNumber()})";
             }
         }
 

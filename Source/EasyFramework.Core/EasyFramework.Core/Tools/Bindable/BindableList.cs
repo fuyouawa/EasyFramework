@@ -5,11 +5,11 @@ namespace EasyFramework.Core
 {
     public interface IReadOnlyBindableList<T> : IReadOnlyList<T>
     {
-        EasyEvent<T> OnAddedElement { get; }
-        EasyEvent<T> OnRemovedElement { get; }
-        EasyEvent OnClearElements { get; }
+        IEasyEvent<T> OnAddedElement { get; }
+        IEasyEvent<T> OnRemovedElement { get; }
+        IEasyEvent OnClearElements { get; }
 
-        EasyEvent OnElementChanged { get; }
+        IEasyEvent OnElementChanged { get; }
     }
 
     public interface IBindableList<T> : IReadOnlyBindableList<T>, IList<T>
@@ -18,6 +18,18 @@ namespace EasyFramework.Core
 
     public class BindableList<T> : IBindableList<T>
     {
+        private readonly EasyEvent<T> _onAddedElement = new EasyEvent<T>();
+        public IEasyEvent<T> OnAddedElement => _onAddedElement;
+
+        private readonly EasyEvent<T> _onRemovedElement = new EasyEvent<T>();
+        public IEasyEvent<T> OnRemovedElement => _onRemovedElement;
+
+        private readonly EasyEvent _onClearElements = new EasyEvent();
+        public IEasyEvent OnClearElements => _onClearElements;
+
+        private readonly EasyEvent _onElementChanged = new EasyEvent();
+        public IEasyEvent OnElementChanged => _onElementChanged;
+
         private List<T> _list;
 
         public BindableList()
@@ -45,15 +57,15 @@ namespace EasyFramework.Core
         public void Add(T item)
         {
             _list.Add(item);
-            OnAddedElement.Invoke(item);
-            OnElementChanged.Invoke();
+            _onAddedElement.Invoke(item);
+            _onElementChanged.Invoke();
         }
 
         public void Clear()
         {
             _list.Clear();
-            OnClearElements.Invoke();
-            OnElementChanged.Invoke();
+            _onClearElements.Invoke();
+            _onElementChanged.Invoke();
         }
 
         public bool Contains(T item)
@@ -71,8 +83,8 @@ namespace EasyFramework.Core
             var suc = _list.Remove(item);
             if (suc)
             {
-                OnRemovedElement.Invoke(item);
-                OnElementChanged.Invoke();
+                _onRemovedElement.Invoke(item);
+                _onElementChanged.Invoke();
             }
             return suc;
         }
@@ -93,8 +105,8 @@ namespace EasyFramework.Core
         {
             var item = _list[index];
             _list.RemoveAt(index);
-            OnRemovedElement.Invoke(item);
-            OnElementChanged.Invoke();
+            _onRemovedElement.Invoke(item);
+            _onElementChanged.Invoke();
         }
 
         public T this[int index]
@@ -102,10 +114,5 @@ namespace EasyFramework.Core
             get => _list[index];
             set => _list[index] = value;
         }
-
-        public EasyEvent<T> OnAddedElement { get; } = new EasyEvent<T>();
-        public EasyEvent<T> OnRemovedElement { get; } = new EasyEvent<T>();
-        public EasyEvent OnClearElements { get; } = new EasyEvent();
-        public EasyEvent OnElementChanged { get; } = new EasyEvent();
     }
 }

@@ -14,20 +14,20 @@ namespace EasyFramework.ToolKit
         [SerializeField, DisableInPlayMode] private int _pageMaxNumber = 10;
 
         [Title("Binding")]
-        [SerializeField] private Button _btnClear;
-        [SerializeField] private InputField _inputSearch;
-        [SerializeField] private Text _textInfoCount;
-        [SerializeField] private Text _textWarnCount;
-        [SerializeField] private Text _textErrorCount;
-        [SerializeField] private Button _btnCollapse;
-        [SerializeField] private Button _btnClose;
+        [SerializeField] private Button _clearButton;
+        [SerializeField] private InputField _searchInputField;
+        [SerializeField] private Text _infoCountText;
+        [SerializeField] private Text _warnCountText;
+        [SerializeField] private Text _errorCountText;
+        [SerializeField] private Button _collapseButton;
+        [SerializeField] private Button _closeButton;
 
-        [SerializeField] private InputField _inputCommand;
-        [SerializeField] private Button _btnSendCommand;
+        [SerializeField] private InputField _commandInputField;
+        [SerializeField] private Button _sendCommandButton;
 
-        [SerializeField] private Button _btnPrevPage;
-        [SerializeField] private Text _textPageNum;
-        [SerializeField] private Button _btnNextPage;
+        [SerializeField] private Button _previousPageButton;
+        [SerializeField] private Text _pageNumberText;
+        [SerializeField] private Button _nextPageButton;
 
         [SerializeField] private RectTransform _logsContainer;
 
@@ -45,19 +45,19 @@ namespace EasyFramework.ToolKit
             _canvasGroup = GetComponent<CanvasGroup>();
 
             _console = GameConsole.Instance;
-            _btnClear.onClick.AddListener(() => _console.ClearLogs());
+            _clearButton.onClick.AddListener(() => _console.ClearLogs());
 
-            _btnCollapse.onClick.AddListener(() => _console.HideLogWindow());
-            _btnClose.onClick.AddListener(() => _console.Close());
+            _collapseButton.onClick.AddListener(() => _console.HideLogWindow());
+            _closeButton.onClick.AddListener(() => _console.Close());
 
-            _btnSendCommand.onClick.AddListener(SendCommand);
+            _sendCommandButton.onClick.AddListener(SendCommand);
 
-            _console.InfoLogCount.OnValueChanged.Register(val => _textInfoCount.text = val.ToString());
-            _console.WarnLogCount.OnValueChanged.Register(val => _textWarnCount.text = val.ToString());
-            _console.ErrorLogCount.OnValueChanged.Register(val => _textErrorCount.text = val.ToString());
+            _console.InfoLogCount.OnValueChanged.Register(val => _infoCountText.text = val.ToString());
+            _console.WarnLogCount.OnValueChanged.Register(val => _warnCountText.text = val.ToString());
+            _console.ErrorLogCount.OnValueChanged.Register(val => _errorCountText.text = val.ToString());
 
-            _btnPrevPage.onClick.AddListener(() => PrevPage());
-            _btnNextPage.onClick.AddListener(() => NextPage());
+            _previousPageButton.onClick.AddListener(() => PrevPage());
+            _nextPageButton.onClick.AddListener(() => NextPage());
 
             GameConsole.Instance.OnPushLog += OnPushLog;
             GameConsole.Instance.OnClearLogs += OnClearLogs;
@@ -147,7 +147,7 @@ namespace EasyFramework.ToolKit
             _pageNum = _console.LogItemDataList.Count / (_pageMaxNumber + 1);   // 当数量和最大数量相同时，也算做当前页；超过1个才算新增一页
             _currentPageNum = Mathf.Min(_pageNum, _currentPageNum);
 
-            _textPageNum.text = $"{_currentPageNum + 1}/{_pageNum + 1}";
+            _pageNumberText.text = $"{_currentPageNum + 1}/{_pageNum + 1}";
         }
 
         private void RefreshPage()
@@ -165,10 +165,10 @@ namespace EasyFramework.ToolKit
 
         private void SendCommand()
         {
-            if (_inputCommand.text.IsNullOrWhiteSpace())
+            if (_commandInputField.text.IsNullOrWhiteSpace())
                 return;
 
-            var originCmd = _inputCommand.text.Trim();
+            var originCmd = _commandInputField.text.Trim();
 
             var match = Regex.Match(originCmd, @"^(\S+)(?:\s+(.+))?$");
             if (!match.Success)

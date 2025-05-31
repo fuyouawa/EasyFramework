@@ -7,18 +7,18 @@ namespace EasyFramework.ToolKit
     {
         private CanvasGroup _canvasGroup;
 
-        [SerializeField] private Text _textInfoCount;
-        [SerializeField] private Text _textWarnCount;
-        [SerializeField] private Text _textErrorCount;
+        [SerializeField] private Text _infoCountText;
+        [SerializeField] private Text _warnCountText;
+        [SerializeField] private Text _errorCountText;
 
         void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
 
             var console = GameConsole.Instance;
-            console.InfoLogCount.OnValueChanged.Register(val => _textInfoCount.text = val.ToString());
-            console.WarnLogCount.OnValueChanged.Register(val => _textWarnCount.text = val.ToString());
-            console.ErrorLogCount.OnValueChanged.Register(val => _textErrorCount.text = val.ToString());
+            console.InfoLogCount.OnValueChanged.Register(val => _infoCountText.text = val.ToString());
+            console.WarnLogCount.OnValueChanged.Register(val => _warnCountText.text = val.ToString());
+            console.ErrorLogCount.OnValueChanged.Register(val => _errorCountText.text = val.ToString());
         }
 
         public void Show()
