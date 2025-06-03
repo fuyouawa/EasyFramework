@@ -116,7 +116,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
                 template = AddIndent(template);
             }
 
-            var arch = "IArchitecture IBelongToArchitecture.GetArchitecture() => ";
+            var arch = "public IArchitecture GetArchitecture() => ";
             arch += builder.ArchitectureType != null
                 ? $"{builder.ArchitectureType.Name}.Instance;"
                 : "throw new NotImplementedException();";
@@ -132,8 +132,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             });
 
             var code = CombineCode(builder, header, body);
-            // File.WriteAllText(path, code);
-            Debug.Log(code);
+            File.WriteAllText(path, code);
             AssetDatabase.Refresh();
         }
 
@@ -158,7 +157,7 @@ public class {{ ClassName }} : {{ BaseClassName }}, IController
             string code;
             if (builder.Namespace.IsNotNullOrWhiteSpace())
             {
-                if (!BindingUtility.IsValidIdentifier(builder.Namespace))
+                if (builder.Namespace.Split('.').Any(s => !BindingUtility.IsValidIdentifier(s)))
                 {
                     throw new Exception($"The namespace '{builder.Namespace}' is invalid.");
                 }

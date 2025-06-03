@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace EasyFramework.Tweening
 {
@@ -33,6 +34,35 @@ namespace EasyFramework.Tweening
         {
             tween.AddKillCallback(_ => callback());
             return tween;
+        }
+
+
+        public static UniTask WaitForPlay(this AbstractTween tween)
+        {
+            var tcs = new UniTaskCompletionSource();
+            tween.OnPlay(() => tcs.TrySetResult());
+            return tcs.Task;
+        }
+
+        public static UniTask WaitForPause(this AbstractTween tween)
+        {
+            var tcs = new UniTaskCompletionSource();
+            tween.OnPause(() => tcs.TrySetResult());
+            return tcs.Task;
+        }
+
+        public static UniTask WaitForComplete(this AbstractTween tween)
+        {
+            var tcs = new UniTaskCompletionSource();
+            tween.OnComplete(() => tcs.TrySetResult());
+            return tcs.Task;
+        }
+
+        public static UniTask WaitForKill(this AbstractTween tween)
+        {
+            var tcs = new UniTaskCompletionSource();
+            tween.OnKill(() => tcs.TrySetResult());
+            return tcs.Task;
         }
 
         public static T SetDelay<T>(this T tween, float delay) where T : AbstractTween

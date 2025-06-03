@@ -148,10 +148,10 @@ namespace EasyFramework.ToolKit.Editor
             EditorGUI.BeginChangeCheck();
 
             EasyEditorGUI.DrawSelectorDropdown(
-                () => BuilderSettings.Instance.GenerateDirectoryPresets,
+                () => BuilderSettings.Instance.GenerateDirectoryPresets.Select(s => s.Replace('/', '\\')),
                 EditorHelper.TempContent("代码生成目录"),
                 _generateDirectoryProperty.GetSmartContent(),
-                t => { _generateDirectoryProperty.ValueEntry.SetAllWeakValues(t); });
+                t => { _generateDirectoryProperty.ValueEntry.SetAllWeakValues(t.Replace('\\', '/')); });
             
             EasyEditorGUI.DrawSelectorDropdown(
                 () => BuilderSettings.Instance.NamespacePresets,
@@ -273,6 +273,11 @@ namespace EasyFramework.ToolKit.Editor
             if (GUILayout.Button("恢复默认值"))
             {
                 UnInitializeAll();
+            }
+
+            if (GUILayout.Button("打开设置"))
+            {
+                SettingsWindow.ShowWindow();
             }
         }
     }

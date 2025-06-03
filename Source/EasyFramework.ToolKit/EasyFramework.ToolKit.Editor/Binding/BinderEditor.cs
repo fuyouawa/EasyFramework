@@ -234,6 +234,11 @@ namespace EasyFramework.ToolKit.Editor
             {
                 UnInitializeAll();
             }
+
+            if (GUILayout.Button("打开设置"))
+            {
+                SettingsWindow.ShowWindow();
+            }
         }
     }
 }
