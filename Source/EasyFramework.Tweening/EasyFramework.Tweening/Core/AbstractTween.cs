@@ -175,6 +175,11 @@ namespace EasyFramework.Tweening
                 return;
             }
 
+            if (stateId != TweenState.Paused)
+            {
+                _playElapsedTime += Time.deltaTime;
+            }
+
             if (stateId == TweenState.Paused)
             {
                 if (!_pause)
@@ -222,8 +227,6 @@ namespace EasyFramework.Tweening
                         OnPlaying(time);
                     }
                 }
-
-                _playElapsedTime += Time.deltaTime;
             }
         }
 
