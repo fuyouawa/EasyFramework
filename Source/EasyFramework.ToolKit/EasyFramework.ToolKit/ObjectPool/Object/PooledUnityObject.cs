@@ -29,7 +29,9 @@ namespace EasyFramework.ToolKit
         }
 
         private IUnityObjectPool _owningPool;
-        [ShowInInspector] private PooledUnityObjectState _state;
+
+        [ShowInInspector, ReadOnly] private PooledUnityObjectState _state;
+        // [ShowInInspector, ReadOnly] private Transform _owningPoolTransform => _owningPool?.Transform;
 
         public float Lifetime { get; set; }
 

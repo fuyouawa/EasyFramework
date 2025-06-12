@@ -15,7 +15,7 @@ namespace EasyFramework.ToolKit
         /// <summary>
         /// 对象池中对象的原始预制体
         /// </summary>
-        GameObject Original { get; }
+        GameObject Original { get; internal set; }
 
         /// <summary>
         /// 对象池的Transform组件，用于管理池中对象的层级关系

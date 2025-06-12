@@ -9,13 +9,37 @@ namespace EasyFramework.ToolKit
     /// </summary>
     public class ObjectPoolManager : Singleton<ObjectPoolManager>, IObjectPoolManager
     {
+        private Type _poolType;
+
         /// <summary>
-        /// 对象池管理器的配置设置
+        /// 对象池类型，用于创建对象池实例
         /// </summary>
-        public ObjectPoolManagerSettings Settings { get; set; } = new ObjectPoolManagerSettings()
+        /// <exception cref="InvalidOperationException">
+        /// 当value为null、是抽象类或接口、没有继承自IObjectPool时抛出
+        /// </exception>
+        public Type PoolType
         {
-            PoolType = typeof(ObjectPool)
-        };
+            get => _poolType;
+            set
+            {
+                if (value == null)
+                {
+                    throw new InvalidOperationException("PoolType cannot be null.");
+                }
+
+                if (value.IsAbstract || value.IsInterface)
+                {
+                    throw new InvalidOperationException($"PoolType '{value}' cannot be abstract or interface.");
+                }
+                
+                if (!typeof(IObjectPool).IsAssignableFrom(value))
+                {
+                    throw new InvalidOperationException($"PoolType '{value}' must implement '{typeof(IObjectPool)}'.");
+                }
+
+                _poolType = value;
+            }
+        }
 
         // 使用元组作为键，存储对象池实例
         private readonly Dictionary<(string poolName, Type objectType), IObjectPool> _pools = new Dictionary<(string poolName, Type objectType), IObjectPool>();
@@ -74,28 +98,16 @@ namespace EasyFramework.ToolKit
         /// <exception cref="InvalidOperationException">当无法创建对象池实例时抛出</exception>
         private IObjectPool CreateObjectPool(string poolName, Type objectType)
         {
-            if (Settings.PoolType == null)
-            {
-                throw new InvalidOperationException("PoolType in Settings cannot be null.");
-            }
-
-            if (!typeof(IObjectPool).IsAssignableFrom(Settings.PoolType))
-            {
-                throw new InvalidOperationException($"PoolType '{Settings.PoolType}' must implement '{typeof(IObjectPool)}'.");
-            }
-
-            if (Settings.PoolType.IsAbstract || Settings.PoolType.IsInterface)
-            {
-                throw new InvalidOperationException($"PoolType '{Settings.PoolType}' cannot be abstract or interface.");
-            }
-
             try
             {
-                return (IObjectPool)Activator.CreateInstance(Settings.PoolType, poolName, objectType);
+                var pool = (IObjectPool)Activator.CreateInstance(_poolType);
+                pool.Name = poolName;
+                pool.ObjectType = objectType;
+                return pool;
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to create object pool instance of type '{Settings.PoolType}'.", ex);
+                throw new InvalidOperationException($"Failed to create object pool instance of type '{_poolType}'.", ex);
             }
         }
     }

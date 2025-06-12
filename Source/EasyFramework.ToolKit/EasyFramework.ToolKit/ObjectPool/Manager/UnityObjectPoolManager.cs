@@ -2,30 +2,59 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using EasyFramework.Core;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 
 namespace EasyFramework.ToolKit
 {
     /// <summary>
     /// Unity对象池管理器，负责创建和管理多个Unity对象池
     /// </summary>
-    public class UnityObjectPoolManager : MonoSingleton<UnityObjectPoolManager>, IUnityObjectPoolManager
+    [ShowOdinSerializedPropertiesInInspector]
+    public class UnityObjectPoolManager : MonoSingleton<UnityObjectPoolManager>, IUnityObjectPoolManager, ISerializationCallbackReceiver
     {
         // 使用元组作为键，存储Unity对象池实例
-        private readonly Dictionary<(string poolName, Type objectType), IUnityObjectPool> _pools = new Dictionary<(string poolName, Type objectType), IUnityObjectPool>();
+        private readonly Dictionary<(string poolName, Type objectType), IUnityObjectPool> _pools =
+            new Dictionary<(string poolName, Type objectType), IUnityObjectPool>();
 
-        [SerializeField]
-        private UnityObjectPoolManagerSettings _settings = new UnityObjectPoolManagerSettings()
+
+        [SerializeField] private string _poolNodeName = "{{ object_type }}_{{ pool_name }}";
+
+        public string PoolNodeName
         {
-            PoolType = typeof(UnityObjectPool)
-        };
+            get => _poolNodeName;
+            set => _poolNodeName = value;
+        }
+        
+        [NonSerialized, OdinSerialize] private Type _poolType = typeof(UnityObjectPool);
 
         /// <summary>
-        /// Unity对象池管理器的配置设置
+        /// Unity对象池类型，用于创建Unity对象池实例
         /// </summary>
-        public UnityObjectPoolManagerSettings Settings
+        /// <exception cref="InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自IUnityObjectPool时抛出</exception>
+        public Type PoolType
         {
-            get => _settings;
-            set => _settings = value;
+            get => _poolType;
+            set
+            {
+                if (value == null)
+                {
+                    throw new InvalidOperationException("PoolType cannot be null.");
+                }
+
+                if (value.IsAbstract || value.IsInterface)
+                {
+                    throw new InvalidOperationException($"PoolType '{value}' cannot be abstract or interface.");
+                }
+                
+                if (!typeof(IUnityObjectPool).IsAssignableFrom(_poolType))
+                {
+                    throw new InvalidOperationException(
+                        $"PoolType '{_poolType}' must implement '{typeof(IUnityObjectPool)}'.");
+                }
+
+                _poolType = value;
+            }
         }
 
         UnityObjectPoolManager()
@@ -63,13 +92,22 @@ namespace EasyFramework.ToolKit
             var pool = CreateUnityObjectPool(poolName, objectType, original);
 
             // 创建一个节点作为此 Pool 的父级，用于层级管理
-            var node = new GameObject($"UnityObjectPool_{poolName}_{objectType.Name}");
+            var node = new GameObject(GetPoolNodeName(poolName, objectType));
             node.transform.SetParent(this.transform, false);
             pool.Transform = node.transform;
 
             _pools.Add(key, pool);
 
             return true;
+        }
+
+        private string GetPoolNodeName(string poolName, Type objectType)
+        {
+            return TemplateEngine.Render(_poolNodeName, new
+            {
+                ObjectType = objectType,
+                PoolName = poolName,
+            });
         }
 
         /// <summary>
@@ -95,32 +133,33 @@ namespace EasyFramework.ToolKit
         /// <param name="original">原始预制体</param>
         /// <returns>新创建的Unity对象池实例</returns>
         /// <exception cref="InvalidOperationException">当无法创建对象池实例时抛出</exception>
-        private static IUnityObjectPool CreateUnityObjectPool(string poolName, Type objectType,
+        private IUnityObjectPool CreateUnityObjectPool(string poolName, Type objectType,
             GameObject original)
         {
-            if (Instance.Settings.PoolType == null)
-            {
-                throw new InvalidOperationException("PoolType in Settings cannot be null.");
-            }
-
-            if (!typeof(IUnityObjectPool).IsAssignableFrom(Instance.Settings.PoolType))
-            {
-                throw new InvalidOperationException($"PoolType '{Instance.Settings.PoolType}' must implement '{typeof(IUnityObjectPool)}'.");
-            }
-
-            if (Instance.Settings.PoolType.IsAbstract || Instance.Settings.PoolType.IsInterface)
-            {
-                throw new InvalidOperationException($"PoolType '{Instance.Settings.PoolType}' cannot be abstract or interface.");
-            }
-
             try
             {
-                return (IUnityObjectPool)Activator.CreateInstance(Instance.Settings.PoolType, poolName, objectType, original);
+                var pool = (IUnityObjectPool)Activator.CreateInstance(_poolType);
+                pool.Name = poolName;
+                pool.ObjectType = objectType;
+                pool.Original = original;
+                return pool;
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"Failed to create unity object pool instance of type '{Instance.Settings.PoolType}'.", ex);
+                throw new InvalidOperationException(
+                    $"Failed to create unity object pool instance of type '{_poolType}'.", ex);
             }
+        }
+
+        [SerializeField, HideInInspector] private SerializationData _serializationData;
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            UnitySerializationUtility.SerializeUnityObject(this, ref _serializationData);
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            UnitySerializationUtility.DeserializeUnityObject(this, ref _serializationData);
         }
     }
 }

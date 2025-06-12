@@ -12,12 +12,37 @@ namespace EasyFramework.ToolKit
     /// </summary>
     public class UnityObjectPool : ObjectPoolBase, IUnityObjectPool
     {
-        /// <inheritdoc />
-        public GameObject Original { get; }
+        [SerializeField] private GameObject _original;
+
+        /// <summary>
+        /// 对象池中对象的原始预制体
+        /// </summary>
+        public GameObject Original => _original;
+
+        GameObject IUnityObjectPool.Original
+        {
+            get => _original;
+            set
+            {
+                if (value.GetComponent(ObjectType) == null)
+                {
+                    throw new InvalidOperationException(
+                        $"The original prefab '{value.name}' must contain component of type '{ObjectType}'.");
+                }
+
+                _original = value;
+            }
+        }
+
+        [SerializeField] private Transform _transform;
 
         /// <inheritdoc />
-        public Transform Transform { get; set; }
-        
+        public Transform Transform
+        {
+            get => _transform;
+            set => _transform = value;
+        }
+
         /// <summary>
         /// 对象池中对象的默认生命周期（秒）
         /// </summary>
@@ -51,9 +76,10 @@ namespace EasyFramework.ToolKit
 
                 if (!typeof(IPooledUnityObject).IsAssignableFrom(value))
                 {
-                    throw new InvalidOperationException($"Type '{value}' must implement '{typeof(IPooledUnityObject)}'.");
+                    throw new InvalidOperationException(
+                        $"Type '{value}' must implement '{typeof(IPooledUnityObject)}'.");
                 }
-                
+
                 if (value.IsAbstract || value.IsInterface)
                 {
                     throw new InvalidOperationException($"Type '{value}' cannot be abstract or interface.");
@@ -70,48 +96,26 @@ namespace EasyFramework.ToolKit
 
         private float _recycleElapsedTime;
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="name">对象池名称</param>
-        /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <param name="original">原始预制体</param>
-        /// <exception cref="ArgumentNullException">当objectType或original为null时抛出</exception>
-        /// <exception cref="InvalidOperationException">当original上未挂载目标组件时抛出</exception>
-        public UnityObjectPool(string name, Type objectType, GameObject original)
-            : base(name, objectType)
-        {
-            if (objectType == null)
-                throw new ArgumentNullException(nameof(objectType));
-            if (original == null)
-                throw new ArgumentNullException(nameof(original));
-
-            // 校验 original 上是否挂载了目标组件
-            if (original.GetComponent(objectType) == null)
-            {
-                throw new InvalidOperationException($"The original prefab '{original.name}' must contain component of type '{objectType}'.");
-            }
-
-            Original = original;
-        }
-
         public override bool TryRecycle(object instance)
         {
             var type = instance.GetType();
             if (!typeof(Component).IsAssignableFrom(type))
             {
-                throw new InvalidOperationException($"The type '{type}' of instance '{instance}' must inherit from '{typeof(Component)}'.");
+                throw new InvalidOperationException(
+                    $"The type '{type}' of instance '{instance}' must inherit from '{typeof(Component)}'.");
             }
 
             if (type != ObjectType)
             {
                 instance = ((Component)instance).GetComponent(ObjectType);
             }
+
             return base.TryRecycle(instance);
         }
 
         // 通过GameObject引用存储活跃的IPooledUnityObject实例
-        private readonly Dictionary<GameObject, IPooledUnityObject> _activeInstancesByGameObject = new Dictionary<GameObject, IPooledUnityObject>();
+        private readonly Dictionary<GameObject, IPooledUnityObject> _activeInstancesByGameObject =
+            new Dictionary<GameObject, IPooledUnityObject>();
 
         void IUnityObjectPool.Update(float deltaTime)
         {
@@ -148,7 +152,8 @@ namespace EasyFramework.ToolKit
 
             if (comps.Length > 1)
             {
-                throw new InvalidOperationException($"GameObject '{instance.name}' cannot contain more than one component implementing '{typeof(IPooledUnityObject)}'.");
+                throw new InvalidOperationException(
+                    $"GameObject '{instance.name}' cannot contain more than one component implementing '{typeof(IPooledUnityObject)}'.");
             }
 
             IPooledUnityObject pooledComponent;
@@ -175,7 +180,7 @@ namespace EasyFramework.ToolKit
             _activeInstancesByGameObject[gameObject] = obj;
             obj.OnSpawn();
         }
-        
+
         /// <inheritdoc />
         protected override void OnRecycle(object instance)
         {

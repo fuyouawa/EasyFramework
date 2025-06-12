@@ -10,10 +10,41 @@ namespace EasyFramework.ToolKit
     public abstract class ObjectPoolBase : IObjectPool
     {
         /// <inheritdoc />
-        public string Name { get; }
+        string IObjectPool.Name
+        {
+            get => _name;
+            set => _name = value;
+        }
 
         /// <inheritdoc />
-        public Type ObjectType { get; }
+        Type IObjectPool.ObjectType
+        {
+            get => _objectType;
+            set
+            {
+                // 检查 objectType 是否可被实例化
+                if (value.IsInterface || value.IsAbstract || value.IsGenericType)
+                {
+                    throw new InvalidOperationException(
+                        $"Type '{value}' cannot be interface, abstract or generic type.");
+                }
+
+                _objectType = value;
+            }
+        }
+
+        private string _name;
+        private Type _objectType;
+
+        /// <summary>
+        /// 对象池的名称
+        /// </summary>
+        public string Name => _name;
+
+        /// <summary>
+        /// 对象池中存储的对象类型
+        /// </summary>
+        public Type ObjectType => _objectType;
 
         /// <summary>
         /// 当前对象池中的对象总数（活跃对象 + 未使用对象）
@@ -43,7 +74,8 @@ namespace EasyFramework.ToolKit
 
                 if (value > 0 && value < _activeInstances.Count)
                 {
-                    throw new InvalidOperationException($"Capacity '{value}' cannot be less than spawned object count '{_activeInstances.Count}'.");
+                    throw new InvalidOperationException(
+                        $"Capacity '{value}' cannot be less than spawned object count '{_activeInstances.Count}'.");
                 }
 
                 _capacity = value;
@@ -54,28 +86,13 @@ namespace EasyFramework.ToolKit
 
         // 存储活跃的对象实例
         private readonly List<object> _activeInstances = new List<object>();
+
         // 存储未使用的对象实例
         private readonly Stack<object> _unusedInstances = new Stack<object>();
 
         // 对象生成和回收时的回调函数
         private Action<object> _onSpawn;
         private Action<object> _onRecycle;
-
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        /// <param name="name">对象池名称</param>
-        /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <exception cref="ArgumentNullException">当objectType为null时抛出</exception>
-        protected ObjectPoolBase(string name, Type objectType)
-        {
-            if (objectType == null)
-            {
-                throw new ArgumentNullException(nameof(objectType));
-            }
-            Name = name;
-            ObjectType = objectType;
-        }
 
         void IObjectPool.AddSpawnCallback(Action<object> callback)
         {
@@ -104,6 +121,7 @@ namespace EasyFramework.ToolKit
                 {
                     return null;
                 }
+
                 instance = GetNewObject();
             }
 
@@ -142,7 +160,7 @@ namespace EasyFramework.ToolKit
         //     _onSpawn?.Invoke(instance);
         //     return instance;
         // }
-        
+
         /// <summary>
         /// 尝试将对象回收到对象池中
         /// </summary>
@@ -201,13 +219,17 @@ namespace EasyFramework.ToolKit
         /// 对象生成时的回调方法
         /// </summary>
         /// <param name="instance">生成的对象实例</param>
-        protected virtual void OnSpawn(object instance) {}
+        protected virtual void OnSpawn(object instance)
+        {
+        }
 
         /// <summary>
         /// 对象回收时的回调方法
         /// </summary>
         /// <param name="instance">回收的对象实例</param>
-        protected virtual void OnRecycle(object instance) {}
+        protected virtual void OnRecycle(object instance)
+        {
+        }
 
         /// <summary>
         /// 根据容量限制收缩未使用的对象

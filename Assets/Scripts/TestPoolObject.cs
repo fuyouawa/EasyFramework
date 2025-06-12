@@ -20,19 +20,16 @@ public class OOO : AbstractPooledObject
     }
 }
 
+public class Bullet : MonoBehaviour {}
+
 public class TestPoolObject : MonoBehaviour
 {
     private GameObject o111;
     // Start is called before the first frame update
     void Start()
     {
-        o111 = new GameObject("IIJbsas");
-        o111.AddComponent<AudioSource>();
-        o111.AddComponent<Rigidbody>();
-        o111.AddComponent<BoxCollider>();
-        o111.AddComponent<ParticleSystem>();
-        o111.AddComponent<Feedbacks>();
-        o111.AddComponent<CharacterController>();
+        o111 = new GameObject("Bullet");
+        o111.AddComponent<Bullet>();
     }
 
     // Update is called once per frame
@@ -62,11 +59,21 @@ public class TestPoolObject : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
+            var pool = UnityObjectPoolManager.Instance.TryGetOrAllocatePool<Bullet>("玩家子弹", o111);
 
-            var pool = UnityObjectPoolManager.Instance.TryGetOrAllocatePool<AudioSource>("JJB", o111);
-            var o = pool.TrySpawn<AudioSource>();
-            var o1 = pool.TrySpawn<AudioSource>();
-            var o2 = pool.TrySpawn<AudioSource>();
+            var o = pool.TrySpawn<Bullet>();
+            var o1 = pool.TrySpawn<Bullet>();
+            var o2 = pool.TrySpawn<Bullet>();
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            var pool = (UnityObjectPool)UnityObjectPoolManager.Instance.TryGetOrAllocatePool<Bullet>("怪物A子弹", o111);
+            pool.DefaultObjectLifetime = 2f;
+
+            var o = pool.TrySpawn<Bullet>();
+            var o1 = pool.TrySpawn<Bullet>();
+            var o2 = pool.TrySpawn<Bullet>();
         }
 
         // if (Input.GetKeyDown(KeyCode.A))

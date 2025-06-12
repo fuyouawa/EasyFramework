@@ -11,12 +11,12 @@ namespace EasyFramework.ToolKit
         /// <summary>
         /// 对象池的名称
         /// </summary>
-        string Name { get; }
+        string Name { get; internal set; }
 
         /// <summary>
         /// 对象池中存储的对象类型
         /// </summary>
-        Type ObjectType { get; }
+        Type ObjectType { get; internal set; }
 
         /// <summary>
         /// 当前对象池中的对象数量
@@ -30,7 +30,7 @@ namespace EasyFramework.ToolKit
 
         internal void AddSpawnCallback(Action<object> callback);
         internal void AddRecycleCallback(Action<object> callback);
-        
+
         // /// <summary>
         // /// 异步尝试从对象池中获取一个对象
         // /// </summary>

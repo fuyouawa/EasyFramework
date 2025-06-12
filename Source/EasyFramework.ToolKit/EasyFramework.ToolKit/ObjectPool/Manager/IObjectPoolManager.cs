@@ -8,11 +8,6 @@ namespace EasyFramework.ToolKit
     public interface IObjectPoolManager
     {
         /// <summary>
-        /// 对象池管理器的配置设置
-        /// </summary>
-        ObjectPoolManagerSettings Settings { get; set; }
-
-        /// <summary>
         /// 尝试创建对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>

@@ -5,8 +5,6 @@ namespace EasyFramework.ToolKit
 {
     public interface IUnityObjectPoolManager
     {
-        UnityObjectPoolManagerSettings Settings { get; set; }
-        
         /// <summary>
         /// 尝试创建对象池。
         /// </summary>
