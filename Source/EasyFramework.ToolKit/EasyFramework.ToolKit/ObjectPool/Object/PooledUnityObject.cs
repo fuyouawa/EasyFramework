@@ -1,8 +1,15 @@
 using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public enum PooledUnityObjectState
+    {
+        Active,
+        Unused
+    }
+
     public class PooledUnityObject : MonoBehaviour, IPooledUnityObject
     {
         IObjectPool IPooledObject.OwningPool
@@ -22,6 +29,7 @@ namespace EasyFramework.ToolKit
         }
 
         private IUnityObjectPool _owningPool;
+        [ShowInInspector] private PooledUnityObjectState _state;
 
         public float Lifetime { get; set; }
 
@@ -53,12 +61,14 @@ namespace EasyFramework.ToolKit
 
             transform.SetParent(_owningPool.Transform);
             gameObject.SetActive(true);
+            _state = PooledUnityObjectState.Active;
         }
 
         void IPooledObject.OnRecycle()
         {
             transform.SetParent(_owningPool.Transform);
             gameObject.SetActive(false);
+            _state = PooledUnityObjectState.Unused;
         }
     }
 }

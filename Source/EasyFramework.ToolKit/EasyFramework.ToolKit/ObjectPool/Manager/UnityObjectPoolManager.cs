@@ -28,6 +28,18 @@ namespace EasyFramework.ToolKit
             set => _settings = value;
         }
 
+        UnityObjectPoolManager()
+        {
+        }
+
+        void FixedUpdate()
+        {
+            foreach (var pool in _pools.Values)
+            {
+                pool.Update(Time.fixedDeltaTime);
+            }
+        }
+
         /// <summary>
         /// 尝试创建Unity对象池
         /// </summary>

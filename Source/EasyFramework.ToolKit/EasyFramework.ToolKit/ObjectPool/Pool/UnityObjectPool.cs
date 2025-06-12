@@ -66,6 +66,8 @@ namespace EasyFramework.ToolKit
         /// </summary>
         public float RecycleInterval { get; set; } = 0.5f;
 
+        private float _recycleElapsedTime;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -85,13 +87,26 @@ namespace EasyFramework.ToolKit
             // 校验 original 上是否挂载了目标组件
             if (original.GetComponent(objectType) == null)
             {
-                throw new InvalidOperationException($"Original prefab '{original.name}' must contain component of type '{objectType}'.");
+                throw new InvalidOperationException($"The original prefab '{original.name}' must contain component of type '{objectType}'.");
             }
 
             Original = original;
         }
 
-        private float _recycleElapsedTime;
+        public override bool TryRecycle(object instance)
+        {
+            var type = instance.GetType();
+            if (!typeof(Component).IsAssignableFrom(type))
+            {
+                throw new InvalidOperationException($"The type '{type}' of instance '{instance}' must inherit from '{typeof(Component)}'.");
+            }
+
+            if (type != ObjectType)
+            {
+                instance = ((Component)instance).GetComponent(ObjectType);
+            }
+            return base.TryRecycle(instance);
+        }
 
         // 通过GameObject引用存储活跃的IPooledUnityObject实例
         private readonly Dictionary<GameObject, IPooledUnityObject> _activeInstancesByGameObject = new Dictionary<GameObject, IPooledUnityObject>();
@@ -153,7 +168,8 @@ namespace EasyFramework.ToolKit
         protected override void OnSpawn(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
-            var obj = ComponentSearcher.Instance.Get<IPooledUnityObject>(gameObject);
+            var obj = gameObject.GetComponent<IPooledUnityObject>();
+            obj.OwningPool = this;
             _activeInstancesByGameObject[gameObject] = obj;
             obj.OnSpawn();
         }
@@ -162,7 +178,8 @@ namespace EasyFramework.ToolKit
         protected override void OnRecycle(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
-            var obj = ComponentSearcher.Instance.Get<IPooledUnityObject>(gameObject);
+            var obj = gameObject.GetComponent<IPooledUnityObject>();
+            obj.OwningPool = this;
             _activeInstancesByGameObject.Remove(gameObject);
             obj.OnRecycle();
         }

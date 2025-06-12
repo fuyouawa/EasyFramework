@@ -109,11 +109,6 @@ namespace EasyFramework.ToolKit
 
             _activeInstances.Add(instance);
 
-            if (instance is IPooledObject pooled)
-            {
-                pooled.OwningPool = this;
-            }
-
             OnSpawn(instance);
             _onSpawn?.Invoke(instance);
 
@@ -143,11 +138,6 @@ namespace EasyFramework.ToolKit
 
             _activeInstances.Add(instance);
 
-            if (instance is IPooledObject pooled)
-            {
-                pooled.OwningPool = this;
-            }
-
             OnSpawn(instance);
             _onSpawn?.Invoke(instance);
             return instance;
@@ -159,7 +149,7 @@ namespace EasyFramework.ToolKit
         /// <param name="instance">要回收的对象</param>
         /// <returns>回收是否成功</returns>
         /// <exception cref="ArgumentNullException">当instance为null时抛出</exception>
-        public bool TryRecycle(object instance)
+        public virtual bool TryRecycle(object instance)
         {
             if (instance == null)
             {

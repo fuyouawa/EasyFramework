@@ -20,6 +20,10 @@ namespace EasyFramework.ToolKit
         // 使用元组作为键，存储对象池实例
         private readonly Dictionary<(string poolName, Type objectType), IObjectPool> _pools = new Dictionary<(string poolName, Type objectType), IObjectPool>();
 
+        ObjectPoolManager()
+        {
+        }
+
         /// <summary>
         /// 尝试创建对象池
         /// </summary>

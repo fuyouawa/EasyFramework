@@ -72,6 +72,7 @@ namespace EasyFramework.ToolKit
         protected override void OnRecycle(object instance)
         {
             var obj = (IPooledObject)instance;
+            obj.OwningPool = this;
             obj.OnRecycle();
         }
     }
