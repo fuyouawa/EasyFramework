@@ -115,33 +115,33 @@ namespace EasyFramework.ToolKit
             return instance;
         }
 
-        /// <summary>
-        /// 异步尝试从对象池中获取一个对象
-        /// </summary>
-        /// <returns>获取到的对象，如果对象池已满则返回null</returns>
-        public async UniTask<object> TrySpawnAsync()
-        {
-            object instance;
-            if (_unusedInstances.Count > 0)
-            {
-                instance = _unusedInstances.Pop();
-            }
-            else
-            {
-                if (_capacity > 0 && Count >= _capacity)
-                {
-                    return null;
-                }
-
-                instance = await GetNewObjectAsync();
-            }
-
-            _activeInstances.Add(instance);
-
-            OnSpawn(instance);
-            _onSpawn?.Invoke(instance);
-            return instance;
-        }
+        // /// <summary>
+        // /// 异步尝试从对象池中获取一个对象
+        // /// </summary>
+        // /// <returns>获取到的对象，如果对象池已满则返回null</returns>
+        // public async UniTask<object> TrySpawnAsync()
+        // {
+        //     object instance;
+        //     if (_unusedInstances.Count > 0)
+        //     {
+        //         instance = _unusedInstances.Pop();
+        //     }
+        //     else
+        //     {
+        //         if (_capacity > 0 && Count >= _capacity)
+        //         {
+        //             return null;
+        //         }
+        //
+        //         instance = await GetNewObjectAsync();
+        //     }
+        //
+        //     _activeInstances.Add(instance);
+        //
+        //     OnSpawn(instance);
+        //     _onSpawn?.Invoke(instance);
+        //     return instance;
+        // }
         
         /// <summary>
         /// 尝试将对象回收到对象池中
@@ -191,11 +191,11 @@ namespace EasyFramework.ToolKit
         /// <returns>新创建的对象实例</returns>
         protected abstract object GetNewObject();
 
-        /// <summary>
-        /// 异步创建新的对象实例
-        /// </summary>
-        /// <returns>新创建的对象实例</returns>
-        protected abstract UniTask<object> GetNewObjectAsync();
+        // /// <summary>
+        // /// 异步创建新的对象实例
+        // /// </summary>
+        // /// <returns>新创建的对象实例</returns>
+        // protected abstract UniTask<object> GetNewObjectAsync();
 
         /// <summary>
         /// 对象生成时的回调方法

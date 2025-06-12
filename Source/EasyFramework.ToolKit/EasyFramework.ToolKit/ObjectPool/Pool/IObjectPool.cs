@@ -31,11 +31,11 @@ namespace EasyFramework.ToolKit
         internal void AddSpawnCallback(Action<object> callback);
         internal void AddRecycleCallback(Action<object> callback);
         
-        /// <summary>
-        /// 异步尝试从对象池中获取一个对象
-        /// </summary>
-        /// <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
-        UniTask<object> TrySpawnAsync();
+        // /// <summary>
+        // /// 异步尝试从对象池中获取一个对象
+        // /// </summary>
+        // /// <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
+        // UniTask<object> TrySpawnAsync();
 
         /// <summary>
         /// 尝试从对象池中获取一个对象

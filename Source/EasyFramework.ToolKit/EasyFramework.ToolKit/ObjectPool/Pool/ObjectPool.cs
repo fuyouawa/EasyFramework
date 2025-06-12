@@ -38,11 +38,11 @@ namespace EasyFramework.ToolKit
             return Activator.CreateInstance(ObjectType);
         }
 
-        /// <inheritdoc />
-        protected override async UniTask<object> GetNewObjectAsync()
-        {
-            return GetNewObject();
-        }
+        // /// <inheritdoc />
+        // protected override async UniTask<object> GetNewObjectAsync()
+        // {
+        //     return GetNewObject();
+        // }
 
         /// <inheritdoc />
         protected override bool CanRecycle(object instance)

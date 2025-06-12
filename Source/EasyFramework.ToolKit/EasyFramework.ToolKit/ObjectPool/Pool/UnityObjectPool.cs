@@ -17,9 +17,11 @@ namespace EasyFramework.ToolKit
 
         /// <inheritdoc />
         public Transform Transform { get; set; }
-
-        /// <inheritdoc />
-        public float DefaultObjectLifetime { get; set; } = 1f;
+        
+        /// <summary>
+        /// 对象池中对象的默认生命周期（秒）
+        /// </summary>
+        public float DefaultObjectLifetime { get; set; } = 0f;
 
         private Type _defaultPooledComponentType = typeof(PooledUnityObject);
 
@@ -129,11 +131,11 @@ namespace EasyFramework.ToolKit
             return inst.GetComponent(ObjectType);
         }
 
-        /// <inheritdoc />
-        protected override async UniTask<object> GetNewObjectAsync()
-        {
-            return GetNewObject();
-        }
+        // /// <inheritdoc />
+        // protected override async UniTask<object> GetNewObjectAsync()
+        // {
+        //     return GetNewObject();
+        // }
 
         /// <summary>
         /// 处理新创建的游戏对象实例

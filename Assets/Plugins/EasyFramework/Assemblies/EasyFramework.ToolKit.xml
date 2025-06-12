@@ -308,12 +308,6 @@
             对象池的容量上限
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPool.TrySpawnAsync">
-            <summary>
-            异步尝试从对象池中获取一个对象
-            </summary>
-            <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
-        </member>
         <member name="M:EasyFramework.ToolKit.IObjectPool.TrySpawn">
             <summary>
             尝试从对象池中获取一个对象
@@ -373,16 +367,6 @@
             Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.DefaultObjectLifetime">
-            <summary>
-            对象池中对象的默认生命周期（秒）
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.DefaultPooledComponentType">
-            <summary>
-            对象池中对象的默认组件类型
-            </summary>
-        </member>
         <member name="P:EasyFramework.ToolKit.IUnityObjectPool.RecycleInterval">
             <summary>
             对象回收检查的时间间隔（秒）
@@ -404,16 +388,6 @@
             </summary>
             <param name="deltaTime">距离上次更新的时间间隔（秒）</param>
         </member>
-        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolExtension.SetDefaultObjectLifetime``1(``0,System.Single)">
-            <summary>
-            设置默认对象生命周期。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolExtension.SetDefaultPooledComponentType``1(``0,System.Type)">
-            <summary>
-            设置默认的 Pooled 组件类型（运行时动态类型）。
-            </summary>
-        </member>
         <member name="T:EasyFramework.ToolKit.ObjectPool">
             <summary>
             通用对象池实现，用于管理实现了IPooledObject接口的对象
@@ -431,9 +405,6 @@
             </exception>
         </member>
         <member name="M:EasyFramework.ToolKit.ObjectPool.GetNewObject">
-            <inheritdoc />
-        </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPool.GetNewObjectAsync">
             <inheritdoc />
         </member>
         <member name="M:EasyFramework.ToolKit.ObjectPool.CanRecycle(System.Object)">
@@ -481,12 +452,6 @@
             </summary>
             <returns>获取到的对象，如果对象池已满则返回null</returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.TrySpawnAsync">
-            <summary>
-            异步尝试从对象池中获取一个对象
-            </summary>
-            <returns>获取到的对象，如果对象池已满则返回null</returns>
-        </member>
         <member name="M:EasyFramework.ToolKit.ObjectPoolBase.TryRecycle(System.Object)">
             <summary>
             尝试将对象回收到对象池中
@@ -505,12 +470,6 @@
         <member name="M:EasyFramework.ToolKit.ObjectPoolBase.GetNewObject">
             <summary>
             创建新的对象实例
-            </summary>
-            <returns>新创建的对象实例</returns>
-        </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.GetNewObjectAsync">
-            <summary>
-            异步创建新的对象实例
             </summary>
             <returns>新创建的对象实例</returns>
         </member>
@@ -543,7 +502,9 @@
             <inheritdoc />
         </member>
         <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultObjectLifetime">
-            <inheritdoc />
+            <summary>
+            对象池中对象的默认生命周期（秒）
+            </summary>
         </member>
         <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultPooledComponentType">
             <summary>
@@ -572,9 +533,6 @@
             <exception cref="T:System.InvalidOperationException">当original上未挂载目标组件时抛出</exception>
         </member>
         <member name="M:EasyFramework.ToolKit.UnityObjectPool.GetNewObject">
-            <inheritdoc />
-        </member>
-        <member name="M:EasyFramework.ToolKit.UnityObjectPool.GetNewObjectAsync">
             <inheritdoc />
         </member>
         <member name="M:EasyFramework.ToolKit.UnityObjectPool.ProcessInstance(UnityEngine.GameObject)">

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
@@ -8,16 +7,6 @@ namespace EasyFramework.ToolKit
     /// </summary>
     public interface IUnityObjectPool : IObjectPool
     {
-        /// <summary>
-        /// 对象池中对象的默认生命周期（秒）
-        /// </summary>
-        float DefaultObjectLifetime { get; set; }
-
-        /// <summary>
-        /// 对象池中对象的默认组件类型
-        /// </summary>
-        Type DefaultPooledComponentType { get; set; }
-
         /// <summary>
         /// 对象回收检查的时间间隔（秒）
         /// </summary>
