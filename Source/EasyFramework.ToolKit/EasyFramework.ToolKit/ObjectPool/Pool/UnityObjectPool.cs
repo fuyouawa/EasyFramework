@@ -2,42 +2,56 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyFramework.Core;
 using UnityEngine;
 
-namespace EasyFramework.Core
+namespace EasyFramework.ToolKit
 {
+    /// <summary>
+    /// Unity对象池实现，用于管理Unity游戏对象的对象池
+    /// </summary>
     public class UnityObjectPool : ObjectPoolBase, IUnityObjectPool
     {
+        /// <inheritdoc />
         public GameObject Original { get; }
+
+        /// <inheritdoc />
         public Transform Transform { get; set; }
+
+        /// <inheritdoc />
         public float DefaultObjectLifetime { get; set; } = 1f;
 
-        private Type _defaultPooledComponentType;
+        private Type _defaultPooledComponentType = typeof(PooledUnityObject);
 
+        /// <summary>
+        /// 对象池中对象的默认组件类型
+        /// </summary>
+        /// <exception cref="ArgumentNullException">当value为null时抛出</exception>
+        /// <exception cref="InvalidOperationException">
+        /// 当value不是Component的子类，
+        /// 或者未实现IPooledUnityObject接口，
+        /// 或者是抽象类或接口时抛出
+        /// </exception>
         public Type DefaultPooledComponentType
         {
             get => _defaultPooledComponentType;
             set
             {
-                // 检查并确保类型有效
                 if (value == null)
                 {
                     throw new ArgumentNullException(nameof(value), $"Default pooled component type cannot be null.");
                 }
 
-                // 必须继承自 UnityEngine.Component
                 if (!typeof(Component).IsAssignableFrom(value))
                 {
                     throw new InvalidOperationException($"Type '{value}' must inherit from '{typeof(Component)}'.");
                 }
 
-                // 必须实现 IPooledUnityObject 接口
                 if (!typeof(IPooledUnityObject).IsAssignableFrom(value))
                 {
                     throw new InvalidOperationException($"Type '{value}' must implement '{typeof(IPooledUnityObject)}'.");
                 }
-
-                // 不允许抽象类或接口
+                
                 if (value.IsAbstract || value.IsInterface)
                 {
                     throw new InvalidOperationException($"Type '{value}' cannot be abstract or interface.");
@@ -47,8 +61,19 @@ namespace EasyFramework.Core
             }
         }
 
+        /// <summary>
+        /// 对象回收检查的时间间隔（秒）
+        /// </summary>
         public float RecycleInterval { get; set; } = 0.5f;
 
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">对象池名称</param>
+        /// <param name="objectType">对象池中存储的对象类型</param>
+        /// <param name="original">原始预制体</param>
+        /// <exception cref="ArgumentNullException">当objectType或original为null时抛出</exception>
+        /// <exception cref="InvalidOperationException">当original上未挂载目标组件时抛出</exception>
         public UnityObjectPool(string name, Type objectType, GameObject original)
             : base(name, objectType)
         {
@@ -64,13 +89,11 @@ namespace EasyFramework.Core
             }
 
             Original = original;
-
-            // 默认使用框架提供的 PooledUnityObject 类型，防止未显式设置导致空引用
-            _defaultPooledComponentType = typeof(PooledUnityObject);
         }
 
         private float _recycleElapsedTime;
 
+        // 通过GameObject引用存储活跃的IPooledUnityObject实例
         private readonly Dictionary<GameObject, IPooledUnityObject> _activeInstancesByGameObject = new Dictionary<GameObject, IPooledUnityObject>();
 
         void IUnityObjectPool.Update(float deltaTime)
@@ -83,6 +106,7 @@ namespace EasyFramework.Core
             }
         }
 
+        /// <inheritdoc />
         protected override object GetNewObject()
         {
             var inst = UnityEngine.Object.Instantiate(Original);
@@ -90,17 +114,21 @@ namespace EasyFramework.Core
             return inst.GetComponent(ObjectType);
         }
 
+        /// <inheritdoc />
         protected override async UniTask<object> GetNewObjectAsync()
         {
             return GetNewObject();
         }
 
+        /// <summary>
+        /// 处理新创建的游戏对象实例
+        /// </summary>
+        /// <param name="instance">新创建的游戏对象实例</param>
+        /// <exception cref="InvalidOperationException">当instance包含多个IPooledUnityObject组件时抛出</exception>
         protected virtual void ProcessInstance(GameObject instance)
         {
-            // 获取所有 IPooledUnityObject 组件
             var comps = instance.GetComponents<IPooledUnityObject>();
 
-            // 若超过 1 个，说明使用者手动挂载了多个，抛异常提醒
             if (comps.Length > 1)
             {
                 throw new InvalidOperationException($"GameObject '{instance.name}' cannot contain more than one component implementing '{typeof(IPooledUnityObject)}'.");
@@ -110,7 +138,6 @@ namespace EasyFramework.Core
 
             if (comps.Length == 0)
             {
-                // 自动添加默认实现
                 pooledComponent = (IPooledUnityObject)instance.AddComponent(_defaultPooledComponentType);
             }
             else
@@ -122,6 +149,7 @@ namespace EasyFramework.Core
             pooledComponent.Lifetime = DefaultObjectLifetime;
         }
 
+        /// <inheritdoc />
         protected override void OnSpawn(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
@@ -129,7 +157,8 @@ namespace EasyFramework.Core
             _activeInstancesByGameObject[gameObject] = obj;
             obj.OnSpawn();
         }
-
+        
+        /// <inheritdoc />
         protected override void OnRecycle(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
@@ -138,6 +167,10 @@ namespace EasyFramework.Core
             obj.OnRecycle();
         }
 
+        /// <summary>
+        /// 定时更新所有活跃对象的状态
+        /// </summary>
+        /// <param name="interval">更新间隔（秒）</param>
         protected virtual void OnTick(float interval)
         {
             // 复制一份防止Tick时变更

@@ -1,14 +1,25 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace EasyFramework.Core
+namespace EasyFramework.ToolKit
 {
+    /// <summary>
+    /// 通用对象池实现，用于管理实现了IPooledObject接口的对象
+    /// </summary>
     public class ObjectPool : ObjectPoolBase
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="name">对象池名称</param>
+        /// <param name="objectType">对象池中存储的对象类型</param>
+        /// <exception cref="InvalidOperationException">
+        /// 当objectType未实现IPooledObject接口，
+        /// 或者是接口、抽象类、泛型类型时抛出
+        /// </exception>
         public ObjectPool(string name, Type objectType)
             : base(name, objectType)
         {
-            // 检查 objectType 是否实现 IPooledObject 接口
             if (!typeof(IPooledObject).IsAssignableFrom(objectType))
             {
                 throw new InvalidOperationException($"Type '{objectType}' must implement '{typeof(IPooledObject)}'.");
@@ -21,16 +32,19 @@ namespace EasyFramework.Core
             }
         }
 
+        /// <inheritdoc />
         protected override object GetNewObject()
         {
             return Activator.CreateInstance(ObjectType);
         }
 
+        /// <inheritdoc />
         protected override async UniTask<object> GetNewObjectAsync()
         {
             return GetNewObject();
         }
 
+        /// <inheritdoc />
         protected override bool CanRecycle(object instance)
         {
             var obj = (IPooledObject)instance;
@@ -46,6 +60,7 @@ namespace EasyFramework.Core
             return base.CanRecycle(instance);
         }
 
+        /// <inheritdoc />
         protected override void OnSpawn(object instance)
         {
             var obj = (IPooledObject)instance;
@@ -53,6 +68,7 @@ namespace EasyFramework.Core
             obj.OnSpawn();
         }
 
+        /// <inheritdoc />
         protected override void OnRecycle(object instance)
         {
             var obj = (IPooledObject)instance;

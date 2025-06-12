@@ -596,28 +596,6 @@
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.Core.IObjectPoolManager.TryAllocatePool(System.String,System.Type)">
-            <summary>
-            尝试创建对象池。
-            返回 true 表示创建成功；false 表示已存在同名同类型的池。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Core.IUnityObjectPoolManager.TryAllocatePool(System.String,System.Type,UnityEngine.GameObject)">
-            <summary>
-            尝试创建 Unity 对象池。
-            返回 true 表示创建成功；false 表示已存在同名同类型的池。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Core.IUnityObjectPoolExtension.SetDefaultObjectLifetime``1(``0,System.Single)">
-            <summary>
-            设置默认对象生命周期。
-            </summary>
-        </member>
-        <member name="M:EasyFramework.Core.IUnityObjectPoolExtension.SetDefaultPooledComponentType``1(``0,System.Type)">
-            <summary>
-            设置默认的 Pooled 组件类型（运行时动态类型）。
-            </summary>
-        </member>
         <member name="T:EasyFramework.Core.EasyEventHandler`1">
             <summary>
             事件处理器

@@ -1,6 +1,6 @@
 using System;
 
-namespace EasyFramework.Core
+namespace EasyFramework.ToolKit
 {
     public static class IObjectPoolManagerExtension
     {

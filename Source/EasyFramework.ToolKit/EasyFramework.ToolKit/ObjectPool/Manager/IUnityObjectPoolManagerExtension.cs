@@ -1,4 +1,4 @@
-namespace EasyFramework.Core
+namespace EasyFramework.ToolKit
 {
     using System;
     using UnityEngine;

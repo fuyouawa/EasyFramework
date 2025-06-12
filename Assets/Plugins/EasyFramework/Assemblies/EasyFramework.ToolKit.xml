@@ -133,6 +133,469 @@
             </summary>
             <param name="other">The other group attribute to combine with.</param>
         </member>
+        <member name="T:EasyFramework.ToolKit.IObjectPoolManager">
+            <summary>
+            对象池管理器接口，负责管理多个对象池的创建和访问
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IObjectPoolManager.Settings">
+            <summary>
+            对象池管理器的配置设置
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.TryAllocatePool(System.String,System.Type)">
+            <summary>
+            尝试创建对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.TryGetPool(System.String,System.Type)">
+            <summary>
+            尝试获取指定名称和类型的对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>找到的对象池，如果不存在则返回null</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolManager.TryAllocatePool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            尝试创建对象池。
+            </summary>
+            <param name="poolName"></param>
+            <param name="objectType"></param>
+            <returns> true 表示创建成功；false 表示已存在同名同类型的池。</returns>
+        </member>
+        <member name="T:EasyFramework.ToolKit.ObjectPoolManager">
+            <summary>
+            对象池管理器，负责创建和管理多个对象池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolManager.Settings">
+            <summary>
+            对象池管理器的配置设置
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.TryAllocatePool(System.String,System.Type)">
+            <summary>
+            尝试创建对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
+            <exception cref="T:System.ArgumentNullException">当objectType为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.TryGetPool(System.String,System.Type)">
+            <summary>
+            尝试获取指定名称和类型的对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>找到的对象池，如果不存在则返回null</returns>
+            <exception cref="T:System.ArgumentNullException">当objectType为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.CreateObjectPool(System.String,System.Type)">
+            <summary>
+            创建新的对象池实例
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>新创建的对象池实例</returns>
+            <exception cref="T:System.InvalidOperationException">当无法创建对象池实例时抛出</exception>
+        </member>
+        <member name="T:EasyFramework.ToolKit.ObjectPoolManagerSettings">
+            <summary>
+            对象池管理器的配置设置类
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolManagerSettings.PoolType">
+            <summary>
+            对象池类型，用于创建对象池实例
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            当value为null，
+            或者是抽象类或接口，
+            或者没有公开的构造函数(string name, Type objectType)时抛出
+            </exception>
+        </member>
+        <member name="T:EasyFramework.ToolKit.UnityObjectPoolManager">
+            <summary>
+            Unity对象池管理器，负责创建和管理多个Unity对象池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPoolManager.Settings">
+            <summary>
+            Unity对象池管理器的配置设置
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.TryAllocatePool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            尝试创建Unity对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">原始预制体</param>
+            <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
+            <exception cref="T:System.ArgumentNullException">当objectType或original为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.TryGetPool(System.String,System.Type)">
+            <summary>
+            尝试获取指定名称和类型的Unity对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>找到的对象池，如果不存在则返回null</returns>
+            <exception cref="T:System.ArgumentNullException">当objectType为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.CreateUnityObjectPool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            创建新的Unity对象池实例
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">原始预制体</param>
+            <returns>新创建的Unity对象池实例</returns>
+            <exception cref="T:System.InvalidOperationException">当无法创建对象池实例时抛出</exception>
+        </member>
+        <member name="T:EasyFramework.ToolKit.UnityObjectPoolManagerSettings">
+            <summary>
+            Unity对象池管理器的配置设置类，支持Unity序列化
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPoolManagerSettings.PoolType">
+            <summary>
+            Unity对象池类型，用于创建Unity对象池实例
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            当value为null，
+            或者是抽象类或接口，
+            或者没有公开的构造函数(string name, Type objectType, GameObject original)时抛出
+            </exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManagerSettings.UnityEngine#ISerializationCallbackReceiver#OnBeforeSerialize">
+            <summary>
+            序列化前调用，将Type类型序列化为字节数组
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManagerSettings.UnityEngine#ISerializationCallbackReceiver#OnAfterDeserialize">
+            <summary>
+            反序列化后调用，将字节数组反序列化为Type类型
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.IObjectPool">
+            <summary>
+            对象池接口，定义了对象池的基本操作和属性
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IObjectPool.Name">
+            <summary>
+            对象池的名称
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IObjectPool.ObjectType">
+            <summary>
+            对象池中存储的对象类型
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IObjectPool.Count">
+            <summary>
+            当前对象池中的对象数量
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IObjectPool.Capacity">
+            <summary>
+            对象池的容量上限
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPool.TrySpawnAsync">
+            <summary>
+            异步尝试从对象池中获取一个对象
+            </summary>
+            <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPool.TrySpawn">
+            <summary>
+            尝试从对象池中获取一个对象
+            </summary>
+            <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPool.TryRecycle(System.Object)">
+            <summary>
+            尝试将对象回收到对象池中
+            </summary>
+            <param name="instance">要回收的对象</param>
+            <returns>回收是否成功</returns>
+        </member>
+        <member name="T:EasyFramework.ToolKit.IObjectPoolExtension">
+            <summary>
+            对象池扩展方法类，提供了一系列便捷的对象池操作方法
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.OnSpawn``1(``0,System.Action{System.Object})">
+            <summary>
+            添加对象生成时的回调函数
+            </summary>
+            <typeparam name="TObjectPool">对象池类型</typeparam>
+            <param name="objectPool">目标对象池</param>
+            <param name="callback">对象生成时的回调函数</param>
+            <returns>对象池实例，支持链式调用</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.OnRecycle``1(``0,System.Action{System.Object})">
+            <summary>
+            添加对象回收时的回调函数
+            </summary>
+            <typeparam name="TObjectPool">对象池类型</typeparam>
+            <param name="objectPool">目标对象池</param>
+            <param name="callback">对象回收时的回调函数</param>
+            <returns>对象池实例，支持链式调用</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.SetCapacity``1(``0,System.Int32)">
+            <summary>
+            设置对象池的容量
+            </summary>
+            <typeparam name="TObjectPool">对象池类型</typeparam>
+            <param name="objectPool">目标对象池</param>
+            <param name="newCapacity">新的容量值</param>
+            <returns>对象池实例，支持链式调用</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.TrySpawn``1(EasyFramework.ToolKit.IObjectPool)">
+            <summary>
+            尝试从对象池中获取指定类型的对象
+            </summary>
+            <typeparam name="TObject">期望的对象类型</typeparam>
+            <param name="objectPool">目标对象池</param>
+            <returns>获取到的对象</returns>
+            <exception cref="T:System.ArgumentException">当期望的类型与对象池中的对象类型不兼容时抛出</exception>
+        </member>
+        <member name="T:EasyFramework.ToolKit.IUnityObjectPool">
+            <summary>
+            Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.DefaultObjectLifetime">
+            <summary>
+            对象池中对象的默认生命周期（秒）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.DefaultPooledComponentType">
+            <summary>
+            对象池中对象的默认组件类型
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.RecycleInterval">
+            <summary>
+            对象回收检查的时间间隔（秒）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.Original">
+            <summary>
+            对象池中对象的原始预制体
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.Transform">
+            <summary>
+            对象池的Transform组件，用于管理池中对象的层级关系
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IUnityObjectPool.Update(System.Single)">
+            <summary>
+            更新对象池状态，处理对象生命周期和回收
+            </summary>
+            <param name="deltaTime">距离上次更新的时间间隔（秒）</param>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolExtension.SetDefaultObjectLifetime``1(``0,System.Single)">
+            <summary>
+            设置默认对象生命周期。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolExtension.SetDefaultPooledComponentType``1(``0,System.Type)">
+            <summary>
+            设置默认的 Pooled 组件类型（运行时动态类型）。
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.ObjectPool">
+            <summary>
+            通用对象池实现，用于管理实现了IPooledObject接口的对象
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.#ctor(System.String,System.Type)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="name">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <exception cref="T:System.InvalidOperationException">
+            当objectType未实现IPooledObject接口，
+            或者是接口、抽象类、泛型类型时抛出
+            </exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.GetNewObject">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.GetNewObjectAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.CanRecycle(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.OnSpawn(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPool.OnRecycle(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="T:EasyFramework.ToolKit.ObjectPoolBase">
+            <summary>
+            对象池的基类，实现了IObjectPool接口的基本功能
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolBase.Name">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolBase.ObjectType">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolBase.Count">
+            <summary>
+            当前对象池中的对象总数（活跃对象 + 未使用对象）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.ObjectPoolBase.Capacity">
+            <summary>
+            对象池的容量上限。设置为0表示无限制。
+            当设置新的容量时，如果新容量小于当前活跃对象数量，将抛出异常。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.#ctor(System.String,System.Type)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="name">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <exception cref="T:System.ArgumentNullException">当objectType为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.TrySpawn">
+            <summary>
+            尝试从对象池中获取一个对象
+            </summary>
+            <returns>获取到的对象，如果对象池已满则返回null</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.TrySpawnAsync">
+            <summary>
+            异步尝试从对象池中获取一个对象
+            </summary>
+            <returns>获取到的对象，如果对象池已满则返回null</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.TryRecycle(System.Object)">
+            <summary>
+            尝试将对象回收到对象池中
+            </summary>
+            <param name="instance">要回收的对象</param>
+            <returns>回收是否成功</returns>
+            <exception cref="T:System.ArgumentNullException">当instance为null时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.CanRecycle(System.Object)">
+            <summary>
+            检查对象是否可以被回收
+            </summary>
+            <param name="instance">要检查的对象</param>
+            <returns>对象是否可以被回收</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.GetNewObject">
+            <summary>
+            创建新的对象实例
+            </summary>
+            <returns>新创建的对象实例</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.GetNewObjectAsync">
+            <summary>
+            异步创建新的对象实例
+            </summary>
+            <returns>新创建的对象实例</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.OnSpawn(System.Object)">
+            <summary>
+            对象生成时的回调方法
+            </summary>
+            <param name="instance">生成的对象实例</param>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.OnRecycle(System.Object)">
+            <summary>
+            对象回收时的回调方法
+            </summary>
+            <param name="instance">回收的对象实例</param>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.ShrinkUnusedObjectsToFitCapacity">
+            <summary>
+            根据容量限制收缩未使用的对象
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.UnityObjectPool">
+            <summary>
+            Unity对象池实现，用于管理Unity游戏对象的对象池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.Original">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.Transform">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultObjectLifetime">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultPooledComponentType">
+            <summary>
+            对象池中对象的默认组件类型
+            </summary>
+            <exception cref="T:System.ArgumentNullException">当value为null时抛出</exception>
+            <exception cref="T:System.InvalidOperationException">
+            当value不是Component的子类，
+            或者未实现IPooledUnityObject接口，
+            或者是抽象类或接口时抛出
+            </exception>
+        </member>
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.RecycleInterval">
+            <summary>
+            对象回收检查的时间间隔（秒）
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.#ctor(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="name">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">原始预制体</param>
+            <exception cref="T:System.ArgumentNullException">当objectType或original为null时抛出</exception>
+            <exception cref="T:System.InvalidOperationException">当original上未挂载目标组件时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.GetNewObject">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.GetNewObjectAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.ProcessInstance(UnityEngine.GameObject)">
+            <summary>
+            处理新创建的游戏对象实例
+            </summary>
+            <param name="instance">新创建的游戏对象实例</param>
+            <exception cref="T:System.InvalidOperationException">当instance包含多个IPooledUnityObject组件时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnSpawn(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnRecycle(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnTick(System.Single)">
+            <summary>
+            定时更新所有活跃对象的状态
+            </summary>
+            <param name="interval">更新间隔（秒）</param>
+        </member>
         <member name="P:EasyFramework.ToolKit.MethodPickerSettingsAttribute.LimitParameterTypesGetter">
             <summary>
             <para>获取参数的限制类型</para>

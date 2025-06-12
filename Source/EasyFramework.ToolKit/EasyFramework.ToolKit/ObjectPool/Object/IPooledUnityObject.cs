@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace EasyFramework.Core
+namespace EasyFramework.ToolKit
 {
     public interface IPooledUnityObject : IPooledObject
     {
