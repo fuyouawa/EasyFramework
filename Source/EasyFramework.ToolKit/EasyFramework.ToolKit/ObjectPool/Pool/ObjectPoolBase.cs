@@ -47,10 +47,10 @@ namespace EasyFramework.ToolKit
         /// </summary>
         public Type ObjectType => _objectType;
 
-        public int TotalCount => ActiveCount + AvailableCount;
+        public int TotalCount => ActiveCount + IdleCount;
 
         public abstract int ActiveCount { get; }
-        public abstract int AvailableCount { get; }
+        public abstract int IdleCount { get; }
 
         private int _capacity = -1;
 
@@ -84,7 +84,7 @@ namespace EasyFramework.ToolKit
 
                 if (TotalCount > _capacity)
                 {
-                    ShrinkAvailableObjectsToFitCapacity(TotalCount - _capacity);
+                    ShrinkIdleObjectsToFitCapacity(TotalCount - _capacity);
                 }
             }
         }
@@ -107,13 +107,13 @@ namespace EasyFramework.ToolKit
         {
             if (_capacity >= 0)
             {
-                if (TotalCount >= _capacity && AvailableCount == 0)
+                if (TotalCount >= _capacity && IdleCount == 0)
                 {
                     return null;
                 }
             }
 
-            var instance = TryRentFromAvailable();
+            var instance = TryRentFromIdle();
             OnRent(instance);
             _onRent?.Invoke(instance);
             return instance;
@@ -126,7 +126,7 @@ namespace EasyFramework.ToolKit
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            if (!TryReleaseToAvailable(instance))
+            if (!TryReleaseToIdle(instance))
             {
                 return false;
             }
@@ -145,14 +145,14 @@ namespace EasyFramework.ToolKit
             return TryRemoveFromActive(instance);
         }
 
-        protected abstract object TryRentFromAvailable();
-        protected abstract bool TryReleaseToAvailable(object instance);
+        protected abstract object TryRentFromIdle();
+        protected abstract bool TryReleaseToIdle(object instance);
         protected abstract bool TryRemoveFromActive(object instance);
 
         /// <summary>
         /// 根据容量限制收缩
         /// </summary>
-        protected abstract void ShrinkAvailableObjectsToFitCapacity(int shrinkCount);
+        protected abstract void ShrinkIdleObjectsToFitCapacity(int shrinkCount);
 
         protected virtual void OnRent(object instance) {}
         protected virtual void OnRelease(object instance) {}

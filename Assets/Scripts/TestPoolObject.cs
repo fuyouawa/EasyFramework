@@ -5,16 +5,16 @@ using EasyFramework.Core;
 using EasyFramework.ToolKit;
 using UnityEngine;
 
-public class OOO : IPooledObjectCallbackReceiver
+public class OOO : IPoolCallbackReceiver
 {
     public int kkn;
 
-    void IPooledObjectCallbackReceiver.OnRent(IObjectPool owningPool)
+    void IPoolCallbackReceiver.OnRent(IObjectPool owningPool)
     {
         Debug.Log($"OnSpawn: {kkn}");
     }
 
-    void IPooledObjectCallbackReceiver.OnRelease(IObjectPool owningPool)
+    void IPoolCallbackReceiver.OnRelease(IObjectPool owningPool)
     {
         Debug.Log($"OnRecycle: {kkn}");
     }

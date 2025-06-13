@@ -75,7 +75,7 @@ namespace EasyFramework.ToolKit
             var obj = objectPool.TryRent();
             if (obj == null)
             {
-                throw new InvalidOperationException($"No available object could be rented from pool '{objectPool.Name}'.");
+                throw new InvalidOperationException($"No idle object could be rented from pool '{objectPool.Name}'.");
             }
             return obj;
         }

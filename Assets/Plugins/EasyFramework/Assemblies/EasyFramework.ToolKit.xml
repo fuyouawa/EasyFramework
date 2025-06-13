@@ -237,6 +237,33 @@
             <param name="original">原始预制体</param>
             <returns></returns>
         </member>
+        <member name="T:EasyFramework.ToolKit.IPoolCallbackReceiver">
+            <summary>
+            对象池事件的回调接口。
+            
+            <para>若该接口由普通类实现，则在对象被取出/回收时会直接调用该实例的方法。</para>
+            <para>若由 Unity 组件实现，则在对象池操作时，会调用该 GameObject 上所有实现该接口的组件。</para>
+            <para>该接口为可选实现，仅在需要监听池事件时实现。</para>
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IPoolCallbackReceiver.OnRent(EasyFramework.ToolKit.IObjectPool)">
+            <summary>
+            对象从对象池中被取出时调用。
+            </summary>
+            <param name="owningPool">所属的对象池</param>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IPoolCallbackReceiver.OnRelease(EasyFramework.ToolKit.IObjectPool)">
+            <summary>
+            对象被回收到对象池中时调用。
+            </summary>
+            <param name="owningPool">所属的对象池</param>
+        </member>
+        <member name="T:EasyFramework.ToolKit.PooledUnityObjectAutoActivator">
+            <summary>
+            用于自动处理 Unity 对象在对象池中的激活/隐藏逻辑的组件。
+            当对象从池中取出时自动激活 GameObject，回收时自动隐藏，并更新当前状态。
+            </summary>
+        </member>
         <member name="T:EasyFramework.ToolKit.IObjectPool">
             <summary>
             对象池接口，定义了对象池的基本操作和属性
@@ -367,9 +394,39 @@
             <para>当设置新的容量时，如果新容量小于当前活跃对象数量，将抛出异常。</para>
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.ShrinkAvailableObjectsToFitCapacity(System.Int32)">
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.ShrinkIdleObjectsToFitCapacity(System.Int32)">
             <summary>
             根据容量限制收缩
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.Target">
+            <summary>
+            目标实例
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.OwningPool">
+            <summary>
+            所属池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.TargetComponent">
+            <summary>
+            目标组件（用于快速返回）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.ActiveLifetime">
+            <summary>
+            激活中对象的回收时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.IdleLifetime">
+            <summary>
+            空闲中对象的销毁时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.ElapsedTime">
+            <summary>
+            计时器
             </summary>
         </member>
         <member name="T:EasyFramework.ToolKit.UnityObjectPool">
@@ -390,14 +447,11 @@
             更新间隔
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultAddComponentType">
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultComponentType">
             <summary>
-            <para>对象池中对象默认添加的组件类型</para>
-            <para>如果为null代表不添加默认组件</para>
+            <para>为对象池中对象默认添加的组件类型。</para>
+            <para>如果为null代表不添加默认组件。</para>
             </summary>
-            <exception cref="T:System.InvalidOperationException">
-            当value不为空，并且不是Component的子类或者是抽象类、接口时抛出
-            </exception>
         </member>
         <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnTick(System.Single)">
             <summary>

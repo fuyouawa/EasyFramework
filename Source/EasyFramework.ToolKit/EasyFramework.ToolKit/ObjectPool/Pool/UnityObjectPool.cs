@@ -10,25 +10,45 @@ namespace EasyFramework.ToolKit
     public enum PooledUnityObjectState
     {
         Avtive,
-        Unused,
+        Idle,
     }
 
-    class PooledUnityObjectData
+    class PooledUnityInstance
     {
-        public GameObject Instance { get; }
+        /// <summary>
+        /// 目标实例
+        /// </summary>
+        public GameObject Target { get; }
+
+        /// <summary>
+        /// 所属池
+        /// </summary>
         public IUnityObjectPool OwningPool { get; }
+
+        /// <summary>
+        /// 目标组件（用于快速返回）
+        /// </summary>
         public Component TargetComponent { get; }
 
-        public float TimeToRecycle { get; set; }
-        public float TimeToDestroy { get; set; }
+        /// <summary>
+        /// 激活中对象的回收时间，小于0则无限制
+        /// </summary>
+        public float ActiveLifetime { get; set; }
+        /// <summary>
+        /// 空闲中对象的销毁时间，小于0则无限制
+        /// </summary>
+        public float IdleLifetime { get; set; }
 
+        /// <summary>
+        /// 计时器
+        /// </summary>
         public float ElapsedTime { get; set; }
 
         public PooledUnityObjectState State { get; set; }
 
-        public PooledUnityObjectData(GameObject instance, IUnityObjectPool owningPool, Component targetComponent)
+        public PooledUnityInstance(GameObject target, IUnityObjectPool owningPool, Component targetComponent)
         {
-            Instance = instance;
+            Target = target;
             OwningPool = owningPool;
             TargetComponent = targetComponent;
         }
@@ -78,23 +98,20 @@ namespace EasyFramework.ToolKit
         /// </summary>
         public float TickInterval { get; set; } = 0.5f;
 
-        private Type _defaultAddComponentType = typeof(PooledUnityObject);
+        private Type _defaultComponentType = typeof(PooledUnityObjectAutoActivator);
 
         /// <summary>
-        /// <para>对象池中对象默认添加的组件类型</para>
-        /// <para>如果为null代表不添加默认组件</para>
+        /// <para>为对象池中对象默认添加的组件类型。</para>
+        /// <para>如果为null代表不添加默认组件。</para>
         /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// 当value不为空，并且不是Component的子类或者是抽象类、接口时抛出
-        /// </exception>
-        public Type DefaultAddComponentType
+        public Type DefaultComponentType
         {
-            get => _defaultAddComponentType;
+            get => _defaultComponentType;
             set
             {
                 if (value == null)
                 {
-                    _defaultAddComponentType = null;
+                    _defaultComponentType = null;
                     return;
                 }
 
@@ -108,45 +125,45 @@ namespace EasyFramework.ToolKit
                     throw new InvalidOperationException($"Type '{value}' cannot be abstract or interface.");
                 }
 
-                _defaultAddComponentType = value;
+                _defaultComponentType = value;
             }
         }
 
         private float _tickElapsedTime;
 
-        public override int ActiveCount => _activeObjectDataByInstance.Count;
-        public override int AvailableCount => _availableObjectDatas.Count;
+        public override int ActiveCount => _activeInstanceDict.Count;
+        public override int IdleCount => _idleInstances.Count;
 
-        private readonly Dictionary<GameObject, PooledUnityObjectData> _activeObjectDataByInstance =
-            new Dictionary<GameObject, PooledUnityObjectData>();
+        private readonly Dictionary<GameObject, PooledUnityInstance> _activeInstanceDict =
+            new Dictionary<GameObject, PooledUnityInstance>();
 
-        private readonly List<PooledUnityObjectData> _availableObjectDatas = new List<PooledUnityObjectData>();
+        private readonly List<PooledUnityInstance> _idleInstances = new List<PooledUnityInstance>();
 
 
-        protected override object TryRentFromAvailable()
+        protected override object TryRentFromIdle()
         {
-            PooledUnityObjectData data;
-            if (_availableObjectDatas.Count > 0)
+            PooledUnityInstance data;
+            if (_idleInstances.Count > 0)
             {
-                data = _availableObjectDatas[^1];
-                _availableObjectDatas.RemoveAt(_availableObjectDatas.Count - 1);
+                data = _idleInstances[^1];
+                _idleInstances.RemoveAt(_idleInstances.Count - 1);
             }
             else
             {
                 var inst = Instantiate();
-                data = new PooledUnityObjectData(inst, this, inst.GetComponent(ObjectType))
+                data = new PooledUnityInstance(inst, this, inst.GetComponent(ObjectType))
                 {
-                    TimeToRecycle = DefaultTimeToRecycleObject,
-                    TimeToDestroy = DefaultTimeToDestroyObject,
+                    ActiveLifetime = DefaultTimeToRecycleObject,
+                    IdleLifetime = DefaultTimeToDestroyObject,
                 };
             }
 
-            _activeObjectDataByInstance.Add(data.Instance, data);
+            _activeInstanceDict.Add(data.Target, data);
 
             data.State = PooledUnityObjectState.Avtive;
             data.ElapsedTime = 0f;
 
-            var receivers = data.Instance.GetComponents<IPooledObjectCallbackReceiver>();
+            var receivers = data.Target.GetComponents<IPoolCallbackReceiver>();
 
             if (receivers.Length > 0)
             {
@@ -159,18 +176,18 @@ namespace EasyFramework.ToolKit
             return data.TargetComponent;
         }
 
-        protected override bool TryReleaseToAvailable(object instance)
+        protected override bool TryReleaseToIdle(object instance)
         {
             var gameObject = GetGameObject(instance);
-            var data = _activeObjectDataByInstance[gameObject];
+            var data = _activeInstanceDict[gameObject];
 
-            data.State = PooledUnityObjectState.Unused;
+            data.State = PooledUnityObjectState.Idle;
             data.ElapsedTime = 0;
 
-            _activeObjectDataByInstance.Remove(gameObject);
-            _availableObjectDatas.Add(data);
+            _activeInstanceDict.Remove(gameObject);
+            _idleInstances.Add(data);
 
-            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
+            var receivers = gameObject.GetComponents<IPoolCallbackReceiver>();
             if (receivers.Length > 0)
             {
                 foreach (var receiver in receivers)
@@ -185,12 +202,12 @@ namespace EasyFramework.ToolKit
         protected override bool TryRemoveFromActive(object instance)
         {
             var gameObject = GetGameObject(instance);
-            return _activeObjectDataByInstance.Remove(gameObject);
+            return _activeInstanceDict.Remove(gameObject);
         }
 
-        protected override void ShrinkAvailableObjectsToFitCapacity(int shrinkCount)
+        protected override void ShrinkIdleObjectsToFitCapacity(int shrinkCount)
         {
-            _availableObjectDatas.RemoveRange(0, shrinkCount);
+            _idleInstances.RemoveRange(0, shrinkCount);
         }
 
         private GameObject GetGameObject(object instance)
@@ -222,18 +239,18 @@ namespace EasyFramework.ToolKit
         {
             var inst = UnityEngine.Object.Instantiate(Original, Transform);
 
-            if (_defaultAddComponentType != null && !inst.HasComponent(_defaultAddComponentType))
+            if (_defaultComponentType != null && !inst.HasComponent(_defaultComponentType))
             {
-                inst.AddComponent(_defaultAddComponentType);
+                inst.AddComponent(_defaultComponentType);
             }
 
             return inst;
         }
 
 
-        private readonly List<PooledUnityObjectData> _pendingRemoveObjects = new List<PooledUnityObjectData>();
-        private readonly List<PooledUnityObjectData> _pendingRecycleObjects = new List<PooledUnityObjectData>();
-        private readonly List<PooledUnityObjectData> _pendingDestroyObjects = new List<PooledUnityObjectData>();
+        private readonly List<PooledUnityInstance> _pendingRemoveInstances = new List<PooledUnityInstance>();
+        private readonly List<PooledUnityInstance> _pendingRecycleInstances = new List<PooledUnityInstance>();
+        private readonly List<PooledUnityInstance> _pendingDestroyInstances = new List<PooledUnityInstance>();
 
         /// <summary>
         /// 定时更新所有活跃对象的状态
@@ -241,26 +258,26 @@ namespace EasyFramework.ToolKit
         /// <param name="interval">更新间隔（秒）</param>
         protected virtual void OnTick(float interval)
         {
-            foreach (var data in _activeObjectDataByInstance.Values)
+            foreach (var data in _activeInstanceDict.Values)
             {
-                if (data.TimeToRecycle > 0)
+                if (data.ActiveLifetime > 0)
                 {
                     data.ElapsedTime += interval;
-                    if (data.ElapsedTime >= data.TimeToRecycle)
+                    if (data.ElapsedTime >= data.ActiveLifetime)
                     {
-                        _pendingRecycleObjects.Add(data);
+                        _pendingRecycleInstances.Add(data);
                     }
                 }
             }
 
-            foreach (var data in _availableObjectDatas)
+            foreach (var data in _idleInstances)
             {
-                if (data.TimeToDestroy > 0)
+                if (data.IdleLifetime > 0)
                 {
                     data.ElapsedTime += interval;
-                    if (data.ElapsedTime >= data.TimeToDestroy)
+                    if (data.ElapsedTime >= data.IdleLifetime)
                     {
-                        _pendingDestroyObjects.Add(data);
+                        _pendingDestroyInstances.Add(data);
                     }
                 }
             }
@@ -272,52 +289,52 @@ namespace EasyFramework.ToolKit
 
         private void DoPendingRecycleObjects()
         {
-            if (_pendingRecycleObjects.Count > 0)
+            if (_pendingRecycleInstances.Count > 0)
             {
-                foreach (var data in _pendingRecycleObjects)
+                foreach (var data in _pendingRecycleInstances)
                 {
-                    if (!TryRelease(data.Instance))
+                    if (!TryRelease(data.Target))
                     {
                         throw new InvalidOperationException(
                             $"Failed to recycle the specified instance back to pool '{Name}'.");
                     }
                 }
 
-                _pendingRecycleObjects.Clear();
+                _pendingRecycleInstances.Clear();
             }
         }
 
         private void DoPendingDestroyObjects()
         {
-            if (_pendingDestroyObjects.Count > 0)
+            if (_pendingDestroyInstances.Count > 0)
             {
-                foreach (var data in _pendingDestroyObjects)
+                foreach (var data in _pendingDestroyInstances)
                 {
-                    UnityEngine.Object.Destroy(data.Instance);
-                    _pendingRemoveObjects.Add(data);
+                    UnityEngine.Object.Destroy(data.Target);
+                    _pendingRemoveInstances.Add(data);
                 }
 
-                _pendingDestroyObjects.Clear();
+                _pendingDestroyInstances.Clear();
             }
         }
 
         private void DoPendingRemoveObjects()
         {
-            if (_pendingRemoveObjects.Count > 0)
+            if (_pendingRemoveInstances.Count > 0)
             {
-                foreach (var data in _pendingRemoveObjects)
+                foreach (var data in _pendingRemoveInstances)
                 {
                     if (data.State == PooledUnityObjectState.Avtive)
                     {
-                        _activeObjectDataByInstance.Remove(data.Instance);
+                        _activeInstanceDict.Remove(data.Target);
                     }
                     else
                     {
-                        _availableObjectDatas.Remove(data);
+                        _idleInstances.Remove(data);
                     }
                 }
 
-                _pendingRemoveObjects.Clear();
+                _pendingRemoveInstances.Clear();
             }
         }
     }

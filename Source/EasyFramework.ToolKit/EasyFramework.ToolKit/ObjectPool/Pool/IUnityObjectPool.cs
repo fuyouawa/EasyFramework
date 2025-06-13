@@ -1,7 +1,17 @@
+using System;
 using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    // public interface IPooledUnityObjectSetter
+    // {
+    //     internal Func<float> TimeToRecycleGetter { get; }
+    //     internal Action<float> TimeToRecycleSetter { get; }
+    //
+    //     internal Func<float> TimeToDestroyGetter { get; }
+    //     internal Action<float> TimeToDestroySetter { get; }
+    // }
+
     /// <summary>
     /// Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
     /// </summary>

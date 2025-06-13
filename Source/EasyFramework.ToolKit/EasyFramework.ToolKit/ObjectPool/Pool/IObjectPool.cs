@@ -19,7 +19,7 @@ namespace EasyFramework.ToolKit
         Type ObjectType { get; internal set; }
 
         int ActiveCount { get; }
-        int AvailableCount { get; }
+        int IdleCount { get; }
 
         /// <summary>
         /// 对象池的容量上限

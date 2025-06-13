@@ -13,18 +13,18 @@ namespace EasyFramework.ToolKit
         // 存储活跃的对象实例
         private readonly List<object> _activeInstances = new List<object>();
 
-        // 存储未使用的对象实例
-        private readonly Stack<object> _availableInstances = new Stack<object>();
+        // 存储空闲的对象实例
+        private readonly Stack<object> _idleInstances = new Stack<object>();
 
         public override int ActiveCount => _activeInstances.Count;
-        public override int AvailableCount => _availableInstances.Count;
+        public override int IdleCount => _idleInstances.Count;
 
-        protected override object TryRentFromAvailable()
+        protected override object TryRentFromIdle()
         {
             object instance;
-            if (_availableInstances.Count > 0)
+            if (_idleInstances.Count > 0)
             {
-                instance = _availableInstances.Pop();
+                instance = _idleInstances.Pop();
             }
             else
             {
@@ -40,7 +40,7 @@ namespace EasyFramework.ToolKit
             return Activator.CreateInstance(ObjectType);
         }
 
-        protected override bool TryReleaseToAvailable(object instance)
+        protected override bool TryReleaseToIdle(object instance)
         {
             if (!CanRecycle(instance))
             {
@@ -52,7 +52,7 @@ namespace EasyFramework.ToolKit
                 return false;
             }
             
-            _availableInstances.Push(instance);
+            _idleInstances.Push(instance);
             return true;
         }
 
@@ -61,11 +61,11 @@ namespace EasyFramework.ToolKit
             return _activeInstances.Remove(instance);
         }
 
-        protected override void ShrinkAvailableObjectsToFitCapacity(int shrinkCount)
+        protected override void ShrinkIdleObjectsToFitCapacity(int shrinkCount)
         {
             for (int i = 0; i < shrinkCount; i++)
             {
-                _availableInstances.Pop();
+                _idleInstances.Pop();
             }
         }
 
@@ -80,7 +80,7 @@ namespace EasyFramework.ToolKit
 
         protected override void OnRent(object instance)
         {
-            if (instance is IPooledObjectCallbackReceiver receiver)
+            if (instance is IPoolCallbackReceiver receiver)
             {
                 receiver.OnRent(this);
             }
@@ -88,7 +88,7 @@ namespace EasyFramework.ToolKit
 
         protected override void OnRelease(object instance)
         {
-            if (instance is IPooledObjectCallbackReceiver receiver)
+            if (instance is IPoolCallbackReceiver receiver)
             {
                 receiver.OnRelease(this);
             }
