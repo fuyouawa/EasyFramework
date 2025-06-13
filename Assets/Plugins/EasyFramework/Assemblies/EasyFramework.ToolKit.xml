@@ -326,11 +326,6 @@
             Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.RecycleInterval">
-            <summary>
-            对象回收检查的时间间隔（秒）
-            </summary>
-        </member>
         <member name="P:EasyFramework.ToolKit.IUnityObjectPool.Original">
             <summary>
             对象池中对象的原始预制体
@@ -440,6 +435,11 @@
             根据容量限制收缩未使用的对象
             </summary>
         </member>
+        <member name="P:EasyFramework.ToolKit.PooledUnityObjectData.Lifetime">
+            <summary>
+            生命时间，小于等于0则代表无限生命时间（直到手动回收）
+            </summary>
+        </member>
         <member name="T:EasyFramework.ToolKit.UnityObjectPool">
             <summary>
             Unity对象池实现，用于管理Unity游戏对象的对象池
@@ -458,21 +458,19 @@
             对象池中对象的默认生命周期（秒）
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultPooledComponentType">
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.TickInterval">
             <summary>
-            对象池中对象的默认组件类型
+            更新间隔
             </summary>
-            <exception cref="T:System.ArgumentNullException">当value为null时抛出</exception>
-            <exception cref="T:System.InvalidOperationException">
-            当value不是Component的子类，
-            或者未实现IPooledUnityObject接口，
-            或者是抽象类或接口时抛出
-            </exception>
         </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.RecycleInterval">
+        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultAddComponentType">
             <summary>
-            对象回收检查的时间间隔（秒）
+            <para>对象池中对象默认添加的组件类型</para>
+            <para>如果为null代表不添加默认组件</para>
             </summary>
+            <exception cref="T:System.InvalidOperationException">
+            当value不为空，并且不是Component的子类或者是抽象类、接口时抛出
+            </exception>
         </member>
         <member name="M:EasyFramework.ToolKit.UnityObjectPool.GetNewObject">
             <inheritdoc />
@@ -482,7 +480,6 @@
             处理新创建的游戏对象实例
             </summary>
             <param name="instance">新创建的游戏对象实例</param>
-            <exception cref="T:System.InvalidOperationException">当instance包含多个IPooledUnityObject组件时抛出</exception>
         </member>
         <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnSpawn(System.Object)">
             <inheritdoc />

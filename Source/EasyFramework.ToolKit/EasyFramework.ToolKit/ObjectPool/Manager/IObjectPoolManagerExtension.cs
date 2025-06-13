@@ -5,13 +5,11 @@ namespace EasyFramework.ToolKit
     public static class IObjectPoolManagerExtension
     {
         public static IObjectPool TryGetPool<TObject>(this IObjectPoolManager manager, string poolName)
-            where TObject : IPooledObject
         {
             return manager.TryGetPool(poolName, typeof(TObject));
         }
 
         public static bool TryAllocatePool<TObject>(this IObjectPoolManager manager, string poolName)
-            where TObject : IPooledObject
         {
             return manager.TryAllocatePool(poolName, typeof(TObject));
         }
@@ -30,7 +28,6 @@ namespace EasyFramework.ToolKit
         }
 
         public static IObjectPool TryGetOrAllocatePool<TObject>(this IObjectPoolManager manager, string poolName)
-            where TObject : IPooledObject
         {
             return manager.TryGetOrAllocatePool(poolName, typeof(TObject));
         }

@@ -8,11 +8,6 @@ namespace EasyFramework.ToolKit
     public interface IUnityObjectPool : IObjectPool
     {
         /// <summary>
-        /// 对象回收检查的时间间隔（秒）
-        /// </summary>
-        float RecycleInterval { get; set; }
-
-        /// <summary>
         /// 对象池中对象的原始预制体
         /// </summary>
         GameObject Original { get; internal set; }

@@ -1,21 +1,38 @@
+using System;
 using UnityEngine;
 
 namespace EasyFramework.Core
 {
     public static class GameObjectExtension
     {
-        public static T GetOrAddComponent<T>(this GameObject obj) where T : Component
+        public static T GetOrAddComponent<T>(this GameObject target) where T : Component
         {
-            if (!obj.TryGetComponent(out T component))
+            if (!target.TryGetComponent(out T component))
             {
-                component = obj.AddComponent<T>();
+                component = target.AddComponent<T>();
             }
 
             return component;
         }
-        public static bool HasComponent<T>(this GameObject go)
+
+        public static Component GetOrAddComponent(this GameObject target, Type componentType)
         {
-            return go.TryGetComponent<T>(out _);
+            if (!target.TryGetComponent(componentType, out var component))
+            {
+                component = target.AddComponent(componentType);
+            }
+
+            return component;
+        }
+
+        public static bool HasComponent<T>(this GameObject target)
+        {
+            return target.TryGetComponent<T>(out _);
+        }
+
+        public static bool HasComponent(this GameObject target, Type componentType)
+        {
+            return target.TryGetComponent(componentType, out _);
         }
     }
 }

@@ -23,12 +23,6 @@ namespace EasyFramework.ToolKit
         /// <inheritdoc />
         protected override bool CanRecycle(object instance)
         {
-            var obj = (IPooledObject)instance;
-            if (!ReferenceEquals(obj.OwningPool, this))
-            {
-                return false;
-            }
-
             if (instance.GetType() != ObjectType)
             {
                 return false;
@@ -39,17 +33,19 @@ namespace EasyFramework.ToolKit
         /// <inheritdoc />
         protected override void OnSpawn(object instance)
         {
-            var obj = (IPooledObject)instance;
-            obj.OwningPool = this;
-            obj.OnSpawn();
+            if (instance is IPooledObjectCallbackReceiver receiver)
+            {
+                receiver.OnSpawn(this);
+            }
         }
 
         /// <inheritdoc />
         protected override void OnRecycle(object instance)
         {
-            var obj = (IPooledObject)instance;
-            obj.OwningPool = this;
-            obj.OnRecycle();
+            if (instance is IPooledObjectCallbackReceiver receiver)
+            {
+                receiver.OnRecycle(this);
+            }
         }
     }
 }

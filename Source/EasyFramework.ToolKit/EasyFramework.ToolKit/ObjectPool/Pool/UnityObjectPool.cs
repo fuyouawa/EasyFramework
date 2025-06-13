@@ -7,6 +7,33 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
+    public enum PooledUnityObjectState
+    {
+        Avtive,
+        Unused,
+    }
+
+    class PooledUnityObjectData
+    {
+        public GameObject Instance { get; }
+        public IUnityObjectPool OwningPool { get; }
+
+        /// <summary>
+        /// 生命时间，小于等于0则代表无限生命时间（直到手动回收）
+        /// </summary>
+        public float Lifetime { get; set; }
+
+        public float RemainingLifetime { get; set; }
+
+        public PooledUnityObjectState State { get; set; }
+
+        public PooledUnityObjectData(GameObject instance, IUnityObjectPool owningPool)
+        {
+            Instance = instance;
+            OwningPool = owningPool;
+        }
+    }
+
     /// <summary>
     /// Unity对象池实现，用于管理Unity游戏对象的对象池
     /// </summary>
@@ -48,25 +75,29 @@ namespace EasyFramework.ToolKit
         /// </summary>
         public float DefaultObjectLifetime { get; set; } = 0f;
 
-        private Type _defaultPooledComponentType = typeof(PooledUnityObject);
+        /// <summary>
+        /// 更新间隔
+        /// </summary>
+        public float TickInterval { get; set; } = 0.5f;
+        
+        private Type _defaultAddComponentType = typeof(PooledUnityObject);
 
         /// <summary>
-        /// 对象池中对象的默认组件类型
+        /// <para>对象池中对象默认添加的组件类型</para>
+        /// <para>如果为null代表不添加默认组件</para>
         /// </summary>
-        /// <exception cref="ArgumentNullException">当value为null时抛出</exception>
         /// <exception cref="InvalidOperationException">
-        /// 当value不是Component的子类，
-        /// 或者未实现IPooledUnityObject接口，
-        /// 或者是抽象类或接口时抛出
+        /// 当value不为空，并且不是Component的子类或者是抽象类、接口时抛出
         /// </exception>
-        public Type DefaultPooledComponentType
+        public Type DefaultAddComponentType
         {
-            get => _defaultPooledComponentType;
+            get => _defaultAddComponentType;
             set
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException(nameof(value), $"Default pooled component type cannot be null.");
+                    _defaultAddComponentType = null;
+                    return;
                 }
 
                 if (!typeof(Component).IsAssignableFrom(value))
@@ -74,56 +105,44 @@ namespace EasyFramework.ToolKit
                     throw new InvalidOperationException($"Type '{value}' must inherit from '{typeof(Component)}'.");
                 }
 
-                if (!typeof(IPooledUnityObject).IsAssignableFrom(value))
-                {
-                    throw new InvalidOperationException(
-                        $"Type '{value}' must implement '{typeof(IPooledUnityObject)}'.");
-                }
-
                 if (value.IsAbstract || value.IsInterface)
                 {
                     throw new InvalidOperationException($"Type '{value}' cannot be abstract or interface.");
                 }
 
-                _defaultPooledComponentType = value;
+                _defaultAddComponentType = value;
             }
         }
 
-        /// <summary>
-        /// 对象回收检查的时间间隔（秒）
-        /// </summary>
-        public float RecycleInterval { get; set; } = 0.5f;
-
-        private float _recycleElapsedTime;
+        private float _tickElapsedTime;
 
         public override bool TryRecycle(object instance)
         {
-            var type = instance.GetType();
-            if (!typeof(Component).IsAssignableFrom(type))
+            if (instance is Component component)
             {
-                throw new InvalidOperationException(
-                    $"The type '{type}' of instance '{instance}' must inherit from '{typeof(Component)}'.");
+                instance = component.GetComponent(ObjectType);
             }
-
-            if (type != ObjectType)
+            else if (instance is GameObject gameObject)
             {
-                instance = ((Component)instance).GetComponent(ObjectType);
+                instance = gameObject.GetComponent(ObjectType);
+            }
+            else
+            {
+                //TODO 异常
             }
 
             return base.TryRecycle(instance);
         }
 
-        // 通过GameObject引用存储活跃的IPooledUnityObject实例
-        private readonly Dictionary<GameObject, IPooledUnityObject> _activeInstancesByGameObject =
-            new Dictionary<GameObject, IPooledUnityObject>();
+        private readonly Dictionary<GameObject, PooledUnityObjectData> _objectDatasByInstance = new Dictionary<GameObject, PooledUnityObjectData>();
 
         void IUnityObjectPool.Update(float deltaTime)
         {
-            _recycleElapsedTime += deltaTime;
-            while (_recycleElapsedTime >= RecycleInterval)
+            _tickElapsedTime += deltaTime;
+            while (_tickElapsedTime >= TickInterval)
             {
-                OnTick(RecycleInterval);
-                _recycleElapsedTime -= RecycleInterval;
+                OnTick(TickInterval);
+                _tickElapsedTime -= TickInterval;
             }
         }
 
@@ -135,61 +154,66 @@ namespace EasyFramework.ToolKit
             return inst.GetComponent(ObjectType);
         }
 
-        // /// <inheritdoc />
-        // protected override async UniTask<object> GetNewObjectAsync()
-        // {
-        //     return GetNewObject();
-        // }
-
         /// <summary>
         /// 处理新创建的游戏对象实例
         /// </summary>
         /// <param name="instance">新创建的游戏对象实例</param>
-        /// <exception cref="InvalidOperationException">当instance包含多个IPooledUnityObject组件时抛出</exception>
         protected virtual void ProcessInstance(GameObject instance)
         {
-            var comps = instance.GetComponents<IPooledUnityObject>();
-
-            if (comps.Length > 1)
+            var data = new PooledUnityObjectData(instance, this)
             {
-                throw new InvalidOperationException(
-                    $"GameObject '{instance.name}' cannot contain more than one component implementing '{typeof(IPooledUnityObject)}'.");
+                Lifetime = DefaultObjectLifetime,
+                RemainingLifetime = DefaultObjectLifetime
+            };
+
+            if (!_objectDatasByInstance.TryAdd(instance, data))
+            {
+                //TODO 异常
             }
 
-            IPooledUnityObject pooledComponent;
-
-            if (comps.Length == 0)
+            instance.transform.SetParent(Transform);
+            if (_defaultAddComponentType != null && !instance.HasComponent(_defaultAddComponentType))
             {
-                pooledComponent = (IPooledUnityObject)instance.AddComponent(_defaultPooledComponentType);
+                instance.AddComponent(_defaultAddComponentType);
             }
-            else
-            {
-                pooledComponent = comps[0];
-            }
-
-            // 设置默认生命周期
-            pooledComponent.Lifetime = DefaultObjectLifetime;
         }
 
         /// <inheritdoc />
         protected override void OnSpawn(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
-            var obj = gameObject.GetComponent<IPooledUnityObject>();
-            obj.OwningPool = this;
-            _activeInstancesByGameObject[gameObject] = obj;
-            obj.OnSpawn();
+            _objectDatasByInstance[gameObject].State = PooledUnityObjectState.Avtive;
+
+            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
+
+            if (receivers.Length > 0)
+            {
+                foreach (var receiver in receivers)
+                {
+                    receiver.OnSpawn(this);
+                }
+            }
         }
 
         /// <inheritdoc />
         protected override void OnRecycle(object instance)
         {
             var gameObject = ((Component)instance).gameObject;
-            var obj = gameObject.GetComponent<IPooledUnityObject>();
-            obj.OwningPool = this;
-            _activeInstancesByGameObject.Remove(gameObject);
-            obj.OnRecycle();
+            _objectDatasByInstance[gameObject].State = PooledUnityObjectState.Unused;
+            
+            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
+            if (receivers.Length > 0)
+            {
+                foreach (var receiver in receivers)
+                {
+                    receiver.OnRecycle(this);
+                }
+            }
         }
+
+        private readonly List<PooledUnityObjectData> _pendingRemoveObjects = new List<PooledUnityObjectData>();
+        private readonly List<PooledUnityObjectData> _pendingRecycleObjects = new List<PooledUnityObjectData>();
+        private readonly List<PooledUnityObjectData> _pendingDestroyObjects = new List<PooledUnityObjectData>();
 
         /// <summary>
         /// 定时更新所有活跃对象的状态
@@ -197,12 +221,81 @@ namespace EasyFramework.ToolKit
         /// <param name="interval">更新间隔（秒）</param>
         protected virtual void OnTick(float interval)
         {
-            // 复制一份防止Tick时变更
-            var temp = _activeInstancesByGameObject.Values.ToArray();
-
-            foreach (var o in temp)
+            foreach (var data in _objectDatasByInstance.Values)
             {
-                o.Tick(interval);
+                if (data.Instance == null)
+                {
+                    _pendingRemoveObjects.Add(data);
+                    continue;
+                }
+
+                if (data.Lifetime > 0 && data.State == PooledUnityObjectState.Avtive)
+                {
+                    data.RemainingLifetime -= interval;
+                    if (data.RemainingLifetime <= 0)
+                    {
+                        _pendingRecycleObjects.Add(data);
+                        data.RemainingLifetime = data.Lifetime;
+                    }
+                }
+
+                if (data.State == PooledUnityObjectState.Unused)
+                {
+                    //TODO 销毁不在使用的实例（类似Lifetime，但计时到了后直接加入_pendingDestroyObjects）
+                }
+            }
+
+            DoPendingRecycleObjects();
+            DoPendingDestroyObjects();
+            DoPendingRemoveObjects();
+        }
+
+        private void DoPendingRecycleObjects()
+        {
+            if (_pendingRecycleObjects.Count > 0)
+            {
+                foreach (var data in _pendingRecycleObjects)
+                {
+                    if (!TryRecycle(data.Instance))
+                    {
+                        _pendingDestroyObjects.Add(data);
+                    }
+
+                    data.State = PooledUnityObjectState.Unused;
+                }
+
+                _pendingRecycleObjects.Clear();
+            }
+        }
+
+        private void DoPendingDestroyObjects()
+        {
+            if (_pendingDestroyObjects.Count > 0)
+            {
+                foreach (var data in _pendingDestroyObjects)
+                {
+                    UnityEngine.Object.Destroy(data.Instance);
+                    _pendingRemoveObjects.Add(data);
+
+                    data.State = PooledUnityObjectState.Unused;
+                }
+
+                _pendingDestroyObjects.Clear();
+            }
+        }
+
+        private void DoPendingRemoveObjects()
+        {
+            if (_pendingRemoveObjects.Count > 0)
+            {
+                foreach (var data in _pendingRemoveObjects)
+                {
+                    _objectDatasByInstance.Remove(data.Instance);
+
+                    data.State = PooledUnityObjectState.Unused;
+                }
+
+                _pendingRemoveObjects.Clear();
             }
         }
     }

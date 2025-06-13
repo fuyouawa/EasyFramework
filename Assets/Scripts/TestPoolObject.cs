@@ -5,18 +5,18 @@ using EasyFramework.Core;
 using EasyFramework.ToolKit;
 using UnityEngine;
 
-public class OOO : AbstractPooledObject
+public class OOO : IPooledObjectCallbackReceiver
 {
     public int kkn;
 
-    protected override void OnSpawn()
+    void IPooledObjectCallbackReceiver.OnSpawn(IObjectPool owningPool)
     {
-        Debug.Log("OnSpawn");
+        Debug.Log($"OnSpawn: {kkn}");
     }
 
-    protected override void OnRecycle()
+    void IPooledObjectCallbackReceiver.OnRecycle(IObjectPool owningPool)
     {
-        Debug.Log("OnRecycle");
+        Debug.Log($"OnRecycle: {kkn}");
     }
 }
 
