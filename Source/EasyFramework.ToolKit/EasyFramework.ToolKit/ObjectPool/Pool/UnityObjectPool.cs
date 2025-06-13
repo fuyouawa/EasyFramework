@@ -41,9 +41,9 @@ namespace EasyFramework.ToolKit
         public float IdleLifetime { get; set; }
         
         /// <summary>
-        /// 获取当前计时器累计时间（单位：秒）。
-        /// - 激活状态时：表示已激活时长
-        /// - 空闲状态时：表示已空闲时长
+        /// <para>获取当前计时器累计时间（单位：秒）。</para>
+        /// <para>- 激活状态时：表示已激活时长</para>
+        /// <para>- 空闲状态时：表示已空闲时长</para>
         /// </summary>
         public float ElapsedTime { get; set; }
 
@@ -256,7 +256,6 @@ namespace EasyFramework.ToolKit
                 return ret;
             }
 
-            //TODO 异常信息
             throw new ArgumentException($"The specified instance '{instance.name}' is not managed by this object pool '{Name}'.");
         }
 

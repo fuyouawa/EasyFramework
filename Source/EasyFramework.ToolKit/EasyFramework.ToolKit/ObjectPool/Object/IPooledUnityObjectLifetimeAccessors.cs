@@ -3,11 +3,11 @@ using System;
 namespace EasyFramework.ToolKit
 {
     /// <summary>
-    /// 提供对池化 Unity 对象的生命周期属性（激活/空闲时长、当前计时器）的访问接口。
-    /// 主要用于内部机制获取或设置如下属性：
-    /// - 激活状态下的最大存活时间（超时将回收）
-    /// - 空闲状态下的最大存活时间（超时将销毁）
-    /// - 当前计时器（根据状态不同表示距离回收或销毁的时间）
+    /// <para>提供对池化 Unity 对象的生命周期属性（激活/空闲时长、当前计时器）的访问接口。</para>
+    /// <para>主要用于内部机制获取或设置如下属性：</para>
+    /// <para>- 激活状态下的最大存活时间（超时将回收）</para>
+    /// <para>- 空闲状态下的最大存活时间（超时将销毁）</para>
+    /// <para>- 当前计时器（根据状态不同表示距离回收或销毁的时间）</para>
     /// </summary>
     public interface IPooledUnityObjectLifetimeAccessors
     {
@@ -22,9 +22,9 @@ namespace EasyFramework.ToolKit
         public float IdleLifetime { get; set; }
 
         /// <summary>
-        /// 获取当前计时器累计时间（单位：秒）。
-        /// - 激活状态时：表示已激活时长
-        /// - 空闲状态时：表示已空闲时长
+        /// <para>获取当前计时器累计时间（单位：秒）。</para>
+        /// <para>- 激活状态时：表示已激活时长</para>
+        /// <para>- 空闲状态时：表示已空闲时长</para>
         /// </summary>
         public float ElapsedTime { get; set; }
     }
@@ -45,7 +45,6 @@ namespace EasyFramework.ToolKit
             set => _activeLifetimeSetter(value);
         }
 
-        //TODO 类似ActiveLifetime实现
         public float IdleLifetime
         {
             get => _idleLifetimeGetter();
