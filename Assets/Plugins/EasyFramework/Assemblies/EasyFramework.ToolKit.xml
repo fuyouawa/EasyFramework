@@ -258,6 +258,61 @@
             </summary>
             <param name="owningPool">所属的对象池</param>
         </member>
+        <member name="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors">
+            <summary>
+            提供对池化 Unity 对象的生命周期属性（激活/空闲时长、当前计时器）的访问接口。
+            主要用于内部机制获取或设置如下属性：
+            - 激活状态下的最大存活时间（超时将回收）
+            - 空闲状态下的最大存活时间（超时将销毁）
+            - 当前计时器（根据状态不同表示距离回收或销毁的时间）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.ActiveLifetime">
+            <summary>
+            激活中对象的回收时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.IdleLifetime">
+            <summary>
+            空闲中对象的销毁时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.ElapsedTime">
+            <summary>
+            获取当前计时器累计时间（单位：秒）。
+            - 激活状态时：表示已激活时长
+            - 空闲状态时：表示已空闲时长
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension">
+            <summary>
+            为 <see cref="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors"/> 提供链式调用的扩展方法。
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetActiveLifetime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+            <summary>
+            设置激活状态下的最大存活时间。
+            </summary>
+            <param name="accessors">生命周期访问器。</param>
+            <param name="lifetime">存活时间（秒），小于0表示无限制。</param>
+            <returns>配置后的访问器实例，支持链式调用。</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetIdleLifetime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+            <summary>
+            设置空闲状态下的最大存活时间。
+            </summary>
+            <param name="accessors">生命周期访问器。</param>
+            <param name="lifetime">存活时间（秒），小于0表示无限制。</param>
+            <returns>配置后的访问器实例，支持链式调用。</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetElapsedTime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+            <summary>
+            设置当前计时器累计时间。
+            </summary>
+            <param name="accessors">生命周期访问器。</param>
+            <param name="elapsedTime">累计时间（秒）。</param>
+            <returns>配置后的访问器实例，支持链式调用。</returns>
+        </member>
         <member name="T:EasyFramework.ToolKit.PooledUnityObjectAutoActivator">
             <summary>
             用于自动处理 Unity 对象在对象池中的激活/隐藏逻辑的组件。
@@ -356,6 +411,13 @@
             对象池的Transform组件，用于管理池中对象的层级关系
             </summary>
         </member>
+        <member name="M:EasyFramework.ToolKit.IUnityObjectPool.GetLifetimeAccessors(UnityEngine.GameObject)">
+            <summary>
+            获取指定对象的生命周期访问器（包含激活时长、空闲时长与计时器控制）
+            </summary>
+            <param name="instance">池中 Unity 实例对象</param>
+            <returns>生命周期访问器接口</returns>
+        </member>
         <member name="M:EasyFramework.ToolKit.IUnityObjectPool.Update(System.Single)">
             <summary>
             更新对象池状态，处理对象生命周期和回收
@@ -426,7 +488,9 @@
         </member>
         <member name="P:EasyFramework.ToolKit.PooledUnityInstance.ElapsedTime">
             <summary>
-            计时器
+            获取当前计时器累计时间（单位：秒）。
+            - 激活状态时：表示已激活时长
+            - 空闲状态时：表示已空闲时长
             </summary>
         </member>
         <member name="T:EasyFramework.ToolKit.UnityObjectPool">

@@ -34,13 +34,16 @@ namespace EasyFramework.ToolKit
         /// 激活中对象的回收时间，小于0则无限制
         /// </summary>
         public float ActiveLifetime { get; set; }
+
         /// <summary>
         /// 空闲中对象的销毁时间，小于0则无限制
         /// </summary>
         public float IdleLifetime { get; set; }
-
+        
         /// <summary>
-        /// 计时器
+        /// 获取当前计时器累计时间（单位：秒）。
+        /// - 激活状态时：表示已激活时长
+        /// - 空闲状态时：表示已空闲时长
         /// </summary>
         public float ElapsedTime { get; set; }
 
@@ -222,7 +225,39 @@ namespace EasyFramework.ToolKit
                 return gameObject;
             }
 
-            throw new ArgumentException($"Instance must be a '{typeof(GameObject)}' or '{typeof(Component)}'.", nameof(instance));
+            throw new ArgumentException($"Instance must be a '{typeof(GameObject)}' or '{typeof(Component)}'.",
+                nameof(instance));
+        }
+
+        public IPooledUnityObjectLifetimeAccessors GetLifetimeAccessors(GameObject instance)
+        {
+            var inst = GetInternalInstance(instance);
+            return new PooledUnityObjectLifetimeAccessors(
+                () => inst.ActiveLifetime,
+                f => inst.ActiveLifetime = f,
+                () => inst.IdleLifetime,
+                f => inst.IdleLifetime = f,
+                () => inst.ElapsedTime,
+                f => inst.ElapsedTime = f
+            );
+        }
+
+        private PooledUnityInstance GetInternalInstance(GameObject instance)
+        {
+            var ret = _activeInstanceDict.GetValueOrDefault(instance);
+            if (ret != null)
+            {
+                return ret;
+            }
+
+            ret = _idleInstances.Find(inst => inst.Target == instance);
+            if (ret != null)
+            {
+                return ret;
+            }
+
+            //TODO 异常信息
+            throw new ArgumentException($"The specified instance '{instance.name}' is not managed by this object pool '{Name}'.");
         }
 
         void IUnityObjectPool.Update(float deltaTime)

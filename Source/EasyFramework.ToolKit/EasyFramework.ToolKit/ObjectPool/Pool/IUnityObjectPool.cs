@@ -3,15 +3,6 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    // public interface IPooledUnityObjectSetter
-    // {
-    //     internal Func<float> TimeToRecycleGetter { get; }
-    //     internal Action<float> TimeToRecycleSetter { get; }
-    //
-    //     internal Func<float> TimeToDestroyGetter { get; }
-    //     internal Action<float> TimeToDestroySetter { get; }
-    // }
-
     /// <summary>
     /// Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
     /// </summary>
@@ -26,6 +17,13 @@ namespace EasyFramework.ToolKit
         /// 对象池的Transform组件，用于管理池中对象的层级关系
         /// </summary>
         Transform Transform { get; set; }
+
+        /// <summary>
+        /// 获取指定对象的生命周期访问器（包含激活时长、空闲时长与计时器控制）
+        /// </summary>
+        /// <param name="instance">池中 Unity 实例对象</param>
+        /// <returns>生命周期访问器接口</returns>
+        IPooledUnityObjectLifetimeAccessors GetLifetimeAccessors(GameObject instance);
 
         /// <summary>
         /// 更新对象池状态，处理对象生命周期和回收
