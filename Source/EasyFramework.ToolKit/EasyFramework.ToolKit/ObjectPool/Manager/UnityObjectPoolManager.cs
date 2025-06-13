@@ -75,9 +75,8 @@ namespace EasyFramework.ToolKit
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
         /// <param name="original">原始预制体</param>
-        /// <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
-        /// <exception cref="ArgumentNullException">当objectType或original为null时抛出</exception>
-        public bool TryAllocatePool(string poolName, Type objectType, GameObject original)
+        /// <returns></returns>
+        public bool TryCreatePool(string poolName, Type objectType, GameObject original)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
             if (original == null) throw new ArgumentNullException(nameof(original));
@@ -115,8 +114,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>找到的对象池，如果不存在则返回null</returns>
-        /// <exception cref="ArgumentNullException">当objectType为null时抛出</exception>
+        /// <returns></returns>
         public IUnityObjectPool TryGetPool(string poolName, Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
@@ -131,8 +129,7 @@ namespace EasyFramework.ToolKit
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
         /// <param name="original">原始预制体</param>
-        /// <returns>新创建的Unity对象池实例</returns>
-        /// <exception cref="InvalidOperationException">当无法创建对象池实例时抛出</exception>
+        /// <returns></returns>
         private IUnityObjectPool CreateUnityObjectPool(string poolName, Type objectType,
             GameObject original)
         {

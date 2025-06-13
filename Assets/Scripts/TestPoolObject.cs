@@ -9,12 +9,12 @@ public class OOO : IPooledObjectCallbackReceiver
 {
     public int kkn;
 
-    void IPooledObjectCallbackReceiver.OnSpawn(IObjectPool owningPool)
+    void IPooledObjectCallbackReceiver.OnRent(IObjectPool owningPool)
     {
         Debug.Log($"OnSpawn: {kkn}");
     }
 
-    void IPooledObjectCallbackReceiver.OnRecycle(IObjectPool owningPool)
+    void IPooledObjectCallbackReceiver.OnRelease(IObjectPool owningPool)
     {
         Debug.Log($"OnRecycle: {kkn}");
     }
@@ -37,43 +37,47 @@ public class TestPoolObject : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
         {
-            var pool = ObjectPoolManager.Instance.TryGetOrAllocatePool<OOO>("DEFAULT");
-            var o = pool.TrySpawn<OOO>();
+            var pool = ObjectPoolManager.Instance.GetOrCreatePool<OOO>("DEFAULT");
+            var o = pool.Rent<OOO>();
             o.kkn = 1;
-            var o1 = pool.TrySpawn<OOO>();
+            var o1 = pool.Rent<OOO>();
             o1.kkn = 2;
-            var o2 = pool.TrySpawn<OOO>();
+            var o2 = pool.Rent<OOO>();
             o2.kkn = 3;
 
-            pool.TryRecycle(o);
-            pool.TryRecycle(o1);
-            pool.TryRecycle(o2);
+            pool.Release(o);
+            pool.Release(o1);
+            pool.Release(o2);
 
-            o = pool.TrySpawn<OOO>();
+            o = pool.Rent<OOO>();
             o.kkn = 4;
-            o1 = pool.TrySpawn<OOO>();
+            o1 = pool.Rent<OOO>();
             o1.kkn = 5;
-            o2 = pool.TrySpawn<OOO>();
+            o2 = pool.Rent<OOO>();
             o2.kkn = 6;
+            
+            pool.Release(o);
+            pool.Release(o1);
+            pool.Release(o2);
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            var pool = UnityObjectPoolManager.Instance.TryGetOrAllocatePool<Bullet>("玩家子弹", o111);
+            var pool = UnityObjectPoolManager.Instance.GetOrCreatePool<Bullet>("玩家子弹", o111);
 
-            var o = pool.TrySpawn<Bullet>();
-            var o1 = pool.TrySpawn<Bullet>();
-            var o2 = pool.TrySpawn<Bullet>();
+            var o = pool.Rent<Bullet>();
+            var o1 = pool.Rent<Bullet>();
+            var o2 = pool.Rent<Bullet>();
         }
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            var pool = (UnityObjectPool)UnityObjectPoolManager.Instance.TryGetOrAllocatePool<Bullet>("怪物A子弹", o111);
-            pool.DefaultObjectLifetime = 2f;
+            var pool = (UnityObjectPool)UnityObjectPoolManager.Instance.GetOrCreatePool<Bullet>("怪物A子弹", o111);
+            pool.DefaultTimeToRecycleObject = 2f;
 
-            var o = pool.TrySpawn<Bullet>();
-            var o1 = pool.TrySpawn<Bullet>();
-            var o2 = pool.TrySpawn<Bullet>();
+            var o = pool.Rent<Bullet>();
+            var o1 = pool.Rent<Bullet>();
+            var o2 = pool.Rent<Bullet>();
         }
 
         // if (Input.GetKeyDown(KeyCode.A))

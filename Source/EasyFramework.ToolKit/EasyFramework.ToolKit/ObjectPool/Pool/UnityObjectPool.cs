@@ -17,20 +17,20 @@ namespace EasyFramework.ToolKit
     {
         public GameObject Instance { get; }
         public IUnityObjectPool OwningPool { get; }
+        public Component TargetComponent { get; }
 
-        /// <summary>
-        /// 生命时间，小于等于0则代表无限生命时间（直到手动回收）
-        /// </summary>
-        public float Lifetime { get; set; }
+        public float TimeToRecycle { get; set; }
+        public float TimeToDestroy { get; set; }
 
-        public float RemainingLifetime { get; set; }
+        public float ElapsedTime { get; set; }
 
         public PooledUnityObjectState State { get; set; }
 
-        public PooledUnityObjectData(GameObject instance, IUnityObjectPool owningPool)
+        public PooledUnityObjectData(GameObject instance, IUnityObjectPool owningPool, Component targetComponent)
         {
             Instance = instance;
             OwningPool = owningPool;
+            TargetComponent = targetComponent;
         }
     }
 
@@ -70,16 +70,14 @@ namespace EasyFramework.ToolKit
             set => _transform = value;
         }
 
-        /// <summary>
-        /// 对象池中对象的默认生命周期（秒）
-        /// </summary>
-        public float DefaultObjectLifetime { get; set; } = 0f;
+        public float DefaultTimeToRecycleObject { get; set; } = 0f;
+        public float DefaultTimeToDestroyObject { get; set; } = 10f;
 
         /// <summary>
         /// 更新间隔
         /// </summary>
         public float TickInterval { get; set; } = 0.5f;
-        
+
         private Type _defaultAddComponentType = typeof(PooledUnityObject);
 
         /// <summary>
@@ -116,25 +114,99 @@ namespace EasyFramework.ToolKit
 
         private float _tickElapsedTime;
 
-        public override bool TryRecycle(object instance)
+        public override int ActiveCount => _activeObjectDataByInstance.Count;
+        public override int AvailableCount => _availableObjectDatas.Count;
+
+        private readonly Dictionary<GameObject, PooledUnityObjectData> _activeObjectDataByInstance =
+            new Dictionary<GameObject, PooledUnityObjectData>();
+
+        private readonly List<PooledUnityObjectData> _availableObjectDatas = new List<PooledUnityObjectData>();
+
+
+        protected override object TryRentFromAvailable()
         {
-            if (instance is Component component)
+            PooledUnityObjectData data;
+            if (_availableObjectDatas.Count > 0)
             {
-                instance = component.GetComponent(ObjectType);
-            }
-            else if (instance is GameObject gameObject)
-            {
-                instance = gameObject.GetComponent(ObjectType);
+                data = _availableObjectDatas[^1];
+                _availableObjectDatas.RemoveAt(_availableObjectDatas.Count - 1);
             }
             else
             {
-                //TODO 异常
+                var inst = Instantiate();
+                data = new PooledUnityObjectData(inst, this, inst.GetComponent(ObjectType))
+                {
+                    TimeToRecycle = DefaultTimeToRecycleObject,
+                    TimeToDestroy = DefaultTimeToDestroyObject,
+                };
             }
 
-            return base.TryRecycle(instance);
+            _activeObjectDataByInstance.Add(data.Instance, data);
+
+            data.State = PooledUnityObjectState.Avtive;
+            data.ElapsedTime = 0f;
+
+            var receivers = data.Instance.GetComponents<IPooledObjectCallbackReceiver>();
+
+            if (receivers.Length > 0)
+            {
+                foreach (var receiver in receivers)
+                {
+                    receiver.OnRent(this);
+                }
+            }
+
+            return data.TargetComponent;
         }
 
-        private readonly Dictionary<GameObject, PooledUnityObjectData> _objectDatasByInstance = new Dictionary<GameObject, PooledUnityObjectData>();
+        protected override bool TryReleaseToAvailable(object instance)
+        {
+            var gameObject = GetGameObject(instance);
+            var data = _activeObjectDataByInstance[gameObject];
+
+            data.State = PooledUnityObjectState.Unused;
+            data.ElapsedTime = 0;
+
+            _activeObjectDataByInstance.Remove(gameObject);
+            _availableObjectDatas.Add(data);
+
+            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
+            if (receivers.Length > 0)
+            {
+                foreach (var receiver in receivers)
+                {
+                    receiver.OnRelease(this);
+                }
+            }
+
+            return true;
+        }
+
+        protected override bool TryRemoveFromActive(object instance)
+        {
+            var gameObject = GetGameObject(instance);
+            return _activeObjectDataByInstance.Remove(gameObject);
+        }
+
+        protected override void ShrinkAvailableObjectsToFitCapacity(int shrinkCount)
+        {
+            _availableObjectDatas.RemoveRange(0, shrinkCount);
+        }
+
+        private GameObject GetGameObject(object instance)
+        {
+            if (instance is Component component)
+            {
+                return component.gameObject;
+            }
+
+            if (instance is GameObject gameObject)
+            {
+                return gameObject;
+            }
+
+            throw new ArgumentException($"Instance must be a '{typeof(GameObject)}' or '{typeof(Component)}'.", nameof(instance));
+        }
 
         void IUnityObjectPool.Update(float deltaTime)
         {
@@ -146,70 +218,18 @@ namespace EasyFramework.ToolKit
             }
         }
 
-        /// <inheritdoc />
-        protected override object GetNewObject()
+        protected GameObject Instantiate()
         {
-            var inst = UnityEngine.Object.Instantiate(Original);
-            ProcessInstance(inst);
-            return inst.GetComponent(ObjectType);
-        }
+            var inst = UnityEngine.Object.Instantiate(Original, Transform);
 
-        /// <summary>
-        /// 处理新创建的游戏对象实例
-        /// </summary>
-        /// <param name="instance">新创建的游戏对象实例</param>
-        protected virtual void ProcessInstance(GameObject instance)
-        {
-            var data = new PooledUnityObjectData(instance, this)
+            if (_defaultAddComponentType != null && !inst.HasComponent(_defaultAddComponentType))
             {
-                Lifetime = DefaultObjectLifetime,
-                RemainingLifetime = DefaultObjectLifetime
-            };
-
-            if (!_objectDatasByInstance.TryAdd(instance, data))
-            {
-                //TODO 异常
+                inst.AddComponent(_defaultAddComponentType);
             }
 
-            instance.transform.SetParent(Transform);
-            if (_defaultAddComponentType != null && !instance.HasComponent(_defaultAddComponentType))
-            {
-                instance.AddComponent(_defaultAddComponentType);
-            }
+            return inst;
         }
 
-        /// <inheritdoc />
-        protected override void OnSpawn(object instance)
-        {
-            var gameObject = ((Component)instance).gameObject;
-            _objectDatasByInstance[gameObject].State = PooledUnityObjectState.Avtive;
-
-            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
-
-            if (receivers.Length > 0)
-            {
-                foreach (var receiver in receivers)
-                {
-                    receiver.OnSpawn(this);
-                }
-            }
-        }
-
-        /// <inheritdoc />
-        protected override void OnRecycle(object instance)
-        {
-            var gameObject = ((Component)instance).gameObject;
-            _objectDatasByInstance[gameObject].State = PooledUnityObjectState.Unused;
-            
-            var receivers = gameObject.GetComponents<IPooledObjectCallbackReceiver>();
-            if (receivers.Length > 0)
-            {
-                foreach (var receiver in receivers)
-                {
-                    receiver.OnRecycle(this);
-                }
-            }
-        }
 
         private readonly List<PooledUnityObjectData> _pendingRemoveObjects = new List<PooledUnityObjectData>();
         private readonly List<PooledUnityObjectData> _pendingRecycleObjects = new List<PooledUnityObjectData>();
@@ -221,27 +241,27 @@ namespace EasyFramework.ToolKit
         /// <param name="interval">更新间隔（秒）</param>
         protected virtual void OnTick(float interval)
         {
-            foreach (var data in _objectDatasByInstance.Values)
+            foreach (var data in _activeObjectDataByInstance.Values)
             {
-                if (data.Instance == null)
+                if (data.TimeToRecycle > 0)
                 {
-                    _pendingRemoveObjects.Add(data);
-                    continue;
-                }
-
-                if (data.Lifetime > 0 && data.State == PooledUnityObjectState.Avtive)
-                {
-                    data.RemainingLifetime -= interval;
-                    if (data.RemainingLifetime <= 0)
+                    data.ElapsedTime += interval;
+                    if (data.ElapsedTime >= data.TimeToRecycle)
                     {
                         _pendingRecycleObjects.Add(data);
-                        data.RemainingLifetime = data.Lifetime;
                     }
                 }
+            }
 
-                if (data.State == PooledUnityObjectState.Unused)
+            foreach (var data in _availableObjectDatas)
+            {
+                if (data.TimeToDestroy > 0)
                 {
-                    //TODO 销毁不在使用的实例（类似Lifetime，但计时到了后直接加入_pendingDestroyObjects）
+                    data.ElapsedTime += interval;
+                    if (data.ElapsedTime >= data.TimeToDestroy)
+                    {
+                        _pendingDestroyObjects.Add(data);
+                    }
                 }
             }
 
@@ -256,12 +276,11 @@ namespace EasyFramework.ToolKit
             {
                 foreach (var data in _pendingRecycleObjects)
                 {
-                    if (!TryRecycle(data.Instance))
+                    if (!TryRelease(data.Instance))
                     {
-                        _pendingDestroyObjects.Add(data);
+                        throw new InvalidOperationException(
+                            $"Failed to recycle the specified instance back to pool '{Name}'.");
                     }
-
-                    data.State = PooledUnityObjectState.Unused;
                 }
 
                 _pendingRecycleObjects.Clear();
@@ -276,8 +295,6 @@ namespace EasyFramework.ToolKit
                 {
                     UnityEngine.Object.Destroy(data.Instance);
                     _pendingRemoveObjects.Add(data);
-
-                    data.State = PooledUnityObjectState.Unused;
                 }
 
                 _pendingDestroyObjects.Clear();
@@ -290,9 +307,14 @@ namespace EasyFramework.ToolKit
             {
                 foreach (var data in _pendingRemoveObjects)
                 {
-                    _objectDatasByInstance.Remove(data.Instance);
-
-                    data.State = PooledUnityObjectState.Unused;
+                    if (data.State == PooledUnityObjectState.Avtive)
+                    {
+                        _activeObjectDataByInstance.Remove(data.Instance);
+                    }
+                    else
+                    {
+                        _availableObjectDatas.Remove(data);
+                    }
                 }
 
                 _pendingRemoveObjects.Clear();

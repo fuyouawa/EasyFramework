@@ -6,42 +6,54 @@ namespace EasyFramework.ToolKit
     public static class IUnityObjectPoolManagerExtension
     {
         public static IUnityObjectPool TryGetPool<TObject>(this IUnityObjectPoolManager manager, string poolName)
-            where TObject : Component
         {
             return manager.TryGetPool(poolName, typeof(TObject));
         }
 
-        public static bool TryAllocatePool<TObject>(this IUnityObjectPoolManager manager, string poolName, GameObject original)
-            where TObject : Component
-        {
-            return manager.TryAllocatePool(poolName, typeof(TObject), original);
-        }
-
-        public static IUnityObjectPool TryGetOrAllocatePool(this IUnityObjectPoolManager manager, string poolName, Type objectType, GameObject original)
+        public static IUnityObjectPool GetPool(this IUnityObjectPoolManager manager, string poolName, Type objectType)
         {
             var pool = manager.TryGetPool(poolName, objectType);
             if (pool == null)
             {
-                if (manager.TryAllocatePool(poolName, objectType, original))
-                {
-                    pool = manager.TryGetPool(poolName, objectType);
-                }
+                throw new InvalidOperationException(
+                    $"Unity object pool with name '{poolName}' and object type '{objectType}' does not exist.");
             }
             return pool;
         }
 
-        public static IUnityObjectPool TryGetOrAllocatePool<TObject>(this IUnityObjectPoolManager manager, string poolName, GameObject original)
-            where TObject : Component
+        public static void CreatePool(this IUnityObjectPoolManager manager, string poolName, Type objectType, GameObject original)
         {
-            var pool = manager.TryGetPool<TObject>(poolName);
+            if (!manager.TryCreatePool(poolName, objectType, original))
+            {
+                throw new InvalidOperationException(
+                    $"Failed to create unity object pool '{poolName}' with object type '{objectType}'. It may already exist.");
+            }
+        }
+
+        public static IUnityObjectPool GetOrCreatePool(this IUnityObjectPoolManager manager, string poolName, Type objectType, GameObject original)
+        {
+            var pool = manager.TryGetPool(poolName, objectType);
             if (pool == null)
             {
-                if (manager.TryAllocatePool<TObject>(poolName, original))
-                {
-                    pool = manager.TryGetPool<TObject>(poolName);
-                }
+                manager.CreatePool(poolName, objectType, original);
+                pool = manager.GetPool(poolName, objectType);
             }
             return pool;
+        }
+
+        public static IUnityObjectPool GetOrCreatePool<TObject>(this IUnityObjectPoolManager manager, string poolName, GameObject original)
+        {
+            return manager.GetOrCreatePool(poolName, typeof(TObject), original);
+        }
+
+        public static IUnityObjectPool GetPool<TObject>(this IUnityObjectPoolManager manager, string poolName)
+        {
+            return manager.GetPool(poolName, typeof(TObject));
+        }
+
+        public static void CreatePool<TObject>(this IUnityObjectPoolManager manager, string poolName, GameObject original)
+        {
+            manager.CreatePool(poolName, typeof(TObject), original);
         }
     }
 }

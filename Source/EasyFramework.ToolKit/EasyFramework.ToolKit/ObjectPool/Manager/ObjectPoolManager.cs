@@ -9,7 +9,7 @@ namespace EasyFramework.ToolKit
     /// </summary>
     public class ObjectPoolManager : Singleton<ObjectPoolManager>, IObjectPoolManager
     {
-        private Type _poolType;
+        private Type _poolType = typeof(ObjectPool);
 
         /// <summary>
         /// 对象池类型，用于创建对象池实例
@@ -53,9 +53,8 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
-        /// <exception cref="ArgumentNullException">当objectType为null时抛出</exception>
-        public bool TryAllocatePool(string poolName, Type objectType)
+        /// <returns></returns>
+        public bool TryCreatePool(string poolName, Type objectType)
         {
             if (objectType == null)
                 throw new ArgumentNullException(nameof(objectType));
@@ -78,8 +77,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>找到的对象池，如果不存在则返回null</returns>
-        /// <exception cref="ArgumentNullException">当objectType为null时抛出</exception>
+        /// <returns></returns>
         public IObjectPool TryGetPool(string poolName, Type objectType)
         {
             if (objectType == null)
@@ -94,8 +92,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>新创建的对象池实例</returns>
-        /// <exception cref="InvalidOperationException">当无法创建对象池实例时抛出</exception>
+        /// <returns></returns>
         private IObjectPool CreateObjectPool(string poolName, Type objectType)
         {
             try

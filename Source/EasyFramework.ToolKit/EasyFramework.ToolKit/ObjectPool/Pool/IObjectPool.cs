@@ -18,36 +18,19 @@ namespace EasyFramework.ToolKit
         /// </summary>
         Type ObjectType { get; internal set; }
 
-        /// <summary>
-        /// 当前对象池中的对象数量
-        /// </summary>
-        int Count { get; }
+        int ActiveCount { get; }
+        int AvailableCount { get; }
 
         /// <summary>
         /// 对象池的容量上限
         /// </summary>
         int Capacity { get; set; }
 
-        internal void AddSpawnCallback(Action<object> callback);
-        internal void AddRecycleCallback(Action<object> callback);
+        internal void AddRentCallback(Action<object> callback);
+        internal void AddReleaseCallback(Action<object> callback);
 
-        // /// <summary>
-        // /// 异步尝试从对象池中获取一个对象
-        // /// </summary>
-        // /// <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
-        // UniTask<object> TrySpawnAsync();
-
-        /// <summary>
-        /// 尝试从对象池中获取一个对象
-        /// </summary>
-        /// <returns>获取到的对象；如果获取失败（比如对象池已满），则返回 null。</returns>
-        object TrySpawn();
-
-        /// <summary>
-        /// 尝试将对象回收到对象池中
-        /// </summary>
-        /// <param name="instance">要回收的对象</param>
-        /// <returns>回收是否成功</returns>
-        bool TryRecycle(object instance);
+        object TryRent();
+        bool TryRelease(object instance);
+        bool TryRemove(object instance);
     }
 }

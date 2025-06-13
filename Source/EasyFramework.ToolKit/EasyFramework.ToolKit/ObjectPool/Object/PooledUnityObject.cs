@@ -7,13 +7,13 @@ namespace EasyFramework.ToolKit
     {
         [ShowInInspector, ReadOnly] private PooledUnityObjectState _state;
 
-        void IPooledObjectCallbackReceiver.OnSpawn(IObjectPool owningPool)
+        void IPooledObjectCallbackReceiver.OnRent(IObjectPool owningPool)
         {
             _state = PooledUnityObjectState.Avtive;
             gameObject.SetActive(true);
         }
 
-        void IPooledObjectCallbackReceiver.OnRecycle(IObjectPool owningPool)
+        void IPooledObjectCallbackReceiver.OnRelease(IObjectPool owningPool)
         {
             _state = PooledUnityObjectState.Unused;
             gameObject.SetActive(false);

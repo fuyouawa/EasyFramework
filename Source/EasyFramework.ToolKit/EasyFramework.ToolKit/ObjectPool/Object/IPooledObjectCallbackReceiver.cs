@@ -2,7 +2,7 @@ namespace EasyFramework.ToolKit
 {
     public interface IPooledObjectCallbackReceiver
     {
-        void OnSpawn(IObjectPool owningPool);
-        void OnRecycle(IObjectPool owningPool);
+        void OnRent(IObjectPool owningPool);
+        void OnRelease(IObjectPool owningPool);
     }
 }
