@@ -133,6 +133,52 @@
             </summary>
             <param name="other">The other group attribute to combine with.</param>
         </member>
+        <member name="T:EasyFramework.ToolKit.GameObjectPoolManager">
+            <summary>
+            游戏对象池管理器，负责创建和管理多个游戏对象池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.GameObjectPoolManager.PoolType">
+            <summary>
+            游戏对象池类型，用于创建游戏对象池实例
+            </summary>
+            <exception cref="T:System.InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自<see cref="T:EasyFramework.ToolKit.IGameObjectPool"/>时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            尝试创建游戏对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">原始预制体</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.TryGetPool(System.String,System.Type)">
+            <summary>
+            尝试获取指定名称和类型的游戏对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.CreateUnityObjectPool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            创建新的游戏对象池实例
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">原始预制体</param>
+            <returns></returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IGameObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
+            <summary>
+            尝试创建对象池。
+            </summary>
+            <param name="poolName"></param>
+            <param name="objectType"></param>
+            <param name="original"></param>
+            <returns> true 表示创建成功；false 表示已存在同名同类型的池。</returns>
+        </member>
         <member name="T:EasyFramework.ToolKit.IObjectPoolManager">
             <summary>
             对象池管理器接口，负责管理多个对象池的创建和访问
@@ -153,15 +199,6 @@
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
             <returns>找到的对象池，如果不存在则返回null</returns>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IUnityObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
-            <summary>
-            尝试创建对象池。
-            </summary>
-            <param name="poolName"></param>
-            <param name="objectType"></param>
-            <param name="original"></param>
-            <returns> true 表示创建成功；false 表示已存在同名同类型的池。</returns>
         </member>
         <member name="T:EasyFramework.ToolKit.ObjectPoolManager">
             <summary>
@@ -200,43 +237,6 @@
             <param name="objectType">对象池中存储的对象类型</param>
             <returns></returns>
         </member>
-        <member name="T:EasyFramework.ToolKit.UnityObjectPoolManager">
-            <summary>
-            Unity对象池管理器，负责创建和管理多个Unity对象池
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPoolManager.PoolType">
-            <summary>
-            Unity对象池类型，用于创建Unity对象池实例
-            </summary>
-            <exception cref="T:System.InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自IUnityObjectPool时抛出</exception>
-        </member>
-        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
-            <summary>
-            尝试创建Unity对象池
-            </summary>
-            <param name="poolName">对象池名称</param>
-            <param name="objectType">对象池中存储的对象类型</param>
-            <param name="original">原始预制体</param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.TryGetPool(System.String,System.Type)">
-            <summary>
-            尝试获取指定名称和类型的Unity对象池
-            </summary>
-            <param name="poolName">对象池名称</param>
-            <param name="objectType">对象池中存储的对象类型</param>
-            <returns></returns>
-        </member>
-        <member name="M:EasyFramework.ToolKit.UnityObjectPoolManager.CreateUnityObjectPool(System.String,System.Type,UnityEngine.GameObject)">
-            <summary>
-            创建新的Unity对象池实例
-            </summary>
-            <param name="poolName">对象池名称</param>
-            <param name="objectType">对象池中存储的对象类型</param>
-            <param name="original">原始预制体</param>
-            <returns></returns>
-        </member>
         <member name="T:EasyFramework.ToolKit.IPoolCallbackReceiver">
             <summary>
             对象池事件的回调接口。
@@ -258,58 +258,58 @@
             </summary>
             <param name="owningPool">所属的对象池</param>
         </member>
-        <member name="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors">
+        <member name="T:EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor">
             <summary>
-            <para>提供对池化 Unity 对象的生命周期属性（激活/空闲时长、当前计时器）的访问接口。</para>
+            <para>提供对池化游戏对象的生命周期属性（激活/空闲时长、当前计时器）的访问接口。</para>
             <para>主要用于内部机制获取或设置如下属性：</para>
             <para>- 激活状态下的最大存活时间（超时将回收）</para>
             <para>- 空闲状态下的最大存活时间（超时将销毁）</para>
             <para>- 当前计时器（根据状态不同表示距离回收或销毁的时间）</para>
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.ActiveLifetime">
+        <member name="P:EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor.ActiveLifetime">
             <summary>
             激活中对象的回收时间，小于0则无限制
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.IdleLifetime">
+        <member name="P:EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor.IdleLifetime">
             <summary>
             空闲中对象的销毁时间，小于0则无限制
             </summary>
         </member>
-        <member name="P:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors.ElapsedTime">
+        <member name="P:EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor.ElapsedTime">
             <summary>
             <para>获取当前计时器累计时间（单位：秒）。</para>
             <para>- 激活状态时：表示已激活时长</para>
             <para>- 空闲状态时：表示已空闲时长</para>
             </summary>
         </member>
-        <member name="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension">
+        <member name="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorExtension">
             <summary>
-            为 <see cref="T:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors"/> 提供链式调用的扩展方法。
+            为 <see cref="T:EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor"/> 提供链式调用的扩展方法。
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetActiveLifetime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorExtension.SetActiveLifetime(EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor,System.Single)">
             <summary>
             设置激活状态下的最大存活时间。
             </summary>
-            <param name="accessors">生命周期访问器。</param>
+            <param name="accessor">生命周期访问器。</param>
             <param name="lifetime">存活时间（秒），小于0表示无限制。</param>
             <returns>配置后的访问器实例，支持链式调用。</returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetIdleLifetime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorExtension.SetIdleLifetime(EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor,System.Single)">
             <summary>
             设置空闲状态下的最大存活时间。
             </summary>
-            <param name="accessors">生命周期访问器。</param>
+            <param name="accessor">生命周期访问器。</param>
             <param name="lifetime">存活时间（秒），小于0表示无限制。</param>
             <returns>配置后的访问器实例，支持链式调用。</returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorsExtension.SetElapsedTime(EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessors,System.Single)">
+        <member name="M:EasyFramework.ToolKit.IPooledUnityObjectLifetimeAccessorExtension.SetElapsedTime(EasyFramework.ToolKit.IPooledGameObjectLifetimeAccessor,System.Single)">
             <summary>
             设置当前计时器累计时间。
             </summary>
-            <param name="accessors">生命周期访问器。</param>
+            <param name="accessor">生命周期访问器。</param>
             <param name="elapsedTime">累计时间（秒）。</param>
             <returns>配置后的访问器实例，支持链式调用。</returns>
         </member>
@@ -318,6 +318,96 @@
             用于自动处理 Unity 对象在对象池中的激活/隐藏逻辑的组件。
             当对象从池中取出时自动激活 GameObject，回收时自动隐藏，并更新当前状态。
             </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.Target">
+            <summary>
+            目标实例
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.OwningPool">
+            <summary>
+            所属池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.TargetComponent">
+            <summary>
+            目标组件（用于快速返回）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.ActiveLifetime">
+            <summary>
+            激活中对象的回收时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.IdleLifetime">
+            <summary>
+            空闲中对象的销毁时间，小于0则无限制
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.PooledGameObject.ElapsedTime">
+            <summary>
+            <para>获取当前计时器累计时间（单位：秒）。</para>
+            <para>- 激活状态时：表示已激活时长</para>
+            <para>- 空闲状态时：表示已空闲时长</para>
+            </summary>
+        </member>
+        <member name="T:EasyFramework.ToolKit.GameObjectPool">
+            <summary>
+            游戏对象池实现，用于管理游戏对象的对象池
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.GameObjectPool.Original">
+            <summary>
+            对象池中对象的原始预制体
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.GameObjectPool.Transform">
+            <inheritdoc />
+        </member>
+        <member name="P:EasyFramework.ToolKit.GameObjectPool.TickInterval">
+            <summary>
+            更新间隔
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.GameObjectPool.DefaultComponentType">
+            <summary>
+            <para>为对象池中对象默认添加的组件类型。</para>
+            <para>如果为null代表不添加默认组件。</para>
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.GameObjectPool.OnTick(System.Single)">
+            <summary>
+            定时更新所有活跃对象的状态
+            </summary>
+            <param name="interval">更新间隔（秒）</param>
+        </member>
+        <member name="T:EasyFramework.ToolKit.IGameObjectPool">
+            <summary>
+            游戏对象池接口，将GameObject实例池化，并通过缓存Component引用，提供快速访问组件的接口
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IGameObjectPool.Original">
+            <summary>
+            对象池中对象的原始预制体（用于实例化复制）
+            </summary>
+        </member>
+        <member name="P:EasyFramework.ToolKit.IGameObjectPool.Transform">
+            <summary>
+            对象池的Transform组件，用于管理池中对象的层级关系
+            </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IGameObjectPool.GetLifetimeAccessor(UnityEngine.GameObject)">
+            <summary>
+            获取指定对象的生命周期访问器（包含激活时长、空闲时长与计时器控制）
+            </summary>
+            <param name="instance">池中 Unity 实例对象</param>
+            <returns>生命周期访问器接口</returns>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IGameObjectPool.Update(System.Single)">
+            <summary>
+            更新对象池状态，处理对象生命周期和回收
+            </summary>
+            <param name="deltaTime">距离上次更新的时间间隔（秒）</param>
         </member>
         <member name="T:EasyFramework.ToolKit.IObjectPool">
             <summary>
@@ -396,34 +486,6 @@
             <param name="instance">需要被移除的实例</param>
             <exception cref="T:System.InvalidOperationException">当移除失败时抛出</exception>
         </member>
-        <member name="T:EasyFramework.ToolKit.IUnityObjectPool">
-            <summary>
-            Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.Original">
-            <summary>
-            对象池中对象的原始预制体
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.IUnityObjectPool.Transform">
-            <summary>
-            对象池的Transform组件，用于管理池中对象的层级关系
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IUnityObjectPool.GetLifetimeAccessors(UnityEngine.GameObject)">
-            <summary>
-            获取指定对象的生命周期访问器（包含激活时长、空闲时长与计时器控制）
-            </summary>
-            <param name="instance">池中 Unity 实例对象</param>
-            <returns>生命周期访问器接口</returns>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IUnityObjectPool.Update(System.Single)">
-            <summary>
-            更新对象池状态，处理对象生命周期和回收
-            </summary>
-            <param name="deltaTime">距离上次更新的时间间隔（秒）</param>
-        </member>
         <member name="T:EasyFramework.ToolKit.ObjectPool">
             <summary>
             通用对象池实现，用于管理实现了IPooledObject接口的对象
@@ -460,68 +522,6 @@
             <summary>
             根据容量限制收缩
             </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.Target">
-            <summary>
-            目标实例
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.OwningPool">
-            <summary>
-            所属池
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.TargetComponent">
-            <summary>
-            目标组件（用于快速返回）
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.ActiveLifetime">
-            <summary>
-            激活中对象的回收时间，小于0则无限制
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.IdleLifetime">
-            <summary>
-            空闲中对象的销毁时间，小于0则无限制
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.PooledUnityInstance.ElapsedTime">
-            <summary>
-            <para>获取当前计时器累计时间（单位：秒）。</para>
-            <para>- 激活状态时：表示已激活时长</para>
-            <para>- 空闲状态时：表示已空闲时长</para>
-            </summary>
-        </member>
-        <member name="T:EasyFramework.ToolKit.UnityObjectPool">
-            <summary>
-            Unity对象池实现，用于管理Unity游戏对象的对象池
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.Original">
-            <summary>
-            对象池中对象的原始预制体
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.Transform">
-            <inheritdoc />
-        </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.TickInterval">
-            <summary>
-            更新间隔
-            </summary>
-        </member>
-        <member name="P:EasyFramework.ToolKit.UnityObjectPool.DefaultComponentType">
-            <summary>
-            <para>为对象池中对象默认添加的组件类型。</para>
-            <para>如果为null代表不添加默认组件。</para>
-            </summary>
-        </member>
-        <member name="M:EasyFramework.ToolKit.UnityObjectPool.OnTick(System.Single)">
-            <summary>
-            定时更新所有活跃对象的状态
-            </summary>
-            <param name="interval">更新间隔（秒）</param>
         </member>
         <member name="P:EasyFramework.ToolKit.MethodPickerSettingsAttribute.LimitParameterTypesGetter">
             <summary>

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyFramework.ToolKit
 {
-    public static class IUnityObjectPoolExtension
+    public static class IGameObjectPoolExtension
     {
     }
 }

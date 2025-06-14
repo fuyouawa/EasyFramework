@@ -8,14 +8,14 @@ using Sirenix.Serialization;
 namespace EasyFramework.ToolKit
 {
     /// <summary>
-    /// Unity对象池管理器，负责创建和管理多个Unity对象池
+    /// 游戏对象池管理器，负责创建和管理多个游戏对象池
     /// </summary>
     [ShowOdinSerializedPropertiesInInspector]
-    public class UnityObjectPoolManager : MonoSingleton<UnityObjectPoolManager>, IUnityObjectPoolManager, ISerializationCallbackReceiver
+    public class GameObjectPoolManager : MonoSingleton<GameObjectPoolManager>, IGameObjectPoolManager, ISerializationCallbackReceiver
     {
-        // 使用元组作为键，存储Unity对象池实例
-        private readonly Dictionary<(string poolName, Type objectType), IUnityObjectPool> _pools =
-            new Dictionary<(string poolName, Type objectType), IUnityObjectPool>();
+        // 使用元组作为键，存储游戏对象池实例
+        private readonly Dictionary<(string poolName, Type objectType), IGameObjectPool> _pools =
+            new Dictionary<(string poolName, Type objectType), IGameObjectPool>();
 
 
         [SerializeField] private string _poolNodeName = "{{ object_type }}_{{ pool_name }}";
@@ -26,12 +26,12 @@ namespace EasyFramework.ToolKit
             set => _poolNodeName = value;
         }
         
-        [NonSerialized, OdinSerialize] private Type _poolType = typeof(UnityObjectPool);
+        [NonSerialized, OdinSerialize] private Type _poolType = typeof(GameObjectPool);
 
         /// <summary>
-        /// Unity对象池类型，用于创建Unity对象池实例
+        /// 游戏对象池类型，用于创建游戏对象池实例
         /// </summary>
-        /// <exception cref="InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自IUnityObjectPool时抛出</exception>
+        /// <exception cref="InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自<see cref="IGameObjectPool"/>时抛出</exception>
         public Type PoolType
         {
             get => _poolType;
@@ -47,17 +47,17 @@ namespace EasyFramework.ToolKit
                     throw new InvalidOperationException($"PoolType '{value}' cannot be abstract or interface.");
                 }
                 
-                if (!typeof(IUnityObjectPool).IsAssignableFrom(_poolType))
+                if (!typeof(IGameObjectPool).IsAssignableFrom(value))
                 {
                     throw new InvalidOperationException(
-                        $"PoolType '{_poolType}' must implement '{typeof(IUnityObjectPool)}'.");
+                        $"PoolType '{value}' must implement '{typeof(IGameObjectPool)}'.");
                 }
 
                 _poolType = value;
             }
         }
 
-        UnityObjectPoolManager()
+        GameObjectPoolManager()
         {
         }
 
@@ -70,7 +70,7 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 尝试创建Unity对象池
+        /// 尝试创建游戏对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
@@ -110,12 +110,12 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 尝试获取指定名称和类型的Unity对象池
+        /// 尝试获取指定名称和类型的游戏对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
         /// <returns></returns>
-        public IUnityObjectPool TryGetPool(string poolName, Type objectType)
+        public IGameObjectPool TryGetPool(string poolName, Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
 
@@ -124,18 +124,18 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 创建新的Unity对象池实例
+        /// 创建新的游戏对象池实例
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
         /// <param name="original">原始预制体</param>
         /// <returns></returns>
-        private IUnityObjectPool CreateUnityObjectPool(string poolName, Type objectType,
+        private IGameObjectPool CreateUnityObjectPool(string poolName, Type objectType,
             GameObject original)
         {
             try
             {
-                var pool = (IUnityObjectPool)Activator.CreateInstance(_poolType);
+                var pool = (IGameObjectPool)Activator.CreateInstance(_poolType);
                 pool.Name = poolName;
                 pool.ObjectType = objectType;
                 pool.Original = original;
@@ -144,7 +144,7 @@ namespace EasyFramework.ToolKit
             catch (Exception ex)
             {
                 throw new InvalidOperationException(
-                    $"Failed to create unity object pool instance of type '{_poolType}'.", ex);
+                    $"Failed to create game object pool instance of type '{_poolType}'.", ex);
             }
         }
 

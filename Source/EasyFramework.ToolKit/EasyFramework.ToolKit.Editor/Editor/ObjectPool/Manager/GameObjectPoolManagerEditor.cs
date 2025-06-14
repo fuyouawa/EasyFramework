@@ -7,8 +7,8 @@ using UnityEditor;
 
 namespace EasyFramework.ToolKit.Editor
 {
-    [CustomEditor(typeof(UnityObjectPoolManager))]
-    public class UnityObjectPoolManagerEditor : OdinEditor
+    [CustomEditor(typeof(GameObjectPoolManager))]
+    public class GameObjectPoolManagerEditor : OdinEditor
     {
         private InspectorProperty _poolNodeNameProperty;
         private InspectorProperty _poolTypeProperty;
@@ -16,7 +16,7 @@ namespace EasyFramework.ToolKit.Editor
         private static Type[] _poolTypes;
 
         private static Type[] PoolTypes => _poolTypes ??= ReflectionUtility.GetAssemblyTypes()
-            .Where(type => type.HasInterface(typeof(IUnityObjectPool)) && !type.IsAbstract && !type.IsInterface &&
+            .Where(type => type.HasInterface(typeof(IGameObjectPool)) && !type.IsAbstract && !type.IsInterface &&
                            !type.IsGenericType)
             .ToArray();
 

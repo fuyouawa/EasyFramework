@@ -13,7 +13,7 @@ namespace EasyFramework.ToolKit
         Idle,
     }
 
-    class PooledUnityInstance
+    class PooledGameObject
     {
         /// <summary>
         /// 目标实例
@@ -23,7 +23,7 @@ namespace EasyFramework.ToolKit
         /// <summary>
         /// 所属池
         /// </summary>
-        public IUnityObjectPool OwningPool { get; }
+        public IGameObjectPool OwningPool { get; }
 
         /// <summary>
         /// 目标组件（用于快速返回）
@@ -49,7 +49,7 @@ namespace EasyFramework.ToolKit
 
         public PooledUnityObjectState State { get; set; }
 
-        public PooledUnityInstance(GameObject target, IUnityObjectPool owningPool, Component targetComponent)
+        public PooledGameObject(GameObject target, IGameObjectPool owningPool, Component targetComponent)
         {
             Target = target;
             OwningPool = owningPool;
@@ -58,9 +58,9 @@ namespace EasyFramework.ToolKit
     }
 
     /// <summary>
-    /// Unity对象池实现，用于管理Unity游戏对象的对象池
+    /// 游戏对象池实现，用于管理游戏对象的对象池
     /// </summary>
-    public class UnityObjectPool : ObjectPoolBase, IUnityObjectPool
+    public class GameObjectPool : ObjectPoolBase, IGameObjectPool
     {
         [SerializeField] private GameObject _original;
 
@@ -69,7 +69,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         public GameObject Original => _original;
 
-        GameObject IUnityObjectPool.Original
+        GameObject IGameObjectPool.Original
         {
             get => _original;
             set
@@ -137,36 +137,36 @@ namespace EasyFramework.ToolKit
         public override int ActiveCount => _activeInstanceDict.Count;
         public override int IdleCount => _idleInstances.Count;
 
-        private readonly Dictionary<GameObject, PooledUnityInstance> _activeInstanceDict =
-            new Dictionary<GameObject, PooledUnityInstance>();
+        private readonly Dictionary<GameObject, PooledGameObject> _activeInstanceDict =
+            new Dictionary<GameObject, PooledGameObject>();
 
-        private readonly List<PooledUnityInstance> _idleInstances = new List<PooledUnityInstance>();
+        private readonly List<PooledGameObject> _idleInstances = new List<PooledGameObject>();
 
 
         protected override object TryRentFromIdle()
         {
-            PooledUnityInstance data;
+            PooledGameObject instance;
             if (_idleInstances.Count > 0)
             {
-                data = _idleInstances[^1];
+                instance = _idleInstances[^1];
                 _idleInstances.RemoveAt(_idleInstances.Count - 1);
             }
             else
             {
                 var inst = Instantiate();
-                data = new PooledUnityInstance(inst, this, inst.GetComponent(ObjectType))
+                instance = new PooledGameObject(inst, this, inst.GetComponent(ObjectType))
                 {
                     ActiveLifetime = DefaultTimeToRecycleObject,
                     IdleLifetime = DefaultTimeToDestroyObject,
                 };
             }
 
-            _activeInstanceDict.Add(data.Target, data);
+            _activeInstanceDict.Add(instance.Target, instance);
 
-            data.State = PooledUnityObjectState.Avtive;
-            data.ElapsedTime = 0f;
+            instance.State = PooledUnityObjectState.Avtive;
+            instance.ElapsedTime = 0f;
 
-            var receivers = data.Target.GetComponents<IPoolCallbackReceiver>();
+            var receivers = instance.Target.GetComponents<IPoolCallbackReceiver>();
 
             if (receivers.Length > 0)
             {
@@ -176,19 +176,19 @@ namespace EasyFramework.ToolKit
                 }
             }
 
-            return data.TargetComponent;
+            return instance.TargetComponent;
         }
 
         protected override bool TryReleaseToIdle(object instance)
         {
             var gameObject = GetGameObject(instance);
-            var data = _activeInstanceDict[gameObject];
+            var o = _activeInstanceDict[gameObject];
 
-            data.State = PooledUnityObjectState.Idle;
-            data.ElapsedTime = 0;
+            o.State = PooledUnityObjectState.Idle;
+            o.ElapsedTime = 0;
 
             _activeInstanceDict.Remove(gameObject);
-            _idleInstances.Add(data);
+            _idleInstances.Add(o);
 
             var receivers = gameObject.GetComponents<IPoolCallbackReceiver>();
             if (receivers.Length > 0)
@@ -229,10 +229,10 @@ namespace EasyFramework.ToolKit
                 nameof(instance));
         }
 
-        public IPooledUnityObjectLifetimeAccessors GetLifetimeAccessors(GameObject instance)
+        public IPooledGameObjectLifetimeAccessor GetLifetimeAccessor(GameObject instance)
         {
             var inst = GetInternalInstance(instance);
-            return new PooledUnityObjectLifetimeAccessors(
+            return new PooledGameObjectLifetimeAccessor(
                 () => inst.ActiveLifetime,
                 f => inst.ActiveLifetime = f,
                 () => inst.IdleLifetime,
@@ -242,7 +242,7 @@ namespace EasyFramework.ToolKit
             );
         }
 
-        private PooledUnityInstance GetInternalInstance(GameObject instance)
+        private PooledGameObject GetInternalInstance(GameObject instance)
         {
             var ret = _activeInstanceDict.GetValueOrDefault(instance);
             if (ret != null)
@@ -259,7 +259,7 @@ namespace EasyFramework.ToolKit
             throw new ArgumentException($"The specified instance '{instance.name}' is not managed by this object pool '{Name}'.");
         }
 
-        void IUnityObjectPool.Update(float deltaTime)
+        void IGameObjectPool.Update(float deltaTime)
         {
             _tickElapsedTime += deltaTime;
             while (_tickElapsedTime >= TickInterval)
@@ -282,9 +282,9 @@ namespace EasyFramework.ToolKit
         }
 
 
-        private readonly List<PooledUnityInstance> _pendingRemoveInstances = new List<PooledUnityInstance>();
-        private readonly List<PooledUnityInstance> _pendingRecycleInstances = new List<PooledUnityInstance>();
-        private readonly List<PooledUnityInstance> _pendingDestroyInstances = new List<PooledUnityInstance>();
+        private readonly List<PooledGameObject> _pendingRemoveInstances = new List<PooledGameObject>();
+        private readonly List<PooledGameObject> _pendingRecycleInstances = new List<PooledGameObject>();
+        private readonly List<PooledGameObject> _pendingDestroyInstances = new List<PooledGameObject>();
 
         /// <summary>
         /// 定时更新所有活跃对象的状态

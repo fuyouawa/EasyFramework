@@ -63,7 +63,7 @@ public class TestPoolObject : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            var pool = UnityObjectPoolManager.Instance.GetOrCreatePool<Bullet>("玩家子弹", o111);
+            var pool = GameObjectPoolManager.Instance.GetOrCreatePool<Bullet>("玩家子弹", o111);
 
             var o = pool.Rent<Bullet>();
             var o1 = pool.Rent<Bullet>();
@@ -72,7 +72,7 @@ public class TestPoolObject : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K))
         {
-            var pool = (UnityObjectPool)UnityObjectPoolManager.Instance.GetOrCreatePool<Bullet>("怪物A子弹", o111);
+            var pool = (GameObjectPool)GameObjectPoolManager.Instance.GetOrCreatePool<Bullet>("怪物A子弹", o111);
             pool.DefaultTimeToRecycleObject = 2f;
 
             var o = pool.Rent<Bullet>();

@@ -4,12 +4,12 @@ using UnityEngine;
 namespace EasyFramework.ToolKit
 {
     /// <summary>
-    /// Unity对象池接口，继承自IObjectPool，提供了Unity特定的对象池功能
+    /// 游戏对象池接口，将GameObject实例池化，并通过缓存Component引用，提供快速访问组件的接口
     /// </summary>
-    public interface IUnityObjectPool : IObjectPool
+    public interface IGameObjectPool : IObjectPool
     {
         /// <summary>
-        /// 对象池中对象的原始预制体
+        /// 对象池中对象的原始预制体（用于实例化复制）
         /// </summary>
         GameObject Original { get; internal set; }
 
@@ -23,7 +23,7 @@ namespace EasyFramework.ToolKit
         /// </summary>
         /// <param name="instance">池中 Unity 实例对象</param>
         /// <returns>生命周期访问器接口</returns>
-        IPooledUnityObjectLifetimeAccessors GetLifetimeAccessors(GameObject instance);
+        IPooledGameObjectLifetimeAccessor GetLifetimeAccessor(GameObject instance);
 
         /// <summary>
         /// 更新对象池状态，处理对象生命周期和回收
