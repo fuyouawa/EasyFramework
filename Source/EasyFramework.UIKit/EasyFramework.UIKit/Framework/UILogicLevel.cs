@@ -29,7 +29,7 @@ namespace EasyFramework.UIKit
             _openedPanels.Add(panel);
         }
 
-        public void PopPanel(IPanel panel)
+        public void RemovePanel(IPanel panel)
         {
             _openedPanels.Remove(panel);
         }

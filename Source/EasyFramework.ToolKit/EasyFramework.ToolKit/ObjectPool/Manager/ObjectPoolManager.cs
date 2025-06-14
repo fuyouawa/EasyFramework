@@ -49,12 +49,12 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 尝试创建对象池
+        /// 创建对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns></returns>
-        public bool TryCreatePool(string poolName, Type objectType)
+        /// <exception cref="InvalidOperationException">当已存在同名同类型的池时抛出</exception>
+        public void CreatePool(string poolName, Type objectType)
         {
             if (objectType == null)
                 throw new ArgumentNullException(nameof(objectType));
@@ -63,28 +63,33 @@ namespace EasyFramework.ToolKit
 
             if (_pools.ContainsKey(key))
             {
-                return false;
+                throw new InvalidOperationException(
+                    $"Object pool with name '{poolName}' and object type '{objectType}' already exists.");
             }
 
             var pool = CreateObjectPool(poolName, objectType);
             _pools.Add(key, pool);
-
-            return true;
         }
 
         /// <summary>
-        /// 尝试获取指定名称和类型的对象池
+        /// 获取指定名称和类型的对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns></returns>
-        public IObjectPool TryGetPool(string poolName, Type objectType)
+        /// <returns>找到的对象池</returns>
+        /// <exception cref="InvalidOperationException">当找不到指定的对象池时抛出</exception>
+        public IObjectPool GetPool(string poolName, Type objectType)
         {
             if (objectType == null)
                 throw new ArgumentNullException(nameof(objectType));
 
-            _pools.TryGetValue((poolName, objectType), out var pool);
-            return pool;
+            if (_pools.TryGetValue((poolName, objectType), out var pool))
+            {
+                return pool;
+            }
+            
+            throw new InvalidOperationException(
+                $"Object pool with name '{poolName}' and object type '{objectType}' does not exist.");
         }
 
         /// <summary>

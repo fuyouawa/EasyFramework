@@ -6,10 +6,8 @@ using UnityEngine;
 
 namespace EasyFramework.UIKit
 {
-    public class UIManager : MonoSingleton<UIManager>
+    public class UIManager : MonoSingleton<UIManager>, IUIManager
     {
-        public static IPanelLoader DefaultPanelLoader = new DefaultPanelLoader();
-
         [SerializeField] private UIRoot _root;
         private readonly UILogicLevel[] _logicLevels;
 
@@ -40,61 +38,62 @@ namespace EasyFramework.UIKit
             };
         }
 
-        public async UniTask<T> OpenPanelAsync<T>(
-            string assetAddress = null,
-            UILevel level = UILevel.Common,
-            IPanelData panelData = null,
-            PanelOpenType panelOpenType = PanelOpenType.Single,
-            IPanelLoader panelLoader = null)
-            where T : class, IPanel
+        private readonly Dictionary<Type, IPanel> _panelInstanceByType = new Dictionary<Type, IPanel>();
+
+        public bool HasPanel(Type panelType)
         {
-            var panel = await OpenPanelAsync(typeof(T), assetAddress, level, panelData, panelOpenType, panelLoader);
-            return panel as T;
+            return _panelInstanceByType.ContainsKey(panelType);
         }
 
-        public async UniTask<IPanel> OpenPanelAsync(
-            Type panelType,
-            string assetAddress = null,
-            UILevel level = UILevel.Common,
-            IPanelData panelData = null,
-            PanelOpenType panelOpenType = PanelOpenType.Single,
-            IPanelLoader panelLoader = null)
+        public async UniTask CreatePanelAsync(Type panelType, GameObject panelPrefab, UILevel level = UILevel.Common)
         {
-            var info = new PanelInfo(panelType, assetAddress, level, panelData, panelOpenType);
+            if (!panelPrefab.HasComponent(panelType))
+            {
+                throw new ArgumentException($"Panel prefab does not have component of type {panelType.Name}");
+            }
+
+            if (_panelInstanceByType.ContainsKey(panelType))
+            {
+                throw new InvalidOperationException($"Panel of type {panelType.Name} already exists");
+            }
+
             var logicLevel = GetLogicLevel(level);
-
-            IPanel panel = null;
-            if (panelOpenType == PanelOpenType.Single)
-            {
-                panel = logicLevel.FindFirstPanelByType(panelType);
-
-                if (panel != null)
-                {
-                    if (panel.State == PanelState.Opened)
-                    {
-                        Debug.LogWarning($"Panel '{panelType}' has been opened.");
-                        return panel;
-                    }
-
-                    Assert.True(panel.State != PanelState.Killed);
-                }
-            }
-
-            if (panel == null)
-            {
-                panelLoader ??= DefaultPanelLoader;
-                var prefab = await panelLoader.LoadPrefabAsync(info);
-                var inst = await panelLoader.InstantiateAsync(prefab);
-                panel = inst.GetComponent<IPanel>();
-            }
-
-            panel.Info = info;
+            var inst = Instantiate(panelPrefab);
+            var panel = (IPanel)inst.GetComponent(panelType);
+            panel.Info = new PanelInfo(panelType, panelPrefab, level);
+            
             _root.SetPanelLevel(panel, level);
             logicLevel.PushPanel(panel);
+            _panelInstanceByType[panelType] = panel;
 
             if (panel.State == PanelState.Uninitialized)
             {
                 await panel.InitializeAsync();
+            }
+        }
+
+        public IPanel OpenPanel(Type panelType, IPanelData panelData = null, UILevel? level = null)
+        {
+            if (!_panelInstanceByType.TryGetValue(panelType, out var panel))
+            {
+                throw new KeyNotFoundException($"Panel of type {panelType.Name} has not been created. Call CreatePanelAsync first.");
+            }
+
+            if (panel.State == PanelState.Opened)
+            {
+                throw new InvalidOperationException($"Panel of type {panelType.Name} is already open.");
+            }
+
+            if (level.HasValue && level.Value != panel.Info.Level)
+            {
+                var logicLevel = GetLogicLevel(panel.Info.Level);
+                logicLevel.RemovePanel(panel);
+
+                logicLevel = GetLogicLevel(level.Value);
+                logicLevel.PushPanel(panel);
+
+                _root.SetPanelLevel(panel, level.Value);
+                panel.Info.Level = level.Value;
             }
 
             panel.Open(panelData);

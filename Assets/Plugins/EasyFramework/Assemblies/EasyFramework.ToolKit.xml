@@ -144,22 +144,23 @@
             </summary>
             <exception cref="T:System.InvalidOperationException">当要设置的value为null、是抽象或者接口、没有继承自<see cref="T:EasyFramework.ToolKit.IGameObjectPool"/>时抛出</exception>
         </member>
-        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
+        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.CreatePool(System.String,System.Type,UnityEngine.GameObject)">
             <summary>
-            尝试创建游戏对象池
+            创建游戏对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
             <param name="original">原始预制体</param>
-            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">当已存在同名同类型的池时抛出</exception>
         </member>
-        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.TryGetPool(System.String,System.Type)">
+        <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.GetPool(System.String,System.Type)">
             <summary>
-            尝试获取指定名称和类型的游戏对象池
+            获取指定名称和类型的游戏对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
-            <returns></returns>
+            <returns>找到的对象池</returns>
+            <exception cref="T:System.InvalidOperationException">当找不到指定的对象池时抛出</exception>
         </member>
         <member name="M:EasyFramework.ToolKit.GameObjectPoolManager.CreateUnityObjectPool(System.String,System.Type,UnityEngine.GameObject)">
             <summary>
@@ -170,35 +171,45 @@
             <param name="original">原始预制体</param>
             <returns></returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.IGameObjectPoolManager.TryCreatePool(System.String,System.Type,UnityEngine.GameObject)">
+        <member name="M:EasyFramework.ToolKit.IGameObjectPoolManager.CreatePool(System.String,System.Type,UnityEngine.GameObject)">
             <summary>
-            尝试创建对象池。
+            创建对象池
             </summary>
-            <param name="poolName"></param>
-            <param name="objectType"></param>
-            <param name="original"></param>
-            <returns> true 表示创建成功；false 表示已存在同名同类型的池。</returns>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <param name="original">用于实例化的原始游戏对象</param>
+            <exception cref="T:System.InvalidOperationException">当已存在同名同类型的池时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IGameObjectPoolManager.GetPool(System.String,System.Type)">
+            <summary>
+            获取指定名称和类型的对象池
+            </summary>
+            <param name="poolName">对象池名称</param>
+            <param name="objectType">对象池中存储的对象类型</param>
+            <returns>找到的对象池</returns>
+            <exception cref="T:System.InvalidOperationException">当找不到指定的对象池时抛出</exception>
         </member>
         <member name="T:EasyFramework.ToolKit.IObjectPoolManager">
             <summary>
             对象池管理器接口，负责管理多个对象池的创建和访问
             </summary>
         </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.TryCreatePool(System.String,System.Type)">
+        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.CreatePool(System.String,System.Type)">
             <summary>
-            尝试创建对象池
+            创建对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
-            <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
+            <exception cref="T:System.InvalidOperationException">当已存在同名同类型的池时抛出</exception>
         </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.TryGetPool(System.String,System.Type)">
+        <member name="M:EasyFramework.ToolKit.IObjectPoolManager.GetPool(System.String,System.Type)">
             <summary>
-            尝试获取指定名称和类型的对象池
+            获取指定名称和类型的对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
-            <returns>找到的对象池，如果不存在则返回null</returns>
+            <returns>找到的对象池</returns>
+            <exception cref="T:System.InvalidOperationException">当找不到指定的对象池时抛出</exception>
         </member>
         <member name="T:EasyFramework.ToolKit.ObjectPoolManager">
             <summary>
@@ -213,21 +224,22 @@
             当value为null、是抽象类或接口、没有继承自IObjectPool时抛出
             </exception>
         </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.TryCreatePool(System.String,System.Type)">
+        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.CreatePool(System.String,System.Type)">
             <summary>
-            尝试创建对象池
+            创建对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
-            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">当已存在同名同类型的池时抛出</exception>
         </member>
-        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.TryGetPool(System.String,System.Type)">
+        <member name="M:EasyFramework.ToolKit.ObjectPoolManager.GetPool(System.String,System.Type)">
             <summary>
-            尝试获取指定名称和类型的对象池
+            获取指定名称和类型的对象池
             </summary>
             <param name="poolName">对象池名称</param>
             <param name="objectType">对象池中存储的对象类型</param>
-            <returns></returns>
+            <returns>找到的对象池</returns>
+            <exception cref="T:System.InvalidOperationException">当找不到指定的对象池时抛出</exception>
         </member>
         <member name="M:EasyFramework.ToolKit.ObjectPoolManager.CreateObjectPool(System.String,System.Type)">
             <summary>
@@ -429,6 +441,30 @@
             对象池的容量上限
             </summary>
         </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPool.Release(System.Object)">
+            <summary>
+            将对象实例释放回对象池
+            </summary>
+            <param name="instance">要释放的对象实例</param>
+            <returns>
+            如果对象成功释放回对象池，则返回true；
+            如果对象已经处于空闲状态或不属于此对象池，则返回false
+            </returns>
+            <exception cref="T:System.ArgumentNullException">当实例为null时抛出</exception>
+            <exception cref="T:System.InvalidOperationException">当因其他原因无法释放对象时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.IObjectPool.Remove(System.Object)">
+            <summary>
+            从对象池中移除对象实例
+            </summary>
+            <param name="instance">要移除的对象实例</param>
+            <returns>
+            如果对象成功从对象池中移除，则返回true；
+            如果对象已经不在对象池中，则返回false
+            </returns>
+            <exception cref="T:System.ArgumentNullException">当实例为null时抛出</exception>
+            <exception cref="T:System.InvalidOperationException">当因其他原因无法移除对象时抛出</exception>
+        </member>
         <member name="T:EasyFramework.ToolKit.IObjectPoolExtension">
             <summary>
             对象池扩展方法类，提供了一系列便捷的对象池操作方法
@@ -461,30 +497,14 @@
             <param name="newCapacity">新的容量值</param>
             <returns>对象池实例，支持链式调用</returns>
         </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.TryRent``1(EasyFramework.ToolKit.IObjectPool)">
+        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.Rent``1(EasyFramework.ToolKit.IObjectPool)">
             <summary>
-            尝试从对象池中获取指定类型的对象
+            从对象池中获取指定类型的对象
             </summary>
             <typeparam name="T">期望的对象类型</typeparam>
             <param name="objectPool">目标对象池</param>
             <returns>获取到的对象</returns>
             <exception cref="T:System.ArgumentException">当期望的类型与对象池中的对象类型不兼容时抛出</exception>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.Release(EasyFramework.ToolKit.IObjectPool,System.Object)">
-            <summary>
-            从对象池中释放一个实例。如果释放失败，则抛出异常。
-            </summary>
-            <param name="objectPool">目标对象池</param>
-            <param name="instance">需要被释放的实例</param>
-            <exception cref="T:System.InvalidOperationException">当释放失败时抛出</exception>
-        </member>
-        <member name="M:EasyFramework.ToolKit.IObjectPoolExtension.Remove(EasyFramework.ToolKit.IObjectPool,System.Object)">
-            <summary>
-            从对象池中移除一个实例。如果移除失败，则抛出异常。
-            </summary>
-            <param name="objectPool">目标对象池</param>
-            <param name="instance">需要被移除的实例</param>
-            <exception cref="T:System.InvalidOperationException">当移除失败时抛出</exception>
         </member>
         <member name="T:EasyFramework.ToolKit.ObjectPool">
             <summary>
@@ -517,6 +537,29 @@
             <para>对象池的容量上限。设置小于0表示无限制</para>
             <para>当设置新的容量时，如果新容量小于当前活跃对象数量，将抛出异常。</para>
             </summary>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.RentFromIdle">
+            <summary>
+            从空闲对象池中获取一个对象实例
+            </summary>
+            <returns>获取到的对象实例</returns>
+            <exception cref="T:System.InvalidOperationException">当无法获取对象实例时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.ReleaseToIdle(System.Object)">
+            <summary>
+            将对象实例释放回空闲对象池
+            </summary>
+            <param name="instance">要释放的对象实例</param>
+            <returns>如果对象成功释放，则返回true；如果对象已经在空闲池中或不属于此对象池，则返回false</returns>
+            <exception cref="T:System.InvalidOperationException">当因其他原因无法释放对象时抛出</exception>
+        </member>
+        <member name="M:EasyFramework.ToolKit.ObjectPoolBase.RemoveFromActive(System.Object)">
+            <summary>
+            从活跃对象列表中移除对象实例
+            </summary>
+            <param name="instance">要移除的对象实例</param>
+            <returns>如果对象成功移除，则返回true；如果对象不在活跃列表中，则返回false</returns>
+            <exception cref="T:System.InvalidOperationException">当因其他原因无法移除对象时抛出</exception>
         </member>
         <member name="M:EasyFramework.ToolKit.ObjectPoolBase.ShrinkIdleObjectsToFitCapacity(System.Int32)">
             <summary>

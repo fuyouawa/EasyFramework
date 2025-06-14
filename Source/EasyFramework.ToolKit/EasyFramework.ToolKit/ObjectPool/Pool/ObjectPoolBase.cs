@@ -103,51 +103,73 @@ namespace EasyFramework.ToolKit
             _onRelease += callback;
         }
 
-        public object TryRent()
+        public object Rent()
         {
             if (_capacity >= 0)
             {
                 if (TotalCount >= _capacity && IdleCount == 0)
                 {
-                    return null;
+                    throw new InvalidOperationException($"No idle object could be rented from pool '{Name}' because the pool has reached its capacity limit.");
                 }
             }
 
-            var instance = TryRentFromIdle();
+            var instance = RentFromIdle();
+            
             OnRent(instance);
             _onRent?.Invoke(instance);
             return instance;
         }
 
-        public virtual bool TryRelease(object instance)
+        public bool Release(object instance)
         {
             if (instance == null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            if (!TryReleaseToIdle(instance))
+            var result = ReleaseToIdle(instance);
+            
+            if (result)
             {
-                return false;
+                OnRelease(instance);
+                _onRelease?.Invoke(instance);
             }
-            OnRelease(instance);
-            _onRelease?.Invoke(instance);
-            return true;
+            
+            return result;
         }
 
-        public bool TryRemove(object instance)
+        public bool Remove(object instance)
         {
             if (instance == null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            return TryRemoveFromActive(instance);
+            return RemoveFromActive(instance);
         }
 
-        protected abstract object TryRentFromIdle();
-        protected abstract bool TryReleaseToIdle(object instance);
-        protected abstract bool TryRemoveFromActive(object instance);
+        /// <summary>
+        /// 从空闲对象池中获取一个对象实例
+        /// </summary>
+        /// <returns>获取到的对象实例</returns>
+        /// <exception cref="InvalidOperationException">当无法获取对象实例时抛出</exception>
+        protected abstract object RentFromIdle();
+        
+        /// <summary>
+        /// 将对象实例释放回空闲对象池
+        /// </summary>
+        /// <param name="instance">要释放的对象实例</param>
+        /// <returns>如果对象成功释放，则返回true；如果对象已经在空闲池中或不属于此对象池，则返回false</returns>
+        /// <exception cref="InvalidOperationException">当因其他原因无法释放对象时抛出</exception>
+        protected abstract bool ReleaseToIdle(object instance);
+        
+        /// <summary>
+        /// 从活跃对象列表中移除对象实例
+        /// </summary>
+        /// <param name="instance">要移除的对象实例</param>
+        /// <returns>如果对象成功移除，则返回true；如果对象不在活跃列表中，则返回false</returns>
+        /// <exception cref="InvalidOperationException">当因其他原因无法移除对象时抛出</exception>
+        protected abstract bool RemoveFromActive(object instance);
 
         /// <summary>
         /// 根据容量限制收缩

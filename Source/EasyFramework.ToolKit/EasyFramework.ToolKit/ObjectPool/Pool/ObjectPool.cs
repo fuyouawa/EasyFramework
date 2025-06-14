@@ -19,7 +19,7 @@ namespace EasyFramework.ToolKit
         public override int ActiveCount => _activeInstances.Count;
         public override int IdleCount => _idleInstances.Count;
 
-        protected override object TryRentFromIdle()
+        protected override object RentFromIdle()
         {
             object instance;
             if (_idleInstances.Count > 0)
@@ -40,23 +40,23 @@ namespace EasyFramework.ToolKit
             return Activator.CreateInstance(ObjectType);
         }
 
-        protected override bool TryReleaseToIdle(object instance)
+        protected override bool ReleaseToIdle(object instance)
         {
             if (!CanRecycle(instance))
             {
-                return false;
+                throw new InvalidOperationException($"Instance type '{instance.GetType()}' does not match pool object type '{ObjectType}'.");
             }
 
             if (!_activeInstances.Remove(instance))
             {
-                return false;
+                return false; // 对象已经不在活跃列表中
             }
             
             _idleInstances.Push(instance);
             return true;
         }
 
-        protected override bool TryRemoveFromActive(object instance)
+        protected override bool RemoveFromActive(object instance)
         {
             return _activeInstances.Remove(instance);
         }

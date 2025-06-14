@@ -4,6 +4,16 @@
         <name>EasyFramework.UIKit</name>
     </assembly>
     <members>
+        <member name="M:EasyFramework.UIKit.IUIManagerExtension.IsValidPanelType(System.Type)">
+            <summary>
+            检查类型是否为有效的面板类型
+            </summary>
+        </member>
+        <member name="M:EasyFramework.UIKit.UIRoot.ResetRectTransform(UnityEngine.RectTransform)">
+            <summary>
+            将RectTransform重置为全屏UI元素的默认值
+            </summary>
+        </member>
         <member name="T:EasyFramework.UIKit.EasyToggleTransition">
             <summary>
             Display settings for when a toggle is activated or deactivated.

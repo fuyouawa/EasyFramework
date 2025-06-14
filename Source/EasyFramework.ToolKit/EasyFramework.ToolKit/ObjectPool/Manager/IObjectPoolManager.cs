@@ -8,19 +8,20 @@ namespace EasyFramework.ToolKit
     public interface IObjectPoolManager
     {
         /// <summary>
-        /// 尝试创建对象池
+        /// 创建对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>true 表示创建成功；false 表示已存在同名同类型的池</returns>
-        bool TryCreatePool(string poolName, Type objectType);
+        /// <exception cref="InvalidOperationException">当已存在同名同类型的池时抛出</exception>
+        void CreatePool(string poolName, Type objectType);
 
         /// <summary>
-        /// 尝试获取指定名称和类型的对象池
+        /// 获取指定名称和类型的对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns>找到的对象池，如果不存在则返回null</returns>
-        IObjectPool TryGetPool(string poolName, Type objectType);
+        /// <returns>找到的对象池</returns>
+        /// <exception cref="InvalidOperationException">当找不到指定的对象池时抛出</exception>
+        IObjectPool GetPool(string poolName, Type objectType);
     }
 }

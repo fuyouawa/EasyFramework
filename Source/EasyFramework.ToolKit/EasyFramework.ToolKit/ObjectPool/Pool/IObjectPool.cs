@@ -29,8 +29,30 @@ namespace EasyFramework.ToolKit
         internal void AddRentCallback(Action<object> callback);
         internal void AddReleaseCallback(Action<object> callback);
 
-        object TryRent();
-        bool TryRelease(object instance);
-        bool TryRemove(object instance);
+        object Rent();
+        
+        /// <summary>
+        /// 将对象实例释放回对象池
+        /// </summary>
+        /// <param name="instance">要释放的对象实例</param>
+        /// <returns>
+        /// 如果对象成功释放回对象池，则返回true；
+        /// 如果对象已经处于空闲状态或不属于此对象池，则返回false
+        /// </returns>
+        /// <exception cref="ArgumentNullException">当实例为null时抛出</exception>
+        /// <exception cref="InvalidOperationException">当因其他原因无法释放对象时抛出</exception>
+        bool Release(object instance);
+        
+        /// <summary>
+        /// 从对象池中移除对象实例
+        /// </summary>
+        /// <param name="instance">要移除的对象实例</param>
+        /// <returns>
+        /// 如果对象成功从对象池中移除，则返回true；
+        /// 如果对象已经不在对象池中，则返回false
+        /// </returns>
+        /// <exception cref="ArgumentNullException">当实例为null时抛出</exception>
+        /// <exception cref="InvalidOperationException">当因其他原因无法移除对象时抛出</exception>
+        bool Remove(object instance);
     }
 }

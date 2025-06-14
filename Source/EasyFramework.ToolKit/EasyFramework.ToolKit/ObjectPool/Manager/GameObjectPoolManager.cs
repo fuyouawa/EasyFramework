@@ -70,13 +70,13 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 尝试创建游戏对象池
+        /// 创建游戏对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
         /// <param name="original">原始预制体</param>
-        /// <returns></returns>
-        public bool TryCreatePool(string poolName, Type objectType, GameObject original)
+        /// <exception cref="InvalidOperationException">当已存在同名同类型的池时抛出</exception>
+        public void CreatePool(string poolName, Type objectType, GameObject original)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
             if (original == null) throw new ArgumentNullException(nameof(original));
@@ -85,7 +85,8 @@ namespace EasyFramework.ToolKit
 
             if (_pools.ContainsKey(key))
             {
-                return false;
+                throw new InvalidOperationException(
+                    $"Game object pool with name '{poolName}' and object type '{objectType}' already exists.");
             }
 
             var pool = CreateUnityObjectPool(poolName, objectType, original);
@@ -96,8 +97,6 @@ namespace EasyFramework.ToolKit
             pool.Transform = node.transform;
 
             _pools.Add(key, pool);
-
-            return true;
         }
 
         private string GetPoolNodeName(string poolName, Type objectType)
@@ -110,17 +109,23 @@ namespace EasyFramework.ToolKit
         }
 
         /// <summary>
-        /// 尝试获取指定名称和类型的游戏对象池
+        /// 获取指定名称和类型的游戏对象池
         /// </summary>
         /// <param name="poolName">对象池名称</param>
         /// <param name="objectType">对象池中存储的对象类型</param>
-        /// <returns></returns>
-        public IGameObjectPool TryGetPool(string poolName, Type objectType)
+        /// <returns>找到的对象池</returns>
+        /// <exception cref="InvalidOperationException">当找不到指定的对象池时抛出</exception>
+        public IGameObjectPool GetPool(string poolName, Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType));
 
-            _pools.TryGetValue((poolName, objectType), out var pool);
-            return pool;
+            if (_pools.TryGetValue((poolName, objectType), out var pool))
+            {
+                return pool;
+            }
+            
+            throw new InvalidOperationException(
+                $"Game object pool with name '{poolName}' and object type '{objectType}' does not exist.");
         }
 
         /// <summary>

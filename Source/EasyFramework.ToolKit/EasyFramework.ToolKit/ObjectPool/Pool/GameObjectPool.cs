@@ -143,7 +143,7 @@ namespace EasyFramework.ToolKit
         private readonly List<PooledGameObject> _idleInstances = new List<PooledGameObject>();
 
 
-        protected override object TryRentFromIdle()
+        protected override object RentFromIdle()
         {
             PooledGameObject instance;
             if (_idleInstances.Count > 0)
@@ -179,10 +179,14 @@ namespace EasyFramework.ToolKit
             return instance.TargetComponent;
         }
 
-        protected override bool TryReleaseToIdle(object instance)
+        protected override bool ReleaseToIdle(object instance)
         {
             var gameObject = GetGameObject(instance);
-            var o = _activeInstanceDict[gameObject];
+            
+            if (!_activeInstanceDict.TryGetValue(gameObject, out var o))
+            {
+                return false; // 对象已经不在活跃列表中
+            }
 
             o.State = PooledUnityObjectState.Idle;
             o.ElapsedTime = 0;
@@ -198,11 +202,11 @@ namespace EasyFramework.ToolKit
                     receiver.OnRelease(this);
                 }
             }
-
+            
             return true;
         }
 
-        protected override bool TryRemoveFromActive(object instance)
+        protected override bool RemoveFromActive(object instance)
         {
             var gameObject = GetGameObject(instance);
             return _activeInstanceDict.Remove(gameObject);
@@ -327,11 +331,8 @@ namespace EasyFramework.ToolKit
             {
                 foreach (var data in _pendingRecycleInstances)
                 {
-                    if (!TryRelease(data.Target))
-                    {
-                        throw new InvalidOperationException(
-                            $"Failed to recycle the specified instance back to pool '{Name}'.");
-                    }
+                    // Simply call Release, we don't need to care about the return value here
+                    Release(data.Target);
                 }
 
                 _pendingRecycleInstances.Clear();

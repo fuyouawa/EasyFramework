@@ -35,23 +35,22 @@ namespace EasyFramework.UIKit
                 {
                     PanelLevel = UILevel.Lowest;
                 }
-
-                if (PanelOrder < (int)UILevel.Common)
+                else if (PanelOrder < (int)UILevel.Common)
                 {
                     PanelLevel = UILevel.Background;
                 }
-
-                if (PanelOrder < (int)UILevel.PopUI)
+                else if (PanelOrder < (int)UILevel.PopUI)
                 {
                     PanelLevel = UILevel.Common;
                 }
-
-                if (PanelOrder < (int)UILevel.Topest)
+                else if (PanelOrder < (int)UILevel.Topest)
                 {
                     PanelLevel = UILevel.PopUI;
                 }
-
-                PanelLevel = UILevel.Topest;
+                else
+                {
+                    PanelLevel = UILevel.Topest;
+                }
             }
         }
 
