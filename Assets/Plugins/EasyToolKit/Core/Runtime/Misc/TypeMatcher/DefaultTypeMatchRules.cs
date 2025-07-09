@@ -1,4 +1,5 @@
 using System;
+using EasyToolKit.Core.Internal.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Core
 {
@@ -31,7 +32,7 @@ namespace EasyToolKit.Core
             if (matchArgs.Length != matchTargetArgs.Length || matchArgs.Length != targetArgs.Length) return null;
 
             if (!matchIndex.Type.AreGenericConstraintsSatisfiedBy(targetArgs)) return null;
-
+            
             return matchIndex.Type.MakeGenericType(targetArgs);
         }
 
@@ -98,7 +99,7 @@ namespace EasyToolKit.Core
 
             Type[] inferredArgs;
 
-            if (matchIndex.Type.TryInferGenericArguments(out inferredArgs, inferTargets))
+            if (matchIndex.Type.TryInferGenericParameters(out inferredArgs, inferTargets))
             {
                 return matchIndex.Type.GetGenericTypeDefinition().MakeGenericType(inferredArgs);
             }

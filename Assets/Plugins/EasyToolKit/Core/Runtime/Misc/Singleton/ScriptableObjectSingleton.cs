@@ -27,17 +27,13 @@ namespace EasyToolKit.Core
                 }
             }
 
-            if (Application.isEditor)
-            {
-                return GetScriptableObjectInEditor<T>(assetDirectory, assetName);
-            }
-            else
-            {
-                return InternalGetScriptableObject<T>(assetDirectory, assetName);
-            }
+#if UNITY_EDITOR
+            return GetScriptableObjectEditorImpl<T>(assetDirectory, assetName);
+#endif
+            return GetScriptableObjectImpl<T>(assetDirectory, assetName);
         }
 
-        private static T InternalGetScriptableObject<T>(string assetDirectory, string assetName)
+        private static T GetScriptableObjectImpl<T>(string assetDirectory, string assetName)
             where T : ScriptableObject, IUnitySingleton
         {
             string resourcesPath = assetDirectory;
@@ -62,15 +58,16 @@ namespace EasyToolKit.Core
 
             return instance;
         }
-
+        
+#if UNITY_EDITOR
         private static MethodInfo _getScriptableObjectSingletonInEditorMethod;
 
-        private static T GetScriptableObjectInEditor<T>(string assetDirectory, string assetName)
+        private static T GetScriptableObjectEditorImpl<T>(string assetDirectory, string assetName)
             where T : ScriptableObject, IUnitySingleton
         {
             if (_getScriptableObjectSingletonInEditorMethod == null)
             {
-                var type = Type.GetType("EasyFramework.Editor.EditorSingletonCreator, EasyFramework.Editor")!;
+                var type = AssemblyUtility.GetTypeByFullName("EasyToolKit.Core.Editor.EditorSingletonCreator")!;
                 _getScriptableObjectSingletonInEditorMethod =
                     type.GetMethod("GetScriptableObject", BindingFlags.Static | BindingFlags.Public)!;
             }
@@ -78,6 +75,7 @@ namespace EasyToolKit.Core
             var m = _getScriptableObjectSingletonInEditorMethod.MakeGenericMethod(typeof(T));
             return (T)m.Invoke(null, new object[] { assetDirectory, assetName });
         }
+#endif
     }
 
     [AttributeUsage(AttributeTargets.Class)]

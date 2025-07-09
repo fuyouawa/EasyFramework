@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class EasyEditor : MonoBehaviour
+namespace EasyToolKit.Inspector.Editor
 {
-    // Start is called before the first frame update
-    void Start()
+    [InitializeOnLoad]
+    [CanEditMultipleObjects]
+    public class EasyEditor : UnityEditor.Editor
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+        }
     }
 }
