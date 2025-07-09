@@ -1,9 +1,0 @@
-[submodule "Source/EasyFramework.Native/third_party/cereal"]
-	path = Source/EasyFramework.Native/third_party/cereal
-	url = git@github.com:fuyouawa/cereal.git
-[submodule "Source/EasyFramework.Native/third_party/cppcodec"]
-	path = Source/EasyFramework.Native/third_party/cppcodec
-	url = git@github.com:tplgy/cppcodec.git
-[submodule "Source/EasyFramework.Native/third_party/inja"]
-	path = Source/EasyFramework.Native/third_party/inja
-	url = git@github.com:pantor/inja.git

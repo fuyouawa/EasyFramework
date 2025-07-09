@@ -1,0 +1,3 @@
+<linker>
+       <assembly fullname="EasyToolKit.Core.Internal.OdinSerializer" preserve="all"/>
+</linker>
