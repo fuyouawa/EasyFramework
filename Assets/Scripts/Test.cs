@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            InspectorConfig.Instance.UpdateOdinEditors();
+            InspectorConfig.Instance.UpdateEditors();
         }
     }
 }

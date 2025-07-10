@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: InspectorConfig
   m_EditorClassIdentifier: 
   defaultEditorBehaviour: 11
-  _enableEasyInspector: 0
+  _enableEasyInspector: 1

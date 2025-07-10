@@ -26,36 +26,36 @@ namespace EasyToolKit.Framework
 
         void ICanSetArchitecture.SetArchitecture(IArchitecture architecture) => _arch = architecture;
 
-        public bool IsInitialized { get; protected set; }
+        public bool Initialized { get; protected set; }
 
         private bool _isDoing = false;
 
         async UniTask ICanInitializeAsync.InitializeAsync()
         {
-            if (IsInitialized || _isDoing)
+            if (Initialized || _isDoing)
                 return;
 
             _isDoing = true;
-            await OnInitAsync();
+            await OnInitializeAsync();
             _isDoing = false;
 
-            IsInitialized = true;
+            Initialized = true;
         }
 
         async UniTask ICanInitializeAsync.DeinitializeAsync()
         {
-            if (!IsInitialized || _isDoing)
+            if (!Initialized || _isDoing)
                 return;
 
             _isDoing = true;
-            await OnDeinitAsync();
+            await OnDeinitializeAsync();
             _isDoing = false;
             
             _arch = null;
-            IsInitialized = false;
+            Initialized = false;
         }
 
-        protected virtual UniTask OnInitAsync() => UniTask.CompletedTask;
-        protected virtual UniTask OnDeinitAsync() => UniTask.CompletedTask;
+        protected virtual UniTask OnInitializeAsync() => UniTask.CompletedTask;
+        protected virtual UniTask OnDeinitializeAsync() => UniTask.CompletedTask;
     }
 }

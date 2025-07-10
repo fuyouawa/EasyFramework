@@ -50,18 +50,18 @@ namespace EasyToolKit.Framework
                 return;
 
             State = ArchitectureState.Initializing;
-            await OnInitAsync();
+            await OnInitializeAsync();
 
             var tasks = new List<UniTask>();
             foreach (var model in _container.ResolveAll<IModel>())
             {
-                Assert.False(model.IsInitialized);
+                Assert.False(model.Initialized);
                 tasks.Add(model.InitializeAsync());
             }
 
             foreach (var system in _container.ResolveAll<ISystem>())
             {
-                Assert.False(system.IsInitialized);
+                Assert.False(system.Initialized);
                 tasks.Add(system.InitializeAsync());
             }
 
@@ -76,15 +76,15 @@ namespace EasyToolKit.Framework
                 return;
 
             State = ArchitectureState.Deinitializing;
-            await OnDeinitAsync();
+            await OnDeinitializeAsync();
 
             var tasks = new List<UniTask>();
-            foreach (var system in _container.ResolveAll<ISystem>().Where(s => s.IsInitialized))
+            foreach (var system in _container.ResolveAll<ISystem>().Where(s => s.Initialized))
             {
                 tasks.Add(system.DeinitializeAsync());
             }
 
-            foreach (var model in _container.ResolveAll<IModel>().Where(m => m.IsInitialized))
+            foreach (var model in _container.ResolveAll<IModel>().Where(m => m.Initialized))
             {
                 tasks.Add(model.DeinitializeAsync());
             }
@@ -95,9 +95,9 @@ namespace EasyToolKit.Framework
         }
 
 
-        protected abstract UniTask OnInitAsync();
+        protected abstract UniTask OnInitializeAsync();
 
-        protected virtual UniTask OnDeinitAsync() => UniTask.CompletedTask;
+        protected virtual UniTask OnDeinitializeAsync() => UniTask.CompletedTask;
         
         /// <inheritdoc />
         public void RegisterSystem<TSystem>(TSystem system) where TSystem : ISystem

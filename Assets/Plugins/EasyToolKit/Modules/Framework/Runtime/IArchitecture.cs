@@ -11,7 +11,7 @@ namespace EasyToolKit.Framework
 
     public interface ICanInitializeAsync
     {
-        bool IsInitialized { get; }
+        bool Initialized { get; }
         UniTask InitializeAsync();
         UniTask DeinitializeAsync();
     }
