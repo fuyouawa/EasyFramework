@@ -73,7 +73,7 @@ namespace EasyToolKit.Inspector.Editor
         /// <returns>如果指定的对象等于当前对象，则为true，否则为false</returns>
         public override bool Equals(object obj)
         {
-            return obj != null && obj is TypeEditorPair && this.Equals((TypeEditorPair)obj);
+            return obj is TypeEditorPair pair && this.Equals(pair);
         }
 
         /// <summary>
