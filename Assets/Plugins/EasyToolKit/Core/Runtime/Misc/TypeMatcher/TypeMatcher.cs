@@ -6,9 +6,9 @@ namespace EasyToolKit.Core
 {
     public class TypeMatchIndex
     {
-        public Type Type { get; }
-        public int Priority { get; }
-        public Type[] Targets { get; }
+        public Type Type { get; set; }
+        public int Priority { get; set; }
+        public Type[] Targets { get; set; }
 
         public TypeMatchIndex(Type type, int priority, Type[] targets)
         {

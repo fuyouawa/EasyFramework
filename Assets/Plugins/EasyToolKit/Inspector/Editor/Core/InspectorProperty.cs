@@ -90,9 +90,11 @@ namespace EasyToolKit.Inspector.Editor
         public void Draw(GUIContent label)
         {
             var chain = GetDrawerChain();
-            foreach (var drawer in chain)
+            chain.Reset();
+
+            if (chain.MoveNext())
             {
-                drawer.Draw(label);
+                chain.Current.DrawProperty(label);
             }
         }
     }

@@ -5,10 +5,10 @@ namespace EasyToolKit.Inspector.Editor
 {
     internal static class CustomEditorLoader
     {
-        [DidReloadScripts]
+        // [DidReloadScripts]
         static CustomEditorLoader()
         {
-            InspectorConfig.Instance.UpdateEditors();
+            // InspectorConfig.Instance.UpdateEditors();
         }
     }
 }

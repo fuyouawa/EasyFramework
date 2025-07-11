@@ -5,28 +5,27 @@ using System.Linq;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class DrawerChain : IReadOnlyList<EasyDrawer>
+    public abstract class DrawerChain : IEnumerator<EasyDrawer>, IEnumerable<EasyDrawer>
     {
-        private readonly List<EasyDrawer> _chain;
+        public abstract EasyDrawer Current { get; }
+        public abstract bool MoveNext();
+        public abstract void Reset();
 
-        public InspectorProperty Property { get; private set; }
-        public int Count => _chain.Count;
-        public EasyDrawer this[int index] => _chain[index];
-
-        public DrawerChain(InspectorProperty property, IEnumerable<EasyDrawer> chain)
-        {
-            Property = property;
-            _chain = chain.ToList();
-        }
+        object IEnumerator.Current => Current;
 
         public IEnumerator<EasyDrawer> GetEnumerator()
         {
-            return _chain.GetEnumerator();
+            return this;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        void IDisposable.Dispose()
+        {
+            Reset();
         }
     }
 }
