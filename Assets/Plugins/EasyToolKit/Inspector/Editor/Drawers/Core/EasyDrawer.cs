@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public abstract class EasyValueDrawer
+    public abstract class EasyDrawer
     {
         private InspectorProperty _property;
         private bool _initialized;
@@ -27,16 +27,16 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        internal void DrawProperty(GUIContent label)
+        internal void Draw(GUIContent label)
         {
-            OnDrawProperty(label);
+            OnDraw(label);
         }
 
         protected virtual void OnInitialize()
         {
         }
 
-        protected virtual void OnDrawProperty(GUIContent label)
+        protected virtual void OnDraw(GUIContent label)
         {
         }
     }

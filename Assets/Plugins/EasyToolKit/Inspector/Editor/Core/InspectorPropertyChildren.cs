@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
@@ -10,9 +11,17 @@ namespace EasyToolKit.Inspector.Editor
         private InspectorProperty _property;
         private List<InspectorProperty> _children;
 
-        public int Count => _children.Count;
-        public InspectorProperty this[int index] => _children[index];
-        public InspectorProperty this[string name] => _children.Find(property => property.Name == name);
+        public int Count
+        {
+            get
+            {
+                EnsureInitializeChildren();
+                return _children.Count;
+            }
+        }
+
+        public InspectorProperty this[int index] => Get(index);
+        public InspectorProperty this[string name] => Get(name);
 
         internal InspectorPropertyChildren(InspectorProperty property)
         {
@@ -22,26 +31,80 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             _property = property;
+        }
 
-            _children = new List<InspectorProperty>();
-            var tempSerializedProperty = _property.SerializedProperty.Copy();
-            if (!tempSerializedProperty.NextVisible(true))
+        public InspectorProperty Get(int index)
+        {
+            EnsureInitializeChildren();
+
+            if (index < 0 || index > Count)
             {
-                return;
+                throw new IndexOutOfRangeException();
             }
+
+            var result = _children[index];
+            result.Update();
+            return result;
+        }
+
+        public InspectorProperty Get([NotNull] string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (Count == 0)
+                return null;
+
+            var index = _children.FindIndex(property => property.Name == name);
             
-            var parent = _property == _property.Tree.RootProperty ? null : _property;
-            int index = 0;
-            do
+            if (index >= 0 && index < Count)
             {
-                _children.Add(InspectorProperty.Create(_property.Tree, parent, GetInfo(tempSerializedProperty), index, false));
-                index++;
-            } while (tempSerializedProperty.NextVisible(false));
+                return Get(index);
+            }
+
+            return null;
+        }
+
+        internal void Update()
+        {
+        }
+
+        private void EnsureInitializeChildren()
+        {
+            if (_children == null)
+            {
+                _children = new List<InspectorProperty>();
+                var iterator = _property.Info.SerializedProperty.Copy();
+                if (!iterator.NextVisible(true))
+                {
+                    return;
+                }
+            
+                int index = 0;
+                do
+                {
+                    _children.Add(InspectorProperty.Create(_property.Tree, _property, GetInfo(iterator), index, false));
+                    index++;
+                } while (iterator.NextVisible(false));
+            }
         }
 
         private InspectorPropertyInfo GetInfo(SerializedProperty serializedProperty)
         {
-            return new InspectorPropertyInfo();
+            return InspectorPropertyInfo.CreateForUnityProperty(serializedProperty);
+        }
+
+        public IEnumerable<InspectorProperty> Recurse()
+        {
+            foreach (var child in this)
+            {
+                yield return child;
+
+                foreach (var subChild in child.Children.Recurse())
+                {
+                    yield return subChild;
+                }
+            }
         }
 
         public IEnumerator<InspectorProperty> GetEnumerator()

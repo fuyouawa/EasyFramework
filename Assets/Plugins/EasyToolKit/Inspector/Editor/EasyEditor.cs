@@ -18,11 +18,31 @@ namespace EasyToolKit.Inspector.Editor
         private static bool s_initialized = false;
         private static Type s_audioFilterGUIType;
 
+        private InspectorPropertyTree _propertyTree;
         private object _audioFilterGUIInstance;
+
+        public InspectorPropertyTree PropertyTree
+        {
+            get
+            {
+                if (_propertyTree == null)
+                {
+                    try
+                    {
+                        _propertyTree = InspectorPropertyTree.Create(serializedObject);
+                    }
+                    catch (ArgumentException)
+                    {
+                    }
+                }
+
+                return _propertyTree;
+            }
+        }
 
         public override void OnInspectorGUI()
         {
-            DrawEasyInspector();
+            DrawInspector();
         }
 
         protected virtual void OnEnable()
@@ -70,12 +90,24 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private bool DrawEasyInspector()
+        private void DrawInspector()
         {
-            bool res;
+            if (PropertyTree == null)
+            {
+                base.OnInspectorGUI();
+                return;
+            }
+
+            
+            if (Event.current.type == EventType.Layout)
+            {
+                PropertyTree.DrawMonoScriptObjectField = PropertyTree.SerializedObject != null &&
+                                                         PropertyTree.TargetType != null;
+            }
+
             using (new LocalizationGroup(target))
             {
-                res = DrawEasyInspectorImpl();
+                DrawTree();
 
                 if (s_hasReflectedAudioFilter && this.target is MonoBehaviour)
                 {
@@ -91,54 +123,11 @@ namespace EasyToolKit.Inspector.Editor
                     }
                 }
             }
-
-            return res;
         }
 
-        private bool DrawEasyInspectorImpl()
+        protected virtual void DrawTree()
         {
-            EditorGUI.BeginChangeCheck();
-            serializedObject.UpdateIfRequiredOrScript();
-
-            // Loop through properties and create one field (including children) for each top level property.
-            SerializedProperty property = serializedObject.GetIterator();
-            bool expanded = true;
-            while (property.NextVisible(expanded))
-            {
-                DrawProperty(property);
-                expanded = false;
-            }
-
-            serializedObject.ApplyModifiedProperties();
-
-            return EditorGUI.EndChangeCheck();
-        }
-
-        private void DrawProperty(SerializedProperty property)
-        {
-            using (new EditorGUI.DisabledScope("m_Script" == property.propertyPath))
-            {
-                EditorGUILayout.PropertyField(property, true);
-            }
-
-            if (property.propertyPath == "m_Script")
-            {
-                MonoScript monoScript = property.objectReferenceValue as MonoScript;
-
-                bool invalid = !(monoScript != null);
-
-                if (invalid)
-                {
-                    EditorGUILayout.HelpBox(
-                        "The associated script can not be loaded.\nPlease fix any compile errors\nand assign a valid script.",
-                        MessageType.Warning);
-                }
-
-                if (serializedObject.ApplyModifiedProperties())
-                {
-                    ActiveEditorTracker.sharedTracker.ForceRebuild();
-                }
-            }
+            PropertyTree.Draw();
         }
     }
 }

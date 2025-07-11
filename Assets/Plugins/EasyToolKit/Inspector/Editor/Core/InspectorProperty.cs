@@ -7,22 +7,18 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class InspectorProperty
     {
-        private SerializedProperty _serializedProperty;
-        private InspectorProperty _parent;
-        private InspectorPropertyChildren _children;
-        private InspectorPropertyTree _tree;
-        private InspectorPropertyInfo _info;
-        private int _index;
+        private DrawerChain _drawerChain;
 
-        public SerializedProperty SerializedProperty => _serializedProperty;
-        public InspectorProperty Parent => _parent;
-        public InspectorPropertyTree Tree => _tree;
-        public InspectorPropertyChildren Children => _children;
-        public InspectorPropertyInfo Info => _info;
-        public int Index => _index;
+        public InspectorProperty Parent { get; private set; }
+        public InspectorPropertyTree Tree { get; private set; }
+        public InspectorPropertyChildren Children { get; private set; }
+        public InspectorPropertyInfo Info { get; private set; }
+        public int Index { get; private set; }
 
-        public string Name => _serializedProperty.name;
-        public string DisplayName => _serializedProperty.displayName;
+        public string Name => Info.SerializedProperty.name;
+        public string DisplayName => Info.SerializedProperty.displayName;
+
+        public GUIContent Label { get; set; }
 
         internal static InspectorProperty Create(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info, int index, bool isRoot)
         {
@@ -49,26 +45,55 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
 
-            var property = new InspectorProperty();
-            property._tree = tree;
-            property._parent = parent;
-            property._info = info;
-            property._index = index;
-
-            if (!isRoot)
+            var property = new InspectorProperty
             {
-                property._children = new InspectorPropertyChildren(property);
-            }
+                Tree = tree,
+                Parent = parent,
+                Info = info,
+                Index = index
+            };
 
+            property.Label = new GUIContent(property.DisplayName);
+            
+            property.Children = new InspectorPropertyChildren(property);
             return property;
+        }
+
+        internal void Update()
+        {
+            Children.Update();
+        }
+
+        public void Refresh()
+        {
+            _drawerChain = null;
+        }
+
+        public DrawerChain GetDrawerChain()
+        {
+            if (_drawerChain == null)
+            {
+                _drawerChain = Tree.DrawerChainResolver.GetDrawerChain(this);
+                foreach (var drawer in _drawerChain)
+                {
+                    drawer.Initialize(this);
+                }
+            }
+            return _drawerChain;
         }
 
         public void Draw()
         {
+            Draw(Label);
         }
 
         public void Draw(GUIContent label)
         {
+            var chain = GetDrawerChain();
+            foreach (var drawer in chain)
+            {
+                drawer.Draw(label);
+            }
         }
     }
 }
