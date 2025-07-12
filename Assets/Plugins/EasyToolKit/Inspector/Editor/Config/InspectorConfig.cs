@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using EasyToolKit.ThirdParty.OdinSerializer;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -145,7 +146,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 var config = _configs[i];
 
-                Type drawnType = TypeConverter.FromName(config.DrawnTypeName);
+                Type drawnType = AssemblyUtility.GetTypeByFullName(config.DrawnTypeName);
 
                 if (drawnType == null)
                 {
@@ -160,7 +161,7 @@ namespace EasyToolKit.Inspector.Editor
                 }
                 else
                 {
-                    drawerType = TypeConverter.FromName(config.EditorTypeName);
+                    drawerType = AssemblyUtility.GetTypeByFullName(config.EditorTypeName);
 
                     if (drawerType == null)
                     {
@@ -220,16 +221,14 @@ namespace EasyToolKit.Inspector.Editor
                 throw new ArgumentNullException(nameof(drawnType));
             }
 
-            string drawnTypeName = TypeConverter.ToName(drawnType);
-            string editorTypeName = editorType == null ? string.Empty : TypeConverter.ToName(editorType);
+            string drawnTypeName = TwoWaySerializationBinder.Default.BindToName(drawnType);
+            string editorTypeName = editorType == null ? string.Empty : TwoWaySerializationBinder.Default.BindToName(editorType);
 
             if (editorType != null)
             {
                 if (!InspectorDrawingUtility.IsValidEditorBaseType(editorType, drawnType))
                 {
-                    throw new ArgumentException("The type " + editorType.GetNiceName() +
-                                                " is not a valid base editor for type " + drawnType.GetNiceName() +
-                                                ".");
+                    throw new ArgumentException($"Type '{editorType}' is not a valid base editor for type '{drawnType}'.");
                 }
             }
 

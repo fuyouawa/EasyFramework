@@ -1,0 +1,16 @@
+{
+    "name": "EasyToolKit.UIKit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1e4f85747155df3459a37be1ee31991d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

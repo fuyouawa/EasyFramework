@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Text;
 using System;
 using EasyToolKit.Core;
+using EasyToolKit.ThirdParty.OdinSerializer;
 
 namespace EasyToolKit.GameConsole
 {
@@ -84,7 +85,7 @@ namespace EasyToolKit.GameConsole
             }
             else
             {
-                arg = Serializer.DeserializeWeak(Encoding.UTF8.GetBytes(argText), DataFormat.Json);
+                arg = SerializationUtility.DeserializeValueWeak(Encoding.UTF8.GetBytes(argText), DataFormat.JSON);
             }
 
             call.Invoke(this, new object[] { arg });

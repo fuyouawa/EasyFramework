@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
 
 namespace EasyToolKit.Core
@@ -67,7 +68,7 @@ namespace EasyToolKit.Core
         {
             if (_getScriptableObjectSingletonInEditorMethod == null)
             {
-                var type = AssemblyUtility.GetTypeByFullName("EasyToolKit.Core.Editor.EditorSingletonCreator")!;
+                var type = TwoWaySerializationBinder.Default.BindToType("EasyToolKit.Core.Editor.EditorSingletonCreator")!;
                 _getScriptableObjectSingletonInEditorMethod =
                     type.GetMethod("GetScriptableObject", BindingFlags.Static | BindingFlags.Public)!;
             }

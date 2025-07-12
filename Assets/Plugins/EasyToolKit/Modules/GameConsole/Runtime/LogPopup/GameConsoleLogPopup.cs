@@ -16,9 +16,9 @@ namespace EasyToolKit.GameConsole
             _canvasGroup = GetComponent<CanvasGroup>();
 
             var console = GameConsoleManager.Instance;
-            console.InfoLogCount.OnValueChanged.Register(val => _infoCountText.text = val.ToString());
-            console.WarnLogCount.OnValueChanged.Register(val => _warnCountText.text = val.ToString());
-            console.ErrorLogCount.OnValueChanged.Register(val => _errorCountText.text = val.ToString());
+            console.InfoLogCount.OnValueChanged += val => _infoCountText.text = val.ToString();
+            console.WarnLogCount.OnValueChanged += val => _warnCountText.text = val.ToString();
+            console.ErrorLogCount.OnValueChanged += val => _errorCountText.text = val.ToString();
         }
 
         public void Show()

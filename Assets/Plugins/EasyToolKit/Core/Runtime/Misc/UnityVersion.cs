@@ -4,7 +4,7 @@ namespace EasyToolKit.Core
     {
         public static bool IsVersionOrGreater(int major, int minor)
         {
-            return Internal.OdinSerializer.Utilities.UnityVersion.IsVersionOrGreater(major, minor);
+            return ThirdParty.OdinSerializer.Utilities.UnityVersion.IsVersionOrGreater(major, minor);
         }
     }
 }

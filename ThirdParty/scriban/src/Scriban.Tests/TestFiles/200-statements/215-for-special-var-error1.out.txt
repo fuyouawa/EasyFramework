@@ -1,0 +1,1 @@
+text(4,5) : error : Cannot get the member for.index for a null object.

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using EasyToolKit.Core.Internal.OdinSerializer.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -44,8 +43,7 @@ namespace EasyToolKit.Core.Editor
                 return;
             CustomEditor customAttribute = CustomAttributeExtensions.GetCustomAttribute<CustomEditor>(editorType);
             if (customAttribute == null)
-                throw new ArgumentException("Editor type to set '" + editorType.GetNiceName() +
-                                            "' has no CustomEditor attribute applied! Use a SetCustomEditor overload that takes isFallbackEditor and isEditorForChildClasses parameters.");
+                throw new ArgumentException($"Editor type to set '{editorType}' has no CustomEditor attribute applied! Use a SetCustomEditor overload that takes isFallbackEditor and isEditorForChildClasses parameters.");
             CustomEditorUtility.SetCustomEditor(inspectedType, editorType, customAttribute.isFallback,
                 (bool)CustomEditorUtility.UniversalAPI.CustomEditor_EditorForChildClassesField.GetValue(
                     (object)customAttribute));
@@ -60,7 +58,7 @@ namespace EasyToolKit.Core.Editor
             if (!CustomEditorUtility.IsValid)
                 return;
             CustomEditorUtility.SetCustomEditor(inspectedType, editorType, isFallbackEditor, isEditorForChildClasses,
-                editorType.IsDefined<CanEditMultipleObjects>());
+                editorType.IsDefined(typeof(CanEditMultipleObjects)));
         }
 
         public static void SetCustomEditor(

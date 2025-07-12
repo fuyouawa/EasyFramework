@@ -2,6 +2,7 @@ using EasyToolKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -21,11 +22,11 @@ namespace EasyToolKit.Inspector.Editor
             TypeMatcher.SetTypeMatchIndices(types.Select(type =>
             {
                 var index = new TypeMatchIndex(type, 0, null);
-                if (type.IsImplementsOpenGenericType(typeof(EasyValueDrawer<>)))
+                if (type.ImplementsOpenGenericType(typeof(EasyValueDrawer<>)))
                 {
                     index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyValueDrawer<>));
                 }
-                else if (type.IsImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
+                else if (type.ImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
                 {
                     index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<>));
                 }

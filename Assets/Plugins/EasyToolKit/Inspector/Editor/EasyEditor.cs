@@ -1,8 +1,9 @@
 using System;
 using System.Reflection;
-using EasyToolKit.Core;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEditor;
 using UnityEngine;
+using UnityVersion = EasyToolKit.Core.UnityVersion;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -77,7 +78,7 @@ namespace EasyToolKit.Inspector.Editor
                             .GetMethod("GetCustomFilterChannelCount", BindingFlags.Public | BindingFlags.Static));
 
                     s_audioFilterGUIType = typeof(UnityEditor.Editor).Assembly.GetType("UnityEditor.AudioFilterGUI");
-                    s_drawAudioFilterGUI = EmitUtility.CreateWeakInstanceMethodCaller<MonoBehaviour>(
+                    s_drawAudioFilterGUI = EmitUtilities.CreateWeakInstanceMethodCaller<MonoBehaviour>(
                         s_audioFilterGUIType.GetMethod("DrawAudioFilterGUI",
                             BindingFlags.Public | BindingFlags.Instance));
                     s_hasReflectedAudioFilter = true;

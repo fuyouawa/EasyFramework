@@ -51,9 +51,9 @@ namespace EasyToolKit.GameConsole
 
             _sendCommandButton.onClick.AddListener(SendCommand);
 
-            _manager.InfoLogCount.OnValueChanged.Register(val => _infoCountText.text = val.ToString());
-            _manager.WarnLogCount.OnValueChanged.Register(val => _warnCountText.text = val.ToString());
-            _manager.ErrorLogCount.OnValueChanged.Register(val => _errorCountText.text = val.ToString());
+            _manager.InfoLogCount.OnValueChanged += val => _infoCountText.text = val.ToString();
+            _manager.WarnLogCount.OnValueChanged += val => _warnCountText.text = val.ToString();
+            _manager.ErrorLogCount.OnValueChanged += val => _errorCountText.text = val.ToString();
 
             _previousPageButton.onClick.AddListener(() => PrevPage());
             _nextPageButton.onClick.AddListener(() => NextPage());

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace EasyToolKit.Core
 {
     public interface IReadonlyBindableValue<T>
     {
         T Value { get; }
-        IEasyEvent<T> OnBeforeValueChange { get; }
-        IEasyEvent<T> OnValueChanged { get; }
+        event Action<T> OnBeforeValueChange;
+        event Action<T> OnValueChanged;
     }
 
     public interface IBindableValue<T> : IReadonlyBindableValue<T>
@@ -17,28 +19,25 @@ namespace EasyToolKit.Core
 
     public class BindableValue<T> : IBindableValue<T>
     {
+        private T _value;
+
         public BindableValue(T defaultValue = default)
         {
             _value = defaultValue;
         }
 
-        private T _value;
-
         public T Value => _value;
-        private readonly EasyEvent<T> _onBeforeValueChange = new EasyEvent<T>();
-        public IEasyEvent<T> OnBeforeValueChange => _onBeforeValueChange;
-
-        private readonly EasyEvent<T> _onValueChanged = new EasyEvent<T>();
-        public IEasyEvent<T> OnValueChanged => _onValueChanged;
+        public event Action<T> OnBeforeValueChange;
+        public event Action<T> OnValueChanged;
 
         public void SetValue(T value)
         {
             if (value == null && _value == null) return;
             if (value != null && EqualityComparer<T>.Default.Equals(_value, value)) return;
 
-            _onBeforeValueChange.Invoke(value);
+            OnBeforeValueChange?.Invoke(value);
             SetValueWithoutEvent(value);
-            _onValueChanged.Invoke(value);
+            OnValueChanged?.Invoke(value);
         }
 
         public void SetValueWithoutEvent(T value)

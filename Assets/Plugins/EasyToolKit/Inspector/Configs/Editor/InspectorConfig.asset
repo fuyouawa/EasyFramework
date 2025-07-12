@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d5e601baccf498439369cd1c0a1c4e1, type: 3}
   m_Name: InspectorConfig
   m_EditorClassIdentifier: 
-  defaultEditorBehaviour: 11
+  _defaultEditorTargets: 11
   _enableEasyInspector: 1

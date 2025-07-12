@@ -1,0 +1,3 @@
+text(4,18) : error : Unexpected token `}` while parsing expression
+text(4,18) : error : Invalid token found `}`. Expecting <EOL>/end of line.
+text(4,18) : error : Unexpected end of file while parsing a string not terminated by a "

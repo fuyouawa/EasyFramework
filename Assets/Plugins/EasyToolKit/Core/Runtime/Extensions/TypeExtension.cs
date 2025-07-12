@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
-using JetBrains.Annotations;
-using UnityEngine;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Core
 {
@@ -265,36 +263,6 @@ namespace EasyToolKit.Core
         public static bool HasInterface(this Type type, Type interfaceType)
         {
             return Array.Exists(type.GetInterfaces(), t => t == interfaceType);
-        }
-
-        public static string GetNiceName(this Type type)
-        {
-            return Internal.OdinSerializer.Utilities.TypeExtensions.GetNiceName(type);
-        }
-
-        public static bool IsImplementsOpenGenericType(this Type candidateType, Type openGenericType)
-        {
-            return Internal.OdinSerializer.Utilities.TypeExtensions.ImplementsOpenGenericType(candidateType, openGenericType);
-        }
-
-        public static bool AreGenericConstraintsSatisfiedBy(this Type genericType, params Type[] parameters)
-        {
-            return Internal.OdinSerializer.Utilities.TypeExtensions.AreGenericConstraintsSatisfiedBy(genericType,
-                parameters);
-        }
-
-        public static bool TryInferGenericParameters(
-            this System.Type genericTypeDefinition,
-            out System.Type[] inferredParams,
-            params System.Type[] knownParameters)
-        {
-            return Internal.OdinSerializer.Utilities.TypeExtensions.TryInferGenericParameters(genericTypeDefinition, out inferredParams, knownParameters);
-        }
-
-        public static Type[] GetArgumentsOfInheritedOpenGenericType(this Type candidateType, Type openGenericType)
-        {
-            return Internal.OdinSerializer.Utilities.TypeExtensions.GetArgumentsOfInheritedOpenGenericType(
-                candidateType, openGenericType);
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -5,11 +6,11 @@ namespace EasyToolKit.Core
 {
     public interface IReadOnlyBindableList<T> : IReadOnlyList<T>
     {
-        IEasyEvent<T> OnAddedElement { get; }
-        IEasyEvent<T> OnRemovedElement { get; }
-        IEasyEvent OnClearElements { get; }
+        event Action<T> OnAddedElement;
+        event Action<T> OnRemovedElement;
+        event Action OnClearElements;
 
-        IEasyEvent OnElementChanged { get; }
+        event Action OnElementChanged;
     }
 
     public interface IBindableList<T> : IReadOnlyBindableList<T>, IList<T>
@@ -18,17 +19,6 @@ namespace EasyToolKit.Core
 
     public class BindableList<T> : IBindableList<T>
     {
-        private readonly EasyEvent<T> _onAddedElement = new EasyEvent<T>();
-        public IEasyEvent<T> OnAddedElement => _onAddedElement;
-
-        private readonly EasyEvent<T> _onRemovedElement = new EasyEvent<T>();
-        public IEasyEvent<T> OnRemovedElement => _onRemovedElement;
-
-        private readonly EasyEvent _onClearElements = new EasyEvent();
-        public IEasyEvent OnClearElements => _onClearElements;
-
-        private readonly EasyEvent _onElementChanged = new EasyEvent();
-        public IEasyEvent OnElementChanged => _onElementChanged;
 
         private List<T> _list;
 
@@ -44,6 +34,11 @@ namespace EasyToolKit.Core
 
         public int Count => _list.Count;
 
+        public event Action<T> OnAddedElement;
+        public event Action<T> OnRemovedElement;
+        public event Action OnClearElements;
+        public event Action OnElementChanged;
+
         public IEnumerator<T> GetEnumerator()
         {
             return _list.GetEnumerator();
@@ -57,15 +52,15 @@ namespace EasyToolKit.Core
         public void Add(T item)
         {
             _list.Add(item);
-            _onAddedElement.Invoke(item);
-            _onElementChanged.Invoke();
+            OnAddedElement?.Invoke(item);
+            OnElementChanged?.Invoke();
         }
 
         public void Clear()
         {
             _list.Clear();
-            _onClearElements.Invoke();
-            _onElementChanged.Invoke();
+            OnClearElements?.Invoke();
+            OnElementChanged?.Invoke();
         }
 
         public bool Contains(T item)
@@ -83,8 +78,8 @@ namespace EasyToolKit.Core
             var suc = _list.Remove(item);
             if (suc)
             {
-                _onRemovedElement.Invoke(item);
-                _onElementChanged.Invoke();
+                OnRemovedElement?.Invoke(item);
+                OnElementChanged?.Invoke();
             }
             return suc;
         }
@@ -105,8 +100,8 @@ namespace EasyToolKit.Core
         {
             var item = _list[index];
             _list.RemoveAt(index);
-            _onRemovedElement.Invoke(item);
-            _onElementChanged.Invoke();
+            OnRemovedElement?.Invoke(item);
+            OnElementChanged?.Invoke();
         }
 
         public T this[int index]

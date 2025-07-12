@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using EasyToolKit.Core.Editor;
-using EasyToolKit.Inspector.Editor;
-using UnityEditor;
+using EasyToolKit.GameConsole;
+using EasyToolKit.Logging;
 using UnityEngine;
 
 [Serializable]
@@ -19,7 +16,10 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.UnityConsole()
+            .WriteTo.GameConsole()
+            .CreateLogger();
     }
 
     // Update is called once per frame
@@ -27,6 +27,7 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
+            Log.Info("asd");
         }
     }
 }

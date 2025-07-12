@@ -1,5 +1,6 @@
 using System;
 using EasyToolKit.Core;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
@@ -27,7 +28,7 @@ namespace EasyToolKit.Inspector.Editor
         public TypeEditorPair(Type drawnType)
         {
             this.DrawnTypeName = drawnType != null
-                ? TypeConverter.ToName(drawnType)
+                ? TwoWaySerializationBinder.Default.BindToName(drawnType)
                 : throw new ArgumentNullException(nameof(drawnType));
             this.EditorTypeName = string.Empty;
         }
@@ -42,7 +43,7 @@ namespace EasyToolKit.Inspector.Editor
             : this(drawnType)
         {
             this.EditorTypeName = editorType != null
-                ? TypeConverter.ToName(editorType)
+                ? TwoWaySerializationBinder.Default.BindToName(editorType)
                 : string.Empty;
         }
 
