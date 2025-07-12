@@ -2,7 +2,11 @@
     "name": "EasyToolKit.UIKit.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:1e4f85747155df3459a37be1ee31991d"
+        "GUID:1e4f85747155df3459a37be1ee31991d",
+        "GUID:c3fd9bfd17ebe344098f8c2b5cf0e761",
+        "GUID:115773bebdb5df34380f47e49a199777",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:44769f68f317d65439a703ff1b3fd2c9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
