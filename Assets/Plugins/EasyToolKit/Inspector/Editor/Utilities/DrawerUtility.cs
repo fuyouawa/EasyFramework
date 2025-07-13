@@ -76,7 +76,6 @@ namespace EasyToolKit.Inspector.Editor
 
             queries.Add(TypeMatcher.Match(Type.EmptyTypes));
 
-
         }
     }
 }

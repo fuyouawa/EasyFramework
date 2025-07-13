@@ -1,5 +1,6 @@
 using Codice.Client.BaseCommands.BranchExplorer;
 using System;
+using EasyToolKit.Core;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,9 +11,13 @@ namespace EasyToolKit.Inspector.Editor
         private DrawerChain _drawerChain;
 
         public InspectorProperty Parent { get; private set; }
-        public InspectorPropertyTree Tree { get; private set; }
-        public InspectorPropertyChildren Children { get; private set; }
-        public InspectorPropertyInfo Info { get; private set; }
+        public InspectorPropertyTree Tree { get; }
+        public InspectorPropertyChildren Children { get; }
+        public InspectorPropertyInfo Info { get; }
+        public IInspectorValueEntry ValueEntry { get; }
+
+        public string Path => Info.SerializedProperty.propertyPath;
+
         public int Index { get; private set; }
 
         public string Name => Info.SerializedProperty.name;
@@ -20,7 +25,8 @@ namespace EasyToolKit.Inspector.Editor
 
         public GUIContent Label { get; set; }
 
-        internal static InspectorProperty Create(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info, int index, bool isRoot)
+        internal InspectorProperty(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
+            int index)
         {
             if (tree == null)
             {
@@ -45,22 +51,20 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
 
-            var property = new InspectorProperty
-            {
-                Tree = tree,
-                Parent = parent,
-                Info = info,
-                Index = index
-            };
-
-            property.Label = new GUIContent(property.DisplayName);
+            Tree = tree;
+            Parent = parent;
+            Info = info;
+            Index = index;
             
-            property.Children = new InspectorPropertyChildren(property);
-            return property;
+            Label = new GUIContent(DisplayName);
+            Children = new InspectorPropertyChildren(this);
+            var entryType = typeof(InspectorValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
+            ValueEntry = (IInspectorValueEntry)entryType.CreateInstance();
         }
 
         internal void Update()
         {
+            ValueEntry.Update();
             Children.Update();
         }
 

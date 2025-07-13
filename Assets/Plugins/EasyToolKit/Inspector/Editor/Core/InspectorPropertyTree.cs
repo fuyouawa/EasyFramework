@@ -1,100 +1,116 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using EasyToolKit.Core;
+using EasyToolKit.Core.Editor;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public abstract class InspectorPropertyTree
+    public class InspectorPropertyTree
     {
-        public abstract SerializedObject SerializedObject { get; }
-        public abstract Type TargetType { get; }
-        public abstract IReadOnlyList WeakTargets { get; }
+        private readonly List<InspectorProperty> _rootProperties = new List<InspectorProperty>();
+        private DrawerChainResolver _drawerChainResolver;
+        private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
+        private Action _pendingCallbacks;
+        private Action _pendingCallbacksUntilRepaint;
+
+        public SerializedObject SerializedObject { get; }
+        public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
+        public Type TargetType => SerializedObject.targetObject.GetType();
 
         public bool DrawMonoScriptObjectField { get; set; }
 
-        public abstract IReadOnlyList<InspectorProperty> RootProperties { get; }
+        public IReadOnlyList<InspectorProperty> RootProperties => _rootProperties;
 
-        public abstract DrawerChainResolver DrawerChainResolver { get; set; }
+        public event Action<InspectorProperty, int> OnPropertyValueChanged;
 
-        public abstract IEnumerable<InspectorProperty> EnumerateTree(bool includeChildren);
 
-        public static InspectorPropertyTree Create([NotNull] SerializedObject serializedObject)
+        public InspectorPropertyTree([NotNull] SerializedObject serializedObject)
         {
             if (serializedObject == null)
                 throw new ArgumentNullException(nameof(serializedObject));
 
-            return Create(serializedObject.targetObjects, serializedObject);
+            SerializedObject = serializedObject;
+
+            var iterator = serializedObject.GetIterator();
+            if (!iterator.NextVisible(true))
+            {
+                return;
+            }
+
+            int index = 0;
+            do
+            {
+                if (iterator.propertyPath == "m_Script")
+                {
+                    continue;
+                }
+
+                var info = InspectorPropertyInfo.CreateForUnityProperty(iterator);
+                _rootProperties.Add(new InspectorProperty(this, null, info, index));
+                index++;
+            } while (iterator.NextVisible(false));
         }
 
-        public static InspectorPropertyTree Create([NotNull] IList targets, SerializedObject serializedObject)
+        public DrawerChainResolver DrawerChainResolver
         {
-            if (targets == null) throw new ArgumentNullException(nameof(targets));
-
-
-            if (serializedObject != null)
+            get
             {
-                bool valid = true;
-                var targetObjects = serializedObject.targetObjects;
-
-                if (targets.Count != targetObjects.Length)
+                if (_drawerChainResolver == null)
                 {
-                    valid = false;
+                    _drawerChainResolver = DefaultDrawerChainResolver.Instance;
                 }
-                else
+
+                return _drawerChainResolver;
+            }
+            set
+            {
+                if (!ReferenceEquals(_drawerChainResolver, value))
                 {
-                    for (int i = 0; i < targets.Count; i++)
+                    _drawerChainResolver = value;
+                    RefreshRootProperties();
+                }
+            }
+        }
+
+        public void RefreshRootProperties()
+        {
+            foreach (var property in RootProperties)
+            {
+                property.Refresh();
+            }
+        }
+
+        public IEnumerable<InspectorProperty> EnumerateTree(bool includeChildren)
+        {
+            foreach (var property in RootProperties)
+            {
+                yield return property;
+
+                if (includeChildren)
+                {
+                    foreach (var child in property.Children.Recurse())
                     {
-                        if (!object.ReferenceEquals(targets[i], targetObjects[i]))
-                        {
-                            valid = false;
-                            break;
-                        }
+                        yield return child;
                     }
                 }
-
-                if (!valid)
-                {
-                    throw new ArgumentException(); //TODO 异常信息
-                }
             }
+        }
 
+        public void SetPropertyDirty(InspectorProperty property)
+        {
+            _dirtyProperties.Add(property);
+        }
 
-            Type targetType = targets[0].GetType();
+        public void QueueCallback(Action action)
+        {
+            _pendingCallbacks += action;
+        }
 
-            for (int i = 1; i < targets.Count; i++)
-            {
-                object target = targets[i];
-
-                if (ReferenceEquals(target, null))
-                {
-                    throw new ArgumentException("Target at index " + i + " was null.");
-                }
-
-                Type otherType = target.GetType();
-                if (targetType != otherType)
-                {
-                    throw new ArgumentException(); //TODO 异常信息
-                }
-            }
-
-            var treeType = typeof(InspectorPropertyTree<>).MakeGenericType(targetType);
-
-            Array targetArray;
-            if (targets.GetType().IsArray && targets.GetType().GetElementType() == targetType)
-            {
-                targetArray = (Array)targets;
-            }
-            else
-            {
-                targetArray = Array.CreateInstance(targetType, targets.Count);
-                targets.CopyTo(targetArray, 0);
-            }
-
-            return (InspectorPropertyTree)Activator.CreateInstance(treeType, targetArray, serializedObject);
+        public void QueueCallbackUntilRepaint(Action action)
+        {
+            _pendingCallbacksUntilRepaint += action;
         }
 
         public void Draw()
@@ -152,115 +168,143 @@ namespace EasyToolKit.Inspector.Editor
 
         private void EndDraw()
         {
+            DoPendingCallbacks();
             SerializedObject.ApplyModifiedProperties();
         }
 
-        protected virtual void Update()
+        private void DoPendingCallbacks()
         {
+            if (_pendingCallbacks != null)
+            {
+                try
+                {
+                    _pendingCallbacks();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+
+                _pendingCallbacks = null;
+            }
+
+            if (_pendingCallbacksUntilRepaint != null)
+            {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    try
+                    {
+                        _pendingCallbacksUntilRepaint();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
+
+                    _pendingCallbacksUntilRepaint = null;
+                }
+            }
+        }
+
+        private void Update()
+        {
+            ApplyChanges();
             foreach (var property in RootProperties)
             {
                 property.Update();
             }
         }
-    }
 
-    public class InspectorPropertyTree<T> : InspectorPropertyTree
-    {
-        private readonly T[] _targets;
-        private readonly List<InspectorProperty> _rootProperties = new List<InspectorProperty>();
-        private DrawerChainResolver _drawerChainResolver;
 
-        public override SerializedObject SerializedObject { get; }
-        public override Type TargetType => typeof(T);
-
-        public override IReadOnlyList<InspectorProperty> RootProperties => _rootProperties;
-
-        public override DrawerChainResolver DrawerChainResolver
+        private void ApplyChanges()
         {
-            get
+            bool changed = false;
+            foreach (var property in _dirtyProperties)
             {
-                if (_drawerChainResolver == null)
+                if (property.ValueEntry != null)
                 {
-                    _drawerChainResolver = DefaultDrawerChainResolver.Instance;
+                    if (property.ValueEntry.ApplyChanges())
+                    {
+                        changed = true;
+                    }
                 }
-                return _drawerChainResolver;
             }
-            set
+
+            if (changed)
             {
-                if (!ReferenceEquals(_drawerChainResolver, value))
+                foreach (var targetObject in SerializedObject.targetObjects)
                 {
-                    _drawerChainResolver = value;
-                    RefreshRootProperties();
+                    EasyEditorUtility.SetUnityObjectDirty(targetObject);
+                }
+            }
+
+            _dirtyProperties.Clear();
+        }
+
+        internal void InvokePropertyValueChanged(InspectorProperty property, int index)
+        {
+            if (OnPropertyValueChanged != null)
+            {
+                try
+                {
+                    OnPropertyValueChanged(property, index);
+                }
+                catch (ExitGUIException)
+                {
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
                 }
             }
         }
 
-        public override IReadOnlyList WeakTargets => new ReadOnlyList(_targets);
-
-        public InspectorPropertyTree([NotNull] T[] targets, [NotNull] SerializedObject serializedObject)
+        public static InspectorPropertyTree Create([NotNull] SerializedObject serializedObject)
         {
-            if (targets == null)
-                throw new ArgumentNullException(nameof(targets));
-
-            if (targets.Length == 0)
-                throw new ArgumentException(); //TODO 异常信息
-
             if (serializedObject == null)
                 throw new ArgumentNullException(nameof(serializedObject));
 
-            for (int i = 0; i < targets.Length; i++)
+            return Create(serializedObject.targetObjects, serializedObject);
+        }
+
+        public static InspectorPropertyTree Create([NotNull] UnityEngine.Object[] targets,
+            SerializedObject serializedObject)
+        {
+            if (targets == null) throw new ArgumentNullException(nameof(targets));
+
+            if (serializedObject != null)
             {
-                if (object.ReferenceEquals(targets[i], null))
+                bool valid = true;
+                var targetObjects = serializedObject.targetObjects;
+
+                if (targets.Length != targetObjects.Length)
+                {
+                    valid = false;
+                }
+                else
+                {
+                    for (int i = 0; i < targets.Length; i++)
+                    {
+                        if (!object.ReferenceEquals(targets[i], targetObjects[i]))
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!valid)
                 {
                     throw new ArgumentException(); //TODO 异常信息
                 }
             }
-
-            SerializedObject = serializedObject;
-            _targets = targets;
-
-            var iterator = serializedObject.GetIterator();
-            if (!iterator.NextVisible(true))
+            else
             {
-                return;
+                serializedObject = new SerializedObject(targets);
             }
-            
-            int index = 0;
-            do
-            {
-                if (iterator.propertyPath == "m_Script")
-                {
-                    continue;
-                }
 
-                _rootProperties.Add(InspectorProperty.Create(this, null,
-                    InspectorPropertyInfo.CreateForUnityProperty(iterator), index, true));
-                index++;
-            } while (iterator.NextVisible(false));
-        }
-
-        public void RefreshRootProperties()
-        {
-            foreach (var property in RootProperties)
-            {
-                property.Refresh();
-            }
-        }
-
-        public override IEnumerable<InspectorProperty> EnumerateTree(bool includeChildren)
-        {
-            foreach (var property in RootProperties)
-            {
-                yield return property;
-
-                if (includeChildren)
-                {
-                    foreach (var child in property.Children.Recurse())
-                    {
-                        yield return child;
-                    }
-                }
-            }
+            return new InspectorPropertyTree(serializedObject);
         }
     }
 }

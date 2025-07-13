@@ -83,7 +83,7 @@ namespace EasyToolKit.Inspector.Editor
                 int index = 0;
                 do
                 {
-                    _children.Add(InspectorProperty.Create(_property.Tree, _property, GetInfo(iterator), index, false));
+                    _children.Add(new InspectorProperty(_property.Tree, _property, GetInfo(iterator), index));
                     index++;
                 } while (iterator.NextVisible(false));
             }

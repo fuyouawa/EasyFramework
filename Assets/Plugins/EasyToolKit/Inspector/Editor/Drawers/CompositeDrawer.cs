@@ -19,7 +19,6 @@ namespace EasyToolKit.Inspector.Editor
                 return;
             }
 
-            
             if (label == null)
             {
                 foreach (var child in Property.Children)

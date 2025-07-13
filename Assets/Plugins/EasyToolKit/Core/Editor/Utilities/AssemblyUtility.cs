@@ -6,20 +6,20 @@ using EasyToolKit.ThirdParty.OdinSerializer;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEditor;
 
-namespace EasyToolKit.Core
+namespace EasyToolKit.Core.Editor
 {
     [Flags]
     public enum AssemblyCategory
     {
         None = 0,
-        Scripts = 1,
-        ImportedAssemblies = 2,
-        UnityEngine = 4,
-        DotNetRuntime = 8,
-        DynamicAssemblies = 16, // 0x00000010
-        Unknown = 32, // 0x00000020
-        ProjectSpecific = ImportedAssemblies | Scripts, // 0x00000003
-        All = ProjectSpecific | Unknown | DynamicAssemblies | DotNetRuntime | UnityEngine, // 0x0000003F
+        Scripts = 1 << 1,
+        ImportedAssemblies = 1 << 2,
+        UnityEngine = 1 << 3,
+        DotNetRuntime = 1 << 4,
+        DynamicAssemblies = 1 << 5,
+        Unknown = 1 << 6,
+        ProjectSpecific = ImportedAssemblies | Scripts,
+        All = ProjectSpecific | Unknown | DynamicAssemblies | DotNetRuntime | UnityEngine,
     }
 
     [InitializeOnLoad]

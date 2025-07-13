@@ -6,7 +6,7 @@ namespace EasyToolKit.Core
     public interface IReadOnlyList : IEnumerable
     {
         int Count { get; }
-        object this[int index] { get; }
+        object this[int index] { get; set; }
     }
 
     public class ReadOnlyList : IReadOnlyList
@@ -25,6 +25,10 @@ namespace EasyToolKit.Core
 
         public int Count => _list.Count;
 
-        public object this[int index] => _list[index];
+        public object this[int index]
+        {
+            get => _list[index];
+            set => _list[index] = value;
+        }
     }
 }
