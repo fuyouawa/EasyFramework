@@ -11,10 +11,11 @@ namespace EasyToolKit.Inspector.Editor
 
     public class DrawerPriority : IEquatable<DrawerPriority>, IComparable<DrawerPriority>
     {
+        public static readonly DrawerPriority DefaultPriority = new DrawerPriority(0);
         public static readonly DrawerPriority ValuePriority = new DrawerPriority(1);
         public static readonly DrawerPriority AttributePriority = new DrawerPriority(1000);
 
-        public readonly double Value;
+        public readonly int Value;
 
         public DrawerPriority(DrawerPriorityLevel level)
         {
@@ -34,7 +35,7 @@ namespace EasyToolKit.Inspector.Editor
             Value = priority.Value;
         }
 
-        public DrawerPriority(double value)
+        public DrawerPriority(int value)
         {
             Value = value;
         }
@@ -44,7 +45,7 @@ namespace EasyToolKit.Inspector.Editor
             if (ReferenceEquals(left, right)) return true;
             if (ReferenceEquals(left, null) || ReferenceEquals(right, null)) return false;
 
-            return Mathf.Approximately((float)left.Value, (float)right.Value);
+            return left.Value == right.Value;
         }
 
         public static bool operator !=(DrawerPriority left, DrawerPriority right)

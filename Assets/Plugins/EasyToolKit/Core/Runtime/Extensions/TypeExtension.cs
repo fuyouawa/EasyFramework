@@ -55,22 +55,23 @@ namespace EasyToolKit.Core
         }
 
 
-        public static object CreateInstance(this Type type)
+        public static object CreateInstance(this Type type, params object[] args)
         {
             if (type == null)
                 return null;
 
             if (type == typeof(string))
                 return string.Empty;
-            return Activator.CreateInstance(type);
+            
+            return Activator.CreateInstance(type, args);
         }
 
 
-        public static T CreateInstance<T>(this Type type)
+        public static T CreateInstance<T>(this Type type, params object[] args)
         {
             if (!typeof(T).IsAssignableFrom(type))
                 throw new ArgumentException($"Generic type '{typeof(T)}' must be convertible by '{type}'");
-            return (T)CreateInstance(type);
+            return (T)CreateInstance(type, args);
         }
 
         public static T GetCustomAttribute<T>(this Type type) where T : Attribute

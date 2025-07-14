@@ -14,7 +14,7 @@ namespace EasyToolKit.Core
         {
             Type = type;
             Priority = priority;
-            Targets = targets;
+            Targets = targets ?? Type.EmptyTypes;
         }
     }
 
@@ -39,10 +39,12 @@ namespace EasyToolKit.Core
 
     public class TypeMatcher
     {
+        private static readonly Dictionary<int, TypeMatchResult[]> MergedResultsCache = new Dictionary<int, TypeMatchResult[]>();
+
         private List<TypeMatchIndex> _matchIndices;
         private readonly List<TypeMatchRule> _matchRules = new List<TypeMatchRule>();
 
-        private readonly Dictionary<Type[], TypeMatchResult[]> _matchResultsCacheByTargets = new Dictionary<Type[], TypeMatchResult[]>();
+        private readonly Dictionary<int, TypeMatchResult[]> _matchResultsCache = new Dictionary<int, TypeMatchResult[]>();
 
         public TypeMatcher(bool addDefaultMatchRules = true)
         {
@@ -78,12 +80,20 @@ namespace EasyToolKit.Core
 
         private void ClearCache()
         {
-            _matchResultsCacheByTargets.Clear();
+            _matchResultsCache.Clear();
+            MergedResultsCache.Clear();
         }
 
-        public TypeMatchResult[] Match(params Type[] targets)
+        public TypeMatchResult[] GetCachedMatches(params Type[] targets)
         {
-            if (_matchResultsCacheByTargets.TryGetValue(targets, out var ret))
+            var hash = new HashCode();
+            foreach (var target in targets)
+            {
+                hash.Add(target);
+            }
+            var hashCode = hash.ToHashCode();
+
+            if (_matchResultsCache.TryGetValue(hashCode, out var ret))
             {
                 return ret;
             }
@@ -110,8 +120,40 @@ namespace EasyToolKit.Core
             ret = results
                 .OrderByDescending(result => result.MatchIndex.Priority)
                 .ToArray();
-            _matchResultsCacheByTargets[targets] = ret;
+            _matchResultsCache[hashCode] = ret;
             return ret;
+        }
+
+        public static TypeMatchResult[] GetCachedMergedResults(IReadOnlyList<TypeMatchResult[]> resultsList)
+        {
+            if (resultsList.Count == 0)
+            {
+                return Array.Empty<TypeMatchResult>();
+            }
+
+            if (resultsList.Count == 1)
+            {
+                return resultsList[0];
+            }
+
+            var hash = new HashCode();
+            foreach (var value in resultsList)
+            {
+                hash.Add(value);
+            }
+            var hashCode = hash.ToHashCode();
+
+            if (MergedResultsCache.TryGetValue(hashCode, out var results))
+            {
+                return results;
+            }
+
+            results = resultsList
+                .SelectMany(x => x)
+                .OrderByDescending(result => result.MatchIndex.Priority)
+                .ToArray();
+            MergedResultsCache[hashCode] = results;
+            return results;
         }
 
         private void AddDefaultMatchRules()

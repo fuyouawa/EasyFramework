@@ -145,9 +145,12 @@ namespace EasyToolKit.Core.Editor
                 return p => (T)(object)p.objectReferenceValue;
             }
 
-            Delegate result;
-            PrimitiveValueGetters.TryGetValue(typeof(T), out result);
-            return (Func<SerializedProperty, T>)result;
+            if (PrimitiveValueGetters.TryGetValue(typeof(T), out var result))
+            {
+                return (Func<SerializedProperty, T>)result;
+            }
+
+            return property => (T)property.boxedValue;
         }
         
         public static Action<SerializedProperty, T> GetValueSetter<T>()
@@ -157,9 +160,12 @@ namespace EasyToolKit.Core.Editor
                 return (p, v) => p.objectReferenceValue = (UnityEngine.Object)(object)v;
             }
 
-            Delegate result;
-            PrimitiveValueSetters.TryGetValue(typeof(T), out result);
-            return (Action<SerializedProperty, T>)result;
+            if (PrimitiveValueSetters.TryGetValue(typeof(T), out var result))
+            {
+                return (Action<SerializedProperty, T>)result;
+            }
+
+            return (property, value) => property.boxedValue = value;
         }
     }
 }

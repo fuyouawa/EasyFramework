@@ -1,12 +1,19 @@
 using System;
 using EasyToolKit.GameConsole;
+using EasyToolKit.Inspector.Editor;
 using EasyToolKit.Logging;
+using MyNamespace;
+using UnityEditor;
 using UnityEngine;
 
-[Serializable]
-public class LL
+namespace MyNamespace
 {
-    public int jl;
+    [Serializable]
+
+    public class LL
+    {
+        public int jl;
+    }
 }
 
 public class Test : MonoBehaviour
@@ -30,4 +37,11 @@ public class Test : MonoBehaviour
             Log.Info("asd");
         }
     }
+}
+
+
+[CustomEditor(typeof(Test))]
+public class TestEditor : EasyEditor
+{
+
 }

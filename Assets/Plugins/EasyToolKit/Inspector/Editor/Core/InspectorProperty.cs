@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using EasyToolKit.Core;
 using JetBrains.Annotations;
+using UnityEditor;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
@@ -10,6 +11,8 @@ namespace EasyToolKit.Inspector.Editor
     {
         private DrawerChain _drawerChain;
         private Attribute[] _attributes;
+        private string _niceName;
+        private SerializedProperty _unitySerializedProperty;
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
@@ -20,12 +23,21 @@ namespace EasyToolKit.Inspector.Editor
         [CanBeNull]
         public IInspectorValueEntry ValueEntry { get; }
 
-        public string Path => Info.SerializedProperty.propertyPath;
-
         public int Index { get; private set; }
 
-        public string Name => Info.SerializedProperty.name;
-        public string DisplayName => Info.SerializedProperty.displayName;
+        public string Name => Info.PropertyName;
+
+        public string NiceName
+        {
+            get
+            {
+                if (_niceName == null)
+                {
+                    _niceName = ObjectNames.NicifyVariableName(Name);
+                }
+                return _niceName;
+            }
+        }
 
         public GUIContent Label { get; set; }
 
@@ -60,13 +72,13 @@ namespace EasyToolKit.Inspector.Editor
             Info = info;
             Index = index;
 
-            Label = new GUIContent(DisplayName);
+            Label = new GUIContent(NiceName);
             Children = new InspectorPropertyChildren(this);
 
             if (info.ValueAccessor != null)
             {
                 var entryType = typeof(InspectorValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
-                ValueEntry = (IInspectorValueEntry)entryType.CreateInstance();
+                ValueEntry = (IInspectorValueEntry)entryType.CreateInstance(this);
             }
         }
 
@@ -114,6 +126,27 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             return _attributes;
+        }
+
+        public T GetAttribute<T>()
+            where T : Attribute
+        {
+            foreach (var attribute in GetAttributes())
+            {
+                if (attribute is T attr)
+                {
+                    return attr;
+                }
+            }
+
+            return null;
+        }
+
+        public SerializedProperty TryGetUnitySerializedProperty()
+        {
+            _unitySerializedProperty ??= Tree.SerializedObject.FindProperty(Info.PropertyPath);
+
+            return _unitySerializedProperty?.Copy();
         }
 
         public void Draw()

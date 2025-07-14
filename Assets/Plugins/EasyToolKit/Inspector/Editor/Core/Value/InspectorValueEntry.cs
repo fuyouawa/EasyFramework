@@ -50,7 +50,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 foreach (var target in Property.Tree.Targets)
                 {
-                    Undo.RecordObject(target, $"Change {Property.Path} on {target.name}");
+                    Undo.RecordObject(target, $"Change {Property.Info.PropertyPath} on {target.name}");
                 }
 
                 changed = Values.ApplyChanges();

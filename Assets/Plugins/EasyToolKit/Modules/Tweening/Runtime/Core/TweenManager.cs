@@ -39,7 +39,7 @@ namespace EasyToolKit.Tweening
                 return tweenerType;
             }
 
-            var results = _tweenerProcessorTypeMatcher.Match(new[] { valueType, effectConfigType });
+            var results = _tweenerProcessorTypeMatcher.GetCachedMatches(new[] { valueType, effectConfigType });
             if (results.IsNotNullOrEmpty())
             {
                 tweenerType = results[0].MatchedType;

@@ -6,19 +6,12 @@ using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class InspectorPropertyChildren : IReadOnlyList<InspectorProperty>
+    public class InspectorPropertyChildren
     {
-        private InspectorProperty _property;
-        private List<InspectorProperty> _children;
-
-        public int Count
-        {
-            get
-            {
-                EnsureInitializeChildren();
-                return _children.Count;
-            }
-        }
+        private readonly InspectorProperty _property;
+        private readonly Dictionary<int, InspectorPropertyInfo> _childrenInfoByIndex;
+        private Dictionary<int, InspectorProperty> _childrenByIndex;
+        public int Count => _childrenInfoByIndex.Count;
 
         public InspectorProperty this[int index] => Get(index);
         public InspectorProperty this[string name] => Get(name);
@@ -31,20 +24,45 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             _property = property;
+            
+            _childrenInfoByIndex = new Dictionary<int, InspectorPropertyInfo>();
+            var iterator = _property.TryGetUnitySerializedProperty();
+            if (iterator == null)
+            {
+                //TODO 非unity object的情况
+                throw new NotImplementedException();
+            }
+
+            if (!iterator.NextVisible(true))
+            {
+                return;
+            }
+            
+            int index = 0;
+            do
+            {
+                _childrenInfoByIndex[index] =
+                    InspectorPropertyInfo.CreateForUnityProperty(iterator, _property.Info.PropertyType);
+                index++;
+            } while (iterator.NextVisible(false));
         }
 
         public InspectorProperty Get(int index)
         {
-            EnsureInitializeChildren();
-
             if (index < 0 || index > Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            var result = _children[index];
-            result.Update();
-            return result;
+            if (_childrenByIndex.TryGetValue(index, out var child))
+            {
+                return child;
+            }
+
+            child = new InspectorProperty(_property.Tree, _property, _childrenInfoByIndex[index], index);
+            _childrenByIndex[index] = child;
+            Update();
+            return child;
         }
 
         public InspectorProperty Get([NotNull] string name)
@@ -55,13 +73,14 @@ namespace EasyToolKit.Inspector.Editor
             if (Count == 0)
                 return null;
 
-            var index = _children.FindIndex(property => property.Name == name);
-            
-            if (index >= 0 && index < Count)
+            foreach (var kv in _childrenInfoByIndex)
             {
-                return Get(index);
+                if (kv.Value.PropertyName == name)
+                {
+                    return Get(kv.Key);
+                }
             }
-
+            
             return null;
         }
 
@@ -69,31 +88,11 @@ namespace EasyToolKit.Inspector.Editor
         {
         }
 
-        private void EnsureInitializeChildren()
-        {
-            if (_children == null)
-            {
-                _children = new List<InspectorProperty>();
-                var iterator = _property.Info.SerializedProperty.Copy();
-                if (!iterator.NextVisible(true))
-                {
-                    return;
-                }
-            
-                int index = 0;
-                do
-                {
-                    var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, _property.Info.PropertyType);
-                    _children.Add(new InspectorProperty(_property.Tree, _property, info, index));
-                    index++;
-                } while (iterator.NextVisible(false));
-            }
-        }
-
         public IEnumerable<InspectorProperty> Recurse()
         {
-            foreach (var child in this)
+            for (var i = 0; i < Count; i++)
             {
+                var child = this[i];
                 yield return child;
 
                 foreach (var subChild in child.Children.Recurse())
@@ -101,16 +100,6 @@ namespace EasyToolKit.Inspector.Editor
                     yield return subChild;
                 }
             }
-        }
-
-        public IEnumerator<InspectorProperty> GetEnumerator()
-        {
-            return _children.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }
