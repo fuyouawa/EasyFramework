@@ -4,21 +4,21 @@ using JetBrains.Annotations;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public abstract class DrawerChainResolver
+    public abstract class InspectorPropertyResolver
     {
         public InspectorProperty Property { get; private set; }
-
-        public static DrawerChainResolver Create([NotNull] Type resolverType, [NotNull] InspectorProperty property)
+        
+        public static InspectorPropertyResolver Create([NotNull] Type resolverType, [NotNull] InspectorProperty property)
         {
             if (resolverType == null) throw new ArgumentNullException(nameof(resolverType));
             if (property == null) throw new ArgumentNullException(nameof(property));
 
-            if (!typeof(DrawerChainResolver).IsAssignableFrom(resolverType))
+            if (!typeof(InspectorPropertyResolver).IsAssignableFrom(resolverType))
             {
                 throw new ArgumentException(nameof(resolverType));
             }
 
-            var resolver = resolverType.CreateInstance<DrawerChainResolver>();
+            var resolver = resolverType.CreateInstance<InspectorPropertyResolver>();
             resolver.Property = property;
             resolver.Initialize();
             return resolver;
@@ -26,6 +26,8 @@ namespace EasyToolKit.Inspector.Editor
 
         protected virtual void Initialize() {}
 
-        public abstract DrawerChain GetDrawerChain();
+        public abstract InspectorPropertyInfo GetChildInfo(int childIndex);
+        public abstract int ChildNameToIndex(string name);
+        public abstract int GetChildCount();
     }
 }

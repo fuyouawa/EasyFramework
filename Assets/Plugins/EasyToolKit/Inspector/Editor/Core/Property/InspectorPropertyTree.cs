@@ -11,12 +11,11 @@ namespace EasyToolKit.Inspector.Editor
     public class InspectorPropertyTree
     {
         private readonly List<InspectorProperty> _rootProperties = new List<InspectorProperty>();
-        private DrawerChainResolver _drawerChainResolver;
-        private InspectorAttributeAccessorsResolver _attributeAccessorsResolver;
         private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
 
+        public int UpdatedFrame { get; private set; }
         public SerializedObject SerializedObject { get; }
         public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
         public Type TargetType => SerializedObject.targetObject.GetType();
@@ -54,47 +53,6 @@ namespace EasyToolKit.Inspector.Editor
                 _rootProperties.Add(new InspectorProperty(this, null, info, index));
                 index++;
             } while (iterator.NextVisible(false));
-        }
-
-        public DrawerChainResolver DrawerChainResolver
-        {
-            get
-            {
-                if (_drawerChainResolver == null)
-                {
-                    _drawerChainResolver = DefaultDrawerChainResolver.Instance;
-                }
-
-                return _drawerChainResolver;
-            }
-            set
-            {
-                if (!ReferenceEquals(_drawerChainResolver, value))
-                {
-                    _drawerChainResolver = value;
-                    Refresh();
-                }
-            }
-        }
-
-        public InspectorAttributeAccessorsResolver AttributeAccessorsResolver
-        {
-            get
-            {
-                if (_attributeAccessorsResolver == null)
-                {
-                    _attributeAccessorsResolver = new DefaultInspectorAttributeAccessorsResolver();
-                }
-                return _attributeAccessorsResolver;
-            }
-            set
-            {
-                if (!ReferenceEquals(_attributeAccessorsResolver, value))
-                {
-                    _attributeAccessorsResolver = value;
-                    Refresh();
-                }
-            }
         }
 
         public void Refresh()
@@ -236,6 +194,8 @@ namespace EasyToolKit.Inspector.Editor
             {
                 property.Update();
             }
+
+            ++UpdatedFrame;
         }
 
 

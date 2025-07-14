@@ -12,13 +12,11 @@ namespace EasyToolKit.Inspector.Editor
         private DrawerChain _drawerChain;
         private Attribute[] _attributes;
         private string _niceName;
-        private SerializedProperty _unitySerializedProperty;
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
         public InspectorPropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
-
 
         [CanBeNull]
         public IInspectorValueEntry ValueEntry { get; }
@@ -40,6 +38,10 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         public GUIContent Label { get; set; }
+
+        public InspectorPropertyResolver PropertyResolver { get; private set; }
+        public DrawerChainResolver DrawerChainResolver { get; private set; }
+        public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
 
         internal InspectorProperty(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
             int index)
@@ -74,6 +76,9 @@ namespace EasyToolKit.Inspector.Editor
 
             Label = new GUIContent(NiceName);
             Children = new InspectorPropertyChildren(this);
+            ChangePropertyResolver(Info.DefaultPropertyResolverType);
+            ChangeDrawerChainResolver(Info.DefaultDrawerChainResolverType);
+            ChangeAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
 
             if (info.ValueAccessor != null)
             {
@@ -91,6 +96,24 @@ namespace EasyToolKit.Inspector.Editor
             Children.Update();
         }
 
+        public void ChangePropertyResolver(Type resolverType)
+        {
+            PropertyResolver = InspectorPropertyResolver.Create(resolverType, this);
+            Refresh();
+        }
+
+        public void ChangeDrawerChainResolver(Type resolverType)
+        {
+            DrawerChainResolver = DrawerChainResolver.Create(resolverType, this);
+            Refresh();
+        }
+
+        public void ChangeAttributeAccessorResolver(Type resolverType)
+        {
+            AttributeAccessorResolver = AttributeAccessorResolver.Create(resolverType, this);
+            Refresh();
+        }
+
         public void Refresh()
         {
             _drawerChain = null;
@@ -101,7 +124,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_drawerChain == null)
             {
-                _drawerChain = Tree.DrawerChainResolver.GetDrawerChain(this);
+                _drawerChain = DrawerChainResolver.GetDrawerChain();
                 foreach (var drawer in _drawerChain)
                 {
                     drawer.Initialize(this);
@@ -116,7 +139,7 @@ namespace EasyToolKit.Inspector.Editor
             if (_attributes == null)
             {
                 var total = new List<Attribute>();
-                var accessors = Tree.AttributeAccessorsResolver.GetAttributeAccessors(this);
+                var accessors = AttributeAccessorResolver.GetAttributeAccessors();
                 foreach (var accessor in accessors)
                 {
                     total.AddRange(accessor.GetAttributes());
@@ -144,9 +167,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public SerializedProperty TryGetUnitySerializedProperty()
         {
-            _unitySerializedProperty ??= Tree.SerializedObject.FindProperty(Info.PropertyPath);
-
-            return _unitySerializedProperty?.Copy();
+            return Tree.SerializedObject.FindProperty(Info.PropertyPath);
         }
 
         public void Draw()

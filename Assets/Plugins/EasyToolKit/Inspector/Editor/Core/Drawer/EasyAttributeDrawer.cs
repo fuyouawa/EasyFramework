@@ -2,7 +2,7 @@ using System;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class EasyAttributeDrawer<TAttribute> : EasyDrawer
+    public abstract class EasyAttributeDrawer<TAttribute> : EasyDrawer
         where TAttribute : Attribute
     {
         private TAttribute _attribute;

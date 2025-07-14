@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class EasyValueDrawer<T> : EasyDrawer
+    public abstract class EasyValueDrawer<T> : EasyDrawer
     {
         private IInspectorValueEntry<T> _valueEntry;
 

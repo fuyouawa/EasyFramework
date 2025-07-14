@@ -9,9 +9,8 @@ namespace EasyToolKit.Inspector.Editor
     public class InspectorPropertyChildren
     {
         private readonly InspectorProperty _property;
-        private readonly Dictionary<int, InspectorPropertyInfo> _childrenInfoByIndex;
         private Dictionary<int, InspectorProperty> _childrenByIndex;
-        public int Count => _childrenInfoByIndex.Count;
+        public int Count => _property.PropertyResolver.GetChildCount();
 
         public InspectorProperty this[int index] => Get(index);
         public InspectorProperty this[string name] => Get(name);
@@ -24,43 +23,22 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             _property = property;
-            
-            _childrenInfoByIndex = new Dictionary<int, InspectorPropertyInfo>();
-            var iterator = _property.TryGetUnitySerializedProperty();
-            if (iterator == null)
-            {
-                //TODO 非unity object的情况
-                throw new NotImplementedException();
-            }
-
-            if (!iterator.NextVisible(true))
-            {
-                return;
-            }
-            
-            int index = 0;
-            do
-            {
-                _childrenInfoByIndex[index] =
-                    InspectorPropertyInfo.CreateForUnityProperty(iterator, _property.Info.PropertyType);
-                index++;
-            } while (iterator.NextVisible(false));
         }
 
-        public InspectorProperty Get(int index)
+        public InspectorProperty Get(int childIndex)
         {
-            if (index < 0 || index > Count)
+            if (childIndex < 0 || childIndex > Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            if (_childrenByIndex.TryGetValue(index, out var child))
+            if (_childrenByIndex.TryGetValue(childIndex, out var child))
             {
                 return child;
             }
 
-            child = new InspectorProperty(_property.Tree, _property, _childrenInfoByIndex[index], index);
-            _childrenByIndex[index] = child;
+            child = new InspectorProperty(_property.Tree, _property, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
+            _childrenByIndex[childIndex] = child;
             Update();
             return child;
         }
@@ -73,15 +51,7 @@ namespace EasyToolKit.Inspector.Editor
             if (Count == 0)
                 return null;
 
-            foreach (var kv in _childrenInfoByIndex)
-            {
-                if (kv.Value.PropertyName == name)
-                {
-                    return Get(kv.Key);
-                }
-            }
-            
-            return null;
+            return Get(_property.PropertyResolver.ChildNameToIndex(name));
         }
 
         internal void Update()

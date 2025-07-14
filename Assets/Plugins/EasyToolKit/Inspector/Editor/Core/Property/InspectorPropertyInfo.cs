@@ -13,6 +13,9 @@ namespace EasyToolKit.Inspector.Editor
         public Type PropertyType { get; private set; }
         public string PropertyPath { get; private set; }
         public string PropertyName { get; private set; }
+        public Type DefaultPropertyResolverType { get; private set; }
+        public Type DefaultDrawerChainResolverType { get; private set; }
+        public Type DefaultAttributeAccessorResolver { get; private set; }
 
         private InspectorPropertyInfo() {}
 
@@ -32,7 +35,10 @@ namespace EasyToolKit.Inspector.Editor
                 PropertyType = field.FieldType,
                 PropertyPath = serializedProperty.propertyPath,
                 ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty.Copy()),
-                PropertyName = serializedProperty.name
+                PropertyName = serializedProperty.name,
+                DefaultPropertyResolverType = typeof(UnityPropertyResolver),
+                DefaultDrawerChainResolverType = typeof(DefaultDrawerChainResolver),
+                DefaultAttributeAccessorResolver = typeof(DefaultAttributeAccessorResolver)
             };
             return info;
         }

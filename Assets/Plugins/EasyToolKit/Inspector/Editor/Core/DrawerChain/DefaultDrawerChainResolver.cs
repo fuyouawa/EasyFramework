@@ -12,16 +12,24 @@ namespace EasyToolKit.Inspector.Editor
         
         private static readonly Dictionary<Type, Func<EasyDrawer>> FastDrawerCreators = new Dictionary<Type, Func<EasyDrawer>>(FastTypeComparer.Instance);
 
-        public override DrawerChain GetDrawerChain(InspectorProperty property)
+        private DrawerChain _chain;
+
+        public override DrawerChain GetDrawerChain()
         {
-            var drawerTypeResults = DrawerUtility.GetDefaultPropertyDrawerTypes(property);
+            if (_chain != null)
+            {
+                return _chain;
+            }
+
+            var drawerTypeResults = DrawerUtility.GetDefaultPropertyDrawerTypes(Property);
             var drawers = new List<EasyDrawer>();
             foreach (var drawerType in drawerTypeResults.Select(result => result.MatchedType).Distinct())
             {
                 drawers.Add(CreateDrawer(drawerType));
             }
 
-            return new DrawerChain(property, drawers);
+            _chain = new DrawerChain(Property, drawers);
+            return _chain;
         }
 
         private static EasyDrawer CreateDrawer(Type drawerType)
