@@ -83,15 +83,11 @@ namespace EasyToolKit.Inspector.Editor
                 int index = 0;
                 do
                 {
-                    _children.Add(new InspectorProperty(_property.Tree, _property, GetInfo(iterator), index));
+                    var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, _property.Info.PropertyType);
+                    _children.Add(new InspectorProperty(_property.Tree, _property, info, index));
                     index++;
                 } while (iterator.NextVisible(false));
             }
-        }
-
-        private InspectorPropertyInfo GetInfo(SerializedProperty serializedProperty)
-        {
-            return InspectorPropertyInfo.CreateForUnityProperty(serializedProperty);
         }
 
         public IEnumerable<InspectorProperty> Recurse()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -11,6 +12,7 @@ namespace EasyToolKit.Inspector.Editor
     {
         private readonly List<InspectorProperty> _rootProperties = new List<InspectorProperty>();
         private DrawerChainResolver _drawerChainResolver;
+        private InspectorAttributeAccessorsResolver _attributeAccessorsResolver;
         private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
@@ -40,6 +42,7 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             int index = 0;
+            var targetType = serializedObject.targetObject.GetType();
             do
             {
                 if (iterator.propertyPath == "m_Script")
@@ -47,7 +50,7 @@ namespace EasyToolKit.Inspector.Editor
                     continue;
                 }
 
-                var info = InspectorPropertyInfo.CreateForUnityProperty(iterator);
+                var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, targetType);
                 _rootProperties.Add(new InspectorProperty(this, null, info, index));
                 index++;
             } while (iterator.NextVisible(false));
@@ -69,12 +72,32 @@ namespace EasyToolKit.Inspector.Editor
                 if (!ReferenceEquals(_drawerChainResolver, value))
                 {
                     _drawerChainResolver = value;
-                    RefreshRootProperties();
+                    Refresh();
                 }
             }
         }
 
-        public void RefreshRootProperties()
+        public InspectorAttributeAccessorsResolver AttributeAccessorsResolver
+        {
+            get
+            {
+                if (_attributeAccessorsResolver == null)
+                {
+                    _attributeAccessorsResolver = new DefaultInspectorAttributeAccessorsResolver();
+                }
+                return _attributeAccessorsResolver;
+            }
+            set
+            {
+                if (!ReferenceEquals(_attributeAccessorsResolver, value))
+                {
+                    _attributeAccessorsResolver = value;
+                    Refresh();
+                }
+            }
+        }
+
+        public void Refresh()
         {
             foreach (var property in RootProperties)
             {

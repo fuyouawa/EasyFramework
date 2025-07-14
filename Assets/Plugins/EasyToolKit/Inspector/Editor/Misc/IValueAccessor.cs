@@ -2,7 +2,7 @@ using System;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public interface IInspectorValueAccessor
+    public interface IValueAccessor
     {
         bool IsReadonly { get; }
         Type OwnerType { get; }
@@ -11,7 +11,7 @@ namespace EasyToolKit.Inspector.Editor
         object GetValue(object owner);
     }
 
-    public abstract class InspectorValueAccessor : IInspectorValueAccessor
+    public abstract class ValueAccessor : IValueAccessor
     {
         public virtual bool IsReadonly => false;
 
@@ -23,7 +23,7 @@ namespace EasyToolKit.Inspector.Editor
         public abstract object GetValue(object owner);
     }
 
-    public abstract class InspectorValueAccessor<TOwner, TValue> : IInspectorValueAccessor
+    public abstract class ValueAccessor<TOwner, TValue> : IValueAccessor
     {
         public virtual bool IsReadonly => false;
         public virtual Type OwnerType => typeof(TOwner);

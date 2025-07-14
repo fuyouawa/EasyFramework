@@ -81,7 +81,7 @@ namespace EasyToolKit.Core
             _matchResultsCacheByTargets.Clear();
         }
 
-        public TypeMatchResult[] Match(Type[] targets)
+        public TypeMatchResult[] Match(params Type[] targets)
         {
             if (_matchResultsCacheByTargets.TryGetValue(targets, out var ret))
             {

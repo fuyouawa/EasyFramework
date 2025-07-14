@@ -9,7 +9,6 @@ namespace EasyToolKit.Inspector.Editor
     public static class DrawerUtility
     {
         private static readonly TypeMatcher TypeMatcher = new TypeMatcher(false);
-        private static readonly List<TypeMatchResult[]> CachedQueryResults = new List<TypeMatchResult[]>();
 
         static DrawerUtility()
         {
@@ -71,10 +70,22 @@ namespace EasyToolKit.Inspector.Editor
         {
             results.Clear();
 
-            var queries = CachedQueryResults;
-            queries.Clear();
+            var resultsList = new List<TypeMatchResult[]>
+            {
+                TypeMatcher.Match(Type.EmptyTypes),
+                TypeMatcher.Match(property.Info.ValueAccessor.ValueType)
+            };
 
-            queries.Add(TypeMatcher.Match(Type.EmptyTypes));
+            foreach (var attribute in property.GetAttributes())
+            {
+                resultsList.Add(TypeMatcher.Match(attribute.GetType()));
+
+                if (property.ValueEntry != null)
+                {
+                    resultsList.Add(TypeMatcher.Match(attribute.GetType(), property.ValueEntry.ValueType));
+                }
+            }
+
 
         }
     }

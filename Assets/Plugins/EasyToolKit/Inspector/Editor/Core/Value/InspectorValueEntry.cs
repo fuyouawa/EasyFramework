@@ -35,6 +35,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
+        public Type ValueType => typeof(TValue);
         public IInspectorValueCollection WeakValues => Values;
 
         void IInspectorValueEntry.Update()

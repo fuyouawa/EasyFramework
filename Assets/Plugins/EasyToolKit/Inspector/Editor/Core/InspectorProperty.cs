@@ -1,7 +1,7 @@
-using Codice.Client.BaseCommands.BranchExplorer;
 using System;
+using System.Collections.Generic;
 using EasyToolKit.Core;
-using UnityEditor;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
@@ -9,11 +9,15 @@ namespace EasyToolKit.Inspector.Editor
     public class InspectorProperty
     {
         private DrawerChain _drawerChain;
+        private Attribute[] _attributes;
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
         public InspectorPropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
+
+
+        [CanBeNull]
         public IInspectorValueEntry ValueEntry { get; }
 
         public string Path => Info.SerializedProperty.propertyPath;
@@ -55,22 +59,30 @@ namespace EasyToolKit.Inspector.Editor
             Parent = parent;
             Info = info;
             Index = index;
-            
+
             Label = new GUIContent(DisplayName);
             Children = new InspectorPropertyChildren(this);
-            var entryType = typeof(InspectorValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
-            ValueEntry = (IInspectorValueEntry)entryType.CreateInstance();
+
+            if (info.ValueAccessor != null)
+            {
+                var entryType = typeof(InspectorValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
+                ValueEntry = (IInspectorValueEntry)entryType.CreateInstance();
+            }
         }
 
         internal void Update()
         {
-            ValueEntry.Update();
+            if (ValueEntry != null)
+            {
+                ValueEntry.Update();
+            }
             Children.Update();
         }
 
         public void Refresh()
         {
             _drawerChain = null;
+            _attributes = null;
         }
 
         public DrawerChain GetDrawerChain()
@@ -83,7 +95,25 @@ namespace EasyToolKit.Inspector.Editor
                     drawer.Initialize(this);
                 }
             }
+
             return _drawerChain;
+        }
+
+        public Attribute[] GetAttributes()
+        {
+            if (_attributes == null)
+            {
+                var total = new List<Attribute>();
+                var accessors = Tree.AttributeAccessorsResolver.GetAttributeAccessors(this);
+                foreach (var accessor in accessors)
+                {
+                    total.AddRange(accessor.GetAttributes());
+                }
+
+                _attributes = total.ToArray();
+            }
+
+            return _attributes;
         }
 
         public void Draw()

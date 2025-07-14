@@ -5,6 +5,7 @@ namespace EasyToolKit.Inspector.Editor
     public interface IInspectorValueEntry
     {
         object WeakSmartValue { get; set; }
+        Type ValueType { get; }
         IInspectorValueCollection WeakValues { get; }
         InspectorProperty Property { get; }
 
