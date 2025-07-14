@@ -8,25 +8,14 @@ namespace EasyToolKit.Inspector.Editor
     {
         public override bool CanDrawProperty(InspectorProperty property)
         {
-            return property.Children.Count > 0;
+            return property.Children != null && property.Children.Count > 0;
         }
 
         protected override void OnDrawProperty(GUIContent label)
         {
-            // if (Property.Children.Count == 0)
-            // {
-            //     if (label != null)
-            //     {
-            //         var rect = EditorGUILayout.GetControlRect();
-            //         GUI.Label(rect, label);
-            //     }
-            //
-            //     return;
-            // }
-
             if (label == null)
             {
-                for (var i = 0; i < Property.Children.Count; i++)
+                for (var i = 0; i < Property.Children!.Count; i++)
                 {
                     var child = Property.Children[i];
                     child.Draw(child.Label);
@@ -35,7 +24,7 @@ namespace EasyToolKit.Inspector.Editor
             else
             {
                 EditorGUI.indentLevel++;
-                for (var i = 0; i < Property.Children.Count; i++)
+                for (var i = 0; i < Property.Children!.Count; i++)
                 {
                     var child = Property.Children[i];
                     child.Draw(child.Label);

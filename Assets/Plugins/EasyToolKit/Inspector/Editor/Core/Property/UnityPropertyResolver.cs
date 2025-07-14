@@ -45,12 +45,12 @@ namespace EasyToolKit.Inspector.Editor
                     {
                         continue;
                     }
+                }
 
-                    if (!field.FieldType.IsValueType &&
-                        !field.FieldType.HasCustomAttribute<SerializableAttribute>())
-                    {
-                        continue;
-                    }
+                if (!field.FieldType.IsValueType &&
+                    !field.FieldType.HasCustomAttribute<SerializableAttribute>())
+                {
+                    continue;
                 }
                 _propertyInfos.Add(info);
             } while (iterator.Next(false));

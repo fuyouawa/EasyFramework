@@ -15,6 +15,8 @@ namespace EasyToolKit.Inspector.Editor
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
+
+        [CanBeNull]
         public InspectorPropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
 
@@ -38,7 +40,7 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         public GUIContent Label { get; set; }
-
+        
         public InspectorPropertyResolver PropertyResolver { get; private set; }
         public DrawerChainResolver DrawerChainResolver { get; private set; }
         public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
@@ -63,7 +65,7 @@ namespace EasyToolKit.Inspector.Editor
                     throw new ArgumentException("The given tree and the given parent's tree are not the same tree.");
                 }
 
-                if (index < 0 || index >= parent.Children.Count)
+                if (index < 0 || index >= parent.Children!.Count)
                 {
                     throw new IndexOutOfRangeException("The given index for the property to create is out of bounds.");
                 }
@@ -75,10 +77,15 @@ namespace EasyToolKit.Inspector.Editor
             Index = index;
 
             Label = new GUIContent(NiceName);
-            Children = new InspectorPropertyChildren(this);
-            ChangePropertyResolver(Info.DefaultPropertyResolverType);
+
             ChangeDrawerChainResolver(Info.DefaultDrawerChainResolverType);
             ChangeAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
+            
+            if (Info.PropertyType != null && !Info.PropertyType.IsBasic())
+            {
+                Children = new InspectorPropertyChildren(this);
+                ChangePropertyResolver(Info.DefaultPropertyResolverType);
+            }
 
             if (info.ValueAccessor != null)
             {
@@ -93,7 +100,11 @@ namespace EasyToolKit.Inspector.Editor
             {
                 ValueEntry.Update();
             }
-            Children.Update();
+
+            if (Children != null)
+            {
+                Children.Update();
+            }
         }
 
         public void ChangePropertyResolver(Type resolverType)
@@ -122,16 +133,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public DrawerChain GetDrawerChain()
         {
-            if (_drawerChain == null)
-            {
-                _drawerChain = DrawerChainResolver.GetDrawerChain();
-                foreach (var drawer in _drawerChain)
-                {
-                    drawer.Initialize(this);
-                }
-            }
-
-            return _drawerChain;
+            return DrawerChainResolver.GetDrawerChain();
         }
 
         public Attribute[] GetAttributes()

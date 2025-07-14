@@ -69,7 +69,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 yield return property;
 
-                if (includeChildren)
+                if (includeChildren && property.Children != null)
                 {
                     foreach (var child in property.Children.Recurse())
                     {

@@ -9,7 +9,7 @@ namespace EasyToolKit.Inspector.Editor
     public class InspectorPropertyChildren
     {
         private readonly InspectorProperty _property;
-        private Dictionary<int, InspectorProperty> _childrenByIndex;
+        private readonly Dictionary<int, InspectorProperty> _childrenByIndex = new Dictionary<int, InspectorProperty>();
         public int Count => _property.PropertyResolver.GetChildCount();
 
         public InspectorProperty this[int index] => Get(index);
@@ -65,9 +65,12 @@ namespace EasyToolKit.Inspector.Editor
                 var child = this[i];
                 yield return child;
 
-                foreach (var subChild in child.Children.Recurse())
+                if (child.Children != null)
                 {
-                    yield return subChild;
+                    foreach (var subChild in child.Children.Recurse())
+                    {
+                        yield return subChild;
+                    }
                 }
             }
         }

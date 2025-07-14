@@ -6,16 +6,25 @@ namespace EasyToolKit.Inspector.Editor
     [DrawerPriority(2)]
     public class UnityPropertyDrawer : EasyDrawer
     {
+        private SerializedProperty _serializedProperty;
+
         public override bool CanDrawProperty(InspectorProperty property)
         {
-            var unityProperty = property.TryGetUnitySerializedProperty();
-            return unityProperty != null && unityProperty.propertyType != SerializedPropertyType.Generic;
+            var serializedProperty = property.TryGetUnitySerializedProperty();
+            return serializedProperty != null;
+        }
+        
+        protected override void Initialize()
+        {
+            _serializedProperty = Property.TryGetUnitySerializedProperty();
         }
 
         protected override void OnDrawProperty(GUIContent label)
         {
-            EditorGUILayout.PropertyField(Property.TryGetUnitySerializedProperty(), label);
-            CallNextDrawer(label);
+            if (EditorGUILayout.PropertyField(_serializedProperty, label, false))
+            {
+                CallNextDrawer(label);
+            }
         }
     }
 }

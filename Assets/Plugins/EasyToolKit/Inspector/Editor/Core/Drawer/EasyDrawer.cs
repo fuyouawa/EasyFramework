@@ -1,4 +1,6 @@
 using System;
+using EasyToolKit.Core;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,32 +8,31 @@ namespace EasyToolKit.Inspector.Editor
 {
     public abstract class EasyDrawer
     {
-        private InspectorProperty _property;
-        private bool _initialized;
-        
         public bool SkipWhenDrawing { get; set; }
-        public InspectorProperty Property => _property;
+        public InspectorProperty Property { get; private set; }
 
-        internal void Initialize(InspectorProperty property)
+        public static EasyDrawer Create([NotNull] Type drawerType, [NotNull] InspectorProperty property)
         {
-            if (_initialized) return;
+            if (drawerType == null) throw new ArgumentNullException(nameof(drawerType));
+            if (property == null) throw new ArgumentNullException(nameof(property));
 
-            _property = property;
+            if (!typeof(EasyDrawer).IsAssignableFrom(drawerType))
+            {
+                throw new ArgumentException(nameof(drawerType));
+            }
 
-            try
-            {
-                OnInitialize();
-            }
-            finally
-            {
-                _initialized = true;
-            }
+            var drawer = drawerType.CreateInstance<EasyDrawer>();
+            drawer.Property = property;
+            drawer.Initialize();
+            return drawer;
+        }
+
+        protected virtual void Initialize()
+        {
         }
 
         internal void DrawProperty(GUIContent label)
         {
-            if (!_initialized)
-                throw new InvalidOperationException();  //TODO 异常信息
             OnDrawProperty(label);
         }
 
@@ -49,10 +50,6 @@ namespace EasyToolKit.Inspector.Editor
                 return true;
             }
             return false;
-        }
-
-        protected virtual void OnInitialize()
-        {
         }
 
         protected virtual void OnDrawProperty(GUIContent label)

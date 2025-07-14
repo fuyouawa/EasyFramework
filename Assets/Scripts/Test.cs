@@ -13,11 +13,17 @@ namespace MyNamespace
     public class LL
     {
         public int jl;
+        public int jls;
+        public string jbl;
     }
 }
 
 public class Test : MonoBehaviour
 {
+    public int jl;
+    public int i;
+    public int j;
+    public string jb;
     public LL ll = new LL();
 
     // Start is called before the first frame update
