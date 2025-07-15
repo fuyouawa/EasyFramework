@@ -2,7 +2,6 @@
     "name": "EasyToolKit.Tweening",
     "rootNamespace": "",
     "references": [
-        "GUID:c3fd9bfd17ebe344098f8c2b5cf0e761",
         "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],

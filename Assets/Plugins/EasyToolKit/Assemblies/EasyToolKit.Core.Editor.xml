@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EasyToolKit.Core.Editor</name>
+    </assembly>
+    <members>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetAllAssemblies">
+            <summary>
+            Gets an <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.
+            </summary>
+            <returns>An <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.</returns>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.IsDependentOn(System.Reflection.Assembly,System.Reflection.Assembly)">
+            <summary>
+            Determines whether an assembly is depended on another assembly.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <param name="otherAssembly">The other assembly.</param>
+            <returns>
+              <c>true</c> if <paramref name="assembly" /> has a reference in <paramref name="otherAssembly" /> or <paramref name="assembly" /> is the same as <paramref name="otherAssembly" />.
+            </returns>
+            <exception cref="T:System.NullReferenceException"><paramref name="assembly" /> is null.</exception>
+            <exception cref="T:System.NullReferenceException"><paramref name="otherAssembly" /> is null.</exception>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.IsDynamic(System.Reflection.Assembly)">
+            <summary>
+            Determines whether the assembly module is a of type <see cref="T:System.Reflection.Emit.ModuleBuilder" />.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns>
+              <c>true</c> if the specified assembly of type <see cref="T:System.Reflection.Emit.ModuleBuilder" />; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">assembly</exception>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetAssemblyDirectory(System.Reflection.Assembly)">
+            <summary>
+            Gets the full file path to a given assembly's containing directory.
+            </summary>
+            <param name="assembly">The assembly.</param>
+            <returns>The full file path to a given assembly's containing directory, or <c>Null</c> if no file path was found.</returns>
+            <exception cref="T:System.NullReferenceException"><paramref name="assembly" /> is Null.</exception>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetAssemblyFilePath(System.Reflection.Assembly)">
+            <summary>Gets the full directory path to a given assembly.</summary>
+            <param name="assembly">The assembly.</param>
+            <returns>The full directory path in which a given assembly is located, or <c>Null</c> if no file path was found.</returns>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetTypeByFullName(System.String)">
+            <summary>Gets the type.</summary>
+            <param name="fullName">The full name of the type, with or without any assembly information.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetTypes(EasyToolKit.Core.Editor.AssemblyCategory)">
+            <summary>
+            Get types from the current AppDomain with a specified <see cref="T:Sirenix.Utilities.AssemblyCategory" /> filter.
+            </summary>
+            <param name="assemblyFlags">The <see cref="T:Sirenix.Utilities.AssemblyCategory" /> filters.</param>
+            <returns>Types from the current AppDomain with the specified <see cref="T:Sirenix.Utilities.AssemblyCategory" /> filters.</returns>
+        </member>
+    </members>
+</doc>

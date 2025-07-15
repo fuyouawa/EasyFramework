@@ -1,10 +1,13 @@
 using System;
 using EasyToolKit.GameConsole;
 using EasyToolKit.Inspector.Editor;
-using EasyToolKit.Logging;
 using MyNamespace;
-using UnityEditor;
+using Serilog;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MyNamespace
 {
@@ -30,7 +33,6 @@ public class Test : MonoBehaviour
     void Start()
     {
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.UnityConsole()
             .WriteTo.GameConsole()
             .CreateLogger();
     }
@@ -40,14 +42,17 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            Log.Info("asd");
+            Log.Information("asd");
         }
     }
 }
 
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(Test))]
 public class TestEditor : EasyEditor
 {
 
 }
+
+#endif

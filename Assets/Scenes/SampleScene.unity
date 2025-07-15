@@ -337,8 +337,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ee0cbebaea44444a62421129fa7eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jl: 0
+  i: 0
+  j: 26
+  jb: 3545
   ll:
-    jl: 0
+    jl: 25
+    jls: 0
+    jbl: 
 --- !u!4 &1076451576
 Transform:
   m_ObjectHideFlags: 0
@@ -372,7 +378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11490438, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_BlockingMask.m_Bits
-      value: 55
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 22400762, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
       propertyPath: m_SizeDelta.y

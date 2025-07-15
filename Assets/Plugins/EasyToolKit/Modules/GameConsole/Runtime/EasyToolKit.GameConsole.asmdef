@@ -1,9 +1,7 @@
 {
     "name": "EasyToolKit.GameConsole",
     "rootNamespace": "",
-    "references": [
-        "GUID:c3fd9bfd17ebe344098f8c2b5cf0e761"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
