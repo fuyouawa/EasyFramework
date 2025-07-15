@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using System.Runtime.Serialization;
+using TypeExtensions = EasyToolKit.Core.TypeExtensions;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -104,7 +105,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             var priority = DrawerPriority.DefaultPriority;
             
-            var priorityAttribute = TypeExtension.GetCustomAttribute<DrawerPriorityAttribute>(drawerType);
+            var priorityAttribute = TypeExtensions.GetCustomAttribute<DrawerPriorityAttribute>(drawerType);
             if (priorityAttribute != null)
             {
                 priority = priorityAttribute.Priority;

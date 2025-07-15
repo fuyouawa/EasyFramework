@@ -12,6 +12,7 @@ namespace EasyToolKit.Inspector.Editor
         private DrawerChain _drawerChain;
         private Attribute[] _attributes;
         private string _niceName;
+        private InspectorPropertyState _state;
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
@@ -19,6 +20,18 @@ namespace EasyToolKit.Inspector.Editor
         [CanBeNull]
         public InspectorPropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
+
+        public InspectorPropertyState State
+        {
+            get
+            {
+                if (_state == null)
+                {
+                    _state = new InspectorPropertyState(this);
+                }
+                return _state;
+            }
+        }
 
         [CanBeNull]
         public IInspectorValueEntry ValueEntry { get; }

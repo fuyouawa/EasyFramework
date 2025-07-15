@@ -19,7 +19,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        public override bool CanDrawProperty(InspectorProperty property)
+        public sealed override bool CanDrawProperty(InspectorProperty property)
         {
             if (property.ValueEntry != null && !ValueTypeFilter(property.ValueEntry.ValueType))
             {
