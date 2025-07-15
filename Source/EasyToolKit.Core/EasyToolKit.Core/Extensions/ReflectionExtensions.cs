@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EasyToolKit.Core
 {
-    public static class ReflectionExtension
+    public static class ReflectionExtensions
     {
         public static bool HasCustomAttribute<T>(this MemberInfo member) where T : Attribute
         {
@@ -99,7 +99,7 @@ namespace EasyToolKit.Core
         public static string GetMethodParametersSignature(this MethodInfo method)
         {
             return string.Join(", ",
-                method.GetParameters().Select(x => $"{TypeExtension.GetAliases(x.ParameterType)} {x.Name}"));
+                method.GetParameters().Select(x => $"{TypeExtensions.GetAliases(x.ParameterType)} {x.Name}"));
         }
         
         // public static object GetObjectValue(this object obj, string name, BindingFlags flags)

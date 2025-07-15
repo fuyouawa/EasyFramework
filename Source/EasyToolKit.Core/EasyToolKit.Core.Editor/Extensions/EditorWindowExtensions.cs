@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core.Editor
 {
-    public static class EditorWindowExtension
+    public static class EditorWindowExtensions
     {
         public static void CenterWindowWithRadio(this EditorWindow window, float widthRadio, float heightRadio)
         {

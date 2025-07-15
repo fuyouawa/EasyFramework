@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class GradientExtension
+    public static class GradientExtensions
     {
         /// <summary>
         /// <para>将给定的time从[0-maxTime]映射到[0-1]</para>

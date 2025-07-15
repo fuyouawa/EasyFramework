@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class RectExtension
+    public static class RectExtensions
     {
         /// <summary>Returns a Rect with the specified width.</summary>
         /// <param name="rect">The original Rect.</param>

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace EasyToolKit.Core
 {
-    public static class StreamExtension
+    public static class StreamExtensions
     {
         public static async Task ReadCountAsync(this Stream stream, byte[] buffer, int offset, int count)
         {

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class SpriteExtension
+    public static class SpriteExtensions
     {
         public static Sprite[] SliceByCount(this Sprite sprite, int rows, int columns)
         {

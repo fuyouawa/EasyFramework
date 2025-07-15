@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class VectorExtension
+    public static class VectorExtensions
     {
         public static Vector2Int ToCrossDirection(this Vector2 v, float zeroThreshold = 0.01f)
         {

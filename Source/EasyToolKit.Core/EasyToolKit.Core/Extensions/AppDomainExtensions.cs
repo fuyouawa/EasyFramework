@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace EasyToolKit.Core
 {
-    public static class AppDomainExtension
+    public static class AppDomainExtensions
     {
         public static IEnumerable<Assembly> GetProjectAssemblies(this AppDomain domain)
         {

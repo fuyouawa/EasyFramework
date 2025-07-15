@@ -6,6 +6,7 @@ using EasyToolKit.ThirdParty.OdinSerializer;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEditor;
 
+//TODO AssemblyUtility待优化
 namespace EasyToolKit.Core.Editor
 {
     [Flags]

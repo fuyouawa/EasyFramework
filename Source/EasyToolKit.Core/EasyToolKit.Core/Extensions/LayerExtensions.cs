@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class LayerExtension
+    public static class LayerExtensions
     {
         public static bool Contains(this LayerMask mask, int layer)
         {

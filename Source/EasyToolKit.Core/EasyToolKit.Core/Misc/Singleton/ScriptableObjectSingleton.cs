@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using EasyToolKit.ThirdParty.OdinSerializer;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEngine;
 
 namespace EasyToolKit.Core
@@ -81,21 +82,16 @@ namespace EasyToolKit.Core
     [AttributeUsage(AttributeTargets.Class)]
     public class ScriptableObjectSingletonAssetPathAttribute : Attribute
     {
-        public string AssetDirectory;
+        public bool UseAsset { get; set; }
+        public string AssetName { get; set; }
+        public string AssetDirectory { get; }
 
-        public string AssetName;
-
-        public ScriptableObjectSingletonAssetPathAttribute(string assetDirectory, string assetName)
+        public ScriptableObjectSingletonAssetPathAttribute(string assetDirectory)
         {
             AssetDirectory = assetDirectory.Trim().TrimEnd('/', '\\').TrimStart('/', '\\')
                 .Replace('\\', '/') + "/";
 
-            AssetName = assetName;
-        }
-
-        public ScriptableObjectSingletonAssetPathAttribute(string assetPath)
-            : this(assetPath, string.Empty)
-        {
+            UseAsset = true;
         }
     }
 
@@ -130,10 +126,18 @@ namespace EasyToolKit.Core
             {
                 if (s_instance == null)
                 {
-                    s_instance = SingletonCreator.GetScriptableObject<T>(AssetPathAttribute.AssetDirectory,
-                        AssetPathAttribute.AssetName.IsNotNullOrEmpty()
-                            ? AssetPathAttribute.AssetName
-                            : typeof(T).Name);
+                    if (!AssetPathAttribute.UseAsset)
+                    {
+                        s_instance = CreateInstance<T>();
+                        s_instance.name = typeof(T).GetNiceName();
+                    }
+                    else
+                    {
+                        s_instance = SingletonCreator.GetScriptableObject<T>(AssetPathAttribute.AssetDirectory,
+                            AssetPathAttribute.AssetName.IsNotNullOrEmpty()
+                                ? AssetPathAttribute.AssetName
+                                : typeof(T).Name);
+                    }
                 }
 
                 return s_instance;

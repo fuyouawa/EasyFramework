@@ -2,7 +2,7 @@ using System;
 
 namespace EasyToolKit.Core
 {
-    public static class TupleExtension
+    public static class TupleExtensions
     {
         public static bool HasOneOf<T>(this ValueTuple<T> tuple, T val)
         {

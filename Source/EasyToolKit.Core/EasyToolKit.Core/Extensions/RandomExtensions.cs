@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class RandomExtension
+    public static class RandomExtensions
     {
         public static float GetRandom(this Vector2 range)
         {

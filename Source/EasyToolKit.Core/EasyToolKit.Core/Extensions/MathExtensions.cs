@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class MathExtension
+    public static class MathExtensions
     {
         public static float Round(this float value, int decimals)
         {

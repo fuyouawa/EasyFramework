@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace EasyToolKit.Core
 {
-    public static class SceneExtension
+    public static class SceneExtensions
     {
         public static Component[] FindObjectsByType(this Scene scene, Type type, bool includeInactive = false)
         {

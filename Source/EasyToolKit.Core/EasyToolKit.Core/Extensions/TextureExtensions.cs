@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class TextureExtension
+    public static class TextureExtensions
     {
         public static Sprite ToSprite(this Texture2D texture)
         {

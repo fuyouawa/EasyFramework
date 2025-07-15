@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class GameObjectExtension
+    public static class GameObjectExtensions
     {
         public static T GetOrAddComponent<T>(this GameObject target) where T : Component
         {

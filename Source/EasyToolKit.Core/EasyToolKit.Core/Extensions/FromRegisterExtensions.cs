@@ -43,7 +43,7 @@ namespace EasyToolKit.Core
         }
     }
 
-    public static class FromRegisterExtension
+    public static class FromRegisterExtensions
     {
         public static IUnregister UnregisterWhenDestroyed(
             this IFromRegister unRegister,

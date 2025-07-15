@@ -42,7 +42,7 @@ namespace EasyToolKit.Core
         }
     }
 
-    public static class StringExtension
+    public static class StringExtensions
     {
         public static bool IsNullOrEmpty(this string val)
         {

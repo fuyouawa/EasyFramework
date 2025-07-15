@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class ColorExtension
+    public static class ColorExtensions
     {
         public static Color SetR(this Color color, float r)
         {

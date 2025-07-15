@@ -6,7 +6,7 @@ using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Core
 {
-    public static class TypeExtension
+    public static class TypeExtensions
     {
         private static readonly Dictionary<Type, string> TypeAliasesByType = new Dictionary<Type, string>
         {

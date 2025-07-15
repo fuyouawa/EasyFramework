@@ -35,7 +35,7 @@ namespace EasyToolKit.Core
         }
     }
 
-    public static class TransformExtension
+    public static class TransformExtensions
     {
         public static bool IsParentRecursive(this Transform transform, Transform parent)
         {

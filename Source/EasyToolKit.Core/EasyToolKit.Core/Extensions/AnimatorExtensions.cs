@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class AnimatorExtension
+    public static class AnimatorExtensions
     {
         public static bool HasParam(this Animator animator, string name)
         {

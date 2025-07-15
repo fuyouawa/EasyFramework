@@ -4,7 +4,7 @@
         <name>EasyToolKit.Core</name>
     </assembly>
     <members>
-        <member name="M:EasyToolKit.Core.AnimationCurveExtension.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.AnimationCurveExtensions.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single)">
             <summary>
             <para>将给定的time从[0-maxTime]映射到[0-1]</para>
             <para>然后传给AnimationCurve.Evaluate</para>
@@ -14,7 +14,7 @@
             <param name="maxTime"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyToolKit.Core.AnimationCurveExtension.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.AnimationCurveExtensions.EvaluateWithRemap(UnityEngine.AnimationCurve,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             <para>将给定的time从[0-maxTime]映射到[0-1]</para>
             <para>然后传给AnimationCurve.Evaluate</para>
@@ -28,7 +28,7 @@
             <param name="maxValue"></param>
             <returns>[minValue-maxValue]区间的数值</returns>
         </member>
-        <member name="M:EasyToolKit.Core.GradientExtension.EvaluateWithRemap(UnityEngine.Gradient,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.GradientExtensions.EvaluateWithRemap(UnityEngine.Gradient,System.Single,System.Single)">
             <summary>
             <para>将给定的time从[0-maxTime]映射到[0-1]</para>
             <para>然后传给Gradient.Evaluate</para>
@@ -38,40 +38,40 @@
             <param name="maxTime"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetWidth(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetWidth(UnityEngine.Rect,System.Single)">
             <summary>Returns a Rect with the specified width.</summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetHeight(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetHeight(UnityEngine.Rect,System.Single)">
             <summary>Returns a Rect with the specified height.</summary>
             <param name="rect">The original Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetSize(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetSize(UnityEngine.Rect,System.Single,System.Single)">
             <summary>Returns a Rect with the specified size.</summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetSize(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetSize(UnityEngine.Rect,System.Single)">
             <summary>Returns a Rect with the specified size.</summary>
             <param name="rect">The original Rect.</param>
             <param name="widthAndHeight">The desired width and height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetSize(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetSize(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Returns a Rect with the specified size.</summary>
             <param name="rect">The original Rect.</param>
             <param name="size">The desired size of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.HorizontalPadding(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.HorizontalPadding(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount on the X-axis.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="padding">The desired padding.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.HorizontalPadding(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.HorizontalPadding(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount on the X-axis.
             </summary>
@@ -79,14 +79,14 @@
             <param name="left">Desired padding on the left side.</param>
             <param name="right">Desired padding on the right side.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.VerticalPadding(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.VerticalPadding(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount on the Y-axis.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="padding">The desired padding.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.VerticalPadding(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.VerticalPadding(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount on the Y-axis.
             </summary>
@@ -94,14 +94,14 @@
             <param name="top">The desired padding on the top.</param>
             <param name="bottom">The desired padding on the bottom.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Padding(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Padding(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="padding">The desired padding.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Padding(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Padding(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount.
             </summary>
@@ -109,7 +109,7 @@
             <param name="horizontal">The desired horizontal padding.</param>
             <param name="vertical">The desired vertical padding.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Padding(UnityEngine.Rect,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Padding(UnityEngine.Rect,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been inserted by the specified amount.
             </summary>
@@ -119,21 +119,21 @@
             <param name="top">The desired padding on the top.</param>
             <param name="bottom">The desired padding on the bottom.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignLeft(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignLeft(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified width, that has been aligned to the left of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenter(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenter(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified width, that has been aligned to horizontal center of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenter(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenter(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect, with the specified width and height in the center of the provided rect.
             </summary>
@@ -141,61 +141,61 @@
             <param name="width">The desired width of the new Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignRight(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignRight(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified width, that has been aligned to the right of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignRight(UnityEngine.Rect,System.Single,System.Boolean)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignRight(UnityEngine.Rect,System.Single,System.Boolean)">
             <summary>
             Returns a Rect, with the specified width, that has been aligned to the right of the original Rect.
             </summary>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignTop(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignTop(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified height, that has been aligned to the top of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignMiddle(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignMiddle(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified height, that has been aligned to the vertical middle of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignBottom(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignBottom(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified height, that has been aligned to the bottom of the original Rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenterX(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenterX(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified width, that has been aligned horizontally to the center of the original rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="width">The desired width of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenterY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenterY(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified height, that has been aligned vertically to the center of the original rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenterXY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenterXY(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect, with the specified width and height, that has been aligned horizontally and vertically to the center of the original rect.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="size">The desired width and height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AlignCenterXY(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AlignCenterXY(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect, with the specified width and height, that has been aligned horizontally and vertically to the center of the original rect.
             </summary>
@@ -203,14 +203,14 @@
             <param name="width">The desired width of the new Rect.</param>
             <param name="height">The desired height of the new Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Expand(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Expand(UnityEngine.Rect,System.Single)">
             <summary>
             Returns a Rect that has been expanded by the specified amount.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="expand">The desired expansion.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Expand(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Expand(UnityEngine.Rect,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been expanded by the specified amount.
             </summary>
@@ -218,7 +218,7 @@
             <param name="horizontal">The desired expansion on the X-axis.</param>
             <param name="vertical">The desired expansion on the Y-axis.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Expand(UnityEngine.Rect,System.Single,System.Single,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Expand(UnityEngine.Rect,System.Single,System.Single,System.Single,System.Single)">
             <summary>
             Returns a Rect that has been expanded by the specified amount.
             </summary>
@@ -228,7 +228,7 @@
             <param name="top">The desired expansion on the top.</param>
             <param name="bottom">The desired expansion on the bottom.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.Split(UnityEngine.Rect,System.Int32,System.Int32)">
+        <member name="M:EasyToolKit.Core.RectExtensions.Split(UnityEngine.Rect,System.Int32,System.Int32)">
             <summary>
             Splits a Rect horizontally into the specified number of sub-rects, and returns a sub-rect for the specified index.
             </summary>
@@ -236,7 +236,7 @@
             <param name="index">The index for the subrect. Includes 0, and excludes count.</param>
             <param name="count">The amount of subrects the Rect should be split into.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SplitVertical(UnityEngine.Rect,System.Int32,System.Int32)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SplitVertical(UnityEngine.Rect,System.Int32,System.Int32)">
             <summary>
             Splits a Rect vertically into the specified number of sub-rects, and returns a sub-rect for the specified index.
             </summary>
@@ -244,7 +244,7 @@
             <param name="index">The index for the subrect. Includes 0, and excludes count.</param>
             <param name="count">The amount of subrects the Rect should be split into.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SplitGrid(UnityEngine.Rect,System.Single,System.Single,System.Int32)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SplitGrid(UnityEngine.Rect,System.Single,System.Single,System.Int32)">
             <summary>
             Splits a Rect into a grid from left to right and then down.
             </summary>
@@ -254,214 +254,214 @@
             <param name="index">The index of the grid cell.</param>
             <returns></returns>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SplitTableGrid(UnityEngine.Rect,System.Int32,System.Single,System.Int32)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SplitTableGrid(UnityEngine.Rect,System.Int32,System.Single,System.Int32)">
             <summary>
             Splits a Rect into a grid from left to right and then down.
             </summary>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetCenterX(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetCenterX(UnityEngine.Rect,System.Single)">
             <summary>Moves a Rect to the specified center X position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The desired center x position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetCenterY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetCenterY(UnityEngine.Rect,System.Single)">
             <summary>Moves a Rect to the specified center Y position.</summary>
             <param name="rect">The desired original Rect.</param>
             <param name="y">The desired desired center y position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetCenter(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetCenter(UnityEngine.Rect,System.Single,System.Single)">
             <summary>Moves a Rect to the specified center position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The desired center X position.</param>
             <param name="y">The desired center Y position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetCenter(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetCenter(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Moves a Rect to the specified center position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="center">The desired center position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetPosition(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetPosition(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Moves a Rect to the specified position.</summary>
             <param name="rect">The orignal Rect.</param>
             <param name="position">The desired position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.ResetPosition(UnityEngine.Rect)">
+        <member name="M:EasyToolKit.Core.RectExtensions.ResetPosition(UnityEngine.Rect)">
             <summary>Resets a Rect's position to zero.</summary>
             <param name="rect">The original Rect.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddPosition(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddPosition(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Moves a Rect's position by the specified amount.</summary>
             <param name="rect">The original Rect.</param>
             <param name="move">The change in position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddPosition(UnityEngine.Rect,System.Single,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddPosition(UnityEngine.Rect,System.Single,System.Single)">
             <summary>Moves a Rect's position by the specified amount.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The x.</param>
             <param name="y">The y.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetX(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetX(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's X position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The desired X position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddX(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddX(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's X position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubX(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubX(UnityEngine.Rect,System.Single)">
             <summary>Subtracts from a Rect's X position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="x">The value to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetY(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's Y position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="y">The desired Y position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddY(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's Y position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="y">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubY(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubY(UnityEngine.Rect,System.Single)">
             <summary>Subtracts a Rect's Y position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="y">The value to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetMin(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetMin(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Sets the min position of a Rect.</summary>
             <param name="rect">The original Rect.</param>
             <param name="min">The desired min position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddMin(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddMin(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Adds to a Rect's min position.</summary>
             <param name="rect">The original rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubMin(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubMin(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Subtracts a Rect's min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The vlaue to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetMax(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetMax(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Sets a Rect's max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="max">The desired max position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddMax(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddMax(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Adds to a Rect's max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubMax(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubMax(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Subtracts a Rect's max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetXMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetXMin(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's X min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="xMin">The desired min X position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddXMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddXMin(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's X min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubXMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubXMin(UnityEngine.Rect,System.Single)">
             <summary>Subtracts from a Rect's X min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetXMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetXMax(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's X max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="xMax">The desired X max position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddXMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddXMax(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's X max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubXMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubXMax(UnityEngine.Rect,System.Single)">
             <summary>Subtracts a Rect's X max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetYMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetYMin(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's Y min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="yMin">The desired Y min.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddYMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddYMin(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's Y min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubYMin(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubYMin(UnityEngine.Rect,System.Single)">
             <summary>Subtracts a Rect's Y min position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to subtract.</param>
             <returns></returns>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SetYMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SetYMax(UnityEngine.Rect,System.Single)">
             <summary>Sets a Rect's Y max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="yMax">The desired Y max position.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.AddYMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.AddYMax(UnityEngine.Rect,System.Single)">
             <summary>Adds to a Rect's Y max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to add.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.SubYMax(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.SubYMax(UnityEngine.Rect,System.Single)">
             <summary>Subtracts from a Rect's Y max position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="value">The value to subtract.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.MinWidth(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.MinWidth(UnityEngine.Rect,System.Single)">
             <summary>
             Sets a Rect's width, if it is less than the specified value.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="minWidth">The desired min width.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.MaxWidth(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.MaxWidth(UnityEngine.Rect,System.Single)">
             <summary>
             Sets a Rect's width, if it is greater than the specified value.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="maxWidth">The desired max width.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.MinHeight(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.MinHeight(UnityEngine.Rect,System.Single)">
             <summary>
             Sets a Rect's height, if it is less than the specified value.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="minHeight">The desired min height.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.MaxHeight(UnityEngine.Rect,System.Single)">
+        <member name="M:EasyToolKit.Core.RectExtensions.MaxHeight(UnityEngine.Rect,System.Single)">
             <summary>
             Sets a Rect's height, if it is greater than the specified value.
             </summary>
             <param name="rect">The original Rect.</param>
             <param name="maxHeight">The desired max height.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.ExpandTo(UnityEngine.Rect,UnityEngine.Vector2)">
+        <member name="M:EasyToolKit.Core.RectExtensions.ExpandTo(UnityEngine.Rect,UnityEngine.Vector2)">
             <summary>Expands a rect to contain a given position.</summary>
             <param name="rect">The original Rect.</param>
             <param name="pos">The position to expand the rect towards.</param>
         </member>
-        <member name="M:EasyToolKit.Core.RectExtension.IsPlaceholder(UnityEngine.Rect)">
+        <member name="M:EasyToolKit.Core.RectExtensions.IsPlaceholder(UnityEngine.Rect)">
             <summary>
             Determines if an <see cref="T:UnityEngine.Rect" /> is a placeholder; usually (0, 0, 1, 1) in Layout.
             </summary>
             <param name="rect">The original <see cref="T:UnityEngine.Rect" />.</param>
             <returns><c>true</c> if the <see cref="T:UnityEngine.Rect" /> is equal to (0, 0, 0, 0) or (0, 0, 1, 1); otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:EasyToolKit.Core.TypeExtension.ResolveMissingGenericTypeArguments(System.Type,System.Type,System.Boolean)">
+        <member name="M:EasyToolKit.Core.TypeExtensions.ResolveMissingGenericTypeArguments(System.Type,System.Type,System.Boolean)">
             <summary>
             <para>根据源类型（可能包含泛型参数）和目标类型，从目标类型中提取出原类型缺失的泛型参数类型。</para>
             <para>如果源类型是个泛型参数，则直接返回目标类型。</para>

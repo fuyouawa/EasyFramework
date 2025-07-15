@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace EasyToolKit.Core
 {
-    public static class CollectionExtension
+    public static class CollectionExtensions
     {
         public static bool AllSame<T>(this IEnumerable<T> enumerator)
         {

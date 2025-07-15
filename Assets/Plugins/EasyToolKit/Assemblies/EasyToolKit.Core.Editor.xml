@@ -56,5 +56,48 @@
             <param name="assemblyFlags">The <see cref="T:Sirenix.Utilities.AssemblyCategory" /> filters.</param>
             <returns>Types from the current AppDomain with the specified <see cref="T:Sirenix.Utilities.AssemblyCategory" /> filters.</returns>
         </member>
+        <member name="T:EasyToolKit.Core.Editor.UnityEditorEventUtility">
+            <summary>
+            This class contains utility methods for subscribing to various UnityEditor events reliably and safely across all Odin-supported versions of Unity.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.UnityEditorEventUtility.DelayActionThreadSafe(System.Action)">
+            <summary>
+            Sometimes, someone accidentally overrides a delay action subscription to <see cref="F:UnityEditor.EditorApplication.delayCall" />
+            by setting the value instead of using the += operator as should be done,
+            which can be done because in many versions of Unity it is a field, and not an event.
+            (In some versions of Unity it is an event, though, and in this case, this method acts as a wrapper
+            to subscribe reliably, no matter the nature of the backing event.)
+            This method subscribes to a lot of different callbacks, in the hopes of catching at least one.
+            <para />
+            As opposed to <see cref="M:Sirenix.OdinInspector.Editor.UnityEditorEventUtility.DelayAction(System.Action)" />, this method is safe to call from any thread, and will
+            delay the actual subscription to a safe time.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.UnityEditorEventUtility.DelayAction(System.Action)">
+            <summary>
+            Sometimes, an idiot overrides a delay action subscription to <see cref="F:UnityEditor.EditorApplication.delayCall" />,
+            which can be done because the people at Unity didn't know what events were once upon a time.
+            This method subscribes to a lot of different callbacks, in the hopes of catching at least one.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.UnityEditorEventUtility.DelayAction(System.Action,System.Boolean)">
+            <summary>
+            Sometimes, an idiot overrides a delay action subscription to <see cref="F:UnityEditor.EditorApplication.delayCall" />,
+            which can be done because the people at Unity didn't know what events were once upon a time.
+            This method subscribes to a lot of different callbacks, in the hopes of catching at least one.
+            </summary>
+        </member>
+        <member name="E:EasyToolKit.Core.Editor.UnityEditorEventUtility.DuringSceneGUI">
+            <summary>
+            In 2019.1+, this event subscribes to SceneView.duringSceneGui. In 2018.4 and lower, it subscribes to SceneView.onSceneGUIDelegate.
+            </summary>
+        </member>
+        <member name="E:EasyToolKit.Core.Editor.UnityEditorEventUtility.EditorApplication_delayCall">
+            <summary>
+            In 2020.1, Unity changed EditorApplication.delayCall from a field to an event, meaning
+            we now have to use reflection to access it consistently across all versions of Unity.
+            </summary>
+        </member>
     </members>
 </doc>

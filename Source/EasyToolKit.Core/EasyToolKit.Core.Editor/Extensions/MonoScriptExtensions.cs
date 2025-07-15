@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace EasyToolKit.Core.Editor
 {
-    public static class MonoScriptExtension
+    public static class MonoScriptExtensions
     {
         private static MonoScript[] s_allScriptsCache;
         private static readonly Dictionary<Type, MonoScript> ScriptsCacheByType = new Dictionary<Type, MonoScript>(); 

@@ -4,5 +4,71 @@
         <name>EasyToolKit.Inspector.Editor</name>
     </assembly>
     <members>
+        <member name="T:EasyToolKit.Inspector.Editor.GlobalPersistentContext">
+            <summary>
+            Context that persists across reloading and restarting Unity.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Inspector.Editor.GlobalPersistentContext.TimeStamp">
+            <summary>
+            Time stamp for when the persistent context value was last used.
+            Used for purging unused context.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.GlobalPersistentContext.#ctor">
+            <summary>
+            Instatiates a persistent context.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.GlobalPersistentContext.UpdateTimeStamp">
+            <summary>
+            Updates the time stamp to now.
+            </summary>
+        </member>
+        <member name="T:EasyToolKit.Inspector.Editor.GlobalPersistentContext`1">
+            <summary>
+            Context that persists across reloading and restarting Unity.
+            </summary>
+            <typeparam name="T">The type of the context value.</typeparam>
+        </member>
+        <member name="P:EasyToolKit.Inspector.Editor.GlobalPersistentContext`1.Value">
+            <summary>
+            The value of the context.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.GlobalPersistentContext`1.Create">
+            <summary>
+            Creates a new persistent context object.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.GlobalPersistentContext`1.ToString">
+            <summary>
+            Formats a string with the time stamp, and the value.
+            </summary>
+        </member>
+        <member name="T:EasyToolKit.Inspector.Editor.LocalPersistentContext`1">
+            <summary>
+            Helper class that provides a local copy of a <see cref="T:EasyToolKit.Inspector.Editor.GlobalPersistentContext`1"/>.
+            When the local value is changed, it also changed the global value, but the global value does not change the local value.
+            </summary>
+            <typeparam name="T">The type of the context value.</typeparam>
+        </member>
+        <member name="P:EasyToolKit.Inspector.Editor.LocalPersistentContext`1.Value">
+            <summary>
+            The value of the context.
+            Changing this value, also changes the global context value, but the global value does not change the local value.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.LocalPersistentContext`1.Create(EasyToolKit.Inspector.Editor.GlobalPersistentContext{`0})">
+            <summary>
+            Creates a local context object for the provided global context.
+            </summary>
+            <param name="global">The global context object.</param>
+        </member>
+        <member name="M:EasyToolKit.Inspector.Editor.LocalPersistentContext`1.UpdateLocalValue">
+            <summary>
+            Updates the local value to the current global value.
+            </summary>
+        </member>
     </members>
 </doc>

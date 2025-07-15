@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Core
 {
-    public static class MonoBehaviourExtension
+    public static class MonoBehaviourExtensions
     {
         public static void CallInNextFrame(this MonoBehaviour mono, Action callback)
         {
