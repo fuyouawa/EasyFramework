@@ -23,17 +23,17 @@ namespace EasyToolKit.Inspector.Editor
         {
             var ownerType = serializedProperty.serializedObject.targetObject.GetType();
 
-            var field = parentType.GetField(serializedProperty.name, BindingFlagsHelper.AllInstance());
-            Assert.True(field != null);
+            var fieldInfo = parentType.GetField(serializedProperty.name, BindingFlagsHelper.AllInstance());
+            Assert.True(fieldInfo != null);
 
-            var accessorType = typeof(SerializedPropertyValueAccessor<,>)
-                .MakeGenericType(ownerType, field.FieldType);
+            var accessorType = typeof(GenericValueAccessor<,>)
+                .MakeGenericType(ownerType, fieldInfo.FieldType);
             var info = new InspectorPropertyInfo()
             {
-                MemberInfo = field,
-                PropertyType = field.FieldType,
+                MemberInfo = fieldInfo,
+                PropertyType = fieldInfo.FieldType,
                 PropertyPath = serializedProperty.propertyPath,
-                ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty.Copy()),
+                ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo),
                 PropertyName = serializedProperty.name,
                 DefaultPropertyResolverType = typeof(UnityPropertyResolver),
                 DefaultDrawerChainResolverType = typeof(DefaultDrawerChainResolver),

@@ -101,7 +101,7 @@ namespace EasyToolKit.Core
             return string.Join(", ",
                 method.GetParameters().Select(x => $"{TypeExtensions.GetAliases(x.ParameterType)} {x.Name}"));
         }
-        
+
         // public static object GetObjectValue(this object obj, string name, BindingFlags flags)
         // {
         //     var t = obj.GetType();
@@ -135,7 +135,7 @@ namespace EasyToolKit.Core
         //
         //     throw new ArgumentException($"No field or property name:{name}");
         // }
-        
+
         public static Type GetMemberType(this MemberInfo member)
         {
             if (member is FieldInfo field)
@@ -156,21 +156,35 @@ namespace EasyToolKit.Core
             throw new NotSupportedException();
         }
 
-        public static object GetMemberValue(this MemberInfo member, object target)
+        public static object GetMemberValue(this MemberInfo member, object obj)
+        {
+            if (member is FieldInfo field)
+                return field.GetValue(obj);
+
+            return member is PropertyInfo property
+                ? property.GetGetMethod(true).Invoke(obj, null)
+                : throw new ArgumentException($"Can't get the value of '{member.DeclaringType}.{member.Name}'");
+        }
+
+        public static void SetMemberValue(this MemberInfo member, object obj, object value)
         {
             if (member is FieldInfo field)
             {
-                return field.GetValue(target);
+                field.SetValue(obj, value);
             }
-
-            if (member is PropertyInfo property)
+            else
             {
-                return property.GetValue(target);
-            }
+                var methodInfo = member is PropertyInfo property
+                    ? property.GetSetMethod(true)
+                    : throw new ArgumentException($"Can't set the value of '{member.DeclaringType}.{member.Name}'");
 
-            throw new NotSupportedException();
+                if (methodInfo == null)
+                    throw new ArgumentException($"Property '{member.DeclaringType}.{member.Name}' has no setter");
+
+                methodInfo.Invoke(obj, new[] { value });
+            }
         }
-        
+
         // public static void SetObjectValue(this object obj, string name, object val, BindingFlags flags)
         // {
         //     var t = obj.GetType();

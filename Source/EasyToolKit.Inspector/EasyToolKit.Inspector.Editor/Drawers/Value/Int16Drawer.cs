@@ -7,8 +7,9 @@ namespace EasyToolKit.Inspector.Editor
     {
         protected override void OnDrawProperty(GUIContent label)
         {
+            EditorGUI.BeginChangeCheck();
             var value = EditorGUILayout.IntField(label, ValueEntry.SmartValue);
-            
+
             if (value < short.MinValue)
             {
                 value = short.MinValue;
@@ -18,7 +19,10 @@ namespace EasyToolKit.Inspector.Editor
                 value = short.MaxValue;
             }
 
-            ValueEntry.SmartValue = (short)value;
+            if (EditorGUI.EndChangeCheck())
+            {
+                ValueEntry.SmartValue = (short)value;
+            }
         }
     }
 }

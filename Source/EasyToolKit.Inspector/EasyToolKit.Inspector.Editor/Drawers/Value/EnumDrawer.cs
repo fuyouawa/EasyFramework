@@ -13,16 +13,20 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void OnDrawProperty(GUIContent label)
         {
-            var val = ValueEntry.SmartValue;
-            if (val.GetType().IsDefined(typeof(FlagsAttribute), false))
+            var value = ValueEntry.SmartValue;
+            EditorGUI.BeginChangeCheck();
+            if (value.GetType().IsDefined(typeof(FlagsAttribute), false))
             {
-                val = (T)(object)EditorGUILayout.EnumFlagsField(label, (Enum)(object)ValueEntry.SmartValue);
+                value = (T)(object)EditorGUILayout.EnumFlagsField(label, (Enum)(object)value);
             }
             else
             {
-                val = (T)(object)EditorGUILayout.EnumPopup(label, (Enum)(object)ValueEntry.SmartValue);
+                value = (T)(object)EditorGUILayout.EnumPopup(label, (Enum)(object)value);
             }
-            ValueEntry.SmartValue = val;
+            if (EditorGUI.EndChangeCheck())
+            {
+                ValueEntry.SmartValue = value;
+            }
         }
     }
 }

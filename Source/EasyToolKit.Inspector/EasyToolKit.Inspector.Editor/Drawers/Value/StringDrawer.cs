@@ -7,9 +7,15 @@ namespace EasyToolKit.Inspector.Editor
     {
         protected override void OnDrawProperty(GUIContent label)
         {
-            ValueEntry.SmartValue = label == null ?
-                EditorGUILayout.TextField(ValueEntry.SmartValue) :
-                EditorGUILayout.TextField(label, ValueEntry.SmartValue);
+            var value = ValueEntry.SmartValue;
+            EditorGUI.BeginChangeCheck();
+            value = label == null ?
+                EditorGUILayout.TextField(value) :
+                EditorGUILayout.TextField(label, value);
+            if (EditorGUI.EndChangeCheck())
+            {
+                ValueEntry.SmartValue = value;
+            }
         }
     }
 }
