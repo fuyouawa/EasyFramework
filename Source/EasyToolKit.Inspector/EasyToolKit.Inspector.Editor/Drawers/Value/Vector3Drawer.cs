@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class Int32Drawer : EasyValueDrawer<int>
+    public class Vector3Drawer : EasyValueDrawer<Vector3>
     {
         protected override void OnDrawProperty(GUIContent label)
         {
-            ValueEntry.SmartValue = EditorGUILayout.IntField(label, ValueEntry.SmartValue);
+            ValueEntry.SmartValue = EditorGUILayout.Vector3Field(label, ValueEntry.SmartValue);
         }
     }
 }

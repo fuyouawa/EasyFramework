@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using System.Runtime.Serialization;
+using UnityEngine;
 using TypeExtensions = EasyToolKit.Core.TypeExtensions;
 
 namespace EasyToolKit.Inspector.Editor
 {
     public static class DrawerUtility
     {
+        public static readonly GUIContent NotSupportedContent = new GUIContent("Not supported yet!");
+
         private static readonly TypeMatcher TypeMatcher = new TypeMatcher();
 
 

@@ -138,6 +138,16 @@ namespace EasyToolKit.Inspector.Editor
             Refresh();
         }
 
+        public object GetDeclaringObject(int index)
+        {
+            if (Parent == null)
+            {
+                return Tree.Targets[index];
+            }
+            Assert.True(Parent.ValueEntry != null);
+            return Parent.ValueEntry.WeakValues[index];
+        }
+
         public void Refresh()
         {
             _drawerChain = null;
@@ -178,11 +188,6 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             return null;
-        }
-
-        public SerializedProperty TryGetUnitySerializedProperty()
-        {
-            return Tree.SerializedObject.FindProperty(Info.PropertyPath);
         }
 
         public void Draw()

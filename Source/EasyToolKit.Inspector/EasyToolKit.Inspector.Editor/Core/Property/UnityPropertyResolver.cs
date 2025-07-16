@@ -15,7 +15,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            _serializedProperty = Property.TryGetUnitySerializedProperty();
+            _serializedProperty = Property.Tree.SerializedObject.FindProperty(Property.Info.PropertyPath);
             if (_serializedProperty == null)
             {
                 throw new InvalidOperationException();  //TODO 异常信息
@@ -30,6 +30,11 @@ namespace EasyToolKit.Inspector.Editor
             
             do
             {
+                if (!iterator.propertyPath.StartsWith(_serializedProperty.propertyPath + "."))
+                {
+                    break;
+                }
+
                 var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, Property.Info.PropertyType);
                 var field = (FieldInfo)info.MemberInfo;
                 if (!field.IsPublic)

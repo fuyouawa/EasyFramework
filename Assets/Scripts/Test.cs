@@ -1,5 +1,6 @@
 using System;
 using EasyToolKit.GameConsole;
+using EasyToolKit.Inspector;
 using EasyToolKit.Inspector.Editor;
 using MyNamespace;
 using Serilog;
@@ -21,13 +22,21 @@ namespace MyNamespace
     }
 }
 
+public enum Enn
+{
+    kknn,
+    assd
+}
+
 public class Test : MonoBehaviour
 {
+    public LL ll = new LL();
+    [LabelText("{{self.jb}}")]
     public int jl;
     public int i;
     public int j;
+    public Enn ssaf;
     public string jb;
-    public LL ll = new LL();
 
     // Start is called before the first frame update
     void Start()
@@ -50,6 +59,7 @@ public class Test : MonoBehaviour
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(Test))]
+[CanEditMultipleObjects]
 public class TestEditor : EasyEditor
 {
 

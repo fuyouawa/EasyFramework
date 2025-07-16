@@ -28,7 +28,6 @@ namespace EasyToolKit.Inspector.Editor
 
             var accessorType = typeof(SerializedPropertyValueAccessor<,>)
                 .MakeGenericType(ownerType, field.FieldType);
-
             var info = new InspectorPropertyInfo()
             {
                 MemberInfo = field,

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class InspectorValueEntry<TValue> : IInspectorValueEntry<TValue>
     {
+        private bool? _isConflictedCache;
         public InspectorProperty Property { get; }
         public IInspectorValueCollection<TValue> Values { get; }
 
@@ -40,6 +42,7 @@ namespace EasyToolKit.Inspector.Editor
 
         void IInspectorValueEntry.Update()
         {
+            _isConflictedCache = null;
             Values.Update();
         }
 
@@ -66,6 +69,35 @@ namespace EasyToolKit.Inspector.Editor
 
             return changed;
         }
+
+        public bool IsConflicted()
+        {
+            if (_isConflictedCache.HasValue)
+            {
+                return _isConflictedCache.Value;
+            }
+
+            if (Values.Count > 1)
+            {
+                var first = Values[0];
+                for (int i = 1; i < Values.Count; i++)
+                {
+                    if (!EqualityComparer<TValue>.Default.Equals(first, Values[i]))
+                    {
+                        _isConflictedCache = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!_isConflictedCache.HasValue)
+            {
+                _isConflictedCache = false;
+            }
+
+            return _isConflictedCache.Value;
+        }
+
 
         internal void TriggerValueChanged(int index)
         {

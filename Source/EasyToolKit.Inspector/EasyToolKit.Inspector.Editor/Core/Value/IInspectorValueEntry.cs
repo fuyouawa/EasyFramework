@@ -11,6 +11,8 @@ namespace EasyToolKit.Inspector.Editor
 
         event Action<int> OnValueChanged;
 
+        bool IsConflicted();
+
         internal void Update();
         internal bool ApplyChanges();
     }

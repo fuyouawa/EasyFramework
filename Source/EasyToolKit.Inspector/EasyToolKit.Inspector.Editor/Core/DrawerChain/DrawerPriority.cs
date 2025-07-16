@@ -5,8 +5,9 @@ namespace EasyToolKit.Inspector.Editor
 {
     public enum DrawerPriorityLevel
     {
-        ValuePriority,
-        AttributePriority
+        Value,
+        Attribute,
+        Super
     }
 
     public class DrawerPriority : IEquatable<DrawerPriority>, IComparable<DrawerPriority>
@@ -14,23 +15,19 @@ namespace EasyToolKit.Inspector.Editor
         public static readonly DrawerPriority DefaultPriority = new DrawerPriority(0);
         public static readonly DrawerPriority ValuePriority = new DrawerPriority(1);
         public static readonly DrawerPriority AttributePriority = new DrawerPriority(1000);
+        public static readonly DrawerPriority SuperPriority = new DrawerPriority(100000);
 
         public readonly int Value;
 
         public DrawerPriority(DrawerPriorityLevel level)
         {
-            DrawerPriority priority;
-            switch (level)
+            var priority = level switch
             {
-                case DrawerPriorityLevel.ValuePriority:
-                    priority = ValuePriority;
-                    break;
-                case DrawerPriorityLevel.AttributePriority:
-                    priority = AttributePriority;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(level), level, null);
-            }
+                DrawerPriorityLevel.Value => ValuePriority,
+                DrawerPriorityLevel.Attribute => AttributePriority,
+                DrawerPriorityLevel.Super => SuperPriority,
+                _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
+            };
 
             Value = priority.Value;
         }

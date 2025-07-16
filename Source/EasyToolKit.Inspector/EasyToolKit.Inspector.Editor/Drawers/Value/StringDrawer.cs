@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace EasyToolKit.Inspector.Editor.Value
+namespace EasyToolKit.Inspector.Editor
 {
     public class StringDrawer : EasyValueDrawer<string>
     {

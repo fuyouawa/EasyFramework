@@ -1,9 +1,11 @@
 using System;
+using UnityEngine;
 
 namespace EasyToolKit.Inspector
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public class ShowInInspectorAttribute : Attribute
+    public class AssetsOnlyAttribute : Attribute
     {
+        
     }
 }
