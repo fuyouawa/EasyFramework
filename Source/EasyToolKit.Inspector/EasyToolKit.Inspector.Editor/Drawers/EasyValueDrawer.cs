@@ -22,8 +22,10 @@ namespace EasyToolKit.Inspector.Editor
 
         public sealed override bool CanDrawProperty(InspectorProperty property)
         {
-            return property.ValueEntry != null && property.ValueEntry.ValueType == typeof(T) &&
-                   CanDrawValueType(property.ValueEntry.ValueType) && CanDrawValueProperty(property);
+            return property.ValueEntry != null &&
+                   property.ValueEntry.ValueType == typeof(T) &&
+                   CanDrawValueType(property.ValueEntry.ValueType) &&
+                   CanDrawValueProperty(property);
         }
 
         protected virtual bool CanDrawValueType(Type valueType)

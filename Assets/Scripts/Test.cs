@@ -5,6 +5,7 @@ using EasyToolKit.Inspector.Editor;
 using MyNamespace;
 using Serilog;
 using UnityEngine;
+using UnityEngine.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,29 +15,32 @@ namespace MyNamespace
 {
     [Serializable]
 
-    public class LL
+    public class TestClass
     {
-        public int jl;
-        public int jls;
-        public string jbl;
+        public int Int1;
+        public int Int2;
+        public string String3;
     }
 }
 
-public enum Enn
+public enum TestEnum
 {
-    kknn,
-    assd
+    EnumValue1,
+    EnumValue2
 }
 
 public class Test : MonoBehaviour
 {
-    public LL ll = new LL();
-    [LabelText("{{self.jb}}")]
-    public int jl;
-    public int i;
-    public int j;
-    public Enn ssaf;
-    public string jb;
+    public TestClass TestClass = new TestClass();
+    [LabelText("{{self.String1}}")]
+    public int Int1;
+    public int Int2;
+    public int Int3;
+    public TestEnum TestEnum;
+    public string String1;
+    public Transform Transform;
+    public UnityEvent UnityEvent;
+
 
     // Start is called before the first frame update
     void Start()

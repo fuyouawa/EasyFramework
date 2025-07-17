@@ -47,7 +47,7 @@
 //                     // 过滤掉编译器生成的、已过时的、不应绘制的以及 Joint 的子类
 //                     if (!current.IsDefined(typeof(CompilerGeneratedAttribute), false) &&
 //                         !current.IsDefined(typeof(ObsoleteAttribute), false) && !neverDrawTypes.Contains(current) &&
-//                         !typeof(Joint).IsAssignableFrom(current))
+//                         !Type.GetType("UnityEngine.Joint, UnityEngine.PhysicsModule").IsAssignableFrom(current))
 //                         unityObjectTypes.Add(current);
 //                 }
 //             }
@@ -99,7 +99,7 @@
 //                 typeof(MonoBehaviour),
 //                 typeof(UnityEngine.Object),
 //                 typeof(ScriptableObject),
-//                 typeof(StateMachineBehaviour),
+//                 Type.GetType("UnityEngine.StateMachineBehaviour, UnityEngine.AnimationModule")
 //             };
 //
 //             // 遍历所有非编辑器、非抽象、非泛型的 UnityObject 类型
@@ -153,10 +153,10 @@
 //                 throw new ArgumentNullException(nameof(drawnType));
 //             if (!CanCreateCustomEditorFor(drawnType))
 //                 return null;
-//
+//         
 //             if (InspectorConfig.Instance.DefaultEditorTargets == InspectorEditorTargets.None)
 //                 return null;
-//
+//         
 //             bool useEasyInspector;
 //             switch (AssemblyUtility.GetAssemblyCategory(drawnType.Assembly))
 //             {
@@ -181,7 +181,7 @@
 //                         InspectorEditorTargets.OtherTypes;
 //                     break;
 //             }
-//
+//         
 //             if (useEasyInspector)
 //                 return typeof(EasyEditor);
 //             return null;

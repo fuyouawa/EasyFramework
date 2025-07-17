@@ -8,15 +8,14 @@ namespace EasyToolKit.Inspector.Editor
 {
     public sealed class InspectorValueCollection<TValue> : IInspectorValueCollection<TValue>
     {
-        private readonly InspectorProperty _property;
+        public InspectorProperty Property { get; private set; }
         private readonly TValue[] _values;
-        
+
         public bool Dirty { get; private set; }
-        public int Count => _values.Length;
 
         public InspectorValueCollection(InspectorProperty property)
         {
-            _property = property;
+            Property = property;
             _values = new TValue[property.Tree.Targets.Length];
         }
 
@@ -29,6 +28,8 @@ namespace EasyToolKit.Inspector.Editor
         {
             return GetEnumerator();
         }
+
+        public int Count => _values.Length;
 
         object IReadOnlyList.this[int index]
         {
@@ -43,6 +44,12 @@ namespace EasyToolKit.Inspector.Editor
             {
                 if (!EqualityComparer<TValue>.Default.Equals(_values[index], value))
                 {
+                    if (Property.IsReadOnly)
+                    {
+                        Debug.LogWarning($"Property '{Property.Info.PropertyPath}' cannot be edited.");
+                        return;
+                    }
+
                     _values[index] = value;
                     MakeDirty();
                 }
@@ -54,7 +61,7 @@ namespace EasyToolKit.Inspector.Editor
             if (!Dirty)
             {
                 Dirty = true;
-                _property.Tree.SetPropertyDirty(_property);
+                Property.Tree.SetPropertyDirty(Property);
             }
         }
 
@@ -65,10 +72,10 @@ namespace EasyToolKit.Inspector.Editor
 
         void IInspectorValueCollection.Update()
         {
-            for (int i = 0; i < _property.Tree.Targets.Length; i++)
+            for (int i = 0; i < Property.Tree.Targets.Length; i++)
             {
-                var target = _property.Tree.Targets[i];
-                var value = _property.Info.ValueAccessor.GetValue(target);
+                var target = Property.Tree.Targets[i];
+                var value = Property.Info.ValueAccessor.GetValue(target);
                 _values[i] = (TValue)value;
             }
 
@@ -81,10 +88,11 @@ namespace EasyToolKit.Inspector.Editor
 
             for (int i = 0; i < _values.Length; i++)
             {
-                var target = _property.Tree.Targets[i];
+                var target = Property.Tree.Targets[i];
                 var value = _values[i];
-                _property.Info.ValueAccessor.SetValue(target, value);
+                Property.Info.ValueAccessor.SetValue(target, value);
             }
+
             ClearDirty();
             return true;
         }

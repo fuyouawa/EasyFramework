@@ -10,19 +10,17 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class InspectorPropertyTree
     {
-        private readonly List<InspectorProperty> _rootProperties = new List<InspectorProperty>();
         private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
+        private readonly InspectorProperty _logicRootProperty;
 
         public int UpdatedFrame { get; private set; }
         public SerializedObject SerializedObject { get; }
         public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
-        public Type TargetType => SerializedObject.targetObject.GetType();
+        public Type TargetType => _logicRootProperty.Info.PropertyType;
 
         public bool DrawMonoScriptObjectField { get; set; }
-
-        public IReadOnlyList<InspectorProperty> RootProperties => _rootProperties;
 
         public event Action<InspectorProperty, int> OnPropertyValueChanged;
 
@@ -33,40 +31,15 @@ namespace EasyToolKit.Inspector.Editor
                 throw new ArgumentNullException(nameof(serializedObject));
 
             SerializedObject = serializedObject;
-
-            var iterator = serializedObject.GetIterator();
-            if (!iterator.NextVisible(true))
-            {
-                return;
-            }
-
-            int index = 0;
-            var targetType = serializedObject.targetObject.GetType();
-            do
-            {
-                if (iterator.propertyPath == "m_Script")
-                {
-                    continue;
-                }
-
-                var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, targetType);
-                _rootProperties.Add(new InspectorProperty(this, null, info, index));
-                index++;
-            } while (iterator.NextVisible(false));
-        }
-
-        public void Refresh()
-        {
-            foreach (var property in RootProperties)
-            {
-                property.Refresh();
-            }
+            _logicRootProperty =
+                new InspectorProperty(this, null, InspectorPropertyInfo.CreateForLogicRoot(serializedObject), 0);
         }
 
         public IEnumerable<InspectorProperty> EnumerateTree(bool includeChildren)
         {
-            foreach (var property in RootProperties)
+            for (var i = 0; i < _logicRootProperty.Children!.Count; i++)
             {
+                var property = _logicRootProperty.Children[i];
                 yield return property;
 
                 if (includeChildren && property.Children != null)
@@ -190,8 +163,10 @@ namespace EasyToolKit.Inspector.Editor
         private void Update()
         {
             ApplyChanges();
-            foreach (var property in RootProperties)
+
+            for (var i = 0; i < _logicRootProperty.Children!.Count; i++)
             {
+                var property = _logicRootProperty.Children[i];
                 property.Update();
             }
 

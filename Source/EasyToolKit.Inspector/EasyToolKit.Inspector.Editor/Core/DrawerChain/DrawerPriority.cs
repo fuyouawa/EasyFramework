@@ -5,31 +5,24 @@ namespace EasyToolKit.Inspector.Editor
 {
     public enum DrawerPriorityLevel
     {
-        Value,
-        Attribute,
-        Super
+        Default = 0,
+        Value = 1,
+        Attribute = 1000,
+        Super = 10000
     }
 
     public class DrawerPriority : IEquatable<DrawerPriority>, IComparable<DrawerPriority>
     {
-        public static readonly DrawerPriority DefaultPriority = new DrawerPriority(0);
-        public static readonly DrawerPriority ValuePriority = new DrawerPriority(1);
-        public static readonly DrawerPriority AttributePriority = new DrawerPriority(1000);
-        public static readonly DrawerPriority SuperPriority = new DrawerPriority(100000);
+        public static readonly DrawerPriority DefaultPriority = new DrawerPriority(DrawerPriorityLevel.Default);
+        public static readonly DrawerPriority ValuePriority = new DrawerPriority(DrawerPriorityLevel.Value);
+        public static readonly DrawerPriority AttributePriority = new DrawerPriority(DrawerPriorityLevel.Attribute);
+        public static readonly DrawerPriority SuperPriority = new DrawerPriority(DrawerPriorityLevel.Super);
 
         public readonly int Value;
 
         public DrawerPriority(DrawerPriorityLevel level)
         {
-            var priority = level switch
-            {
-                DrawerPriorityLevel.Value => ValuePriority,
-                DrawerPriorityLevel.Attribute => AttributePriority,
-                DrawerPriorityLevel.Super => SuperPriority,
-                _ => throw new ArgumentOutOfRangeException(nameof(level), level, null)
-            };
-
-            Value = priority.Value;
+            Value = (int)level;
         }
 
         public DrawerPriority(int value)

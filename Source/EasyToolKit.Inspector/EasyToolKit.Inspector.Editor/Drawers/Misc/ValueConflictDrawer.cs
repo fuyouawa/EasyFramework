@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EasyToolKit.Inspector.Editor
 {
     [DrawerPriority(DrawerPriorityLevel.Super)]
-    public class PrimitiveValueConflictDrawer<T> : EasyValueDrawer<T>
+    public class ValueConflictDrawer<T> : EasyValueDrawer<T>
     {
         protected override bool CanDrawValueType(Type valueType)
         {

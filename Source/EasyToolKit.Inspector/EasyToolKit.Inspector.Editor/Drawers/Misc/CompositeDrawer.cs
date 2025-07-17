@@ -3,12 +3,11 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    [DrawerPriority(-1)]
     public class CompositeDrawer : EasyDrawer
     {
         public override bool CanDrawProperty(InspectorProperty property)
         {
-            return property.Children != null && property.Children.Count > 0;
+            return property.Children != null;
         }
 
         protected override void OnDrawProperty(GUIContent label)

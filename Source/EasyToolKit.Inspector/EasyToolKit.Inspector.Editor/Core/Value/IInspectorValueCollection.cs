@@ -5,6 +5,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public interface IInspectorValueCollection : IReadOnlyList
     {
+        InspectorProperty Property { get; }
         bool Dirty { get; }
         internal void Update();
         internal bool ApplyChanges();

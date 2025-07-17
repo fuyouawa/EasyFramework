@@ -37,7 +37,8 @@ namespace EasyToolKit.Inspector.Editor
                 return child;
             }
 
-            child = new InspectorProperty(_property.Tree, _property, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
+            var parent = _property.Info.IsLogicRoot ? null : _property;
+            child = new InspectorProperty(_property.Tree, parent, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
             _childrenByIndex[childIndex] = child;
             Update();
             return child;

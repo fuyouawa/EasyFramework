@@ -5,9 +5,9 @@ namespace EasyToolKit.Core.Internal
     {
         public static readonly string PluginsDirectory = "Plugins/EasyToolKit";
 
-        public static string GetAssetDirectory(string folderName, string assetType)
+        public static string GetAssetDirectory(string assetType)
         {
-            return $"{PluginsDirectory}/{folderName}/{assetType}/Resources";
+            return $"{PluginsDirectory}/{assetType}/Resources";
         }
 
         public static string GetModuleAssetDirectory(string folderName, string assetType)
@@ -18,7 +18,7 @@ namespace EasyToolKit.Core.Internal
 
     public class ConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public ConfigsPathAttribute(string folderName) : base(AssetPaths.GetAssetDirectory(folderName, "Configs"))
+        public ConfigsPathAttribute() : base(AssetPaths.GetAssetDirectory("Configs"))
         {
         }
     }

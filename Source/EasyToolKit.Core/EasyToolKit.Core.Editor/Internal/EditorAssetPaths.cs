@@ -4,9 +4,9 @@ namespace EasyToolKit.Core.Editor.Internal
 {
     public static class EditorAssetPaths
     {
-        public static string GetAssetDirectory(string folderName, string assetType)
+        public static string GetAssetDirectory(string assetType)
         {
-            return $"{AssetPaths.PluginsDirectory}/{folderName}/{assetType}/Editor";
+            return $"{AssetPaths.PluginsDirectory}/{assetType}/Editor";
         }
 
 
@@ -19,8 +19,8 @@ namespace EasyToolKit.Core.Editor.Internal
 
     public class EditorConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public EditorConfigsPathAttribute(string folderName) : base(
-            EditorAssetPaths.GetAssetDirectory(folderName, "Configs"))
+        public EditorConfigsPathAttribute() : base(
+            EditorAssetPaths.GetAssetDirectory("Configs"))
         {
         }
     }

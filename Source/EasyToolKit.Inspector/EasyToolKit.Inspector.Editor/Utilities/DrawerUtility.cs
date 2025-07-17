@@ -2,10 +2,10 @@ using EasyToolKit.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using System.Runtime.Serialization;
 using UnityEngine;
-using TypeExtensions = EasyToolKit.Core.TypeExtensions;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -14,20 +14,38 @@ namespace EasyToolKit.Inspector.Editor
         public static readonly GUIContent NotSupportedContent = new GUIContent("Not supported yet!");
 
         private static readonly TypeMatcher TypeMatcher = new TypeMatcher();
-
+        private static readonly Dictionary<Type, Type> UnityPropertyDrawerTypesByDrawnType = new Dictionary<Type, Type>();
+        private static readonly FieldInfo CustomPropertyDrawerTypeFieldInfo = typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance());
 
         static DrawerUtility()
         {
-            var drawerTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(asm => asm.GetTypes())
-                .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract &&
-                            t.IsSubclassOf(typeof(EasyDrawer)))
-                .OrderByDescending(GetDrawerPriority)
-                .ToArray();
+            var easyDrawerTypes = new List<Type>();
 
-            TypeMatcher.SetTypeMatchIndices(drawerTypes.Select((type, i) =>
+            foreach (var type in AppDomain.CurrentDomain.GetAssemblies()
+                         .SelectMany(asm => asm.GetTypes())
+                         .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract))
             {
-                var index = new TypeMatchIndex(type, drawerTypes.Length - i, null);
+                if (type.IsSubclassOf(typeof(EasyDrawer)))
+                {
+                    easyDrawerTypes.Add(type);
+                }
+                else if (type.IsSubclassOf(typeof(UnityEditor.PropertyDrawer)))
+                {
+                    var attr = type.GetCustomAttribute(typeof(UnityEditor.CustomPropertyDrawer));
+                    if (attr != null)
+                    {
+                        var drawnType = (Type)CustomPropertyDrawerTypeFieldInfo.GetValue(attr);
+                        if (drawnType != null)
+                        {
+                            UnityPropertyDrawerTypesByDrawnType[type] = drawnType;
+                        }
+                    }
+                }
+            }
+
+            TypeMatcher.SetTypeMatchIndices(easyDrawerTypes.Select((type, i) =>
+            {
+                var index = new TypeMatchIndex(type, easyDrawerTypes.Count - i, null);
                 if (type.ImplementsOpenGenericType(typeof(EasyValueDrawer<>)))
                 {
                     index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyValueDrawer<>));
@@ -75,6 +93,10 @@ namespace EasyToolKit.Inspector.Editor
             return null;
         }
 
+        public static bool IsDefinedUnityPropertyDrawer(Type targetType)
+        {
+            return UnityPropertyDrawerTypesByDrawnType.ContainsKey(targetType);
+        }
 
         public static IEnumerable<TypeMatchResult> GetDefaultPropertyDrawerTypes(InspectorProperty property)
         {
@@ -108,7 +130,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             var priority = DrawerPriority.DefaultPriority;
             
-            var priorityAttribute = TypeExtensions.GetCustomAttribute<DrawerPriorityAttribute>(drawerType);
+            var priorityAttribute = Core.TypeExtensions.GetCustomAttribute<DrawerPriorityAttribute>(drawerType);
             if (priorityAttribute != null)
             {
                 priority = priorityAttribute.Priority;

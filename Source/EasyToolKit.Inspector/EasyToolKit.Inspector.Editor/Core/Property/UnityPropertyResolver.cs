@@ -15,14 +15,20 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            _serializedProperty = Property.Tree.SerializedObject.FindProperty(Property.Info.PropertyPath);
-            if (_serializedProperty == null)
+            if (Property.Info.IsLogicRoot)
             {
-                throw new InvalidOperationException();  //TODO 异常信息
+                _serializedProperty = Property.Tree.SerializedObject.GetIterator();
+            }
+            else
+            {
+                _serializedProperty = Property.Tree.SerializedObject.FindProperty(Property.Info.PropertyPath);
+                if (_serializedProperty == null)
+                {
+                    throw new InvalidOperationException();  //TODO 异常信息
+                }
             }
 
             var iterator = _serializedProperty.Copy();
-
             if (!iterator.Next(true))
             {
                 return;
@@ -30,13 +36,20 @@ namespace EasyToolKit.Inspector.Editor
             
             do
             {
-                if (!iterator.propertyPath.StartsWith(_serializedProperty.propertyPath + "."))
+                if (!Property.Info.IsLogicRoot)
                 {
-                    break;
+                    if (!iterator.propertyPath.StartsWith(_serializedProperty.propertyPath + "."))
+                    {
+                        break;
+                    }
                 }
 
-                var info = InspectorPropertyInfo.CreateForUnityProperty(iterator, Property.Info.PropertyType);
-                var field = (FieldInfo)info.MemberInfo;
+                var field = Property.Info.PropertyType.GetField(iterator.name, BindingFlagsHelper.AllInstance());
+                if (field == null)
+                {
+                    continue;
+                }
+
                 if (!field.IsPublic)
                 {
                     if (field.GetCustomAttribute<HideInInspector>() != null)
@@ -57,7 +70,8 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     continue;
                 }
-                _propertyInfos.Add(info);
+
+                _propertyInfos.Add(InspectorPropertyInfo.CreateForUnityProperty(iterator, Property.Info.PropertyType));
             } while (iterator.Next(false));
         }
 

@@ -1,13 +1,19 @@
+using System;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class UnityEventDrawer<T> : EasyValueDrawer<T>
-        where T : UnityEventBase
+    [DrawerPriority(DrawerPriorityLevel.Attribute - 1)]
+    public class UnityPropertyDrawer<T> : EasyValueDrawer<T>
     {
         private SerializedProperty _serializedProperty;
+
+        protected override bool CanDrawValueType(Type valueType)
+        {
+            return !valueType.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                   !DrawerUtility.IsDefinedUnityPropertyDrawer(valueType);
+        }
 
         protected override void Initialize()
         {

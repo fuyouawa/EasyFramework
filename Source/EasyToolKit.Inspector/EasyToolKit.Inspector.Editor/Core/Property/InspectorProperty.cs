@@ -9,16 +9,15 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class InspectorProperty
     {
-        private DrawerChain _drawerChain;
         private Attribute[] _attributes;
         private string _niceName;
         private InspectorPropertyState _state;
+        private bool? _isSelfReadOnlyCache;
 
         public InspectorProperty Parent { get; private set; }
         public InspectorPropertyTree Tree { get; }
 
-        [CanBeNull]
-        public InspectorPropertyChildren Children { get; }
+        [CanBeNull] public InspectorPropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
 
         public InspectorPropertyState State
@@ -33,8 +32,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        [CanBeNull]
-        public IInspectorValueEntry ValueEntry { get; }
+        [CanBeNull] public IInspectorValueEntry ValueEntry { get; }
 
         public int Index { get; private set; }
 
@@ -52,11 +50,55 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
+        public bool IsReadOnly
+        {
+            get
+            {
+                if (IsSelfReadOnly)
+                {
+                    return true;
+                }
+
+                if (Parent != null && Parent.IsReadOnly)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        public bool IsSelfReadOnly
+        {
+            get
+            {
+                if (_isSelfReadOnlyCache.HasValue)
+                {
+                    return _isSelfReadOnlyCache.Value;
+                }
+
+                if (Info.ValueAccessor != null && Info.ValueAccessor.IsReadonly)
+                {
+                    _isSelfReadOnlyCache = true;
+                }
+                else if (GetAttribute<ReadOnlyAttribute>() != null)
+                {
+                    _isSelfReadOnlyCache = true;
+                }
+                else
+                {
+                    _isSelfReadOnlyCache = false;
+                }
+
+                return _isSelfReadOnlyCache.Value;
+            }
+        }
+
         public GUIContent Label { get; set; }
         
-        public InspectorPropertyResolver PropertyResolver { get; private set; }
+        [CanBeNull] public InspectorPropertyResolver PropertyResolver { get; private set; }
         public DrawerChainResolver DrawerChainResolver { get; private set; }
-        public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
+        [CanBeNull] public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
 
         internal InspectorProperty(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
             int index)
@@ -91,10 +133,17 @@ namespace EasyToolKit.Inspector.Editor
 
             Label = new GUIContent(NiceName);
 
-            ChangeDrawerChainResolver(Info.DefaultDrawerChainResolverType);
-            ChangeAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
+            if (Info.DefaultDrawerChainResolverType != null)
+            {
+                ChangeDrawerChainResolver(Info.DefaultDrawerChainResolverType);
+            }
+
+            if (Info.DefaultAttributeAccessorResolver != null)
+            {
+                ChangeAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
+            }
             
-            if (Info.PropertyType != null && !Info.PropertyType.IsBasic())
+            if (Info.AllowChildren)
             {
                 Children = new InspectorPropertyChildren(this);
                 ChangePropertyResolver(Info.DefaultPropertyResolverType);
@@ -109,6 +158,7 @@ namespace EasyToolKit.Inspector.Editor
 
         internal void Update()
         {
+            _isSelfReadOnlyCache = null;
             if (ValueEntry != null)
             {
                 ValueEntry.Update();
@@ -138,7 +188,7 @@ namespace EasyToolKit.Inspector.Editor
             Refresh();
         }
 
-        public object GetDeclaringObject(int index)
+        public object GetOwner(int index)
         {
             if (Parent == null)
             {
@@ -150,17 +200,26 @@ namespace EasyToolKit.Inspector.Editor
 
         public void Refresh()
         {
-            _drawerChain = null;
             _attributes = null;
+            _isSelfReadOnlyCache = null;
         }
 
         public DrawerChain GetDrawerChain()
         {
+            if (DrawerChainResolver == null)
+            {
+                throw new InvalidOperationException($"DrawerChainResolver of property '{Info.PropertyPath}' cannot be null.");
+            }
             return DrawerChainResolver.GetDrawerChain();
         }
 
         public Attribute[] GetAttributes()
         {
+            if (AttributeAccessorResolver == null)
+            {
+                return _attributes ??= new Attribute[0];
+            }
+
             if (_attributes == null)
             {
                 var total = new List<Attribute>();
@@ -202,7 +261,9 @@ namespace EasyToolKit.Inspector.Editor
 
             if (chain.MoveNext())
             {
+                EditorGUI.BeginDisabledGroup(IsSelfReadOnly);
                 chain.Current.DrawProperty(label);
+                EditorGUI.EndDisabledGroup();
             }
         }
     }

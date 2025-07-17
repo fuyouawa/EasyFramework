@@ -14,7 +14,7 @@ namespace EasyToolKit.Inspector.Editor
             _template = Template.Parse(text);
             _model = new
             {
-                self = property.GetDeclaringObject(0)
+                self = property.GetOwner(0)
             };
         }
 

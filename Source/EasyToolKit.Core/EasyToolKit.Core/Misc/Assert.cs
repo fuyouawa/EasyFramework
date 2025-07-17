@@ -8,24 +8,20 @@ namespace EasyToolKit.Core
 {
     public class AssertException : Exception
     {
-        public StackTrace Trace { get; }
-
-        public AssertException(StackTrace trace)
-            : this("Assertion failed", trace)
+        public AssertException()
+            : this("Assertion failed")
         {
         }
 
-        public AssertException(string message, StackTrace trace)
+        public AssertException(string message)
             : base(message.DefaultIfNullOrEmpty("Assertion failed"))
         {
-            Trace = trace;
         }
     }
 
     public static class Assert
     {
-        [Conditional("UNITY_ASSERTIONS")]
-        public static void Condition([DoesNotReturnIf(false)] bool cond)
+        private static void Condition([DoesNotReturnIf(false)] bool cond)
         {
             if (!cond)
             {
@@ -37,7 +33,7 @@ namespace EasyToolKit.Core
                 // {
                 //     Environment.FailFast("Assert failed", new AssertException(new StackTrace()));
                 // }
-                throw new AssertException(new StackTrace());
+                throw new AssertException();
             }
         }
 
