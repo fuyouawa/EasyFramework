@@ -21,19 +21,35 @@ namespace EasyToolKit.Inspector.Editor
 
         public sealed override bool CanDrawProperty(InspectorProperty property)
         {
-            if (property.ValueEntry != null && !ValueTypeFilter(property.ValueEntry.ValueType))
+            if (property.ValueEntry != null && !CanDrawValueType(property.ValueEntry.ValueType))
             {
                 return false;
             }
             return property.GetAttribute<TAttribute>() != null && CanDrawAttributeProperty(property);
         }
 
-        protected virtual bool ValueTypeFilter(Type valueType)
+        protected virtual bool CanDrawValueType(Type valueType)
         {
             return true;
         }
 
         protected virtual bool CanDrawAttributeProperty(InspectorProperty property)
+        {
+            return true;
+        }
+    }
+
+    public abstract class EasyAttributeDrawer<TAttribute, TValue> : EasyAttributeDrawer<TAttribute>
+        where TAttribute : Attribute
+    {
+        protected override bool CanDrawAttributeProperty(InspectorProperty property)
+        {
+            return property.ValueEntry != null &&
+                   property.ValueEntry.ValueType == typeof(TValue) &&
+                   CanDrawAttributeValueProperty(property);
+        }
+
+        protected virtual bool CanDrawAttributeValueProperty(InspectorProperty property)
         {
             return true;
         }

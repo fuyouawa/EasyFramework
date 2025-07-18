@@ -13,12 +13,13 @@ namespace EasyToolKit.Inspector.Editor
         private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
-        private readonly InspectorProperty _logicRootProperty;
 
         public int UpdatedFrame { get; private set; }
         public SerializedObject SerializedObject { get; }
+        public InspectorProperty LogicRootProperty { get; }
+
         public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
-        public Type TargetType => _logicRootProperty.Info.PropertyType;
+        public Type TargetType => LogicRootProperty.Info.PropertyType;
 
         public bool DrawMonoScriptObjectField { get; set; }
 
@@ -31,15 +32,15 @@ namespace EasyToolKit.Inspector.Editor
                 throw new ArgumentNullException(nameof(serializedObject));
 
             SerializedObject = serializedObject;
-            _logicRootProperty =
+            LogicRootProperty =
                 new InspectorProperty(this, null, InspectorPropertyInfo.CreateForLogicRoot(serializedObject), 0);
         }
 
         public IEnumerable<InspectorProperty> EnumerateTree(bool includeChildren)
         {
-            for (var i = 0; i < _logicRootProperty.Children!.Count; i++)
+            for (var i = 0; i < LogicRootProperty.Children!.Count; i++)
             {
-                var property = _logicRootProperty.Children[i];
+                var property = LogicRootProperty.Children[i];
                 yield return property;
 
                 if (includeChildren && property.Children != null)
@@ -51,7 +52,7 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
         }
-
+        
         public void SetPropertyDirty(InspectorProperty property)
         {
             _dirtyProperties.Add(property);
@@ -164,12 +165,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             ApplyChanges();
 
-            for (var i = 0; i < _logicRootProperty.Children!.Count; i++)
-            {
-                var property = _logicRootProperty.Children[i];
-                property.Update();
-            }
-
+            LogicRootProperty.Update();
             ++UpdatedFrame;
         }
 

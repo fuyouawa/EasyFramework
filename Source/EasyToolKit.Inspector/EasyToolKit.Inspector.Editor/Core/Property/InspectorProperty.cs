@@ -188,16 +188,6 @@ namespace EasyToolKit.Inspector.Editor
             Refresh();
         }
 
-        public object GetOwner(int index)
-        {
-            if (Parent == null)
-            {
-                return Tree.Targets[index];
-            }
-            Assert.True(Parent.ValueEntry != null);
-            return Parent.ValueEntry.WeakValues[index];
-        }
-
         public void Refresh()
         {
             _attributes = null;

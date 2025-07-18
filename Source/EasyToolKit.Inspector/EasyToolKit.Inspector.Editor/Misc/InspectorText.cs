@@ -1,3 +1,4 @@
+using EasyToolKit.Core;
 using EasyToolKit.ThirdParty.Scriban;
 
 namespace EasyToolKit.Inspector.Editor
@@ -12,9 +13,11 @@ namespace EasyToolKit.Inspector.Editor
         {
             _property = property;
             _template = Template.Parse(text);
+
+            Assert.True(property.Parent.ValueEntry != null);
             _model = new
             {
-                self = property.GetOwner(0)
+                self = property.Parent.ValueEntry.WeakValues[0]
             };
         }
 

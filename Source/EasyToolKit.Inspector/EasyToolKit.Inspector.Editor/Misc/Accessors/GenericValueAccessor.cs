@@ -1,43 +1,32 @@
 using System;
-using System.Reflection;
 using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class GenericValueAccessor<TOwner, TValue> : ValueAccessor<TOwner, TValue>
+    public class GenericValueAccessor : ValueAccessor
     {
-        private readonly MemberInfo _memberInfo;
-        private readonly ValueGetter<TOwner, TValue> _getter;
-        private readonly ValueSetter<TOwner, TValue> _setter;
+        public override Type OwnerType { get; }
+        public override Type ValueType { get; }
 
-        public GenericValueAccessor(MemberInfo memberInfo)
+        private readonly WeakValueGetter _getter;
+        private readonly WeakValueSetter _setter;
+
+        public GenericValueAccessor(Type ownerType, Type valueType, WeakValueGetter getter, WeakValueSetter setter)
         {
-            if (memberInfo is FieldInfo fieldInfo)
-            {
-                _getter = EmitUtilities.CreateInstanceFieldGetter<TOwner, TValue>(fieldInfo);
-                _setter = EmitUtilities.CreateInstanceFieldSetter<TOwner, TValue>(fieldInfo);
-            }
-            else if (memberInfo is PropertyInfo propertyInfo)
-            {
-                _getter = EmitUtilities.CreateInstancePropertyGetter<TOwner, TValue>(propertyInfo);
-                _setter = EmitUtilities.CreateInstancePropertySetter<TOwner, TValue>(propertyInfo);
-            }
-            else
-            {
-                throw new NotSupportedException();  //TODO 异常信息
-            }
-
-            _memberInfo = memberInfo;
+            OwnerType = ownerType;
+            ValueType = valueType;
+            _getter = getter;
+            _setter = setter;
         }
 
-        public override void SetValue(ref TOwner target, TValue value)
+        public override void SetValue(object owner, object value)
         {
-            _setter(ref target, value);
+            _setter(ref owner, value);
         }
 
-        public override TValue GetValue(ref TOwner target)
+        public override object GetValue(object owner)
         {
-            return _getter(ref target);
+            return _getter(ref owner);
         }
     }
 }

@@ -30,26 +30,28 @@ namespace EasyToolKit.Inspector.Editor
             var fieldInfo = parentType.GetField(serializedProperty.name, BindingFlagsHelper.AllInstance());
             Assert.True(fieldInfo != null);
 
-            var accessorType = typeof(GenericValueAccessor<,>)
-                .MakeGenericType(parentType, fieldInfo.FieldType);
 
             var info = new InspectorPropertyInfo()
             {
                 MemberInfo = fieldInfo,
                 PropertyType = fieldInfo.FieldType,
                 PropertyPath = serializedProperty.propertyPath,
-                ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo),
                 PropertyName = serializedProperty.name,
                 DefaultPropertyResolverType = typeof(UnityPropertyResolver),
                 DefaultDrawerChainResolverType = typeof(DefaultDrawerChainResolver),
                 DefaultAttributeAccessorResolver = typeof(DefaultAttributeAccessorResolver),
             };
+            
+            var accessorType = typeof(MemberValueAccessor<,>)
+                .MakeGenericType(parentType, fieldInfo.FieldType);
+            info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
 
+            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.PropertyType);
             info.AllowChildren = info.PropertyType != null &&
                                  !info.PropertyType.IsBasic() &&
                                  !info.PropertyType.IsSubclassOf(typeof(UnityEngine.Object)) &&
                                  info.PropertyType.GetCustomAttribute<SerializableAttribute>() != null &&
-                                 DrawerUtility.IsDefinedUnityPropertyDrawer(info.PropertyType);
+                                 !isDefinedUnityPropertyDrawer;
             return info;
         }
 
@@ -64,8 +66,15 @@ namespace EasyToolKit.Inspector.Editor
                 PropertyName = iterator.name,
                 DefaultPropertyResolverType = typeof(UnityPropertyResolver),
                 AllowChildren = true,
-                IsLogicRoot = true
+                IsLogicRoot = true,
             };
+
+            info.ValueAccessor = new GenericValueAccessor(
+                typeof(int),
+                info.PropertyType,
+                (ref object index) => serializedObject.targetObjects[(int)index],
+                null);
+
             return info;
         }
     }

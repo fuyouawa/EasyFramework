@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EasyToolKit.Core;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace EasyToolKit.Inspector.Editor
     {
         public InspectorProperty Property { get; private set; }
         private readonly TValue[] _values;
+        private bool _firstUpdated = false;
 
         public bool Dirty { get; private set; }
 
@@ -72,25 +74,46 @@ namespace EasyToolKit.Inspector.Editor
 
         void IInspectorValueCollection.Update()
         {
-            for (int i = 0; i < Property.Tree.Targets.Length; i++)
+            if (Property.Info.IsLogicRoot)
             {
-                var target = Property.Tree.Targets[i];
-                var value = Property.Info.ValueAccessor.GetValue(target);
-                _values[i] = (TValue)value;
+                if (!_firstUpdated)
+                {
+                    for (int i = 0; i < Property.Tree.Targets.Length; i++)
+                    {
+                        _values[i] = (TValue)(object)Property.Tree.Targets[i];
+                    }
+                }
+            }
+            else
+            {
+                Assert.True(Property.Parent.ValueEntry != null);
+                Assert.True(Property.Info.ValueAccessor != null);
+
+                for (int i = 0; i < Property.Tree.Targets.Length; i++)
+                {
+                    var owner = Property.Parent.ValueEntry.WeakValues[i];
+                    var value = (TValue)Property.Info.ValueAccessor.GetValue(owner);
+                    _values[i] = value;
+                }
             }
 
             ClearDirty();
+
+            _firstUpdated = true;
         }
 
         bool IInspectorValueCollection.ApplyChanges()
         {
             if (!Dirty) return false;
+            
+            Assert.True(Property.Parent.ValueEntry != null);
+            Assert.True(Property.Info.ValueAccessor != null);
 
             for (int i = 0; i < _values.Length; i++)
             {
-                var target = Property.Tree.Targets[i];
+                var owner = Property.Parent.ValueEntry.WeakValues[i];
                 var value = _values[i];
-                Property.Info.ValueAccessor.SetValue(target, value);
+                Property.Info.ValueAccessor.SetValue(owner, value);
             }
 
             ClearDirty();

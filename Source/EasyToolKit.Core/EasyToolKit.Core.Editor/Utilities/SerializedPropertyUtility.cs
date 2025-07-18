@@ -132,7 +132,6 @@ namespace EasyToolKit.Core.Editor
 
                 case SerializedPropertyType.Quaternion:
                     return typeof(Quaternion);
-
                 default:
                     return null;
             }

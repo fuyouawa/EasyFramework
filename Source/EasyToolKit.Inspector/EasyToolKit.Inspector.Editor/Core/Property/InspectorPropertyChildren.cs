@@ -34,13 +34,13 @@ namespace EasyToolKit.Inspector.Editor
 
             if (_childrenByIndex.TryGetValue(childIndex, out var child))
             {
+                child.Update();
                 return child;
             }
 
-            var parent = _property.Info.IsLogicRoot ? null : _property;
-            child = new InspectorProperty(_property.Tree, parent, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
+            child = new InspectorProperty(_property.Tree, _property, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
             _childrenByIndex[childIndex] = child;
-            Update();
+            child.Update();
             return child;
         }
 

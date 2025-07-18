@@ -13,6 +13,12 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void OnDrawProperty(GUIContent label)
         {
+            if (label == null)
+            {
+                CallNextDrawer(null);
+                return;
+            }
+
             Property.State.Expanded = EditorGUILayout.Foldout(Property.State.Expanded, label, true);
             if (Property.State.Expanded)
             {

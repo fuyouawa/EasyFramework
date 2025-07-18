@@ -11,6 +11,12 @@ namespace EasyToolKit.Inspector.Editor
         object GetValue(object owner);
     }
 
+    public interface IValueAccessor<TOwner, TValue> : IValueAccessor
+    {
+        void SetValue(ref TOwner owner, TValue value);
+        TValue GetValue(ref TOwner owner);
+    }
+
     public abstract class ValueAccessor : IValueAccessor
     {
         public virtual bool IsReadonly => false;
@@ -23,7 +29,7 @@ namespace EasyToolKit.Inspector.Editor
         public abstract object GetValue(object owner);
     }
 
-    public abstract class ValueAccessor<TOwner, TValue> : IValueAccessor
+    public abstract class ValueAccessor<TOwner, TValue> : IValueAccessor<TOwner, TValue>
     {
         public virtual bool IsReadonly => false;
         public virtual Type OwnerType => typeof(TOwner);

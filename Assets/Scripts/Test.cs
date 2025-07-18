@@ -31,6 +31,7 @@ public enum TestEnum
 
 public class Test : MonoBehaviour
 {
+    [HideLabel]
     public TestClass TestClass = new TestClass();
     [LabelText("{{self.String1}}")]
     public int Int1;

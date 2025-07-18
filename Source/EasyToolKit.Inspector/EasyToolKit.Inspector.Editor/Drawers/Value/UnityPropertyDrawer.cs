@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
         protected override bool CanDrawValueType(Type valueType)
         {
             return !valueType.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                   !DrawerUtility.IsDefinedUnityPropertyDrawer(valueType);
+                   DrawerUtility.IsDefinedUnityPropertyDrawer(valueType);
         }
 
         protected override void Initialize()

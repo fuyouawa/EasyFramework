@@ -37,7 +37,7 @@ namespace EasyToolKit.Inspector.Editor
                         var drawnType = (Type)CustomPropertyDrawerTypeFieldInfo.GetValue(attr);
                         if (drawnType != null)
                         {
-                            UnityPropertyDrawerTypesByDrawnType[type] = drawnType;
+                            UnityPropertyDrawerTypesByDrawnType[drawnType] = type;
                         }
                     }
                 }
@@ -95,7 +95,21 @@ namespace EasyToolKit.Inspector.Editor
 
         public static bool IsDefinedUnityPropertyDrawer(Type targetType)
         {
-            return UnityPropertyDrawerTypesByDrawnType.ContainsKey(targetType);
+            if (UnityPropertyDrawerTypesByDrawnType.ContainsKey(targetType))
+            {
+                return true;
+            }
+
+            //TODO 通过CustomPropertyDrawer判断是否需要检查继承
+            foreach (var drawnType in UnityPropertyDrawerTypesByDrawnType.Keys)
+            {
+                if (drawnType.IsAssignableFrom(targetType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static IEnumerable<TypeMatchResult> GetDefaultPropertyDrawerTypes(InspectorProperty property)
@@ -103,8 +117,12 @@ namespace EasyToolKit.Inspector.Editor
             var resultsList = new List<TypeMatchResult[]>
             {
                 TypeMatcher.GetCachedMatches(Type.EmptyTypes),
-                TypeMatcher.GetCachedMatches(property.Info.ValueAccessor.ValueType)
             };
+
+            if (property.Info.PropertyType != null)
+            {
+                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.PropertyType));
+            }
 
             foreach (var attribute in property.GetAttributes())
             {
