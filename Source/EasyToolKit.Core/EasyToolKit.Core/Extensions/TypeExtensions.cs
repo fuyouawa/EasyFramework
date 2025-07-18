@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Core
 {
@@ -264,6 +263,30 @@ namespace EasyToolKit.Core
         public static bool HasInterface(this Type type, Type interfaceType)
         {
             return Array.Exists(type.GetInterfaces(), t => t == interfaceType);
+        }
+
+        public static Type[] GetArgumentsOfInheritedOpenGenericType(this Type candidateType, Type openGenericType)
+        {
+            return ThirdParty.OdinSerializer.Utilities.TypeExtensions.GetArgumentsOfInheritedOpenGenericType(
+                candidateType, openGenericType);
+        }
+
+        public static bool AreGenericConstraintsSatisfiedBy(this Type genericType, params Type[] parameters)
+        {
+            return ThirdParty.OdinSerializer.Utilities.TypeExtensions.AreGenericConstraintsSatisfiedBy(
+                genericType, parameters);
+        }
+
+        public static bool TryInferGenericParameters(this Type genericTypeDefinition, out Type[] inferredParams, params Type[] knownParameters)
+        {
+            return ThirdParty.OdinSerializer.Utilities.TypeExtensions.TryInferGenericParameters(genericTypeDefinition,
+                out inferredParams, knownParameters);
+        }
+
+        public static bool IsImplementsOpenGenericType(this Type candidateType, Type openGenericType)
+        {
+            return ThirdParty.OdinSerializer.Utilities.TypeExtensions.ImplementsOpenGenericType(candidateType,
+                openGenericType);
         }
 
         /// <summary>

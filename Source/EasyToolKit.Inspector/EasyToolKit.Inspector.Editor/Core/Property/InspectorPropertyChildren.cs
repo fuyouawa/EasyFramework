@@ -10,7 +10,7 @@ namespace EasyToolKit.Inspector.Editor
     {
         private readonly InspectorProperty _property;
         private readonly Dictionary<int, InspectorProperty> _childrenByIndex = new Dictionary<int, InspectorProperty>();
-        public int Count => _property.PropertyResolver.GetChildCount();
+        public int Count => _property.ChildrenResolver.GetChildCount();
 
         public InspectorProperty this[int index] => Get(index);
         public InspectorProperty this[string name] => Get(name);
@@ -38,7 +38,7 @@ namespace EasyToolKit.Inspector.Editor
                 return child;
             }
 
-            child = new InspectorProperty(_property.Tree, _property, _property.PropertyResolver.GetChildInfo(childIndex), childIndex);
+            child = new InspectorProperty(_property.Tree, _property, _property.ChildrenResolver.GetChildInfo(childIndex), childIndex);
             _childrenByIndex[childIndex] = child;
             child.Update();
             return child;
@@ -52,7 +52,7 @@ namespace EasyToolKit.Inspector.Editor
             if (Count == 0)
                 return null;
 
-            return Get(_property.PropertyResolver.ChildNameToIndex(name));
+            return Get(_property.ChildrenResolver.ChildNameToIndex(name));
         }
 
         internal void Update()

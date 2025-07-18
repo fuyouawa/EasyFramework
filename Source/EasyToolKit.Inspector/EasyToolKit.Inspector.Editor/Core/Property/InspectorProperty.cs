@@ -96,7 +96,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public GUIContent Label { get; set; }
         
-        [CanBeNull] public InspectorPropertyResolver PropertyResolver { get; private set; }
+        [CanBeNull] public InspectorPropertyResolver ChildrenResolver { get; private set; }
         public DrawerChainResolver DrawerChainResolver { get; private set; }
         [CanBeNull] public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
 
@@ -135,18 +135,18 @@ namespace EasyToolKit.Inspector.Editor
 
             if (Info.DefaultDrawerChainResolverType != null)
             {
-                ChangeDrawerChainResolver(Info.DefaultDrawerChainResolverType);
+                SetDrawerChainResolver(Info.DefaultDrawerChainResolverType);
             }
 
             if (Info.DefaultAttributeAccessorResolver != null)
             {
-                ChangeAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
+                SetAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
             }
             
             if (Info.AllowChildren)
             {
                 Children = new InspectorPropertyChildren(this);
-                ChangePropertyResolver(Info.DefaultPropertyResolverType);
+                SetChildrenResolver(Info.DefaultChildrenResolverType);
             }
 
             if (info.ValueAccessor != null)
@@ -170,19 +170,19 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        public void ChangePropertyResolver(Type resolverType)
+        public void SetChildrenResolver(Type resolverType)
         {
-            PropertyResolver = InspectorPropertyResolver.Create(resolverType, this);
+            ChildrenResolver = InspectorPropertyResolver.Create(resolverType, this);
             Refresh();
         }
 
-        public void ChangeDrawerChainResolver(Type resolverType)
+        public void SetDrawerChainResolver(Type resolverType)
         {
             DrawerChainResolver = DrawerChainResolver.Create(resolverType, this);
             Refresh();
         }
 
-        public void ChangeAttributeAccessorResolver(Type resolverType)
+        public void SetAttributeAccessorResolver(Type resolverType)
         {
             AttributeAccessorResolver = AttributeAccessorResolver.Create(resolverType, this);
             Refresh();

@@ -4,14 +4,14 @@ using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class SerializedPropertyValueAccessor<TOwner, TValue> : ValueAccessor<TOwner, TValue>
+    public class UnityPropertyAccessor<TOwner, TValue> : ValueAccessor<TOwner, TValue>
     {
         private static readonly Func<SerializedProperty, TValue> Getter = SerializedPropertyUtility.GetValueGetter<TValue>();
         private static readonly Action<SerializedProperty, TValue> Setter = SerializedPropertyUtility.GetValueSetter<TValue>();
 
         private readonly SerializedProperty _serializedProperty;
 
-        public SerializedPropertyValueAccessor(SerializedProperty serializedProperty)
+        public UnityPropertyAccessor(SerializedProperty serializedProperty)
         {
             _serializedProperty = serializedProperty.Copy();
         }

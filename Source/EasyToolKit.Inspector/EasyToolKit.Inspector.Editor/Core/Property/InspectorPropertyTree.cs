@@ -52,6 +52,11 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
         }
+
+        public SerializedProperty GetUnityPropertyByPath(string propertyPath)
+        {
+            return SerializedObject.FindProperty(propertyPath);
+        }
         
         public void SetPropertyDirty(InspectorProperty property)
         {

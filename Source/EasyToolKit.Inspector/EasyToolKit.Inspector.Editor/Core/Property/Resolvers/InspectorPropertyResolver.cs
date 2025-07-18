@@ -7,7 +7,7 @@ namespace EasyToolKit.Inspector.Editor
     public abstract class InspectorPropertyResolver
     {
         public InspectorProperty Property { get; private set; }
-        
+
         public static InspectorPropertyResolver Create([NotNull] Type resolverType, [NotNull] InspectorProperty property)
         {
             if (resolverType == null) throw new ArgumentNullException(nameof(resolverType));

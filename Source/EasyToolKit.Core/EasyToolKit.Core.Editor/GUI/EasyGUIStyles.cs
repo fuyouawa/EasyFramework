@@ -24,5 +24,18 @@ namespace EasyToolKit.Core.Editor
         //         return s_messageBox;
         //     }
         // }
+        private static GUIStyle s_none;
+
+        public static GUIStyle None
+        {
+            get
+            {
+                if (s_none == null)
+                {
+                    s_none = new GUIStyle() { margin = new RectOffset(0, 0, 0, 0), padding = new RectOffset(0, 0, 0, 0), border = new RectOffset(0, 0, 0, 0) };
+                }
+                return s_none;
+            }
+        }
     }
 }

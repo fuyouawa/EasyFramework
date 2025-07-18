@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using System.Runtime.Serialization;
 using UnityEngine;
 
@@ -14,8 +13,12 @@ namespace EasyToolKit.Inspector.Editor
         public static readonly GUIContent NotSupportedContent = new GUIContent("Not supported yet!");
 
         private static readonly TypeMatcher TypeMatcher = new TypeMatcher();
-        private static readonly Dictionary<Type, Type> UnityPropertyDrawerTypesByDrawnType = new Dictionary<Type, Type>();
-        private static readonly FieldInfo CustomPropertyDrawerTypeFieldInfo = typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance());
+
+        private static readonly Dictionary<Type, Type> UnityPropertyDrawerTypesByDrawnType =
+            new Dictionary<Type, Type>();
+
+        private static readonly FieldInfo CustomPropertyDrawerTypeFieldInfo =
+            typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance());
 
         static DrawerUtility()
         {
@@ -43,19 +46,22 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
 
-            TypeMatcher.SetTypeMatchIndices(easyDrawerTypes.Select((type, i) =>
-            {
-                var index = new TypeMatchIndex(type, easyDrawerTypes.Count - i, null);
-                if (type.ImplementsOpenGenericType(typeof(EasyValueDrawer<>)))
+            TypeMatcher.SetTypeMatchIndices(easyDrawerTypes
+                .OrderByDescending(GetDrawerPriority)
+                .Select((type, i) =>
                 {
-                    index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyValueDrawer<>));
-                }
-                else if (type.ImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
-                {
-                    index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<>));
-                }
-                return index;
-            }));
+                    var index = new TypeMatchIndex(type, easyDrawerTypes.Count - i, null);
+                    if (type.IsImplementsOpenGenericType(typeof(EasyValueDrawer<>)))
+                    {
+                        index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyValueDrawer<>));
+                    }
+                    else if (type.IsImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
+                    {
+                        index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<>));
+                    }
+
+                    return index;
+                }));
 
             TypeMatcher.AddMatchRule(GetMatchedType);
         }
@@ -67,7 +73,7 @@ namespace EasyToolKit.Inspector.Editor
 
             var valueType = targets[0];
             var argType = matchIndex.Targets[0];
-        
+
             // 如果参数不是泛型参数，并且是个不包含泛型参数的类型
             // 用于判断当前序列化器的参数必须是个具体类型
             if (!argType.IsGenericParameter && !argType.ContainsGenericParameters)
@@ -76,10 +82,10 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     return matchIndex.Type;
                 }
-        
+
                 return null;
             }
-        
+
             var missingArgs = argType.ResolveMissingGenericTypeArguments(valueType, false);
             if (missingArgs.Length == 0)
                 return null;
@@ -147,8 +153,8 @@ namespace EasyToolKit.Inspector.Editor
         public static DrawerPriority GetDrawerPriority(Type drawerType)
         {
             var priority = DrawerPriority.DefaultPriority;
-            
-            var priorityAttribute = Core.TypeExtensions.GetCustomAttribute<DrawerPriorityAttribute>(drawerType);
+
+            var priorityAttribute = drawerType.GetCustomAttribute<DrawerPriorityAttribute>();
             if (priorityAttribute != null)
             {
                 priority = priorityAttribute.Priority;
@@ -156,7 +162,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (priority == DrawerPriority.DefaultPriority)
             {
-                if (drawerType.ImplementsOpenGenericClass(typeof(EasyAttributeDrawer<>)))
+                if (drawerType.IsImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
                 {
                     priority = DrawerPriority.AttributePriority;
                 }

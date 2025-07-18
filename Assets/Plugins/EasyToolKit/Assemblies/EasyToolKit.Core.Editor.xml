@@ -4,6 +4,47 @@
         <name>EasyToolKit.Core.Editor</name>
     </assembly>
     <members>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.BeginIgnoreInput">
+            <summary>
+            Ignores input on following GUI calls. Remember to end with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.EndIgnoreInput"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.EndIgnoreInput">
+            <summary>
+            Ends the ignore input started by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.BeginIgnoreInput"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushEventType(UnityEngine.EventType)">
+            <summary>
+            Pushes the event type to the stack. Remember to pop with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopEventType"/>.
+            </summary>
+            <param name="eventType">The type of event to push.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopEventType">
+            <summary>
+            Pops the event type pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopEventType"/>.
+            </summary>
+        </member>
+        <member name="T:EasyToolKit.Core.Editor.GUIFrameCounter">
+            <summary>
+            A utility class for properly counting frames and helps determine when a frame has started in an editor window.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.GUIFrameCounter.FrameCount">
+            <summary>
+            Gets the frame count.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.GUIFrameCounter.IsNewFrame">
+            <summary>
+            Gets a value indicating whether this instance is new frame.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.GUIFrameCounter.Update">
+            <summary>
+            Updates the frame counter and returns itself.
+            </summary>
+        </member>
         <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetAllAssemblies">
             <summary>
             Gets an <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.

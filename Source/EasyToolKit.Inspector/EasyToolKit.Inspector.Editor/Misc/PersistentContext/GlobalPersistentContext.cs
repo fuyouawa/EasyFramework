@@ -1,6 +1,5 @@
 using System;
 using EasyToolKit.ThirdParty.OdinSerializer;
-using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 
 namespace EasyToolKit.Inspector.Editor
 {	/// <summary>
@@ -71,7 +70,7 @@ namespace EasyToolKit.Inspector.Editor
         /// </summary>
         public override string ToString()
         {
-            return new DateTime(this.TimeStamp).ToString("dd/MM/yy HH:mm:ss") + " <" + typeof(T).GetNiceName() + "> " + (this.value != null ? this.value.ToString() : "(null)");
+            return new DateTime(this.TimeStamp).ToString("dd/MM/yy HH:mm:ss") + " <" + typeof(T) + "> " + (this.value != null ? this.value.ToString() : "(null)");
         }
     }
 }

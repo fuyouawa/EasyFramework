@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using EasyToolKit.GameConsole;
 using EasyToolKit.Inspector;
 using EasyToolKit.Inspector.Editor;
@@ -31,16 +32,17 @@ public enum TestEnum
 
 public class Test : MonoBehaviour
 {
-    [HideLabel]
-    public TestClass TestClass = new TestClass();
-    [LabelText("{{self.String1}}")]
-    public int Int1;
-    public int Int2;
-    public int Int3;
-    public TestEnum TestEnum;
-    public string String1;
-    public Transform Transform;
-    public UnityEvent UnityEvent;
+    // [HideLabel]
+    // public TestClass TestClass = new TestClass();
+    // [LabelText("{{self.String1}}")]
+    // public int Int1;
+    // public int Int2;
+    // public int Int3;
+    // public TestEnum TestEnum;
+    // public string String1;
+    // public Transform Transform;
+    // public UnityEvent UnityEvent;
+    public List<int> testList = new List<int>();
 
 
     // Start is called before the first frame update

@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using EasyToolKit.ThirdParty.OdinSerializer;
-using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEngine;
 
 namespace EasyToolKit.Core
@@ -129,7 +128,7 @@ namespace EasyToolKit.Core
                     if (!AssetPathAttribute.UseAsset)
                     {
                         s_instance = CreateInstance<T>();
-                        s_instance.name = typeof(T).GetNiceName();
+                        s_instance.name = typeof(T).Name;
                     }
                     else
                     {
