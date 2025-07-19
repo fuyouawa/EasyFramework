@@ -260,6 +260,16 @@ namespace EasyToolKit.Core
             return parentTypes.ToArray();
         }
 
+        public static bool IsInheritsFrom<T>(this Type type)
+        {
+            return type.IsInheritsFrom(typeof(T));
+        }
+
+        public static bool IsInheritsFrom(this Type type, Type baseType)
+        {
+            return ThirdParty.OdinSerializer.Utilities.TypeExtensions.InheritsFrom(type, baseType);
+        }
+
         public static bool HasInterface(this Type type, Type interfaceType)
         {
             return Array.Exists(type.GetInterfaces(), t => t == interfaceType);

@@ -12,6 +12,12 @@ using UnityEngine.Events;
 using UnityEditor;
 #endif
 
+[Serializable]
+public class MyClass
+{
+    public int Inttt;
+}
+
 namespace MyNamespace
 {
     [Serializable]
@@ -21,6 +27,7 @@ namespace MyNamespace
         public int Int1;
         public int Int2;
         public string String3;
+        public MyClass Class1;
     }
 }
 
@@ -36,18 +43,20 @@ public class Test : MonoBehaviour
     // public TestClass TestClass = new TestClass();
     // [LabelText("{{self.String1}}")]
     // public int Int1;
-    // public int Int2;
+    public int Int2;
     // public int Int3;
     // public TestEnum TestEnum;
     // public string String1;
     // public Transform Transform;
     // public UnityEvent UnityEvent;
-    public List<int> testList = new List<int>();
+    public List<TestClass> testList = new List<TestClass>();
 
+    public TestClass TestClass;
 
     // Start is called before the first frame update
     void Start()
     {
+        
         Log.Logger = new LoggerConfiguration()
             .WriteTo.GameConsole()
             .CreateLogger();

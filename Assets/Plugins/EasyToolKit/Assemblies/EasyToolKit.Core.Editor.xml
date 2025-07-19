@@ -25,6 +25,18 @@
             Pops the event type pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopEventType"/>.
             </summary>
         </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushHierarchyMode(System.Boolean,System.Boolean)">
+            <summary>
+            Pushes the hierarchy mode to the stack. Remember to pop the state with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopHierarchyMode"/>.
+            </summary>
+            <param name="hierarchyMode">The hierachy mode state to push.</param>
+            <param name="preserveCurrentLabelWidth">Changing hierachy mode also changes how label-widths are calcualted. By default, we try to keep the current label width.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopHierarchyMode">
+            <summary>
+            Pops the hierarchy mode pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushHierarchyMode(System.Boolean,System.Boolean)"/>.
+            </summary>
+        </member>
         <member name="T:EasyToolKit.Core.Editor.GUIFrameCounter">
             <summary>
             A utility class for properly counting frames and helps determine when a frame has started in an editor window.

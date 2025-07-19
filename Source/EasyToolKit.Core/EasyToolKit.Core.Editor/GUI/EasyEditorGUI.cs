@@ -799,3 +799,206 @@
 //         #endregion
 //     }
 // }
+
+
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace EasyToolKit.Core.Editor
+{
+    public class EasyEditorGUI
+    {
+        private static readonly GUIScopeStack<Rect> verticalListBorderRects = new GUIScopeStack<Rect>();
+        private static readonly List<int> currentListItemIndecies = new List<int>();
+        private static float currentDrawingToolbarHeight;
+        private static int currentScope = 0;
+
+        public static Rect BeginHorizontalToolbar(float height = 22)
+        {
+            var rect = BeginHorizontalToolbar(EasyGUIStyles.ToolbarBackground, height);
+            return rect;
+        }
+
+        public static Rect BeginHorizontalToolbar(GUIStyle style, float height = 22)
+        {
+            currentDrawingToolbarHeight = height;
+            var rect = EditorGUILayout.BeginHorizontal(style, GUILayout.Height(height), GUILayout.ExpandWidth(false));
+            EasyGUIHelper.PushHierarchyMode(false);
+            EasyGUIHelper.PushIndentLevel(0);
+            return rect;
+        }
+
+        public static void EndHorizontalToolbar()
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                var rect = EasyGUIHelper.GetCurrentLayoutRect();
+                rect.yMin -= 1;
+                DrawBorders(rect, 1);
+            }
+
+            EasyGUIHelper.PopIndentLevel();
+            EasyGUIHelper.PopHierarchyMode();
+            EditorGUILayout.EndHorizontal();
+        }
+
+        public static bool ToolbarButton(GUIContent content, bool selected = false)
+        {
+            if (GUILayout.Button(content, selected ? EasyGUIStyles.ToolbarButtonSelected : EasyGUIStyles.ToolbarButton,
+                    GUILayout.Height(currentDrawingToolbarHeight), GUILayout.ExpandWidth(false)))
+            {
+                EasyGUIHelper.RemoveFocusControl();
+                EasyGUIHelper.RequestRepaint();
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool ToolbarButton(string label, bool selected = false)
+        {
+            return ToolbarButton(EasyGUIHelper.TempContent(label), selected);
+        }
+
+        public static Rect BeginVerticalList(bool drawBorder = true, bool drawDarkBg = true,
+            params GUILayoutOption[] options)
+        {
+            currentScope++;
+            currentListItemIndecies.Resize(Mathf.Max(currentListItemIndecies.Count, currentScope + 1));
+            currentListItemIndecies[currentScope] = 0;
+
+            if (Event.current.type == EventType.MouseMove)
+            {
+                EasyGUIHelper.RequestRepaint();
+            }
+
+            var rect = EditorGUILayout.BeginVertical(options);
+
+            if (drawDarkBg)
+            {
+                DrawSolidRect(rect, EasyGUIStyles.ListItemDragBgColor);
+            }
+
+            if (drawBorder)
+            {
+                verticalListBorderRects.Push(rect);
+            }
+            else
+            {
+                verticalListBorderRects.Push(new Rect(-1, rect.y, rect.width, rect.height));
+            }
+
+            return rect;
+        }
+
+        public static void EndVerticalList()
+        {
+            currentScope--;
+            var rect = verticalListBorderRects.Pop();
+            if (rect.x > 0)
+            {
+                rect.y -= 1;
+                rect.height += 1;
+                DrawBorders(rect, 1, 1, 1, 1);
+            }
+
+            EditorGUILayout.EndVertical();
+        }
+
+        public static Rect BeginListItem(bool allowHover, GUIStyle style, params GUILayoutOption[] options)
+        {
+            currentListItemIndecies.Resize(Mathf.Max(currentListItemIndecies.Count, currentScope));
+            int i = currentListItemIndecies[currentScope];
+            currentListItemIndecies[currentScope] = i + 1;
+
+            GUILayout.BeginVertical(style ?? EasyGUIStyles.ListItem, options);
+            var rect = EasyGUIHelper.GetCurrentLayoutRect();
+            var isMouseOver = rect.Contains(Event.current.mousePosition);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color color = i % 2 == 0 ? EasyGUIStyles.ListItemColorEven : EasyGUIStyles.ListItemColorOdd;
+                Color hover = color;
+                if (/* DragAndDropManager.IsDragInProgress == false && */allowHover)
+                {
+                    hover = i % 2 == 0 ? EasyGUIStyles.ListItemColorHoverEven : EasyGUIStyles.ListItemColorHoverOdd;
+                }
+                DrawSolidRect(rect, isMouseOver ? hover : color);
+            }
+
+            return rect;
+        }
+        
+        public static void EndListItem()
+        {
+            GUILayout.EndVertical();
+        }
+
+        public static void DrawBorders(Rect rect, int left, int right, int top, int bottom, bool usePlayModeTint = true)
+        {
+            DrawBorders(rect, left, right, top, bottom, EasyGUIStyles.BorderColor, usePlayModeTint);
+        }
+
+        public static void DrawBorders(Rect rect, int borderWidth, bool usePlayModeTint = true)
+        {
+            DrawBorders(rect, borderWidth, borderWidth, borderWidth, borderWidth, EasyGUIStyles.BorderColor,
+                usePlayModeTint);
+        }
+
+        public static void DrawBorders(Rect rect, int left, int right, int top, int bottom, Color color,
+            bool usePlayModeTint = true)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (left > 0)
+                {
+                    var borderRect = rect;
+                    borderRect.width = left;
+                    DrawSolidRect(borderRect, color, usePlayModeTint);
+                }
+
+                if (top > 0)
+                {
+                    var borderRect = rect;
+                    borderRect.height = top;
+                    DrawSolidRect(borderRect, color, usePlayModeTint);
+                }
+
+                if (right > 0)
+                {
+                    var borderRect = rect;
+                    borderRect.x += rect.width - right;
+                    borderRect.width = right;
+                    DrawSolidRect(borderRect, color, usePlayModeTint);
+                }
+
+                if (bottom > 0)
+                {
+                    var borderRect = rect;
+                    borderRect.y += rect.height - bottom;
+                    borderRect.height = bottom;
+                    DrawSolidRect(borderRect, color, usePlayModeTint);
+                }
+            }
+        }
+
+
+        public static void DrawSolidRect(Rect rect, Color color, bool usePlayModeTint = true)
+        {
+            if (Event.current.type == EventType.Repaint)
+            {
+                if (usePlayModeTint)
+                {
+                    EditorGUI.DrawRect(rect, color);
+                }
+                else
+                {
+                    EasyGUIHelper.PushColor(color);
+                    GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
+                    EasyGUIHelper.PopColor();
+                }
+            }
+        }
+    }
+}

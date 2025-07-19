@@ -135,5 +135,18 @@ namespace EasyToolKit.Core
 
             return newArray;
         }
+
+        public static void Resize<T>(this List<T> list, int length)
+        {
+            while (list.Count < length)
+            {
+                list.Add(default);
+            }
+
+            while (list.Count > length)
+            {
+                list.RemoveAt(list.Count - 1);
+            }
+        }
     }
 }

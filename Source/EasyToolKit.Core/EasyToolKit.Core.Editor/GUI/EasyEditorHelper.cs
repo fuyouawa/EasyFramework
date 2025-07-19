@@ -87,16 +87,5 @@ namespace EasyToolKit.Core.Editor
 
             s_methodOfEndEditingActiveTextField.Invoke(null, null);
         }
-
-
-        private static readonly GUIContent s_tempContent = new GUIContent();
-
-        internal static GUIContent TempContent(string text, string tooltip = null, Texture image = null)
-        {
-            s_tempContent.text = text;
-            s_tempContent.image = image;
-            s_tempContent.tooltip = tooltip;
-            return s_tempContent;
-        }
     }
 }

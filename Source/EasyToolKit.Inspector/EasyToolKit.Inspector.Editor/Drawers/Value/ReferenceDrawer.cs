@@ -19,7 +19,7 @@ namespace EasyToolKit.Inspector.Editor
                 return;
             }
 
-            Property.State.Expanded = EditorGUILayout.Foldout(Property.State.Expanded, label, true);
+            Property.State.Expanded = EditorGUI.Foldout(EditorGUILayout.GetControlRect(), Property.State.Expanded, label, true);
             if (Property.State.Expanded)
             {
                 CallNextDrawer(label);
