@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class UnityPropertyResolver : InspectorPropertyResolver
+    public class UnityPropertyResolver : PropertyResolver
     {
         private SerializedProperty _serializedProperty;
         private readonly List<InspectorPropertyInfo> _propertyInfos = new List<InspectorPropertyInfo>();
@@ -44,7 +44,7 @@ namespace EasyToolKit.Inspector.Editor
                     }
                 }
 
-                var field = Property.Info.PropertyType.GetField(iterator.name, BindingFlagsHelper.AllInstance());
+                var field = Property.Info.TypeOfProperty.GetField(iterator.name, BindingFlagsHelper.AllInstance());
                 if (field == null)
                 {
                     continue;
@@ -71,7 +71,7 @@ namespace EasyToolKit.Inspector.Editor
                     continue;
                 }
 
-                _propertyInfos.Add(InspectorPropertyInfo.CreateForUnityProperty(iterator, Property.Info.PropertyType));
+                _propertyInfos.Add(InspectorPropertyInfo.CreateForUnityProperty(iterator, Property.Info.TypeOfProperty));
             } while (iterator.Next(false));
         }
 

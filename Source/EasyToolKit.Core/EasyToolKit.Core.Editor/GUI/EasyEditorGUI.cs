@@ -842,6 +842,40 @@ namespace EasyToolKit.Core.Editor
             EasyGUIHelper.PopHierarchyMode();
             EditorGUILayout.EndHorizontal();
         }
+        public static bool ToolbarButton(EditorIcon icon, bool ignoreGUIEnabled = false)
+        {
+            var rect = GUILayoutUtility.GetRect(currentDrawingToolbarHeight, currentDrawingToolbarHeight, GUILayout.ExpandWidth(false));
+            if (GUI.Button(rect, GUIContent.none, EasyGUIStyles.ToolbarButton))
+            {
+                EasyGUIHelper.RemoveFocusControl();
+                EasyGUIHelper.RequestRepaint();
+                return true;
+            }
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                rect.y -= 1;
+                icon.Draw(rect.AlignCenter(16, 16));
+            }
+
+            if (ignoreGUIEnabled)
+            {
+                if (Event.current.button == 0 && Event.current.rawType == EventType.MouseDown)
+                {
+                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                    {
+                        EasyGUIHelper.RemoveFocusControl();
+                        EasyGUIHelper.RequestRepaint();
+                        EasyGUIHelper.PushGUIEnabled(true);
+                        Event.current.Use();
+                        EasyGUIHelper.PopGUIEnabled();
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         public static bool ToolbarButton(GUIContent content, bool selected = false)
         {
@@ -859,6 +893,31 @@ namespace EasyToolKit.Core.Editor
         public static bool ToolbarButton(string label, bool selected = false)
         {
             return ToolbarButton(EasyGUIHelper.TempContent(label), selected);
+        }
+
+        public static bool IconButton(EditorIcon icon, GUIStyle style, int width = 18, int height = 18,
+            string tooltip = "")
+        {
+            Rect rect = GUILayoutUtility.GetRect(icon.HighlightedContent, style, GUILayout.ExpandWidth(false), GUILayout.Width(width), GUILayout.Height(height));
+            return IconButton(rect, icon, style, tooltip);
+        }
+
+        public static bool IconButton(Rect rect, EditorIcon icon, GUIStyle style = null, string tooltip = "")
+        {
+            style ??= EasyGUIStyles.IconButton;
+            if (GUI.Button(rect, GUIContent.none, style))
+            {
+                EasyGUIHelper.RemoveFocusControl();
+                return true;
+            }
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                float size = Mathf.Min(rect.height, rect.width);
+                icon.Draw(rect.AlignCenter(size, size));
+            }
+
+            return false;
         }
 
         public static Rect BeginVerticalList(bool drawBorder = true, bool drawDarkBg = true,

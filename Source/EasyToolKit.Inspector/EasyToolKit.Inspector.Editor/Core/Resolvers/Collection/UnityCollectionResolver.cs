@@ -1,14 +1,26 @@
+using EasyToolKit.Core.Editor;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class UnityCollectionResolver<TCollection, TElement> : InspectorCollectionResolver<TCollection, TElement>
-        where TCollection : ICollection<TElement>
+    public class UnityCollectionResolver: OrderedCollectionResolverBase
     {
+        public override Type ElementType { get; }
+
         private SerializedProperty _serializedProperty;
         private readonly Dictionary<int, InspectorPropertyInfo> _propertyInfosByIndex = new Dictionary<int, InspectorPropertyInfo>();
+
+        private readonly Func<SerializedProperty, object> ElementGetter;
+        private readonly Action<SerializedProperty, object> ElementSetter;
+
+        public UnityCollectionResolver(Type elementType)
+        {
+            ElementType = elementType;
+            ElementGetter = SerializedPropertyUtility.GetWeakValueGetter(elementType);
+            ElementSetter = SerializedPropertyUtility.GetWeakValueSetter(elementType);
+        }
 
         protected override void Initialize()
         {
@@ -36,8 +48,8 @@ namespace EasyToolKit.Inspector.Editor
             info = InspectorPropertyInfo.CreateForUnityArrayElement(
                 _serializedProperty.GetArrayElementAtIndex(childIndex),
                 childIndex,
-                typeof(TCollection),
-                typeof(TElement));
+                Property.Info.TypeOfProperty,
+                ElementType);
 
             _propertyInfosByIndex[childIndex] = info;
             return info;
@@ -52,18 +64,39 @@ namespace EasyToolKit.Inspector.Editor
         {
             return _serializedProperty.arraySize;
         }
+        
+        public override void InsertElement(object value)
+        {
+            InsertElementAt(_serializedProperty.arraySize, value);
+        }
 
-        public override void RemoveElement(int index)
+        public override void RemoveElement(object value)
+        {
+            for (int i = 0; i < _serializedProperty.arraySize; i++)
+            {
+                var element = _serializedProperty.GetArrayElementAtIndex(i);
+                var elementValue = ElementGetter(element);
+                if (value.Equals(elementValue))
+                {
+                    RemoveElementAt(i);
+                    return;
+                }
+            }
+        }
+
+        public override void InsertElementAt(int index, object value)
+        {
+            _serializedProperty.InsertArrayElementAtIndex(index);
+            var element = _serializedProperty.GetArrayElementAtIndex(index);
+            ElementSetter(element, value);
+        }
+
+        public override void RemoveElementAt(int index)
         {
             _serializedProperty.DeleteArrayElementAtIndex(index);
         }
 
-        public override void InsertElement(int index)
-        {
-            _serializedProperty.InsertArrayElementAtIndex(index);
-        }
-
-        public override void MoveElement(int sourceIndex, int destinationIndex)
+        public override void MoveElemenetAt(int sourceIndex, int destinationIndex)
         {
             _serializedProperty.MoveArrayElement(sourceIndex, destinationIndex);
         }

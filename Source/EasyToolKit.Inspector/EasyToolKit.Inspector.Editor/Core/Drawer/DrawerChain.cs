@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class DrawerChain : IEnumerable<EasyDrawer>, IEnumerator<EasyDrawer>
+    public class DrawerChain : IEnumerable<IEasyDrawer>, IEnumerator<IEasyDrawer>
     {
-        private readonly EasyDrawer[] _drawers;
+        private readonly IEasyDrawer[] _drawers;
         private int _index = -1;
 
-        public EasyDrawer Current
+        public IEasyDrawer Current
         {
             get
             {
@@ -22,11 +22,11 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        public EasyDrawer[] Drawers => _drawers;
+        public IEasyDrawer[] Drawers => _drawers;
 
         public InspectorProperty Property { get; private set; }
 
-        public DrawerChain(InspectorProperty property, IEnumerable<EasyDrawer> drawers)
+        public DrawerChain(InspectorProperty property, IEnumerable<IEasyDrawer> drawers)
         {
             Property = property;
             _drawers = drawers.ToArray();
@@ -50,9 +50,9 @@ namespace EasyToolKit.Inspector.Editor
         }
 
 
-        public IEnumerator<EasyDrawer> GetEnumerator()
+        public IEnumerator<IEasyDrawer> GetEnumerator()
         {
-            return ((IEnumerable<EasyDrawer>)_drawers).GetEnumerator();
+            return ((IEnumerable<IEasyDrawer>)_drawers).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

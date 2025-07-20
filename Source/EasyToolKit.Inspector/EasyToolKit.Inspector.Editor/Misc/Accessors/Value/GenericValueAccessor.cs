@@ -19,12 +19,12 @@ namespace EasyToolKit.Inspector.Editor
             _setter = setter;
         }
 
-        public override void SetValue(object owner, object value)
+        public override void SetWeakValue(object owner, object value)
         {
             _setter(ref owner, value);
         }
 
-        public override object GetValue(object owner)
+        public override object GetWeakValue(object owner)
         {
             return _getter(ref owner);
         }

@@ -139,29 +139,41 @@ namespace EasyToolKit.Core.Editor
         
         public static Func<SerializedProperty, T> GetValueGetter<T>()
         {
-            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            var getter = GetWeakValueGetter(typeof(T));
+            return property => (T)getter(property);
+        }
+
+        public static Func<SerializedProperty, object> GetWeakValueGetter(Type valueType)
+        {
+            if (typeof(UnityEngine.Object).IsAssignableFrom(valueType))
             {
-                return p => (T)(object)p.objectReferenceValue;
+                return p => p.objectReferenceValue;
             }
 
-            if (PrimitiveValueGetters.TryGetValue(typeof(T), out var result))
+            if (PrimitiveValueGetters.TryGetValue(valueType, out var result))
             {
-                return (Func<SerializedProperty, T>)result;
+                return (Func<SerializedProperty, object>)result;
             }
 
-            return property => (T)property.boxedValue;
+            return property => property.boxedValue;
         }
         
         public static Action<SerializedProperty, T> GetValueSetter<T>()
         {
-            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            var setter = GetWeakValueSetter(typeof(T));
+            return (property, value) => setter(property, value);
+        }
+
+        public static Action<SerializedProperty, object> GetWeakValueSetter(Type valueType)
+        {
+            if (typeof(UnityEngine.Object).IsAssignableFrom(valueType))
             {
-                return (p, v) => p.objectReferenceValue = (UnityEngine.Object)(object)v;
+                return (p, v) => p.objectReferenceValue = (UnityEngine.Object)v;
             }
 
-            if (PrimitiveValueSetters.TryGetValue(typeof(T), out var result))
+            if (PrimitiveValueSetters.TryGetValue(valueType, out var result))
             {
-                return (Action<SerializedProperty, T>)result;
+                return (Action<SerializedProperty, object>)result;
             }
 
             return (property, value) => property.boxedValue = value;

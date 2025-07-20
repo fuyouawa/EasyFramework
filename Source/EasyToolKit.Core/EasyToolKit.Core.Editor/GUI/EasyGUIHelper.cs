@@ -8,6 +8,7 @@ namespace EasyToolKit.Core.Editor
     //TODO 版权问题
     public static class EasyGUIHelper
     {
+        private static readonly GUIScopeStack<bool> GUIEnabledStack = new GUIScopeStack<bool>();
         private static readonly GUIScopeStack<EventType> EventTypeStack = new GUIScopeStack<EventType>();
         private static readonly GUIScopeStack<Color> ColorStack = new GUIScopeStack<Color>();
         private static readonly GUIScopeStack<int> IndentLevelStack = new GUIScopeStack<int>();
@@ -37,6 +38,24 @@ namespace EasyToolKit.Core.Editor
 
             var layoutType = Type.GetType("UnityEngine.GUILayoutGroup, UnityEngine.IMGUIModule");
             TopLevelLayoutCalcHeightMethod = layoutType.GetMethod("CalcHeight");
+        }
+        
+        /// <summary>
+        /// Pushes a state to the GUI enabled stack. Remember to pop the state with <see cref="PopGUIEnabled"/>.
+        /// </summary>
+        /// <param name="enabled">If set to <c>true</c> GUI will be enabled. Otherwise GUI will be disabled.</param>
+        public static void PushGUIEnabled(bool enabled)
+        {
+            GUIEnabledStack.Push(GUI.enabled);
+            GUI.enabled = enabled;
+        }
+
+        /// <summary>
+        /// Pops the GUI enabled pushed by <see cref="PushGUIEnabled(bool)"/>
+        /// </summary>
+        public static void PopGUIEnabled()
+        {
+            GUI.enabled = GUIEnabledStack.Pop();
         }
 
         public static void RemoveFocusControl()

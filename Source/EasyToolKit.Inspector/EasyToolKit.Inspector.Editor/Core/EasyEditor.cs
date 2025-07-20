@@ -19,10 +19,10 @@ namespace EasyToolKit.Inspector.Editor
         private static bool s_initialized = false;
         private static Type s_audioFilterGUIType;
 
-        private InspectorPropertyTree _propertyTree;
+        private PropertyTree _propertyTree;
         private object _audioFilterGUIInstance;
 
-        public InspectorPropertyTree PropertyTree
+        public PropertyTree PropertyTree
         {
             get
             {
@@ -30,7 +30,7 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     try
                     {
-                        _propertyTree = InspectorPropertyTree.Create(serializedObject);
+                        _propertyTree = PropertyTree.Create(serializedObject);
                     }
                     catch (ArgumentException)
                     {

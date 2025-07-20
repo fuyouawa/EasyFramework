@@ -28,11 +28,11 @@ namespace EasyToolKit.Inspector.Editor
                          .SelectMany(asm => asm.GetTypes())
                          .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract))
             {
-                if (type.IsSubclassOf(typeof(EasyDrawer)))
+                if (type.IsInheritsFrom<IEasyDrawer>())
                 {
                     easyDrawerTypes.Add(type);
                 }
-                else if (type.IsSubclassOf(typeof(UnityEditor.PropertyDrawer)))
+                else if (type.IsInheritsFrom<UnityEditor.PropertyDrawer>())
                 {
                     var attr = type.GetCustomAttribute(typeof(UnityEditor.CustomPropertyDrawer));
                     if (attr != null)
@@ -125,9 +125,9 @@ namespace EasyToolKit.Inspector.Editor
                 TypeMatcher.GetCachedMatches(Type.EmptyTypes),
             };
 
-            if (property.Info.PropertyType != null)
+            if (property.Info.TypeOfProperty != null)
             {
-                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.PropertyType));
+                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.TypeOfProperty));
             }
 
             foreach (var attribute in property.GetAttributes())
@@ -146,7 +146,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public static bool CanDrawProperty(Type drawerType, InspectorProperty property)
         {
-            var drawer = (EasyDrawer)FormatterServices.GetUninitializedObject(drawerType);
+            var drawer = (IEasyDrawer)FormatterServices.GetUninitializedObject(drawerType);
             return drawer.CanDrawProperty(property);
         }
 

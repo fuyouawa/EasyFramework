@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using EasyToolKit.Core;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -15,10 +16,13 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             var drawerTypeResults = DrawerUtility.GetDefaultPropertyDrawerTypes(Property);
-            var drawers = new List<EasyDrawer>();
+            var drawers = new List<IEasyDrawer>();
             foreach (var drawerType in drawerTypeResults.Select(result => result.MatchedType).Distinct())
             {
-                drawers.Add(EasyDrawer.Create(drawerType, Property));
+                var drawer = drawerType.CreateInstance<IEasyDrawer>();
+                drawer.Property = Property;
+                drawer.Initialize();
+                drawers.Add(drawer);
             }
 
             _chain = new DrawerChain(Property, drawers);

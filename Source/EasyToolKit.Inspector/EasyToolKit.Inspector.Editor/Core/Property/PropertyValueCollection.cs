@@ -7,7 +7,21 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public sealed class InspectorValueCollection<TValue> : IInspectorValueCollection<TValue>
+    public interface IPropertyValueCollection : IReadOnlyList
+    {
+        InspectorProperty Property { get; }
+        bool Dirty { get; }
+        internal void Update();
+        internal bool ApplyChanges();
+    }
+
+    public interface IPropertyValueCollection<T> : IPropertyValueCollection, IReadOnlyList<T>
+    {
+        new T this[int index] { get; set; }
+        new int Count { get; }
+    }
+
+    public sealed class PropertyValueCollection<TValue> : IPropertyValueCollection<TValue>
     {
         public InspectorProperty Property { get; private set; }
         private readonly TValue[] _values;
@@ -15,7 +29,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public bool Dirty { get; private set; }
 
-        public InspectorValueCollection(InspectorProperty property)
+        public PropertyValueCollection(InspectorProperty property)
         {
             Property = property;
             _values = new TValue[property.Tree.Targets.Length];
@@ -72,7 +86,7 @@ namespace EasyToolKit.Inspector.Editor
             Dirty = false;
         }
 
-        void IInspectorValueCollection.Update()
+        void IPropertyValueCollection.Update()
         {
             if (Property.Info.IsLogicRoot)
             {
@@ -92,7 +106,7 @@ namespace EasyToolKit.Inspector.Editor
                 for (int i = 0; i < Property.Tree.Targets.Length; i++)
                 {
                     var owner = Property.Parent.ValueEntry.WeakValues[i];
-                    var value = (TValue)Property.Info.ValueAccessor.GetValue(owner);
+                    var value = (TValue)Property.Info.ValueAccessor.GetWeakValue(owner);
                     _values[i] = value;
                 }
             }
@@ -102,7 +116,7 @@ namespace EasyToolKit.Inspector.Editor
             _firstUpdated = true;
         }
 
-        bool IInspectorValueCollection.ApplyChanges()
+        bool IPropertyValueCollection.ApplyChanges()
         {
             if (!Dirty) return false;
             
@@ -113,7 +127,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 var owner = Property.Parent.ValueEntry.WeakValues[i];
                 var value = _values[i];
-                Property.Info.ValueAccessor.SetValue(owner, value);
+                Property.Info.ValueAccessor.SetWeakValue(owner, value);
             }
 
             ClearDirty();

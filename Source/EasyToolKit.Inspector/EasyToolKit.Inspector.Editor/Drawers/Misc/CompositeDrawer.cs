@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class CompositeDrawer : EasyDrawer
+    public class CompositeDrawer<T> : EasyValueDrawer<T>
     {
-        public override bool CanDrawProperty(InspectorProperty property)
+        protected override bool CanDrawValueProperty(InspectorProperty property)
         {
             return property.Children != null;
         }

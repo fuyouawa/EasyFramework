@@ -9,18 +9,26 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
+    public enum PropertyType
+    {
+        Value,
+        Method
+    }
+
     public sealed class InspectorPropertyInfo
     {
-        [CanBeNull] public IValueAccessor ValueAccessor { get; private set; }
+        public IValueAccessor ValueAccessor { get; private set; }
         public MemberInfo MemberInfo { get; private set; }
-        public Type PropertyType { get; private set; }
+        public PropertyType PropertyType { get; private set; }
+        [CanBeNull] public Type TypeOfProperty { get; private set; }
         public string PropertyPath { get; private set; }
         public string PropertyName { get; private set; }
         public bool AllowChildren { get; private set; }
         public bool IsLogicRoot { get; private set; }
-        [CanBeNull] public Type DefaultChildrenResolverType { get; private set; }
-        [CanBeNull] public Type DefaultDrawerChainResolverType { get; private set; }
-        [CanBeNull] public Type DefaultAttributeAccessorResolver { get; private set; }
+
+        [CanBeNull] public IPropertyResolver DefaultChildrenResolver { get; private set; }
+        [CanBeNull] public IDrawerChainResolver DefaultDrawerChainResolver { get; private set; }
+        [CanBeNull] public IAttributeAccessorResolver DefaultAttributeAccessorResolver { get; private set; }
 
         private InspectorPropertyInfo()
         {
@@ -36,35 +44,36 @@ namespace EasyToolKit.Inspector.Editor
             var info = new InspectorPropertyInfo()
             {
                 MemberInfo = fieldInfo,
-                PropertyType = fieldInfo.FieldType,
+                TypeOfProperty = fieldInfo.FieldType,
                 PropertyPath = serializedProperty.propertyPath,
                 PropertyName = serializedProperty.name,
-                DefaultDrawerChainResolverType = typeof(DefaultDrawerChainResolver),
-                DefaultAttributeAccessorResolver = typeof(DefaultAttributeAccessorResolver),
+                DefaultDrawerChainResolver = new DefaultDrawerChainResolver(),
+                DefaultAttributeAccessorResolver = new DefaultAttributeAccessorResolver(),
+                PropertyType = PropertyType.Value
             };
 
             var accessorType = typeof(MemberValueAccessor<,>)
                 .MakeGenericType(parentType, fieldInfo.FieldType);
             info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
 
-            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.PropertyType);
-            info.AllowChildren = info.PropertyType != null &&
-                                 !info.PropertyType.IsBasic() &&
-                                 !info.PropertyType.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                                 info.PropertyType.GetCustomAttribute<SerializableAttribute>() != null &&
+            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.TypeOfProperty);
+            info.AllowChildren = info.TypeOfProperty != null &&
+                                 !info.TypeOfProperty.IsBasic() &&
+                                 !info.TypeOfProperty.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                                 info.TypeOfProperty.GetCustomAttribute<SerializableAttribute>() != null &&
                                  !isDefinedUnityPropertyDrawer;
 
 
             if (info.AllowChildren)
             {
-                if (info.PropertyType.IsImplementsOpenGenericType(typeof(ICollection<>)))
+                if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
                 {
-                    var arguments = info.PropertyType.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
-                    info.DefaultChildrenResolverType = typeof(UnityCollectionResolver<,>).MakeGenericType(info.PropertyType, arguments[0]);
+                    var arguments = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
+                    info.DefaultChildrenResolver = new UnityCollectionResolver(arguments[0]);
                 }
                 else
                 {
-                    info.DefaultChildrenResolverType = typeof(UnityPropertyResolver);
+                    info.DefaultChildrenResolver = new UnityPropertyResolver();
                 }
             }
 
@@ -75,10 +84,11 @@ namespace EasyToolKit.Inspector.Editor
         {
             var info = new InspectorPropertyInfo()
             {
-                PropertyType = elementType,
+                TypeOfProperty = elementType,
                 PropertyPath = serializedProperty.propertyPath,
                 PropertyName = serializedProperty.name,
-                DefaultDrawerChainResolverType = typeof(DefaultDrawerChainResolver),
+                DefaultDrawerChainResolver = new DefaultDrawerChainResolver(),
+                PropertyType = PropertyType.Value
             };
 
             info.ValueAccessor = new GenericValueAccessor(
@@ -88,23 +98,23 @@ namespace EasyToolKit.Inspector.Editor
                 (ref object collection, object element) => ((IList)collection)[index] = element);
 
             //TODO 优化重复代码
-            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.PropertyType);
-            info.AllowChildren = info.PropertyType != null &&
-                                 !info.PropertyType.IsBasic() &&
-                                 !info.PropertyType.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                                 info.PropertyType.GetCustomAttribute<SerializableAttribute>() != null &&
+            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.TypeOfProperty);
+            info.AllowChildren = info.TypeOfProperty != null &&
+                                 !info.TypeOfProperty.IsBasic() &&
+                                 !info.TypeOfProperty.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                                 info.TypeOfProperty.GetCustomAttribute<SerializableAttribute>() != null &&
                                  !isDefinedUnityPropertyDrawer;
             
             if (info.AllowChildren)
             {
-                if (info.PropertyType.IsImplementsOpenGenericType(typeof(ICollection<>)))
+                if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
                 {
-                    var arguments = info.PropertyType.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
-                    info.DefaultChildrenResolverType = typeof(UnityCollectionResolver<,>).MakeGenericType(info.PropertyType, arguments[0]);
+                    var arguments = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
+                    info.DefaultChildrenResolver = new UnityCollectionResolver(arguments[0]);
                 }
                 else
                 {
-                    info.DefaultChildrenResolverType = typeof(UnityPropertyResolver);
+                    info.DefaultChildrenResolver = new UnityPropertyResolver();
                 }
             }
 
@@ -117,17 +127,18 @@ namespace EasyToolKit.Inspector.Editor
 
             var info = new InspectorPropertyInfo()
             {
-                PropertyType = serializedObject.targetObject.GetType(),
+                TypeOfProperty = serializedObject.targetObject.GetType(),
                 PropertyPath = iterator.propertyPath,
                 PropertyName = iterator.name,
-                DefaultChildrenResolverType = typeof(UnityPropertyResolver),
+                DefaultChildrenResolver = new UnityPropertyResolver(),
                 AllowChildren = true,
                 IsLogicRoot = true,
+                PropertyType = PropertyType.Value
             };
 
             info.ValueAccessor = new GenericValueAccessor(
                 typeof(int),
-                info.PropertyType,
+                info.TypeOfProperty,
                 (ref object index) => serializedObject.targetObjects[(int)index],
                 null);
 

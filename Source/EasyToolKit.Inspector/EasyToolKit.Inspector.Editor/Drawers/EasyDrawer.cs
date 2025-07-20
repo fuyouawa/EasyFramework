@@ -6,37 +6,29 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public abstract class EasyDrawer
+    public interface IEasyDrawer : IInitializable
+    {
+        bool SkipWhenDrawing { get; set; }
+        InspectorProperty Property { get; set; }
+        void DrawProperty(GUIContent label);
+        bool CanDrawProperty(InspectorProperty property);
+    }
+
+    public abstract class EasyDrawer : IEasyDrawer
     {
         public bool SkipWhenDrawing { get; set; }
         public InspectorProperty Property { get; private set; }
-
-        public static EasyDrawer Create([NotNull] Type drawerType, [NotNull] InspectorProperty property)
-        {
-            if (drawerType == null) throw new ArgumentNullException(nameof(drawerType));
-            if (property == null) throw new ArgumentNullException(nameof(property));
-
-            if (!typeof(EasyDrawer).IsAssignableFrom(drawerType))
-            {
-                throw new ArgumentException(nameof(drawerType));
-            }
-
-            var drawer = drawerType.CreateInstance<EasyDrawer>();
-            drawer.Property = property;
-            drawer.Initialize();
-            return drawer;
-        }
+        public bool IsInitialized { get; private set; }
 
         protected virtual void Initialize()
         {
         }
 
-        internal void DrawProperty(GUIContent label)
+        protected virtual void Deinitialize()
         {
-            OnDrawProperty(label);
         }
 
-        public virtual bool CanDrawProperty(InspectorProperty property)
+        protected virtual bool CanDrawProperty(InspectorProperty property)
         {
             return true;
         }
@@ -54,6 +46,38 @@ namespace EasyToolKit.Inspector.Editor
 
         protected virtual void OnDrawProperty(GUIContent label)
         {
+        }
+
+        InspectorProperty IEasyDrawer.Property
+        {
+            get => Property;
+            set => Property = value;
+        }
+        
+        bool IInitializable.IsInitialized => IsInitialized;
+
+        void IInitializable.Initialize()
+        {
+            if (IsInitialized) return;
+            Initialize();
+            IsInitialized = true;
+        }
+
+        void IInitializable.Deinitialize()
+        {
+            if (!IsInitialized) return;
+            Deinitialize();
+            IsInitialized = false;
+        }
+
+        void IEasyDrawer.DrawProperty(GUIContent label)
+        {
+            OnDrawProperty(label);
+        }
+
+        bool IEasyDrawer.CanDrawProperty(InspectorProperty property)
+        {
+            return CanDrawProperty(property);
         }
     }
 }

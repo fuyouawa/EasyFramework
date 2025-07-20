@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EasyToolKit.Core;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -11,28 +12,32 @@ namespace EasyToolKit.Inspector.Editor
     {
         private Attribute[] _attributes;
         private string _niceName;
-        private InspectorPropertyState _state;
+        private PropertyState _state;
         private bool? _isSelfReadOnlyCache;
 
-        public InspectorProperty Parent { get; private set; }
-        public InspectorPropertyTree Tree { get; }
+        private IPropertyResolver _childrenResolver;
+        private IDrawerChainResolver _drawerChainResolver;
+        private IAttributeAccessorResolver _attributeAccessorResolver;
 
-        [CanBeNull] public InspectorPropertyChildren Children { get; }
+        public InspectorProperty Parent { get; private set; }
+        public PropertyTree Tree { get; }
+
+        [CanBeNull] public PropertyChildren Children { get; }
         public InspectorPropertyInfo Info { get; }
 
-        public InspectorPropertyState State
+        public PropertyState State
         {
             get
             {
                 if (_state == null)
                 {
-                    _state = new InspectorPropertyState(this);
+                    _state = new PropertyState(this);
                 }
                 return _state;
             }
         }
 
-        [CanBeNull] public IInspectorValueEntry ValueEntry { get; }
+        [CanBeNull] public IPropertyValueEntry ValueEntry { get; }
 
         public int Index { get; private set; }
 
@@ -95,12 +100,41 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         public GUIContent Label { get; set; }
-        
-        [CanBeNull] public InspectorPropertyResolver ChildrenResolver { get; private set; }
-        public DrawerChainResolver DrawerChainResolver { get; private set; }
-        [CanBeNull] public AttributeAccessorResolver AttributeAccessorResolver { get; private set; }
 
-        internal InspectorProperty(InspectorPropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
+        [CanBeNull] public IPropertyResolver ChildrenResolver
+        {
+            get => _childrenResolver;
+            set
+            {
+                InitializeResolver(value);
+                _childrenResolver = value;
+                Refresh();
+            }
+        }
+        
+        [CanBeNull] public IDrawerChainResolver DrawerChainResolver
+        {
+            get => _drawerChainResolver;
+            set
+            {
+                InitializeResolver(value);
+                _drawerChainResolver = value;
+                Refresh();
+            }
+        }
+        
+        [CanBeNull] public IAttributeAccessorResolver AttributeAccessorResolver 
+        {
+            get => _attributeAccessorResolver;
+            set
+            {
+                InitializeResolver(value);
+                _attributeAccessorResolver = value;
+                Refresh();
+            }
+        }
+
+        internal InspectorProperty(PropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
             int index)
         {
             if (tree == null)
@@ -133,27 +167,37 @@ namespace EasyToolKit.Inspector.Editor
 
             Label = new GUIContent(NiceName);
 
-            if (Info.DefaultDrawerChainResolverType != null)
+            if (Info.DefaultDrawerChainResolver != null)
             {
-                SetDrawerChainResolver(Info.DefaultDrawerChainResolverType);
+                DrawerChainResolver = Info.DefaultDrawerChainResolver;
             }
 
             if (Info.DefaultAttributeAccessorResolver != null)
             {
-                SetAttributeAccessorResolver(Info.DefaultAttributeAccessorResolver);
+                AttributeAccessorResolver = Info.DefaultAttributeAccessorResolver;
             }
             
             if (Info.AllowChildren)
             {
-                Children = new InspectorPropertyChildren(this);
-                SetChildrenResolver(Info.DefaultChildrenResolverType);
+                ChildrenResolver = Info.DefaultChildrenResolver;
+                Children = new PropertyChildren(this);
             }
 
             if (info.ValueAccessor != null)
             {
-                var entryType = typeof(InspectorValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
-                ValueEntry = (IInspectorValueEntry)entryType.CreateInstance(this);
+                var entryType = typeof(PropertyValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
+                ValueEntry = (IPropertyValueEntry)entryType.CreateInstance(this);
             }
+        }
+        
+        public LocalPersistentContext<T> GetPersistentContext<T>(string key,
+            T defaultValue = default)
+        {
+            var key1 = TwoWaySerializationBinder.Default.BindToName(Tree.TargetType);
+            var key2 = Info.PropertyPath;
+
+            var hash = HashCode.Combine(key1, key2, key);
+            return PersistentContext.GetLocal(hash, defaultValue);
         }
 
         internal void Update()
@@ -168,24 +212,6 @@ namespace EasyToolKit.Inspector.Editor
             {
                 Children.Update();
             }
-        }
-
-        public void SetChildrenResolver(Type resolverType)
-        {
-            ChildrenResolver = InspectorPropertyResolver.Create(resolverType, this);
-            Refresh();
-        }
-
-        public void SetDrawerChainResolver(Type resolverType)
-        {
-            DrawerChainResolver = DrawerChainResolver.Create(resolverType, this);
-            Refresh();
-        }
-
-        public void SetAttributeAccessorResolver(Type resolverType)
-        {
-            AttributeAccessorResolver = AttributeAccessorResolver.Create(resolverType, this);
-            Refresh();
         }
 
         public void Refresh()
@@ -254,6 +280,20 @@ namespace EasyToolKit.Inspector.Editor
                 EditorGUI.BeginDisabledGroup(IsSelfReadOnly);
                 chain.Current.DrawProperty(label);
                 EditorGUI.EndDisabledGroup();
+            }
+        }
+
+        private void InitializeResolver(IInitializableResolver resolver)
+        {
+            if (resolver != null)
+            {
+                if (resolver.IsInitialized)
+                {
+                    resolver.Deinitialize();
+                }
+
+                resolver.Property = this;
+                resolver.Initialize();
             }
         }
     }

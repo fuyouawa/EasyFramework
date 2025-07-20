@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class InspectorPropertyChildren
+    public class PropertyChildren
     {
         private readonly InspectorProperty _property;
         private readonly Dictionary<int, InspectorProperty> _childrenByIndex = new Dictionary<int, InspectorProperty>();
@@ -15,7 +15,7 @@ namespace EasyToolKit.Inspector.Editor
         public InspectorProperty this[int index] => Get(index);
         public InspectorProperty this[string name] => Get(name);
 
-        internal InspectorPropertyChildren(InspectorProperty property)
+        internal PropertyChildren(InspectorProperty property)
         {
             if (property == null)
             {

@@ -4,6 +4,17 @@
         <name>EasyToolKit.Core.Editor</name>
     </assembly>
     <members>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushGUIEnabled(System.Boolean)">
+            <summary>
+            Pushes a state to the GUI enabled stack. Remember to pop the state with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopGUIEnabled"/>.
+            </summary>
+            <param name="enabled">If set to <c>true</c> GUI will be enabled. Otherwise GUI will be disabled.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopGUIEnabled">
+            <summary>
+            Pops the GUI enabled pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushGUIEnabled(System.Boolean)"/>
+            </summary>
+        </member>
         <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.BeginIgnoreInput">
             <summary>
             Ignores input on following GUI calls. Remember to end with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.EndIgnoreInput"/>.

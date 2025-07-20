@@ -7,8 +7,8 @@ namespace EasyToolKit.Inspector.Editor
         bool IsReadonly { get; }
         Type OwnerType { get; }
         Type ValueType { get; }
-        void SetValue(object owner, object value);
-        object GetValue(object owner);
+        void SetWeakValue(object owner, object value);
+        object GetWeakValue(object owner);
     }
 
     public interface IValueAccessor<TOwner, TValue> : IValueAccessor
@@ -25,8 +25,8 @@ namespace EasyToolKit.Inspector.Editor
 
         public abstract Type ValueType { get; }
 
-        public abstract void SetValue(object owner, object value);
-        public abstract object GetValue(object owner);
+        public abstract void SetWeakValue(object owner, object value);
+        public abstract object GetWeakValue(object owner);
     }
 
     public abstract class ValueAccessor<TOwner, TValue> : IValueAccessor<TOwner, TValue>
@@ -35,13 +35,13 @@ namespace EasyToolKit.Inspector.Editor
         public virtual Type OwnerType => typeof(TOwner);
         public virtual Type ValueType => typeof(TValue);
 
-        public virtual void SetValue(object owner, object value)
+        public virtual void SetWeakValue(object owner, object value)
         {
             var castOwner = (TOwner)owner;
             SetValue(ref castOwner, (TValue)value);
         }
 
-        public virtual object GetValue(object owner)
+        public virtual object GetWeakValue(object owner)
         {
             var castOwner = (TOwner)owner;
             return GetValue(ref castOwner);

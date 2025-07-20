@@ -5,7 +5,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public static class EasyDrawerExtensions
     {
-        public static LocalPersistentContext<T> GetPersistentContext<T>(this EasyDrawer drawer, string key,
+        public static LocalPersistentContext<T> GetPersistentContext<T>(this IEasyDrawer drawer, string key,
             T defaultValue = default)
         {
             var key1 = TwoWaySerializationBinder.Default.BindToName(drawer.GetType());

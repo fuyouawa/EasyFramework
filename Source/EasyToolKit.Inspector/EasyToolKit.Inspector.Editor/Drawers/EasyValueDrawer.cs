@@ -5,22 +5,22 @@ namespace EasyToolKit.Inspector.Editor
 {
     public abstract class EasyValueDrawer<T> : EasyDrawer
     {
-        private IInspectorValueEntry<T> _valueEntry;
+        private IPropertyValueEntry<T> _valueEntry;
 
-        public IInspectorValueEntry<T> ValueEntry
+        public IPropertyValueEntry<T> ValueEntry
         {
             get
             {
                 if (_valueEntry == null)
                 {
-                    _valueEntry = Property.ValueEntry as IInspectorValueEntry<T>;
+                    _valueEntry = Property.ValueEntry as IPropertyValueEntry<T>;
                 }
 
                 return _valueEntry;
             }
         }
 
-        public sealed override bool CanDrawProperty(InspectorProperty property)
+        protected sealed override bool CanDrawProperty(InspectorProperty property)
         {
             return property.ValueEntry != null &&
                    property.ValueEntry.ValueType == typeof(T) &&

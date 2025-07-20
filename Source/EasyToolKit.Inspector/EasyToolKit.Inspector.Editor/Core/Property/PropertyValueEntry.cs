@@ -5,16 +5,37 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class InspectorValueEntry<TValue> : IInspectorValueEntry<TValue>
+    public interface IPropertyValueEntry
+    {
+        object WeakSmartValue { get; set; }
+        Type ValueType { get; }
+        IPropertyValueCollection WeakValues { get; }
+        InspectorProperty Property { get; }
+
+        event Action<int> OnValueChanged;
+
+        bool IsConflicted();
+
+        internal void Update();
+        internal bool ApplyChanges();
+    }
+
+    public interface IPropertyValueEntry<TValue> : IPropertyValueEntry
+    {
+        TValue SmartValue { get; set; }
+        IPropertyValueCollection<TValue> Values { get; }
+    }
+
+    public class PropertyValueEntry<TValue> : IPropertyValueEntry<TValue>
     {
         private bool? _isConflictedCache;
         public InspectorProperty Property { get; }
-        public IInspectorValueCollection<TValue> Values { get; }
+        public IPropertyValueCollection<TValue> Values { get; }
 
-        public InspectorValueEntry(InspectorProperty property)
+        public PropertyValueEntry(InspectorProperty property)
         {
             Property = property;
-            Values = new InspectorValueCollection<TValue>(property);
+            Values = new PropertyValueCollection<TValue>(property);
         }
 
         public event Action<int> OnValueChanged;
@@ -38,15 +59,15 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         public Type ValueType => typeof(TValue);
-        public IInspectorValueCollection WeakValues => Values;
+        public IPropertyValueCollection WeakValues => Values;
 
-        void IInspectorValueEntry.Update()
+        void IPropertyValueEntry.Update()
         {
             _isConflictedCache = null;
             Values.Update();
         }
 
-        bool IInspectorValueEntry.ApplyChanges()
+        bool IPropertyValueEntry.ApplyChanges()
         {
             bool changed = false;
             if (Values.Dirty)

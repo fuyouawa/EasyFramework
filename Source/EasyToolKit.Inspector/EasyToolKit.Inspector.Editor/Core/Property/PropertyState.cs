@@ -1,12 +1,12 @@
 namespace EasyToolKit.Inspector.Editor
 {
-    public class InspectorPropertyState
+    public class PropertyState
     {
         public InspectorProperty Property { get; }
 
         private LocalPersistentContext<bool> _expanded;
 
-        public InspectorPropertyState(InspectorProperty property)
+        public PropertyState(InspectorProperty property)
         {
             Property = property;
         }

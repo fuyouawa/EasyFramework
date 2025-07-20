@@ -337,7 +337,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ee0cbebaea44444a62421129fa7eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testList: 
+  Int2: 0
+  testList: []
+  TestClass:
+    Int1: 0
+    Int2: 0
+    String3: 
+    Class1:
+      Inttt: 0
 --- !u!4 &1076451576
 Transform:
   m_ObjectHideFlags: 0
@@ -887,7 +894,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ee0cbebaea44444a62421129fa7eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testList: 240000001a000000
+  Int2: 0
+  testList:
+  - Int1: 11
+    Int2: 0
+    String3: 
+    Class1:
+      Inttt: 0
+  - Int1: 0
+    Int2: -59
+    String3: 
+    Class1:
+      Inttt: 0
+  TestClass:
+    Int1: 0
+    Int2: 0
+    String3: 
+    Class1:
+      Inttt: 0
 --- !u!4 &1433810479
 Transform:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,14 +21,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override bool CanDrawValueProperty(InspectorProperty property)
         {
-            return property.ChildrenResolver is InspectorCollectionResolver<T>;
-        }
-
-        private InspectorCollectionResolver<T> _collectionResolver;
-
-        protected override void Initialize()
-        {
-            _collectionResolver = (InspectorCollectionResolver<T>)Property.ChildrenResolver;
+            return property.ChildrenResolver is ICollectionResolver;
         }
 
         protected override void OnDrawProperty(GUIContent label)
@@ -44,7 +38,7 @@ namespace EasyToolKit.Inspector.Editor
 
             GUILayout.FlexibleSpace();
 
-            if (EasyEditorGUI.ToolbarButton(TempContent.SetImage(EasyEditorIcons.Plus)))
+            if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
             {
                 
             }
@@ -69,19 +63,29 @@ namespace EasyToolKit.Inspector.Editor
         {
             var rect = EasyEditorGUI.BeginListItem(false, ListItemStyle, GUILayout.MinHeight(25), GUILayout.ExpandWidth(true));
 
-            Rect dragHandleRect;
-            Rect removeBtnRect;
-            if (Event.current.type == EventType.Repaint)
-            {
-                dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 20, 20);
-                removeBtnRect = new Rect(dragHandleRect.x + rect.width - 22, dragHandleRect.y + 1, 14, 14);
+            var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 20, 20);
+            var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 22, dragHandleRect.y + 1, 14, 14);
                 
-                GUI.Label(dragHandleRect, EasyEditorIcons.List, GUIStyle.none);
-            }
+            GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
             property.Draw(null);
 
+            if (EasyEditorGUI.IconButton(removeBtnRect, EasyEditorIcons.X))
+            {
+                
+            }
+
             EasyEditorGUI.EndListItem();
         }
+
+        // private object GetValueToAdd(int targetIndex)
+        // {
+        //     if (_collectionResolver.ElementType.IsInheritsFrom<UnityEngine.Object>())
+        //     {
+        //         return null;
+        //     }
+        //
+        //     return UnitySerializationUtility.CreateDefaultUnityInitializedObject(_collectionResolver.ElementType);
+        // }
     }
 }

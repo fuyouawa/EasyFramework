@@ -16,9 +16,9 @@ namespace EasyToolKit.Inspector.Editor
             {
                 new MemberAttributeAccessor(Property.Info.MemberInfo)
             };
-            if (Property.Info.PropertyType != null)
+            if (Property.Info.TypeOfProperty != null)
             {
-                accessors.Add(new TypeAttributeAccessor(Property.Info.PropertyType));
+                accessors.Add(new TypeAttributeAccessor(Property.Info.TypeOfProperty));
             }
 
             _attributes = accessors.ToArray();

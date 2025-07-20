@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class InspectorPropertyTree
+    public class PropertyTree
     {
         private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
         private Action _pendingCallbacks;
@@ -19,14 +19,14 @@ namespace EasyToolKit.Inspector.Editor
         public InspectorProperty LogicRootProperty { get; }
 
         public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
-        public Type TargetType => LogicRootProperty.Info.PropertyType;
+        public Type TargetType => LogicRootProperty.Info.TypeOfProperty;
 
         public bool DrawMonoScriptObjectField { get; set; }
 
         public event Action<InspectorProperty, int> OnPropertyValueChanged;
 
 
-        public InspectorPropertyTree([NotNull] SerializedObject serializedObject)
+        public PropertyTree([NotNull] SerializedObject serializedObject)
         {
             if (serializedObject == null)
                 throw new ArgumentNullException(nameof(serializedObject));
@@ -180,6 +180,11 @@ namespace EasyToolKit.Inspector.Editor
             bool changed = false;
             foreach (var property in _dirtyProperties)
             {
+                if (property.ChildrenResolver != null)
+                {
+                    property.ChildrenResolver.ApplyChanges();
+                }
+
                 if (property.ValueEntry != null)
                 {
                     if (property.ValueEntry.ApplyChanges())
@@ -219,7 +224,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        public static InspectorPropertyTree Create([NotNull] SerializedObject serializedObject)
+        public static PropertyTree Create([NotNull] SerializedObject serializedObject)
         {
             if (serializedObject == null)
                 throw new ArgumentNullException(nameof(serializedObject));
@@ -227,7 +232,7 @@ namespace EasyToolKit.Inspector.Editor
             return Create(serializedObject.targetObjects, serializedObject);
         }
 
-        public static InspectorPropertyTree Create([NotNull] UnityEngine.Object[] targets,
+        public static PropertyTree Create([NotNull] UnityEngine.Object[] targets,
             SerializedObject serializedObject)
         {
             if (targets == null) throw new ArgumentNullException(nameof(targets));
@@ -263,7 +268,7 @@ namespace EasyToolKit.Inspector.Editor
                 serializedObject = new SerializedObject(targets);
             }
 
-            return new InspectorPropertyTree(serializedObject);
+            return new PropertyTree(serializedObject);
         }
     }
 }
