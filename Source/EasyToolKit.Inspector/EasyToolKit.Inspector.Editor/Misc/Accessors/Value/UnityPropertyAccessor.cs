@@ -6,8 +6,8 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class UnityPropertyAccessor<TOwner, TValue> : ValueAccessor<TOwner, TValue>
     {
-        private static readonly Func<SerializedProperty, TValue> Getter = SerializedPropertyUtility.GetValueGetter<TValue>();
-        private static readonly Action<SerializedProperty, TValue> Setter = SerializedPropertyUtility.GetValueSetter<TValue>();
+        private static readonly Func<SerializedProperty, TValue> ValueGetter = SerializedPropertyUtility.GetValueGetter<TValue>();
+        private static readonly Action<SerializedProperty, TValue> ValueSetter = SerializedPropertyUtility.GetValueSetter<TValue>();
 
         private readonly SerializedProperty _serializedProperty;
 
@@ -16,14 +16,14 @@ namespace EasyToolKit.Inspector.Editor
             _serializedProperty = serializedProperty.Copy();
         }
 
-        public override void SetValue(ref TOwner owner, TValue value)
+        public override void SetValue(ref TOwner owner, TValue collection)
         {
-            Setter(_serializedProperty, value);
+            ValueSetter(_serializedProperty, collection);
         }
 
         public override TValue GetValue(ref TOwner owner)
         {
-            return Getter(_serializedProperty);
+            return ValueGetter(_serializedProperty);
         }
     }
 }

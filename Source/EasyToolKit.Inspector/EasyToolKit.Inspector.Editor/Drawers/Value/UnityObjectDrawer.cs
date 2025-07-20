@@ -6,7 +6,7 @@ namespace EasyToolKit.Inspector.Editor
     public class UnityObjectDrawer<T> : EasyValueDrawer<T>
         where T : UnityEngine.Object
     {
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             var value = ValueEntry.SmartValue;
             EditorGUI.BeginChangeCheck();

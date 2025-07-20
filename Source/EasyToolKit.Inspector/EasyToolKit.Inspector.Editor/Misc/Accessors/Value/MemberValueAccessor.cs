@@ -30,9 +30,9 @@ namespace EasyToolKit.Inspector.Editor
             _memberInfo = memberInfo;
         }
 
-        public override void SetValue(ref TOwner target, TValue value)
+        public override void SetValue(ref TOwner target, TValue collection)
         {
-            _setter(ref target, value);
+            _setter(ref target, collection);
         }
 
         public override TValue GetValue(ref TOwner target)

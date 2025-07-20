@@ -136,8 +136,13 @@ namespace EasyToolKit.Core
             return newArray;
         }
 
-        public static void Resize<T>(this List<T> list, int length)
+        public static void Resize<T>(this IList<T> list, int length)
         {
+            if (list.GetType().IsArray)
+            {
+                throw new InvalidOperationException("Use Array.Resize instead.");
+            }
+
             while (list.Count < length)
             {
                 list.Add(default);

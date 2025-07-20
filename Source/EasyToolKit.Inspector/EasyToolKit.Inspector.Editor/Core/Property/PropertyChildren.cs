@@ -59,6 +59,11 @@ namespace EasyToolKit.Inspector.Editor
         {
         }
 
+        public void Refresh()
+        {
+            _childrenByIndex.Clear();
+        }
+
         public IEnumerable<InspectorProperty> Recurse()
         {
             for (var i = 0; i < Count; i++)

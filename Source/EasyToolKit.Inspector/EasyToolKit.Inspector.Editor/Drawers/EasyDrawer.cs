@@ -44,7 +44,7 @@ namespace EasyToolKit.Inspector.Editor
             return false;
         }
 
-        protected virtual void OnDrawProperty(GUIContent label)
+        protected virtual void DrawProperty(GUIContent label)
         {
         }
 
@@ -72,7 +72,7 @@ namespace EasyToolKit.Inspector.Editor
 
         void IEasyDrawer.DrawProperty(GUIContent label)
         {
-            OnDrawProperty(label);
+            DrawProperty(label);
         }
 
         bool IEasyDrawer.CanDrawProperty(InspectorProperty property)

@@ -13,7 +13,7 @@ namespace EasyToolKit.Inspector.Editor
             return valueType.IsBasic() || valueType.IsSubclassOf(typeof(UnityEngine.Object));
         }
 
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             if (ValueEntry.IsConflicted())
             {

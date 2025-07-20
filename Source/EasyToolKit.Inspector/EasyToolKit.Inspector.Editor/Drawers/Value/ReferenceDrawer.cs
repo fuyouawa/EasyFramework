@@ -11,7 +11,7 @@ namespace EasyToolKit.Inspector.Editor
             return property.Children != null;
         }
 
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             if (label == null)
             {

@@ -75,6 +75,11 @@ namespace EasyToolKit.Inspector.Editor
             } while (iterator.Next(false));
         }
 
+        protected override void Deinitialize()
+        {
+            _propertyInfos.Clear();
+        }
+
         public override InspectorPropertyInfo GetChildInfo(int childIndex)
         {
             return _propertyInfos[childIndex];

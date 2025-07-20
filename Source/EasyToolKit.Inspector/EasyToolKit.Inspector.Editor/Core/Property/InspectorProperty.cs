@@ -218,6 +218,10 @@ namespace EasyToolKit.Inspector.Editor
         {
             _attributes = null;
             _isSelfReadOnlyCache = null;
+            if (Children != null)
+            {
+                Children.Refresh();
+            }
         }
 
         public DrawerChain GetDrawerChain()

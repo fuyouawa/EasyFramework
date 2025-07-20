@@ -13,7 +13,7 @@ namespace EasyToolKit.Inspector.Editor
 
     public interface IValueAccessor<TOwner, TValue> : IValueAccessor
     {
-        void SetValue(ref TOwner owner, TValue value);
+        void SetValue(ref TOwner owner, TValue collection);
         TValue GetValue(ref TOwner owner);
     }
 
@@ -47,7 +47,7 @@ namespace EasyToolKit.Inspector.Editor
             return GetValue(ref castOwner);
         }
 
-        public abstract void SetValue(ref TOwner owner, TValue value);
+        public abstract void SetValue(ref TOwner owner, TValue collection);
 
         public abstract TValue GetValue(ref TOwner owner);
     }

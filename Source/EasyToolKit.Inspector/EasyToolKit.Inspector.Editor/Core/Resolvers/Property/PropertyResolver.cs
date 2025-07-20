@@ -8,14 +8,13 @@ namespace EasyToolKit.Inspector.Editor
         InspectorPropertyInfo GetChildInfo(int childIndex);
         int ChildNameToIndex(string name);
         int GetChildCount();
-        void ApplyChanges();
+        bool ApplyChanges();
     }
 
     public abstract class PropertyResolver : IPropertyResolver
     {
         public InspectorProperty Property { get; private set; }
         public bool IsInitialized { get; private set; }
-        private Action _changeAction;
 
         InspectorProperty IInitializableResolver.Property
         {
@@ -46,27 +45,11 @@ namespace EasyToolKit.Inspector.Editor
         public abstract int ChildNameToIndex(string name);
         public abstract int GetChildCount();
 
-        protected void QueueChange(Action action)
+        bool IPropertyResolver.ApplyChanges()
         {
-            _changeAction += action;
-            Property.Tree.QueueCallbackUntilRepaint(() =>
-            {
-                Property.Tree.SetPropertyDirty(Property);
-            });
+            return ApplyChanges();
         }
 
-        void IPropertyResolver.ApplyChanges()
-        {
-            if (_changeAction != null)
-            {
-                foreach (var target in Property.Tree.Targets)
-                {
-                    Undo.RecordObject(target, $"Change {Property.Info.PropertyPath} on {target.name}");
-                }
-
-                _changeAction();
-                _changeAction = null;
-            }
-        }
+        protected virtual bool ApplyChanges() => false;
     }
 }

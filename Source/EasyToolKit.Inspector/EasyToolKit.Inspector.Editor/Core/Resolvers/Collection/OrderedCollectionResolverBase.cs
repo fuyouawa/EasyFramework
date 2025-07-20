@@ -2,17 +2,32 @@ namespace EasyToolKit.Inspector.Editor
 {
     public interface IOrderedCollectionResolver : ICollectionResolver
     {
-        void InsertElementAt(int index, object value);
-        void RemoveElementAt(int index);
-        void MoveElemenetAt(int sourceIndex, int destinationIndex);
+        void QueueInsertElementAt(int index, object value);
+        void QueueRemoveElementAt(int index);
+        void QueueMoveElemenetAt(int sourceIndex, int destinationIndex);
     }
 
     public abstract class OrderedCollectionResolverBase : CollectionResolverBase, IOrderedCollectionResolver
     {
-        public abstract void InsertElementAt(int index, object value);
+        public void QueueInsertElementAt(int index, object value)
+        {
+            EnqueueChange(() => InsertElementAt(index, value));
+        }
 
-        public abstract void RemoveElementAt(int index);
+        public void QueueRemoveElementAt(int index)
+        {
+            EnqueueChange(() => RemoveElementAt(index));
+        }
 
-        public abstract void MoveElemenetAt(int sourceIndex, int destinationIndex);
+        public void QueueMoveElemenetAt(int sourceIndex, int destinationIndex)
+        {
+            EnqueueChange(() => MoveElemenetAt(sourceIndex, destinationIndex));
+        }
+
+        protected abstract void InsertElementAt(int index, object value);
+
+        protected abstract void RemoveElementAt(int index);
+
+        protected abstract void MoveElemenetAt(int sourceIndex, int destinationIndex);
     }
 }

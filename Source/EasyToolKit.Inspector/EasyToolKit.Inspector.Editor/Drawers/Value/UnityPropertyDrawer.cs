@@ -20,7 +20,7 @@ namespace EasyToolKit.Inspector.Editor
             _serializedProperty = Property.Tree.GetUnityPropertyByPath(Property.Info.PropertyPath);
         }
 
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             if (_serializedProperty == null)
             {

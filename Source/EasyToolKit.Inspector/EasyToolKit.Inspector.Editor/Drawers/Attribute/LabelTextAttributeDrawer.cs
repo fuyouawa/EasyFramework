@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
             _label = new InspectorText(Property, Attribute.Label);
         }
 
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             label.text = _label.Render();
             CallNextDrawer(label);

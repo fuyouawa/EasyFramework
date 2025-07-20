@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Serialization;
 using EasyToolKit.Core;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -52,10 +53,6 @@ namespace EasyToolKit.Inspector.Editor
                 PropertyType = PropertyType.Value
             };
 
-            var accessorType = typeof(MemberValueAccessor<,>)
-                .MakeGenericType(parentType, fieldInfo.FieldType);
-            info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
-
             var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.TypeOfProperty);
             info.AllowChildren = info.TypeOfProperty != null &&
                                  !info.TypeOfProperty.IsBasic() &&
@@ -63,15 +60,37 @@ namespace EasyToolKit.Inspector.Editor
                                  info.TypeOfProperty.GetCustomAttribute<SerializableAttribute>() != null &&
                                  !isDefinedUnityPropertyDrawer;
 
-
-            if (info.AllowChildren)
+            if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
             {
-                if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
+                Assert.True(serializedProperty.isArray);
+                var arrayElementType = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>))[0];
+
+                var accessorType = typeof(UnityCollectionAccessor<,,>)
+                    .MakeGenericType(parentType, info.TypeOfProperty, arrayElementType);
+                info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty);
+
+                if (info.AllowChildren)
                 {
-                    var arguments = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
-                    info.DefaultChildrenResolver = new UnityCollectionResolver(arguments[0]);
+                    info.DefaultChildrenResolver = new UnityCollectionResolver(arrayElementType);
                 }
-                else
+            }
+            else
+            {
+                try
+                {
+                    var accessorType = typeof(UnityPropertyAccessor<,>)
+                        .MakeGenericType(parentType, fieldInfo.FieldType);
+                    info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty);
+                    info.ValueAccessor.GetWeakValue(FormatterServices.GetUninitializedObject(parentType));
+                }
+                catch (Exception e) //TODO 有的unity类型无法通过SerializedProperty获取，这里先用个通过反射直接获取的
+                {
+                    var accessorType = typeof(MemberValueAccessor<,>)
+                        .MakeGenericType(parentType, fieldInfo.FieldType);
+                    info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
+                }
+
+                if (info.AllowChildren)
                 {
                     info.DefaultChildrenResolver = new UnityPropertyResolver();
                 }

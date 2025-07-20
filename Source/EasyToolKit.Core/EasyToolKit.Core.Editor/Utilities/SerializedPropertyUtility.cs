@@ -139,8 +139,17 @@ namespace EasyToolKit.Core.Editor
         
         public static Func<SerializedProperty, T> GetValueGetter<T>()
         {
-            var getter = GetWeakValueGetter(typeof(T));
-            return property => (T)getter(property);
+            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            {
+                return p => (T)(object)p.objectReferenceValue;
+            }
+
+            if (PrimitiveValueGetters.TryGetValue(typeof(T), out var result))
+            {
+                return (Func<SerializedProperty, T>)result;
+            }
+
+            return property => (T)property.boxedValue;
         }
 
         public static Func<SerializedProperty, object> GetWeakValueGetter(Type valueType)
@@ -150,9 +159,9 @@ namespace EasyToolKit.Core.Editor
                 return p => p.objectReferenceValue;
             }
 
-            if (PrimitiveValueGetters.TryGetValue(valueType, out var result))
+            if (PrimitiveValueGetters.TryGetValue(valueType, out var getter))
             {
-                return (Func<SerializedProperty, object>)result;
+                return property => getter.DynamicInvoke(property);
             }
 
             return property => property.boxedValue;
@@ -160,8 +169,17 @@ namespace EasyToolKit.Core.Editor
         
         public static Action<SerializedProperty, T> GetValueSetter<T>()
         {
-            var setter = GetWeakValueSetter(typeof(T));
-            return (property, value) => setter(property, value);
+            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            {
+                return (p, v) => p.objectReferenceValue = (UnityEngine.Object)(object)v;
+            }
+
+            if (PrimitiveValueSetters.TryGetValue(typeof(T), out var result))
+            {
+                return (Action<SerializedProperty, T>)result;
+            }
+
+            return (property, value) => property.boxedValue = value;
         }
 
         public static Action<SerializedProperty, object> GetWeakValueSetter(Type valueType)
@@ -171,9 +189,9 @@ namespace EasyToolKit.Core.Editor
                 return (p, v) => p.objectReferenceValue = (UnityEngine.Object)v;
             }
 
-            if (PrimitiveValueSetters.TryGetValue(valueType, out var result))
+            if (PrimitiveValueSetters.TryGetValue(valueType, out var setter))
             {
-                return (Action<SerializedProperty, object>)result;
+                return (property, value) => setter.DynamicInvoke(property, value);
             }
 
             return (property, value) => property.boxedValue = value;

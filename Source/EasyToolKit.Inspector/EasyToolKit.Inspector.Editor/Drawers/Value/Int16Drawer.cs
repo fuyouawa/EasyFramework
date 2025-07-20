@@ -5,7 +5,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class Int16Drawer : EasyValueDrawer<short>
     {
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             EditorGUI.BeginChangeCheck();
             var value = EditorGUILayout.IntField(label, ValueEntry.SmartValue);

@@ -48,7 +48,7 @@ public class Test : MonoBehaviour
     // public TestEnum TestEnum;
     // public string String1;
     // public Transform Transform;
-    // public UnityEvent UnityEvent;
+    public UnityEvent UnityEvent;
     public List<TestClass> testList = new List<TestClass>();
 
     public TestClass TestClass;

@@ -5,7 +5,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class Vector3Drawer : EasyValueDrawer<Vector3>
     {
-        protected override void OnDrawProperty(GUIContent label)
+        protected override void DrawProperty(GUIContent label)
         {
             var value = ValueEntry.SmartValue;
             EditorGUI.BeginChangeCheck();

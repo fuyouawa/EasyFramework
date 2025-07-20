@@ -24,7 +24,14 @@ namespace EasyToolKit.Inspector.Editor
             return property.ChildrenResolver is ICollectionResolver;
         }
 
-        protected override void OnDrawProperty(GUIContent label)
+        private ICollectionResolver _collectionResolver;
+
+        protected override void Initialize()
+        {
+            _collectionResolver = (ICollectionResolver)Property.ChildrenResolver;
+        }
+
+        protected override void DrawProperty(GUIContent label)
         {
             DrawHeader(label);
             DrawItems();
@@ -40,7 +47,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
             {
-                
+                _collectionResolver.QueueInsertElement(GetValueToAdd());
             }
             
             EasyEditorGUI.EndHorizontalToolbar();
@@ -78,14 +85,14 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndListItem();
         }
 
-        // private object GetValueToAdd(int targetIndex)
-        // {
-        //     if (_collectionResolver.ElementType.IsInheritsFrom<UnityEngine.Object>())
-        //     {
-        //         return null;
-        //     }
-        //
-        //     return UnitySerializationUtility.CreateDefaultUnityInitializedObject(_collectionResolver.ElementType);
-        // }
+        private object GetValueToAdd()
+        {
+            if (_collectionResolver.ElementType.IsInheritsFrom<UnityEngine.Object>())
+            {
+                return null;
+            }
+        
+            return UnitySerializationUtility.CreateDefaultUnityInitializedObject(_collectionResolver.ElementType);
+        }
     }
 }
