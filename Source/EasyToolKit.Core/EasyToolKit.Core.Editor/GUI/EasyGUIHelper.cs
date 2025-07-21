@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +14,9 @@ namespace EasyToolKit.Core.Editor
         private static readonly GUIScopeStack<EventType> EventTypeStack = new GUIScopeStack<EventType>();
         private static readonly GUIScopeStack<Color> ColorStack = new GUIScopeStack<Color>();
         private static readonly GUIScopeStack<int> IndentLevelStack = new GUIScopeStack<int>();
+        private static readonly GUIScopeStack<float> LabelWidthStack = new GUIScopeStack<float>();
         private static readonly GUIScopeStack<bool> HierarchyModeStack = new GUIScopeStack<bool>();
+        private static readonly GUIScopeStack<float> ContextWidthStackOdinVersion = new GUIScopeStack<float>();
 
         private static readonly Func<Rect> TopLevelLayoutRectGetter;
         private static readonly Func<float> TopLevelLayoutMinHeightGetter;
@@ -20,7 +24,11 @@ namespace EasyToolKit.Core.Editor
         private static readonly Func<float> ActualLabelWidthGetter;
         private static readonly Func<object> TopLevelLayoutGetter;
         private static readonly MethodInfo TopLevelLayoutCalcHeightMethod;
+        private static readonly Func<float> ContextWidthGetter;
+        private static readonly Action<float> ContextWidthSetter;
+        private static readonly Func<Stack<float>> ContextWidthStackGetter;
         private static int numberOfFramesToRepaint;
+        private static float betterContextWidth;
 
         static EasyGUIHelper()
         {
@@ -32,6 +40,13 @@ namespace EasyToolKit.Core.Editor
                 ReflectionUtility.CreateValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.minHeight");
             TopLevelLayoutMaxHeightGetter =
                 ReflectionUtility.CreateValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.maxHeight");
+            
+            ContextWidthGetter = ReflectionUtility.CreateValueGetter<float>(typeof(EditorGUIUtility), "contextWidth");
+            FieldInfo field = typeof (EditorGUIUtility).GetField("s_ContextWidth", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (field != null)
+                ContextWidthSetter = EmitUtilities.CreateStaticFieldSetter<float>(field);
+            else
+                ContextWidthStackGetter = EmitUtilities.CreateStaticFieldGetter<Stack<float>>(typeof (EditorGUIUtility).GetField("s_ContextWidthStack", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
 
             ActualLabelWidthGetter =
                 ReflectionUtility.CreateValueGetter<float>(typeof(EditorGUIUtility), "s_LabelWidth");
@@ -39,7 +54,88 @@ namespace EasyToolKit.Core.Editor
             var layoutType = Type.GetType("UnityEngine.GUILayoutGroup, UnityEngine.IMGUIModule");
             TopLevelLayoutCalcHeightMethod = layoutType.GetMethod("CalcHeight");
         }
+
+        /// <summary>
+        /// Gets the current indent amount.
+        /// </summary>
+        /// <value>
+        /// The current indent amount.
+        /// </value>
+        public static float CurrentIndentAmount
+        {
+            get
+            {
+                return EditorGUI.indentLevel * 15;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current editor gui context width. Only set these if you know what it does.
+        /// </summary>
+        public static float ContextWidth => ContextWidthGetter();
+
+
+        /// <summary>
+        /// Unity EditorGUIUtility.labelWidth only works reliablly in Repaint events.
+        /// BetterLabelWidth does a better job at giving you the correct LabelWidth in non-repaint events.
+        /// </summary>
+        public static float BetterLabelWidth
+        {
+            get
+            {
+                if (BetterContextWidth == 0)
+                {
+                    return EditorGUIUtility.labelWidth;
+                }
+                
+                // Unity only ever knows the exact labelWidth in repaint events.
+                // But you often need it in Layout events as well.
+                // See BetterContextWidths to learn more. 
+
+                // Unity uses the ContextWidth to calculate the labelWidth.
+                PushContextWidth(BetterContextWidth);
+                var val = EditorGUIUtility.labelWidth;
+                PopContextWidth();
+                return val;
+            }
+            set
+            {
+                EditorGUIUtility.labelWidth = value;
+            }
+        }
+
+        /// <summary>
+        /// Odin will set this for you whenever an Odin property tree is drawn.
+        /// But if you're using BetterLabelWidth and BetterContextWidth without Odin, then 
+        /// you need to set BetterContextWidth in the beginning of each GUIEvent.
+        /// </summary>
+        public static float BetterContextWidth
+        {
+            get
+            {
+                if (betterContextWidth == 0)
+                {
+                    return ContextWidth;
+                }
+
+                return betterContextWidth;
+            }
+            set
+            {
+                betterContextWidth = value;
+            }
+        }
         
+
+        /// <summary>
+        /// Gets or sets the actual EditorGUIUtility.LabelWidth, regardless of the current hierarchy mode or context width.
+        /// </summary>
+        public static float ActualLabelWidth
+        {
+            get { return ActualLabelWidthGetter(); }
+            set { BetterLabelWidth = value; }
+        }
+
         /// <summary>
         /// Pushes a state to the GUI enabled stack. Remember to pop the state with <see cref="PopGUIEnabled"/>.
         /// </summary>
@@ -176,12 +272,12 @@ namespace EasyToolKit.Core.Editor
         /// <param name="preserveCurrentLabelWidth">Changing hierachy mode also changes how label-widths are calcualted. By default, we try to keep the current label width.</param>
         public static void PushHierarchyMode(bool hierarchyMode, bool preserveCurrentLabelWidth = true)
         {
-            // var actualLabelWidth = ActualLabelWidth;
-            // LabelWidthStack.Push(actualLabelWidth);
-            // var currentLabelWidth = preserveCurrentLabelWidth ? GUIHelper.BetterLabelWidth : actualLabelWidth;
+            var actualLabelWidth = ActualLabelWidth;
+            LabelWidthStack.Push(actualLabelWidth);
+            var currentLabelWidth = preserveCurrentLabelWidth ? BetterLabelWidth : actualLabelWidth;
             HierarchyModeStack.Push(EditorGUIUtility.hierarchyMode);
             EditorGUIUtility.hierarchyMode = hierarchyMode;
-            // GUIHelper.BetterLabelWidth = currentLabelWidth;
+            BetterLabelWidth = currentLabelWidth;
         }
 
         /// <summary>
@@ -190,7 +286,60 @@ namespace EasyToolKit.Core.Editor
         public static void PopHierarchyMode()
         {
             EditorGUIUtility.hierarchyMode = HierarchyModeStack.Pop();
-            // ActualLabelWidth = LabelWidthStack.Pop();
+            ActualLabelWidth = LabelWidthStack.Pop();
+        }
+        
+        /// <summary>
+        /// Pushes the width to the editor GUI label width to the stack. Remmeber to Pop with <see cref="PopLabelWidth"/>.
+        /// </summary>
+        /// <param name="labelWidth">The editor GUI label width to push.</param>
+        public static void PushLabelWidth(float labelWidth)
+        {
+            LabelWidthStack.Push(ActualLabelWidth);
+            BetterLabelWidth = labelWidth;
+        }
+
+        /// <summary>
+        /// Pops editor gui label widths pushed by <see cref="PushLabelWidth(float)"/>.
+        /// </summary>
+        public static void PopLabelWidth()
+        {
+            BetterLabelWidth = LabelWidthStack.Pop();
+        }
+
+        /// <summary>
+        /// Pushes a context width to the context width stack.
+        /// Remember to pop the value again with <see cref="M:Sirenix.Utilities.Editor.GUIHelper.PopContextWidth" />.
+        /// </summary>
+        /// <param name="width">The width to push.</param>
+        public static void PushContextWidth(float width)
+        {
+            if (ContextWidthSetter != null)
+            {
+                ContextWidthStackOdinVersion.Push(width);
+                ContextWidthSetter(width);
+            }
+            else
+                ContextWidthStackGetter().Push(width);
+        }
+
+        /// <summary>
+        /// Pops a value pushed by <see cref="M:Sirenix.Utilities.Editor.GUIHelper.PushContextWidth(System.Single)" />.
+        /// </summary>
+        public static void PopContextWidth()
+        {
+            if (ContextWidthSetter != null)
+            {
+                float num = ContextWidthStackOdinVersion.Pop();
+                ContextWidthSetter(num);
+            }
+            else
+            {
+                Stack<float> floatStack = ContextWidthStackGetter();
+                if (floatStack.Count <= 0)
+                    return;
+                double num = floatStack.Pop();
+            }
         }
     }
 }

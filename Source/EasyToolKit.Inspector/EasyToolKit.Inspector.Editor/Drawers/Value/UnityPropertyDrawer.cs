@@ -9,6 +9,11 @@ namespace EasyToolKit.Inspector.Editor
     {
         protected override bool CanDrawProperty(InspectorProperty property)
         {
+            if (!property.Info.IsUnityProperty)
+            {
+                return false;
+            }
+
             var propertyType = property.Info.PropertyType;
             var unityProperty = property.Tree.GetUnityPropertyByPath(property.Info.PropertyPath);
             if (propertyType == null || unityProperty == null)
@@ -33,7 +38,6 @@ namespace EasyToolKit.Inspector.Editor
                 EditorGUILayout.LabelField(label, DrawerUtility.NotSupportedContent);
                 return;
             }
-
             EditorGUILayout.PropertyField(_serializedProperty, label);
         }
     }

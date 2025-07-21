@@ -1,5 +1,10 @@
+using System;
+using System.Linq;
+using EasyToolKit.Core;
+using EasyToolKit.Core.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -8,6 +13,40 @@ namespace EasyToolKit.Inspector.Editor
         [DidReloadScripts]
         static CustomEditorLoader()
         {
+            var types = TypeCache.GetTypesWithAttribute<EasyInspectorAttribute>();
+            var drawnTypes = types.Where(type => type.IsSubclassOf(typeof(Component)));
+            foreach (var drawnType in drawnTypes)
+            {
+                CustomEditorUtility.SetCustomEditor(drawnType, typeof(EasyEditor), false, false);
+            }
+
+            EditorApplication.delayCall += () =>
+            {
+                Type inspectorWindowType = typeof(EditorWindow).Assembly.GetType("UnityEditor.InspectorWindow");
+                Type activeEditorTrackerType = typeof(EditorWindow).Assembly.GetType("UnityEditor.ActiveEditorTracker");
+
+                if (inspectorWindowType != null && activeEditorTrackerType != null)
+                {
+                    var createTrackerMethod =
+                        inspectorWindowType.GetMethod("CreateTracker", BindingFlagsHelper.AllInstance());
+                    var trackerField = inspectorWindowType.GetField("m_Tracker", BindingFlagsHelper.AllInstance());
+                    var forceRebuild =
+                        activeEditorTrackerType.GetMethod("ForceRebuild", BindingFlagsHelper.AllInstance());
+
+                    if (createTrackerMethod != null && trackerField != null && forceRebuild != null)
+                    {
+                        // 获取所有检查器窗口并强制重建
+                        var windows = Resources.FindObjectsOfTypeAll(inspectorWindowType);
+
+                        foreach (var window in windows)
+                        {
+                            createTrackerMethod.Invoke(window, null);
+                            object tracker = trackerField.GetValue(window);
+                            forceRebuild.Invoke(tracker, null);
+                        }
+                    }
+                }
+            };
         }
     }
 }

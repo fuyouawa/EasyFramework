@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
+    //TODO UnityCollectionResolver在多选情况下有问题
     public class UnityCollectionResolver<TElement> : OrderedCollectionResolverBase<TElement>
     {
         private SerializedProperty _serializedProperty;

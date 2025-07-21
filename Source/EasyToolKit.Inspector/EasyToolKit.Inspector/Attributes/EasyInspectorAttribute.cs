@@ -3,9 +3,9 @@ using System.Diagnostics;
 
 namespace EasyToolKit.Inspector
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Class)]
     [Conditional("UNITY_EDITOR")]
-    public class ReadOnlyAttribute : Attribute
+    public class EasyInspectorAttribute : Attribute
     {
     }
 }

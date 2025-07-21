@@ -4,6 +4,77 @@
         <name>EasyToolKit.Core.Editor</name>
     </assembly>
     <members>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginIndentedVertical(UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])">
+            <summary>
+            Begins a vertical indentation. Remember to end with <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndIndentedVertical"/>.
+            </summary>
+            <param name="style">The style of the indentation.</param>
+            <param name="options">The GUI layout options.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndIndentedVertical">
+            <summary>
+            Ends a identation vertical layout group started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginIndentedVertical(UnityEngine.GUIStyle,UnityEngine.GUILayoutOption[])"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.IndentSpace">
+            <summary>
+            Indents by the current indent value, <see cref="P:EasyToolKit.Core.Editor.EasyGUIHelper.CurrentIndentAmount"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBox(UnityEngine.GUILayoutOption[])">
+            <summary>
+            Begins drawing a box with toolbar style header. Remember to end with <seealso cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBox"/>.
+            </summary>
+            <param name="options">GUILayout options.</param>
+            <returns>The rect of the box.</returns>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBox">
+            <summary>
+            Ends the drawing a box with a toolbar style header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBox(UnityEngine.GUILayoutOption[])"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBoxHeader">
+            <summary>
+            Begins drawing a toolbar style box header. Remember to end with <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBoxHeader"/>.
+            </summary>
+            <returns>The rect of the box.</returns>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBoxHeader">
+            <summary>
+            Ends the drawing of a toolbar style box header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBoxHeader"/>.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.CurrentIndentAmount">
+            <summary>
+            Gets the current indent amount.
+            </summary>
+            <value>
+            The current indent amount.
+            </value>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.ContextWidth">
+            <summary>
+            Gets the current editor gui context width. Only set these if you know what it does.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.BetterLabelWidth">
+            <summary>
+            Unity EditorGUIUtility.labelWidth only works reliablly in Repaint events.
+            BetterLabelWidth does a better job at giving you the correct LabelWidth in non-repaint events.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.BetterContextWidth">
+            <summary>
+            Odin will set this for you whenever an Odin property tree is drawn.
+            But if you're using BetterLabelWidth and BetterContextWidth without Odin, then 
+            you need to set BetterContextWidth in the beginning of each GUIEvent.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.ActualLabelWidth">
+            <summary>
+            Gets or sets the actual EditorGUIUtility.LabelWidth, regardless of the current hierarchy mode or context width.
+            </summary>
+        </member>
         <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushGUIEnabled(System.Boolean)">
             <summary>
             Pushes a state to the GUI enabled stack. Remember to pop the state with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopGUIEnabled"/>.
@@ -48,6 +119,44 @@
             Pops the hierarchy mode pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushHierarchyMode(System.Boolean,System.Boolean)"/>.
             </summary>
         </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushLabelWidth(System.Single)">
+            <summary>
+            Pushes the width to the editor GUI label width to the stack. Remmeber to Pop with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopLabelWidth"/>.
+            </summary>
+            <param name="labelWidth">The editor GUI label width to push.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopLabelWidth">
+            <summary>
+            Pops editor gui label widths pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushLabelWidth(System.Single)"/>.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushContextWidth(System.Single)">
+            <summary>
+            Pushes a context width to the context width stack.
+            Remember to pop the value again with <see cref="M:Sirenix.Utilities.Editor.GUIHelper.PopContextWidth" />.
+            </summary>
+            <param name="width">The width to push.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopContextWidth">
+            <summary>
+            Pops a value pushed by <see cref="M:Sirenix.Utilities.Editor.GUIHelper.PushContextWidth(System.Single)" />.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoxContainer">
+            <summary>
+            Box container style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoxHeaderStyle">
+            <summary>
+            Box header style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.PropertyPadding">
+            <summary>
+            Property padding.
+            </summary>
+        </member>
         <member name="T:EasyToolKit.Core.Editor.GUIFrameCounter">
             <summary>
             A utility class for properly counting frames and helps determine when a frame has started in an editor window.
@@ -67,12 +176,6 @@
             <summary>
             Updates the frame counter and returns itself.
             </summary>
-        </member>
-        <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.GetAllAssemblies">
-            <summary>
-            Gets an <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.
-            </summary>
-            <returns>An <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.</returns>
         </member>
         <member name="M:EasyToolKit.Core.Editor.AssemblyUtility.IsDependentOn(System.Reflection.Assembly,System.Reflection.Assembly)">
             <summary>

@@ -65,7 +65,8 @@ namespace EasyToolKit.Inspector.Editor
                     }
                 }
 
-                if (!field.FieldType.IsValueType &&
+                if (!field.FieldType.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                    !field.FieldType.IsValueType &&
                     !field.FieldType.HasCustomAttribute<SerializableAttribute>())
                 {
                     continue;

@@ -337,11 +337,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ee0cbebaea44444a62421129fa7eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Transform: {fileID: 0}
   Int2: 0
-  UnityEvent:
+  TestUnityEvent:
     m_PersistentCalls:
       m_Calls: []
   testList:
+  - Int1: 0
+    Int2: 0
+    String3: 
+    Class1:
+      Inttt: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
   - Int1: 0
     Int2: 0
     String3: 
@@ -354,7 +362,7 @@ MonoBehaviour:
     Int2: 0
     String3: 
     Class1:
-      Inttt: 0
+      Inttt: 345345
       TestEnum: 0
       Transform: {fileID: 0}
 --- !u!4 &1076451576
@@ -877,6 +885,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+--- !u!224 &1402946603 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 22457152, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+  m_PrefabInstance: {fileID: 1402946602}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1433810477
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,22 +919,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ee0cbebaea44444a62421129fa7eeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Transform: {fileID: 1402946603}
   Int2: 0
-  UnityEvent:
+  TestUnityEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   testList:
   - Int1: 11
     Int2: 0
@@ -930,16 +932,9 @@ MonoBehaviour:
       Inttt: 0
       TestEnum: 0
       Transform: {fileID: 0}
-  - Int1: 30
-    Int2: -59
-    String3: 
-    Class1:
-      Inttt: 0
-      TestEnum: 1
-      Transform: {fileID: 0}
   - Int1: 0
-    Int2: 131
-    String3: 234234234
+    Int2: 0
+    String3: 
     Class1:
       Inttt: 0
       TestEnum: 0
@@ -949,7 +944,7 @@ MonoBehaviour:
     Int2: 0
     String3: 
     Class1:
-      Inttt: 0
+      Inttt: 345345
       TestEnum: 0
       Transform: {fileID: 0}
 --- !u!4 &1433810479

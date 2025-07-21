@@ -39,18 +39,20 @@ public enum TestEnum
     EnumValue2
 }
 
+[EasyInspector]
 public class Test : MonoBehaviour
 {
     // [HideLabel]
     // public TestClass TestClass = new TestClass();
     // [LabelText("{{self.String1}}")]
     // public int Int1;
+    public Transform Transform;
     public int Int2;
     // public int Int3;
     // public TestEnum TestEnum;
     // public string String1;
     // public Transform Transform;
-    public UnityEvent UnityEvent;
+    public UnityEvent TestUnityEvent;
     public List<TestClass> testList = new List<TestClass>();
 
     public TestClass TestClass;
@@ -73,14 +75,3 @@ public class Test : MonoBehaviour
         }
     }
 }
-
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(Test))]
-[CanEditMultipleObjects]
-public class TestEditor : EasyEditor
-{
-
-}
-
-#endif

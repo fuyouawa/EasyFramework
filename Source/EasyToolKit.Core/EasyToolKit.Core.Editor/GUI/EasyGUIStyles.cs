@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -149,6 +150,56 @@ namespace EasyToolKit.Core.Editor
                 }
 
                 return s_listItem;
+            }
+        }
+
+        private static GUIStyle s_boxContainer;
+        /// <summary>
+        /// Box container style.
+        /// </summary>
+        public static GUIStyle BoxContainer
+        {
+            get
+            {
+                if (s_boxContainer == null)
+                {
+                    s_boxContainer = new GUIStyle(EditorStyles.helpBox) { margin = new RectOffset(0, 0, 0, 2) };
+                }
+                return s_boxContainer;
+            }
+        }
+        
+        private static GUIStyle s_boxHeaderStyle;
+
+        /// <summary>
+        /// Box header style.
+        /// </summary>
+        public static GUIStyle BoxHeaderStyle
+        {
+            get
+            {
+                if (s_boxHeaderStyle == null)
+                {
+                    s_boxHeaderStyle = new GUIStyle(None) { margin = new RectOffset(0, 0, 0, 2) };
+                }
+                return s_boxHeaderStyle;
+            }
+        }
+        
+        private static GUIStyle s_propertyPadding;
+
+        /// <summary>
+        /// Property padding.
+        /// </summary>
+        public static GUIStyle PropertyPadding
+        {
+            get
+            {
+                if (s_propertyPadding == null)
+                {
+                    s_propertyPadding = new GUIStyle(GUIStyle.none) { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
+                }
+                return s_propertyPadding;
             }
         }
     }

@@ -98,6 +98,18 @@ namespace EasyToolKit.Inspector.Editor
                 return _isConflictedCache.Value;
             }
 
+            _isConflictedCache = IsConflictedImpl();
+            return _isConflictedCache.Value;
+        }
+
+        private bool IsConflictedImpl()
+        {
+            if (Property.Info.IsUnityProperty)
+            {
+                var serializedProperty = Property.Tree.GetUnityPropertyByPath(Property.Info.PropertyPath);
+                return serializedProperty.hasMultipleDifferentValues;
+            }
+
             if (Values.Count > 1)
             {
                 var first = Values[0];
@@ -105,18 +117,12 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     if (!EqualityComparer<TValue>.Default.Equals(first, Values[i]))
                     {
-                        _isConflictedCache = true;
-                        break;
+                        return true;
                     }
                 }
             }
 
-            if (!_isConflictedCache.HasValue)
-            {
-                _isConflictedCache = false;
-            }
-
-            return _isConflictedCache.Value;
+            return false;
         }
 
 

@@ -109,15 +109,6 @@ namespace EasyToolKit.Core.Editor
         }
 
         /// <summary>
-        /// Gets an <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.
-        /// </summary>
-        /// <returns>An <see cref="T:Sirenix.Utilities.ImmutableList" /> of all assemblies in the current <see cref="T:System.AppDomain" />.</returns>
-        public static ImmutableList<Assembly> GetAllAssemblies()
-        {
-            return new ImmutableList<Assembly>((IList<Assembly>)AppDomain.CurrentDomain.GetAssemblies());
-        }
-
-        /// <summary>
         /// Determines whether an assembly is depended on another assembly.
         /// </summary>
         /// <param name="assembly">The assembly.</param>

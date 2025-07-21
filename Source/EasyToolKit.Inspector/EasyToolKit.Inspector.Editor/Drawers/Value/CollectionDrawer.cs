@@ -35,8 +35,10 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void DrawProperty(GUIContent label)
         {
+            EasyEditorGUI.BeginIndentedVertical(EasyGUIStyles.PropertyPadding);
             DrawHeader(label);
             DrawItems();
+            EasyEditorGUI.EndIndentedVertical();
         }
 
         private void DrawHeader(GUIContent label)
