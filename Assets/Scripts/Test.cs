@@ -16,6 +16,8 @@ using UnityEditor;
 public class MyClass
 {
     public int Inttt;
+    public TestEnum TestEnum;
+    public Transform Transform;
 }
 
 namespace MyNamespace

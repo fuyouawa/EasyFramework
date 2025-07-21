@@ -47,7 +47,7 @@ namespace EasyToolKit.Inspector.Editor
             return GetValue(ref castOwner);
         }
 
-        public abstract void SetValue(ref TOwner owner, TValue collection);
+        public abstract void SetValue(ref TOwner owner, TValue value);
 
         public abstract TValue GetValue(ref TOwner owner);
     }

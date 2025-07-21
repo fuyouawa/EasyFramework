@@ -17,7 +17,7 @@ namespace EasyToolKit.Inspector.Editor
 
         private IPropertyResolver _childrenResolver;
         private IDrawerChainResolver _drawerChainResolver;
-        private IAttributeAccessorResolver _attributeAccessorResolver;
+        private IAttributeResolver _attributeResolver;
 
         public InspectorProperty Parent { get; private set; }
         public PropertyTree Tree { get; }
@@ -123,13 +123,13 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
         
-        [CanBeNull] public IAttributeAccessorResolver AttributeAccessorResolver 
+        [CanBeNull] public IAttributeResolver AttributeResolver 
         {
-            get => _attributeAccessorResolver;
+            get => _attributeResolver;
             set
             {
                 InitializeResolver(value);
-                _attributeAccessorResolver = value;
+                _attributeResolver = value;
                 Refresh();
             }
         }
@@ -167,19 +167,12 @@ namespace EasyToolKit.Inspector.Editor
 
             Label = new GUIContent(NiceName);
 
-            if (Info.DefaultDrawerChainResolver != null)
-            {
-                DrawerChainResolver = Info.DefaultDrawerChainResolver;
-            }
+            DrawerChainResolver = new DefaultDrawerChainResolver();
+            AttributeResolver = new DefaultAttributeResolver();
 
-            if (Info.DefaultAttributeAccessorResolver != null)
+            if (Info.AllowChildren())
             {
-                AttributeAccessorResolver = Info.DefaultAttributeAccessorResolver;
-            }
-            
-            if (Info.AllowChildren)
-            {
-                ChildrenResolver = Info.DefaultChildrenResolver;
+                ChildrenResolver = Info.GetPreferencedChildrenResolver();
                 Children = new PropertyChildren(this);
             }
 
@@ -235,24 +228,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public Attribute[] GetAttributes()
         {
-            if (AttributeAccessorResolver == null)
-            {
-                return _attributes ??= new Attribute[0];
-            }
-
-            if (_attributes == null)
-            {
-                var total = new List<Attribute>();
-                var accessors = AttributeAccessorResolver.GetAttributeAccessors();
-                foreach (var accessor in accessors)
-                {
-                    total.AddRange(accessor.GetAttributes());
-                }
-
-                _attributes = total.ToArray();
-            }
-
-            return _attributes;
+            return _attributeResolver.GetAttributes();
         }
 
         public T GetAttribute<T>()

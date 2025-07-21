@@ -16,9 +16,9 @@ namespace EasyToolKit.Inspector.Editor
             _serializedProperty = serializedProperty.Copy();
         }
 
-        public override void SetValue(ref TOwner owner, TValue collection)
+        public override void SetValue(ref TOwner owner, TValue value)
         {
-            ValueSetter(_serializedProperty, collection);
+            ValueSetter(_serializedProperty, value);
         }
 
         public override TValue GetValue(ref TOwner owner)

@@ -19,7 +19,7 @@ namespace EasyToolKit.Inspector.Editor
         public InspectorProperty LogicRootProperty { get; }
 
         public UnityEngine.Object[] Targets => SerializedObject.targetObjects;
-        public Type TargetType => LogicRootProperty.Info.TypeOfProperty;
+        public Type TargetType => LogicRootProperty.Info.PropertyType;
 
         public bool DrawMonoScriptObjectField { get; set; }
 

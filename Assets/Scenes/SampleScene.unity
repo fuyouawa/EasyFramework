@@ -347,12 +347,16 @@ MonoBehaviour:
     String3: 
     Class1:
       Inttt: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
   TestClass:
     Int1: 61
     Int2: 0
     String3: 
     Class1:
       Inttt: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
 --- !u!4 &1076451576
 Transform:
   m_ObjectHideFlags: 0
@@ -924,62 +928,30 @@ MonoBehaviour:
     String3: 
     Class1:
       Inttt: 0
-  - Int1: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
+  - Int1: 30
     Int2: -59
     String3: 
     Class1:
       Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 47
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
+      TestEnum: 1
+      Transform: {fileID: 0}
   - Int1: 0
     Int2: 131
     String3: 234234234
     Class1:
       Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
-  - Int1: 0
-    Int2: 0
-    String3: 
-    Class1:
-      Inttt: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
   TestClass:
     Int1: 0
     Int2: 0
     String3: 
     Class1:
       Inttt: 0
+      TestEnum: 0
+      Transform: {fileID: 0}
 --- !u!4 &1433810479
 Transform:
   m_ObjectHideFlags: 0

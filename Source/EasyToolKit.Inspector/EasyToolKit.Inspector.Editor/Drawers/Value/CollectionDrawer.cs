@@ -25,10 +25,12 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         private ICollectionResolver _collectionResolver;
+        private IOrderedCollectionResolver _orderedCollectionResolver;
 
         protected override void Initialize()
         {
             _collectionResolver = (ICollectionResolver)Property.ChildrenResolver;
+            _orderedCollectionResolver = Property.ChildrenResolver as IOrderedCollectionResolver;
         }
 
         protected override void DrawProperty(GUIContent label)
@@ -79,7 +81,14 @@ namespace EasyToolKit.Inspector.Editor
 
             if (EasyEditorGUI.IconButton(removeBtnRect, EasyEditorIcons.X))
             {
-                
+                if (_orderedCollectionResolver != null)
+                {
+                    _orderedCollectionResolver.QueueRemoveElementAt(index);
+                }
+                else
+                {
+                    //TODO 非顺序容器的元素删除
+                }
             }
 
             EasyEditorGUI.EndListItem();

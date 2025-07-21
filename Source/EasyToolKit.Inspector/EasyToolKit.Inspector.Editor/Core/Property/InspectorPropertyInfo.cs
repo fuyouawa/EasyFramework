@@ -10,131 +10,60 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public enum PropertyType
-    {
-        Value,
-        Method
-    }
-
     public sealed class InspectorPropertyInfo
     {
-        public IValueAccessor ValueAccessor { get; private set; }
-        public MemberInfo MemberInfo { get; private set; }
-        public PropertyType PropertyType { get; private set; }
-        [CanBeNull] public Type TypeOfProperty { get; private set; }
+        [CanBeNull] public IValueAccessor ValueAccessor { get; private set; }
+        [CanBeNull] public MemberInfo MemberInfo { get; private set; }
+        [CanBeNull] public Type PropertyType { get; private set; }
         public string PropertyPath { get; private set; }
         public string PropertyName { get; private set; }
-        public bool AllowChildren { get; private set; }
         public bool IsLogicRoot { get; private set; }
+        public bool IsUnityProperty { get; private set; }
 
-        [CanBeNull] public IPropertyResolver DefaultChildrenResolver { get; private set; }
-        [CanBeNull] public IDrawerChainResolver DefaultDrawerChainResolver { get; private set; }
-        [CanBeNull] public IAttributeAccessorResolver DefaultAttributeAccessorResolver { get; private set; }
+        private Type _propertyResolverType;
+
+        public bool IsValueType => MemberInfo is FieldInfo || MemberInfo is PropertyInfo;
 
         private InspectorPropertyInfo()
         {
         }
 
         public static InspectorPropertyInfo CreateForUnityProperty(SerializedProperty serializedProperty,
-            Type parentType)
+            Type parentType, Type valueType)
         {
-            var fieldInfo = parentType.GetField(serializedProperty.name, BindingFlagsHelper.AllInstance());
-            Assert.True(fieldInfo != null);
-
-
             var info = new InspectorPropertyInfo()
             {
-                MemberInfo = fieldInfo,
-                TypeOfProperty = fieldInfo.FieldType,
+                PropertyType = valueType,
                 PropertyPath = serializedProperty.propertyPath,
                 PropertyName = serializedProperty.name,
-                DefaultDrawerChainResolver = new DefaultDrawerChainResolver(),
-                DefaultAttributeAccessorResolver = new DefaultAttributeAccessorResolver(),
-                PropertyType = PropertyType.Value
+                IsUnityProperty = true,
             };
 
-            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.TypeOfProperty);
-            info.AllowChildren = info.TypeOfProperty != null &&
-                                 !info.TypeOfProperty.IsBasic() &&
-                                 !info.TypeOfProperty.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                                 info.TypeOfProperty.GetCustomAttribute<SerializableAttribute>() != null &&
-                                 !isDefinedUnityPropertyDrawer;
-
-            if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
+            if (valueType.IsImplementsOpenGenericType(typeof(ICollection<>)))
             {
                 Assert.True(serializedProperty.isArray);
-                var arrayElementType = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>))[0];
+                var elementType = valueType.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>))[0];
 
                 var accessorType = typeof(UnityCollectionAccessor<,,>)
-                    .MakeGenericType(parentType, info.TypeOfProperty, arrayElementType);
+                    .MakeGenericType(parentType, valueType, elementType);
                 info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty);
-
-                if (info.AllowChildren)
-                {
-                    info.DefaultChildrenResolver = new UnityCollectionResolver(arrayElementType);
-                }
+                info._propertyResolverType = typeof(UnityCollectionResolver<>).MakeGenericType(elementType);
             }
             else
             {
                 try
                 {
                     var accessorType = typeof(UnityPropertyAccessor<,>)
-                        .MakeGenericType(parentType, fieldInfo.FieldType);
+                        .MakeGenericType(parentType, valueType);
                     info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(serializedProperty);
                     info.ValueAccessor.GetWeakValue(FormatterServices.GetUninitializedObject(parentType));
                 }
-                catch (Exception e) //TODO 有的unity类型无法通过SerializedProperty获取，这里先用个通过反射直接获取的
+                catch (Exception e) //TODO 有的类型无法通过SerializedProperty获取
                 {
-                    var accessorType = typeof(MemberValueAccessor<,>)
-                        .MakeGenericType(parentType, fieldInfo.FieldType);
-                    info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
+                    info.ValueAccessor = null;
                 }
 
-                if (info.AllowChildren)
-                {
-                    info.DefaultChildrenResolver = new UnityPropertyResolver();
-                }
-            }
-
-            return info;
-        }
-
-        public static InspectorPropertyInfo CreateForUnityArrayElement(SerializedProperty serializedProperty, int index, Type collectionType, Type elementType)
-        {
-            var info = new InspectorPropertyInfo()
-            {
-                TypeOfProperty = elementType,
-                PropertyPath = serializedProperty.propertyPath,
-                PropertyName = serializedProperty.name,
-                DefaultDrawerChainResolver = new DefaultDrawerChainResolver(),
-                PropertyType = PropertyType.Value
-            };
-
-            info.ValueAccessor = new GenericValueAccessor(
-                collectionType,
-                elementType,
-                (ref object collection) => ((IList)collection)[index],
-                (ref object collection, object element) => ((IList)collection)[index] = element);
-
-            //TODO 优化重复代码
-            var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(info.TypeOfProperty);
-            info.AllowChildren = info.TypeOfProperty != null &&
-                                 !info.TypeOfProperty.IsBasic() &&
-                                 !info.TypeOfProperty.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                                 info.TypeOfProperty.GetCustomAttribute<SerializableAttribute>() != null &&
-                                 !isDefinedUnityPropertyDrawer;
-            
-            if (info.AllowChildren)
-            {
-                if (info.TypeOfProperty.IsImplementsOpenGenericType(typeof(ICollection<>)))
-                {
-                    var arguments = info.TypeOfProperty.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>));
-                    info.DefaultChildrenResolver = new UnityCollectionResolver(arguments[0]);
-                }
-                else
-                {
-                    info.DefaultChildrenResolver = new UnityPropertyResolver();
-                }
+                info._propertyResolverType = typeof(UnityPropertyResolver);
             }
 
             return info;
@@ -146,22 +75,53 @@ namespace EasyToolKit.Inspector.Editor
 
             var info = new InspectorPropertyInfo()
             {
-                TypeOfProperty = serializedObject.targetObject.GetType(),
+                PropertyType = serializedObject.targetObject.GetType(),
                 PropertyPath = iterator.propertyPath,
                 PropertyName = iterator.name,
-                DefaultChildrenResolver = new UnityPropertyResolver(),
-                AllowChildren = true,
                 IsLogicRoot = true,
-                PropertyType = PropertyType.Value
             };
 
             info.ValueAccessor = new GenericValueAccessor(
                 typeof(int),
-                info.TypeOfProperty,
+                info.PropertyType,
                 (ref object index) => serializedObject.targetObjects[(int)index],
                 null);
+            
+            info._propertyResolverType = typeof(UnityPropertyResolver);
 
             return info;
+        }
+
+        public bool AllowChildren()
+        {
+            if (IsLogicRoot) return true;
+
+            var allowChildren = false;
+            if (PropertyType != null)
+            {
+                allowChildren = PropertyType != null &&
+                                !PropertyType.IsBasic() &&
+                                !PropertyType.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                                PropertyType.GetCustomAttribute<SerializableAttribute>() != null;
+            }
+
+            if (allowChildren)
+            {
+                var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(PropertyType);
+                allowChildren = !isDefinedUnityPropertyDrawer;
+            }
+
+            return allowChildren;
+        }
+
+        public IPropertyResolver GetPreferencedChildrenResolver()
+        {
+            if (!AllowChildren())
+            {
+                return null;
+            }
+
+            return _propertyResolverType.CreateInstance<IPropertyResolver>();
         }
     }
 }

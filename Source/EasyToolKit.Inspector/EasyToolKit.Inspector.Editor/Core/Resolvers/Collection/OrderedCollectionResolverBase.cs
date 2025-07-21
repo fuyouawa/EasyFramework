@@ -7,11 +7,11 @@ namespace EasyToolKit.Inspector.Editor
         void QueueMoveElemenetAt(int sourceIndex, int destinationIndex);
     }
 
-    public abstract class OrderedCollectionResolverBase : CollectionResolverBase, IOrderedCollectionResolver
+    public abstract class OrderedCollectionResolverBase<TElement> : CollectionResolverBase<TElement>, IOrderedCollectionResolver
     {
         public void QueueInsertElementAt(int index, object value)
         {
-            EnqueueChange(() => InsertElementAt(index, value));
+            EnqueueChange(() => InsertElementAt(index, (TElement)value));
         }
 
         public void QueueRemoveElementAt(int index)
@@ -24,7 +24,7 @@ namespace EasyToolKit.Inspector.Editor
             EnqueueChange(() => MoveElemenetAt(sourceIndex, destinationIndex));
         }
 
-        protected abstract void InsertElementAt(int index, object value);
+        protected abstract void InsertElementAt(int index, TElement value);
 
         protected abstract void RemoveElementAt(int index);
 

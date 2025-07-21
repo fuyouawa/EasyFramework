@@ -5,22 +5,19 @@ using UnityEditor;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class UnityCollectionResolver: OrderedCollectionResolverBase
+    public class UnityCollectionResolver<TElement> : OrderedCollectionResolverBase<TElement>
     {
-        public override Type ElementType { get; }
-
         private SerializedProperty _serializedProperty;
-        private readonly Dictionary<int, InspectorPropertyInfo> _propertyInfosByIndex = new Dictionary<int, InspectorPropertyInfo>();
 
-        private readonly Func<SerializedProperty, object> _elementValueGetter;
-        private readonly Action<SerializedProperty, object> _elementValueSetter;
+        private readonly Dictionary<int, InspectorPropertyInfo> _propertyInfosByIndex =
+            new Dictionary<int, InspectorPropertyInfo>();
 
-        public UnityCollectionResolver(Type elementType)
-        {
-            ElementType = elementType;
-            _elementValueGetter = SerializedPropertyUtility.GetWeakValueGetter(elementType);
-            _elementValueSetter = SerializedPropertyUtility.GetWeakValueSetter(elementType);
-        }
+        private static readonly Func<SerializedProperty, TElement> ElementValueGetter =
+            SerializedPropertyUtility.GetValueGetter<TElement>();
+
+        private static readonly Action<SerializedProperty, TElement> ElementValueSetter =
+            SerializedPropertyUtility.GetValueSetter<TElement>();
+
 
         protected override void Initialize()
         {
@@ -33,7 +30,7 @@ namespace EasyToolKit.Inspector.Editor
                 _serializedProperty = Property.Tree.GetUnityPropertyByPath(Property.Info.PropertyPath);
                 if (_serializedProperty == null)
                 {
-                    throw new InvalidOperationException();  //TODO 异常信息
+                    throw new InvalidOperationException(); //TODO 异常信息
                 }
             }
         }
@@ -45,10 +42,9 @@ namespace EasyToolKit.Inspector.Editor
                 return info;
             }
 
-            info = InspectorPropertyInfo.CreateForUnityArrayElement(
+            info = InspectorPropertyInfo.CreateForUnityProperty(
                 _serializedProperty.GetArrayElementAtIndex(childIndex),
-                childIndex,
-                Property.Info.TypeOfProperty,
+                Property.Info.PropertyType,
                 ElementType);
 
             _propertyInfosByIndex[childIndex] = info;
@@ -65,17 +61,17 @@ namespace EasyToolKit.Inspector.Editor
             return _serializedProperty.arraySize;
         }
 
-        protected override void InsertElement(object value)
+        protected override void InsertElement(TElement value)
         {
             InsertElementAt(_serializedProperty.arraySize, value);
         }
 
-        protected override void RemoveElement(object value)
+        protected override void RemoveElement(TElement value)
         {
             for (int i = 0; i < _serializedProperty.arraySize; i++)
             {
                 var element = _serializedProperty.GetArrayElementAtIndex(i);
-                var elementValue = _elementValueGetter(element);
+                var elementValue = ElementValueGetter(element);
                 if (value.Equals(elementValue))
                 {
                     RemoveElementAt(i);
@@ -84,11 +80,11 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        protected override void InsertElementAt(int index, object value)
+        protected override void InsertElementAt(int index, TElement value)
         {
             _serializedProperty.InsertArrayElementAtIndex(index);
             var element = _serializedProperty.GetArrayElementAtIndex(index);
-            _elementValueSetter(element, value);
+            ElementValueSetter(element, value);
         }
 
         protected override void RemoveElementAt(int index)

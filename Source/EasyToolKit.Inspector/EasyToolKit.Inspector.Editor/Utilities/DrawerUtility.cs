@@ -125,9 +125,9 @@ namespace EasyToolKit.Inspector.Editor
                 TypeMatcher.GetCachedMatches(Type.EmptyTypes),
             };
 
-            if (property.Info.TypeOfProperty != null)
+            if (property.Info.PropertyType != null)
             {
-                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.TypeOfProperty));
+                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.PropertyType));
             }
 
             foreach (var attribute in property.GetAttributes())

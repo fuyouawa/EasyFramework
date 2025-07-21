@@ -4,12 +4,12 @@ using JetBrains.Annotations;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public interface IAttributeAccessorResolver : IInitializableResolver
+    public interface IAttributeResolver : IInitializableResolver
     {
-        IAttributeAccessor[] GetAttributeAccessors();
+        Attribute[] GetAttributes();
     }
 
-    public abstract class AttributeAccessorResolver : IAttributeAccessorResolver
+    public abstract class AttributeResolver : IAttributeResolver
     {
         public InspectorProperty Property { get; private set; }
         public bool IsInitialized { get; private set; }
@@ -39,6 +39,6 @@ namespace EasyToolKit.Inspector.Editor
         protected virtual void Initialize() {}
         protected virtual void Deinitialize() {}
 
-        public abstract IAttributeAccessor[] GetAttributeAccessors();
+        public abstract Attribute[] GetAttributes();
     }
 }

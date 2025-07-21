@@ -5,15 +5,21 @@ using UnityEngine;
 namespace EasyToolKit.Inspector.Editor
 {
     [DrawerPriority(DrawerPriorityLevel.Attribute - 1)]
-    public class UnityPropertyDrawer<T> : EasyValueDrawer<T>
+    public class UnityPropertyDrawer : EasyDrawer
     {
-        private SerializedProperty _serializedProperty;
-
-        protected override bool CanDrawValueType(Type valueType)
+        protected override bool CanDrawProperty(InspectorProperty property)
         {
-            return !valueType.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                   DrawerUtility.IsDefinedUnityPropertyDrawer(valueType);
+            var propertyType = property.Info.PropertyType;
+            var unityProperty = property.Tree.GetUnityPropertyByPath(property.Info.PropertyPath);
+            if (propertyType == null || unityProperty == null)
+            {
+                return false;
+            }
+
+            return !propertyType.IsSubclassOf(typeof(UnityEngine.Object)) && DrawerUtility.IsDefinedUnityPropertyDrawer(propertyType);
         }
+        
+        private SerializedProperty _serializedProperty;
 
         protected override void Initialize()
         {
