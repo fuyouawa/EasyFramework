@@ -14,7 +14,8 @@ namespace EasyToolKit.Inspector.Editor
         static CustomEditorLoader()
         {
             var types = TypeCache.GetTypesWithAttribute<EasyInspectorAttribute>();
-            var drawnTypes = types.Where(type => type.IsSubclassOf(typeof(Component)));
+            var drawnTypes = types.Where(type => type.IsSubclassOf(typeof(Component)) ||
+                                                 type.IsSubclassOf(typeof(ScriptableObject)));
             foreach (var drawnType in drawnTypes)
             {
                 CustomEditorUtility.SetCustomEditor(drawnType, typeof(EasyEditor), false, false);

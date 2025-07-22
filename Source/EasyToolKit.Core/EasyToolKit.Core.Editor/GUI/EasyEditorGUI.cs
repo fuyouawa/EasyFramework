@@ -168,7 +168,7 @@ namespace EasyToolKit.Core.Editor
             EasyGUIHelper.PopHierarchyMode();
             EndIndentedVertical();
         }
-        
+
         /// <summary>
         /// Begins drawing a toolbar style box header. Remember to end with <see cref="EndToolbarBoxHeader"/>.
         /// </summary>
@@ -176,7 +176,8 @@ namespace EasyToolKit.Core.Editor
         public static Rect BeginToolbarBoxHeader()
         {
             GUILayout.Space(-3);
-            var headerBgRect = EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true));
+            var headerBgRect =
+                EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true));
             GUILayout.Space(0);
 
             if (Event.current.type == EventType.Repaint)
@@ -188,6 +189,7 @@ namespace EasyToolKit.Core.Editor
                 //rect.height += 2;
                 EasyGUIStyles.ToolbarBackground.Draw(rect, GUIContent.none, 0);
             }
+
             return headerBgRect;
         }
 
@@ -223,6 +225,79 @@ namespace EasyToolKit.Core.Editor
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Draws a foldout field where clicking on the label toggles to the foldout too.
+        /// </summary>
+        /// <param name="isVisible">The current state of the foldout.</param>
+        /// <param name="label">The label of the foldout.</param>
+        /// <param name="style">The GUI style.</param>
+        public static bool Foldout(bool isVisible, GUIContent label, GUIStyle style = null)
+        {
+            var tmp = EditorGUIUtility.fieldWidth;
+            EditorGUIUtility.fieldWidth = 10;
+            var rect = EditorGUILayout.GetControlRect(false);
+            EditorGUIUtility.fieldWidth = tmp;
+            //Rect rect = GUILayoutUtility.GetRect(label, SirenixGUIStyles.Foldout);
+            //rect.height = EditorGUIUtility.singleLineHeight;
+
+            return Foldout(rect, isVisible, label, style);
+        }
+
+        /// <summary>
+        /// Draws a foldout field where clicking on the label toggles to the foldout too.
+        /// </summary>
+        /// <param name="rect">The rect to draw the foldout field in.</param>
+        /// <param name="isVisible">The current state of the foldout.</param>
+        /// <param name="label">The label of the foldout.</param>
+        /// <param name="style">The style.</param>
+        public static bool Foldout(Rect rect, bool isVisible, GUIContent label, GUIStyle style = null)
+        {
+            style = style ?? EasyGUIStyles.Foldout;
+
+            var e = Event.current.type;
+            bool isHovering = false;
+            if (e != EventType.Layout)
+            {
+                // Swallow foldout icon as well
+                //rect.x -= 9;
+                //rect.width += 9;
+                isHovering = rect.Contains(Event.current.mousePosition);
+                //rect.width -= 9;
+                //rect.x += 9;
+            }
+
+            if (isHovering)
+            {
+                EasyGUIHelper.PushLabelColor(EasyGUIStyles.HighlightedTextColor);
+            }
+
+            if (isHovering && e == EventType.MouseMove)
+            {
+                EasyGUIHelper.RequestRepaint();
+            }
+
+            if (e == EventType.MouseDown && isHovering && Event.current.button == 0)
+            {
+                // Foldout works when GUI.enabled = false
+                // Enable GUI, in order to Use() the the event properly.
+                isVisible = !isVisible;
+                EasyGUIHelper.RequestRepaint();
+                EasyGUIHelper.PushGUIEnabled(true);
+                Event.current.Use();
+                EasyGUIHelper.PopGUIEnabled();
+                EasyGUIHelper.RemoveFocusControl();
+            }
+
+            isVisible = EditorGUI.Foldout(rect, isVisible, label, style);
+
+            if (isHovering)
+            {
+                EasyGUIHelper.PopLabelColor();
+            }
+
+            return isVisible;
         }
 
         public static Rect BeginVerticalList(bool drawBorder = true, bool drawDarkBg = true,

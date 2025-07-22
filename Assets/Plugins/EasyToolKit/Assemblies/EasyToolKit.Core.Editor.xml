@@ -44,6 +44,23 @@
             Ends the drawing of a toolbar style box header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBoxHeader"/>.
             </summary>
         </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.Foldout(System.Boolean,UnityEngine.GUIContent,UnityEngine.GUIStyle)">
+            <summary>
+            Draws a foldout field where clicking on the label toggles to the foldout too.
+            </summary>
+            <param name="isVisible">The current state of the foldout.</param>
+            <param name="label">The label of the foldout.</param>
+            <param name="style">The GUI style.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.Foldout(UnityEngine.Rect,System.Boolean,UnityEngine.GUIContent,UnityEngine.GUIStyle)">
+            <summary>
+            Draws a foldout field where clicking on the label toggles to the foldout too.
+            </summary>
+            <param name="rect">The rect to draw the foldout field in.</param>
+            <param name="isVisible">The current state of the foldout.</param>
+            <param name="label">The label of the foldout.</param>
+            <param name="style">The style.</param>
+        </member>
         <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.CurrentIndentAmount">
             <summary>
             Gets the current indent amount.
@@ -140,6 +157,17 @@
         <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopContextWidth">
             <summary>
             Pops a value pushed by <see cref="M:Sirenix.Utilities.Editor.GUIHelper.PushContextWidth(System.Single)" />.
+            </summary>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushLabelColor(UnityEngine.Color)">
+            <summary>
+            Pushes the label color to the stack. Remember to pop with <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopLabelColor"/>.
+            </summary>
+            <param name="color">The label color to push.</param>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyGUIHelper.PopLabelColor">
+            <summary>
+            Pops the label color pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushLabelColor(UnityEngine.Color)"/>.
             </summary>
         </member>
         <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoxContainer">

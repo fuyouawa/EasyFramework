@@ -1,3 +1,4 @@
+using EasyToolKit.Core.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,9 +20,7 @@ namespace EasyToolKit.Inspector.Editor
                 return;
             }
 
-            EditorGUI.indentLevel++;
-            Property.State.Expanded = EditorGUILayout.Foldout(Property.State.Expanded, label, true);
-            EditorGUI.indentLevel--;
+            Property.State.Expanded = EasyEditorGUI.Foldout(Property.State.Expanded, label);
 
             if (Property.State.Expanded)
             {

@@ -4,15 +4,48 @@ namespace EasyToolKit.Core.Editor.Internal
 {
     public static class EditorAssetPaths
     {
-        public static string GetAssetDirectory(string assetType)
+        public static string GetAssetDirectory()
         {
-            return $"{AssetPaths.PluginsDirectory}/{assetType}/Editor";
+            return GetDirectory("Assets");
+        }
+        public static string GetModuleAssetDirectory(string folderName)
+        {
+            return GetModuleDirectory(folderName, "Assets");
+        }
+
+        public static string GetConfigsDirectory()
+        {
+            return GetDirectory("Configs");
+        }
+
+        public static string GetModuleConfigsDirectory(string folderName)
+        {
+            return GetModuleDirectory(folderName, "Configs");
+        }
+
+        private static string GetDirectory(string assetType)
+        {
+            return $"Assets/{AssetPaths.GetPluginsDirectory()}/{assetType}/Editor";
         }
 
 
-        public static string GetModuleAssetDirectory(string folderName, string assetType)
+        private static string GetModuleDirectory(string folderName, string assetType)
         {
-            return $"{AssetPaths.PluginsDirectory}/Modules/{folderName}/{assetType}/Editor";
+            return $"Assets/{AssetPaths.GetPluginsDirectory()}/Modules/{folderName}/{assetType}/Editor";
+        }
+    }
+
+    public class EditorAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    {
+        public EditorAssetPathAttribute() : base(EditorAssetPaths.GetAssetDirectory())
+        {
+        }
+    }
+
+    public class EditorModuleAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
+    {
+        public EditorModuleAssetPathAttribute(string folderName) : base(EditorAssetPaths.GetModuleAssetDirectory(folderName))
+        {
         }
     }
 
@@ -20,7 +53,7 @@ namespace EasyToolKit.Core.Editor.Internal
     public class EditorConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
         public EditorConfigsPathAttribute() : base(
-            EditorAssetPaths.GetAssetDirectory("Configs"))
+            EditorAssetPaths.GetConfigsDirectory())
         {
         }
     }
@@ -28,7 +61,7 @@ namespace EasyToolKit.Core.Editor.Internal
     public class ModuleEditorConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
         public ModuleEditorConfigsPathAttribute(string folderName) : base(
-            EditorAssetPaths.GetModuleAssetDirectory(folderName, "Configs"))
+            EditorAssetPaths.GetModuleAssetDirectory(folderName))
         {
         }
     }

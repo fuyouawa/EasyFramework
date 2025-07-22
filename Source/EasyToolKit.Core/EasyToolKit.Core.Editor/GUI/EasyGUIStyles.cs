@@ -42,6 +42,8 @@ namespace EasyToolKit.Core.Editor
             ? new Color(0.90f, 0.90f, 0.90f, 1)
             : new Color(0.20f, 0.20f, 0.20f, 1);
 
+        public static readonly Color HighlightedTextColor = EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 1) : new Color(0, 0, 0, 1);
+
         private static GUIStyle s_none;
 
         public static GUIStyle None
@@ -200,6 +202,20 @@ namespace EasyToolKit.Core.Editor
                     s_propertyPadding = new GUIStyle(GUIStyle.none) { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
                 }
                 return s_propertyPadding;
+            }
+        }
+        
+        private static GUIStyle s_foldout;
+        
+        public static GUIStyle Foldout
+        {
+            get
+            {
+                if (s_foldout == null)
+                {
+                    s_foldout = new GUIStyle(EditorStyles.foldout) { fixedWidth = 0, fixedHeight = 16, stretchHeight = false, stretchWidth = true };
+                }
+                return s_foldout;
             }
         }
     }

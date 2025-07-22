@@ -17,6 +17,7 @@ namespace EasyToolKit.Core.Editor
         private static readonly GUIScopeStack<float> LabelWidthStack = new GUIScopeStack<float>();
         private static readonly GUIScopeStack<bool> HierarchyModeStack = new GUIScopeStack<bool>();
         private static readonly GUIScopeStack<float> ContextWidthStackOdinVersion = new GUIScopeStack<float>();
+        private static readonly GUIScopeStack<Color> LabelColorStack = new GUIScopeStack<Color>();
 
         private static readonly Func<Rect> TopLevelLayoutRectGetter;
         private static readonly Func<float> TopLevelLayoutMinHeightGetter;
@@ -340,6 +341,29 @@ namespace EasyToolKit.Core.Editor
                     return;
                 double num = floatStack.Pop();
             }
+        }
+
+        /// <summary>
+        /// Pushes the label color to the stack. Remember to pop with <see cref="PopLabelColor"/>.
+        /// </summary>
+        /// <param name="color">The label color to push.</param>
+        public static void PushLabelColor(Color color)
+        {
+            LabelColorStack.Push(EditorStyles.label.normal.textColor);
+            EditorStyles.label.normal.textColor = color;
+            EasyGUIStyles.Foldout.normal.textColor = color;
+            EasyGUIStyles.Foldout.onNormal.textColor = color;
+        }
+
+        /// <summary>
+        /// Pops the label color pushed by <see cref="PushLabelColor(Color)"/>.
+        /// </summary>
+        public static void PopLabelColor()
+        {
+            var color = LabelColorStack.Pop();
+            EditorStyles.label.normal.textColor = color;
+            EasyGUIStyles.Foldout.normal.textColor = color;
+            EasyGUIStyles.Foldout.onNormal.textColor = color;
         }
     }
 }
