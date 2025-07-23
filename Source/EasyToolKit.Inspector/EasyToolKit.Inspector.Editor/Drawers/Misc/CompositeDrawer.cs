@@ -28,7 +28,6 @@ namespace EasyToolKit.Inspector.Editor
                     var child = Property.Children[i];
                     child.Draw(child.Label);
                 }
-
                 EditorGUI.indentLevel--;
             }
         }

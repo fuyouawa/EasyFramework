@@ -15,7 +15,7 @@ namespace EasyToolKit.Inspector.Editor
                 return _chain;
             }
 
-            var drawerTypeResults = DrawerUtility.GetDefaultPropertyDrawerTypes(Property);
+            var drawerTypeResults = InspectorDrawerUtility.GetDefaultPropertyDrawerTypes(Property);
             var drawers = new List<IEasyDrawer>();
             foreach (var drawerType in drawerTypeResults.Select(result => result.MatchedType).Distinct())
             {

@@ -1,34 +1,54 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using EasyToolKit.Core;
 using JetBrains.Annotations;
 using UnityEditor;
-using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
     public sealed class InspectorPropertyInfo
     {
+        private Type _propertyResolverType;
+        private MemberInfo _memberInfo;
+        private bool? _isArrayElement;
+
         [CanBeNull] public IValueAccessor ValueAccessor { get; private set; }
-        [CanBeNull] public MemberInfo MemberInfo { get; private set; }
         [CanBeNull] public Type PropertyType { get; private set; }
         public string PropertyPath { get; private set; }
         public string PropertyName { get; private set; }
         public bool IsLogicRoot { get; private set; }
         public bool IsUnityProperty { get; private set; }
 
-        private Type _propertyResolverType;
-
-        public bool IsValueType => MemberInfo is FieldInfo || MemberInfo is PropertyInfo;
-
         private InspectorPropertyInfo()
         {
         }
 
-        public static InspectorPropertyInfo CreateForUnityProperty(SerializedProperty serializedProperty,
+        public bool IsArrayElement
+        {
+            get
+            {
+                if (_isArrayElement == null)
+                {
+                    if (ValueAccessor == null || !ValueAccessor.OwnerType.IsImplementsOpenGenericType(typeof(ICollection<>)))
+                    {
+                        _isArrayElement = false;
+                    }
+                    else
+                    {
+                        _isArrayElement = true;
+                        //TODO IsArrayElement其他情况的补充
+                    }
+                }
+                return _isArrayElement.Value;
+            }
+        }
+
+        public static InspectorPropertyInfo CreateForUnityProperty(
+            SerializedProperty serializedProperty,
             Type parentType, Type valueType)
         {
             var info = new InspectorPropertyInfo()
@@ -36,7 +56,7 @@ namespace EasyToolKit.Inspector.Editor
                 PropertyType = valueType,
                 PropertyPath = serializedProperty.propertyPath,
                 PropertyName = serializedProperty.name,
-                IsUnityProperty = true,
+                IsUnityProperty = true
             };
 
             if (valueType.IsImplementsOpenGenericType(typeof(ICollection<>)))
@@ -107,7 +127,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (allowChildren)
             {
-                var isDefinedUnityPropertyDrawer = DrawerUtility.IsDefinedUnityPropertyDrawer(PropertyType);
+                var isDefinedUnityPropertyDrawer = InspectorDrawerUtility.IsDefinedUnityPropertyDrawer(PropertyType);
                 allowChildren = !isDefinedUnityPropertyDrawer;
             }
 
@@ -122,6 +142,36 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             return _propertyResolverType.CreateInstance<IPropertyResolver>();
+        }
+
+        public MemberInfo TryGetMemberInfo()
+        {
+            if (_memberInfo != null)
+            {
+                return _memberInfo;
+            }
+
+            if (ValueAccessor == null ||
+                IsArrayElement ||
+                PropertyName.IsNullOrEmpty())
+            {
+                return null;
+            }
+
+            var parentType = ValueAccessor.OwnerType;
+            var fieldInfo = parentType.GetField(PropertyName, BindingFlagsHelper.AllInstance());
+            if (fieldInfo != null)
+            {
+                return fieldInfo;
+            }
+
+            var propertyInfo = parentType.GetProperty(PropertyName, BindingFlagsHelper.AllInstance());
+            if (propertyInfo != null)
+            {
+                return propertyInfo;
+            }
+
+            return null;
         }
     }
 }

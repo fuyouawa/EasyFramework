@@ -1,3 +1,5 @@
+using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace EasyToolKit.Core
@@ -12,8 +14,11 @@ namespace EasyToolKit.Core
                 new Vector2(0.5f, 0.5f));
         }
         
-        public static Texture2D[,] SliceByCount(this Texture2D texture, int rows, int columns)
+        public static Texture2D[,] SliceByCount([NotNull] this Texture2D texture, int rows, int columns)
         {
+            if (texture == null)
+                throw new ArgumentNullException(nameof(texture));
+
             int sliceWidth = texture.width / columns;
             int sliceHeight = texture.height / rows;
             
@@ -33,14 +38,15 @@ namespace EasyToolKit.Core
         private static Texture2D CreateSlice(Texture2D sourceTexture, int columnIndex, int rowIndex, int sliceWidth, int sliceHeight)
         {
             Texture2D slice = new Texture2D(sliceWidth, sliceHeight);
-            slice.SetPixels(
-                sourceTexture.GetPixels(
-                    columnIndex * sliceWidth,
-                    sourceTexture.height - (rowIndex + 1) * sliceHeight,
-                    sliceWidth,
-                    sliceHeight
-                )
+
+            var pixels = sourceTexture.GetPixels(
+                columnIndex * sliceWidth,
+                sourceTexture.height - (rowIndex + 1) * sliceHeight,
+                sliceWidth,
+                sliceHeight
             );
+
+            slice.SetPixels(pixels);
             slice.Apply();
             return slice;
         }

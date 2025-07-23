@@ -21,7 +21,7 @@ namespace EasyToolKit.Inspector.Editor
                 return false;
             }
 
-            return !propertyType.IsSubclassOf(typeof(UnityEngine.Object)) && DrawerUtility.IsDefinedUnityPropertyDrawer(propertyType);
+            return !propertyType.IsSubclassOf(typeof(UnityEngine.Object)) && InspectorDrawerUtility.IsDefinedUnityPropertyDrawer(propertyType);
         }
         
         private SerializedProperty _serializedProperty;
@@ -35,7 +35,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_serializedProperty == null)
             {
-                EditorGUILayout.LabelField(label, DrawerUtility.NotSupportedContent);
+                EditorGUILayout.LabelField(label, InspectorDrawerUtility.NotSupportedContent);
                 return;
             }
             EditorGUILayout.PropertyField(_serializedProperty, label);

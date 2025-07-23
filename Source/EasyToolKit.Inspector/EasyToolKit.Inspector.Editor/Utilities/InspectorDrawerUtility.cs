@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public static class DrawerUtility
+    public static class InspectorDrawerUtility
     {
         public static readonly GUIContent NotSupportedContent = new GUIContent("Not supported yet!");
 
@@ -20,7 +20,7 @@ namespace EasyToolKit.Inspector.Editor
         private static readonly FieldInfo CustomPropertyDrawerTypeFieldInfo =
             typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance());
 
-        static DrawerUtility()
+        static InspectorDrawerUtility()
         {
             var easyDrawerTypes = new List<Type>();
 

@@ -94,7 +94,7 @@ namespace EasyToolKit.Core.Editor
             {
                 if (_highlightedContent == null)
                 {
-                    _highlightedContent = new GUIContent(HighlightedContent);
+                    _highlightedContent = new GUIContent(HighlightedTexture);
                 }
 
                 return _highlightedContent;

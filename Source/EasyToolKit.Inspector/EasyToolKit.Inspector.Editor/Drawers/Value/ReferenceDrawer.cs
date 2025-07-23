@@ -19,12 +19,14 @@ namespace EasyToolKit.Inspector.Editor
                 CallNextDrawer(null);
                 return;
             }
-
+            
             Property.State.Expanded = EasyEditorGUI.Foldout(Property.State.Expanded, label);
 
             if (Property.State.Expanded)
             {
-                CallNextDrawer(label);
+                EditorGUI.indentLevel++;
+                CallNextDrawer(null);
+                EditorGUI.indentLevel--;
             }
         }
     }

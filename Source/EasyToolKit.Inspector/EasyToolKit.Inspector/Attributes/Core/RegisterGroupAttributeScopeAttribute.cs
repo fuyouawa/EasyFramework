@@ -1,0 +1,27 @@
+using System;
+
+namespace EasyToolKit.Inspector
+{
+    [AttributeUsage(AttributeTargets.Assembly)]
+    public class RegisterGroupAttributeScopeAttribute : Attribute
+    {
+        public Type BeginGroupAttributeType;
+        public Type EndGroupAttributeType;
+
+        public RegisterGroupAttributeScopeAttribute(Type beginGroupAttributeType, Type endGroupAttributeType)
+        {
+            if (!typeof(BeginGroupAttribute).IsAssignableFrom(beginGroupAttributeType))
+            {
+                throw new ArgumentException($"{beginGroupAttributeType.Name} must inherit from BeginGroupAttribute");
+            }
+
+            if (!typeof(EndGroupAttribute).IsAssignableFrom(endGroupAttributeType))
+            {
+                throw new ArgumentException($"{endGroupAttributeType.Name} must inherit from EndGroupAttribute");
+            }
+
+            BeginGroupAttributeType = beginGroupAttributeType;
+            EndGroupAttributeType = endGroupAttributeType;
+        }
+    }
+}

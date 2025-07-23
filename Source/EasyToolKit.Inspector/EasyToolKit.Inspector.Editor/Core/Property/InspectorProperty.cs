@@ -16,6 +16,7 @@ namespace EasyToolKit.Inspector.Editor
         private bool? _isSelfReadOnlyCache;
 
         private IPropertyResolver _childrenResolver;
+        private IGroupResolver _groupResolver;
         private IDrawerChainResolver _drawerChainResolver;
         private IAttributeResolver _attributeResolver;
 
@@ -40,6 +41,7 @@ namespace EasyToolKit.Inspector.Editor
         [CanBeNull] public IPropertyValueEntry ValueEntry { get; }
 
         public int Index { get; private set; }
+        public int SkipDrawCount { get; set; }
 
         public string Name => Info.PropertyName;
 
@@ -133,6 +135,17 @@ namespace EasyToolKit.Inspector.Editor
                 Refresh();
             }
         }
+        
+        [CanBeNull] public IGroupResolver GroupResolver 
+        {
+            get => _groupResolver;
+            set
+            {
+                InitializeResolver(value);
+                _groupResolver = value;
+                Refresh();
+            }
+        }
 
         internal InspectorProperty(PropertyTree tree, InspectorProperty parent, InspectorPropertyInfo info,
             int index)
@@ -169,6 +182,7 @@ namespace EasyToolKit.Inspector.Editor
 
             DrawerChainResolver = new DefaultDrawerChainResolver();
             AttributeResolver = new DefaultAttributeResolver();
+            GroupResolver = new DefaultGroupResolver();
 
             if (Info.AllowChildren())
             {
@@ -228,7 +242,12 @@ namespace EasyToolKit.Inspector.Editor
 
         public Attribute[] GetAttributes()
         {
-            return _attributeResolver.GetAttributes();
+            return AttributeResolver.GetAttributes();
+        }
+
+        public InspectorProperty[] GetGroupProperties()
+        {
+            return GroupResolver.GetGroupProperties();
         }
 
         public T GetAttribute<T>()
@@ -252,6 +271,12 @@ namespace EasyToolKit.Inspector.Editor
 
         public void Draw(GUIContent label)
         {
+            if (SkipDrawCount > 0)
+            {
+                SkipDrawCount--;
+                return;
+            }
+
             var chain = GetDrawerChain();
             chain.Reset();
 

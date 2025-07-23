@@ -6,6 +6,9 @@ namespace EasyToolKit.Core.Editor
 {
     public static class EasyGUIStyles
     {
+        public static readonly Color HeaderBoxBackgroundColor =
+            EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 0.06f) : new Color(1, 1, 1, 0.26f);
+
         public static readonly Color BorderColor = EditorGUIUtility.isProSkin
             ? new Color(0.11f * 1.0f, 0.11f * 1.0f, 0.11f * 1.0f, 0.8f)
             : new Color(0.38f, 0.38f, 0.38f, 0.6f);
@@ -42,7 +45,8 @@ namespace EasyToolKit.Core.Editor
             ? new Color(0.90f, 0.90f, 0.90f, 1)
             : new Color(0.20f, 0.20f, 0.20f, 1);
 
-        public static readonly Color HighlightedTextColor = EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 1) : new Color(0, 0, 0, 1);
+        public static readonly Color HighlightedTextColor =
+            EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 1) : new Color(0, 0, 0, 1);
 
         private static GUIStyle s_none;
 
@@ -156,6 +160,7 @@ namespace EasyToolKit.Core.Editor
         }
 
         private static GUIStyle s_boxContainer;
+
         /// <summary>
         /// Box container style.
         /// </summary>
@@ -167,10 +172,11 @@ namespace EasyToolKit.Core.Editor
                 {
                     s_boxContainer = new GUIStyle(EditorStyles.helpBox) { margin = new RectOffset(0, 0, 0, 2) };
                 }
+
                 return s_boxContainer;
             }
         }
-        
+
         private static GUIStyle s_boxHeaderStyle;
 
         /// <summary>
@@ -184,10 +190,11 @@ namespace EasyToolKit.Core.Editor
                 {
                     s_boxHeaderStyle = new GUIStyle(None) { margin = new RectOffset(0, 0, 0, 2) };
                 }
+
                 return s_boxHeaderStyle;
             }
         }
-        
+
         private static GUIStyle s_propertyPadding;
 
         /// <summary>
@@ -199,22 +206,31 @@ namespace EasyToolKit.Core.Editor
             {
                 if (s_propertyPadding == null)
                 {
-                    s_propertyPadding = new GUIStyle(GUIStyle.none) { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
+                    s_propertyPadding = new GUIStyle(GUIStyle.none)
+                        { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
                 }
+
                 return s_propertyPadding;
             }
         }
-        
+
         private static GUIStyle s_foldout;
-        
+
         public static GUIStyle Foldout
         {
             get
             {
                 if (s_foldout == null)
                 {
-                    s_foldout = new GUIStyle(EditorStyles.foldout) { fixedWidth = 0, fixedHeight = 16, stretchHeight = false, stretchWidth = true };
+                    s_foldout = new GUIStyle(EditorStyles.foldout)
+                    {
+                        fixedWidth = 0,
+                        fixedHeight = 16,
+                        stretchHeight = false,
+                        stretchWidth = true,
+                    };
                 }
+
                 return s_foldout;
             }
         }

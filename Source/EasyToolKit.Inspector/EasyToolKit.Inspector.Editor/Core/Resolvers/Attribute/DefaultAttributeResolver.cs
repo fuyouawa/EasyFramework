@@ -16,9 +16,11 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             var total = new List<Attribute>();
-            if (Property.Info.MemberInfo != null)
+
+            var memberInfo = Property.Info.TryGetMemberInfo();
+            if (memberInfo != null)
             {
-                total.AddRange(Property.Info.MemberInfo.GetCustomAttributes());
+                total.AddRange(memberInfo.GetCustomAttributes());
             }
 
             if (Property.Info.PropertyType != null)

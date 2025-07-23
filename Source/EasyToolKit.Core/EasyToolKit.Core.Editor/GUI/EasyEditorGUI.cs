@@ -147,11 +147,11 @@ namespace EasyToolKit.Core.Editor
         }
 
         /// <summary>
-        /// Begins drawing a box with toolbar style header. Remember to end with <seealso cref="EndToolbarBox"/>.
+        /// Begins drawing a box with toolbar style header. Remember to end with <seealso cref="EndBox"/>.
         /// </summary>
         /// <param name="options">GUILayout options.</param>
         /// <returns>The rect of the box.</returns>
-        public static Rect BeginToolbarBox(params GUILayoutOption[] options)
+        public static Rect BeginBox(params GUILayoutOption[] options)
         {
             BeginIndentedVertical(EasyGUIStyles.BoxContainer, options);
             EasyGUIHelper.PushHierarchyMode(false);
@@ -160,9 +160,9 @@ namespace EasyToolKit.Core.Editor
         }
 
         /// <summary>
-        /// Ends the drawing a box with a toolbar style header started by <see cref="BeginToolbarBox(GUILayoutOption[])"/>.
+        /// Ends the drawing a box with a toolbar style header started by <see cref="BeginBox"/>.
         /// </summary>
-        public static void EndToolbarBox()
+        public static void EndBox()
         {
             EasyGUIHelper.PopLabelWidth();
             EasyGUIHelper.PopHierarchyMode();
@@ -192,6 +192,34 @@ namespace EasyToolKit.Core.Editor
 
             return headerBgRect;
         }
+        public static Rect BeginBoxHeader()
+        {
+            GUILayout.Space(-3);
+            var headerBgRect = EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true));
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                headerBgRect.x -= 3;
+                headerBgRect.width += 6;
+                //headerBgRect.y -= 2;
+                //headerBgRect.height += 4;
+                EasyGUIHelper.PushColor(EasyGUIStyles.HeaderBoxBackgroundColor);
+                GUI.DrawTexture(headerBgRect, Texture2D.whiteTexture);
+                EasyGUIHelper.PopColor();
+                DrawBorders(headerBgRect, 0, 0, 0, 1, new Color(0, 0, 0, 0.4f));
+            }
+            EasyGUIHelper.PushLabelWidth(EasyGUIHelper.BetterLabelWidth - 4);
+            return headerBgRect;
+        }
+        
+        /// <summary>
+        /// Ends drawing a box header started by <see cref="BeginToolbarBoxHeader"/>,
+        /// </summary>
+        public static void EndBoxHeader()
+        {
+            EasyGUIHelper.PopLabelWidth();
+            EditorGUILayout.EndHorizontal();
+        }
 
         /// <summary>
         /// Ends the drawing of a toolbar style box header started by <see cref="BeginToolbarBoxHeader"/>.
@@ -201,9 +229,12 @@ namespace EasyToolKit.Core.Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        public static bool IconButton(EditorIcon icon, GUIStyle style, int width = 18, int height = 18,
+
+
+        public static bool IconButton(EditorIcon icon, GUIStyle style = null, int width = 18, int height = 18,
             string tooltip = "")
         {
+            style ??= EasyGUIStyles.IconButton;
             Rect rect = GUILayoutUtility.GetRect(icon.HighlightedContent, style, GUILayout.ExpandWidth(false),
                 GUILayout.Width(width), GUILayout.Height(height));
             return IconButton(rect, icon, style, tooltip);
@@ -239,8 +270,6 @@ namespace EasyToolKit.Core.Editor
             EditorGUIUtility.fieldWidth = 10;
             var rect = EditorGUILayout.GetControlRect(false);
             EditorGUIUtility.fieldWidth = tmp;
-            //Rect rect = GUILayoutUtility.GetRect(label, SirenixGUIStyles.Foldout);
-            //rect.height = EditorGUIUtility.singleLineHeight;
 
             return Foldout(rect, isVisible, label, style);
         }

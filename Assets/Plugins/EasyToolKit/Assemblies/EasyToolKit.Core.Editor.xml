@@ -21,16 +21,16 @@
             Indents by the current indent value, <see cref="P:EasyToolKit.Core.Editor.EasyGUIHelper.CurrentIndentAmount"/>.
             </summary>
         </member>
-        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBox(UnityEngine.GUILayoutOption[])">
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginBox(UnityEngine.GUILayoutOption[])">
             <summary>
-            Begins drawing a box with toolbar style header. Remember to end with <seealso cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBox"/>.
+            Begins drawing a box with toolbar style header. Remember to end with <seealso cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndBox"/>.
             </summary>
             <param name="options">GUILayout options.</param>
             <returns>The rect of the box.</returns>
         </member>
-        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBox">
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndBox">
             <summary>
-            Ends the drawing a box with a toolbar style header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBox(UnityEngine.GUILayoutOption[])"/>.
+            Ends the drawing a box with a toolbar style header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginBox(UnityEngine.GUILayoutOption[])"/>.
             </summary>
         </member>
         <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBoxHeader">
@@ -38,6 +38,11 @@
             Begins drawing a toolbar style box header. Remember to end with <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBoxHeader"/>.
             </summary>
             <returns>The rect of the box.</returns>
+        </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndBoxHeader">
+            <summary>
+            Ends drawing a box header started by <see cref="M:EasyToolKit.Core.Editor.EasyEditorGUI.BeginToolbarBoxHeader"/>,
+            </summary>
         </member>
         <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.EndToolbarBoxHeader">
             <summary>
