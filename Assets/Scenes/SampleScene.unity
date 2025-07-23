@@ -926,13 +926,13 @@ MonoBehaviour:
       m_Calls: []
   testList:
   - Int1: 11
-    Int2: 0
+    Int2: 69
     String3: 
     Class1:
       Inttt: 0
       TestEnum: 0
       Transform: {fileID: 0}
-  - Int1: 0
+  - Int1: 42
     Int2: 0
     String3: 
     Class1:

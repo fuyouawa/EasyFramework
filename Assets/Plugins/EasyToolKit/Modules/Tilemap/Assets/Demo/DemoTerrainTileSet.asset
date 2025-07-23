@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d928320bec65f84bbfc3c515c3e0e3f, type: 3}
+  m_Name: DemoTerrainTileSet
+  m_EditorClassIdentifier: 
+  InteriorCornerRules:
+    UseFullDefinition: 0
+    TopLeftRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    TopRightRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    BottomLeftRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    BottomRightRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+  ExteriorCornerRules:
+    UseFullDefinition: 0
+    TopLeftRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    TopRightRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    BottomLeftRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    BottomRightRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+  EdgeRules:
+    UseFullDefinition: 0
+    TopRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    BottomRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    LeftRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+    RightRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}
+  FillRules:
+    FillRule:
+      TilePrefab: {fileID: 0}
+      RotationOffset: {x: 0, y: 0, z: 0}
+      PositionOffset: {x: 0, y: 0, z: 0}
+      ScaleOffset: {x: 0, y: 0, z: 0}

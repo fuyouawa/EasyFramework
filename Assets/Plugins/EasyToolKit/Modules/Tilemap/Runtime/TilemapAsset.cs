@@ -3,10 +3,8 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [CreateAssetMenu(menuName = "EasyTileCreator/Create TilemapAsset", fileName = "TilemapAsset")]
+    [CreateAssetMenu(menuName = "EasyToolKit/Tilemap/Create TilemapAsset", fileName = "TilemapAsset")]
     public class TilemapAsset : ScriptableObject
     {
-        [SerializeField] private List<BlueprintLayer> _blueprintLayers = new List<BlueprintLayer>();
-        [SerializeField] private List<BuildLayer> _buildLayers = new List<BuildLayer>();
     }
 }
