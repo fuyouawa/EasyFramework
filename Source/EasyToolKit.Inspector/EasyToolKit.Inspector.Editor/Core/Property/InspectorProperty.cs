@@ -125,22 +125,30 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
         
-        [CanBeNull] public IAttributeResolver AttributeResolver 
+        public IAttributeResolver AttributeResolver 
         {
             get => _attributeResolver;
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
                 InitializeResolver(value);
                 _attributeResolver = value;
                 Refresh();
             }
         }
         
-        [CanBeNull] public IGroupResolver GroupResolver 
+        public IGroupResolver GroupResolver 
         {
             get => _groupResolver;
             set
             {
+                if (value == null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
                 InitializeResolver(value);
                 _groupResolver = value;
                 Refresh();
@@ -245,9 +253,9 @@ namespace EasyToolKit.Inspector.Editor
             return AttributeResolver.GetAttributes();
         }
 
-        public InspectorProperty[] GetGroupProperties()
+        public InspectorProperty[] GetGroupProperties(Type beginGroupAttributeType)
         {
-            return GroupResolver.GetGroupProperties();
+            return GroupResolver.GetGroupProperties(beginGroupAttributeType);
         }
 
         public T GetAttribute<T>()

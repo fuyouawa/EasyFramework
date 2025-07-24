@@ -1,8 +1,10 @@
+using System;
+
 namespace EasyToolKit.Inspector.Editor
 {
     public interface IGroupResolver : IInitializableResolver
     {
-        InspectorProperty[] GetGroupProperties();
+        InspectorProperty[] GetGroupProperties(Type beginGroupAttributeType);
     }
 
     public abstract class GroupResolver : IGroupResolver
@@ -41,6 +43,6 @@ namespace EasyToolKit.Inspector.Editor
         {
         }
 
-        public abstract InspectorProperty[] GetGroupProperties();
+        public abstract InspectorProperty[] GetGroupProperties(Type beginGroupAttributeType);
     }
 }

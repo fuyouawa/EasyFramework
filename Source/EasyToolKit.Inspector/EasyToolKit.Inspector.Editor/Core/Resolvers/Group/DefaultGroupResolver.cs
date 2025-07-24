@@ -7,20 +7,21 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class DefaultGroupResolver : GroupResolver
     {
-        private InspectorProperty[] _groupProperties;
+        private readonly Dictionary<Type, InspectorProperty[]> _groupPropertiesCache = new Dictionary<Type, InspectorProperty[]>();
 
-        public override InspectorProperty[] GetGroupProperties()
+        public override InspectorProperty[] GetGroupProperties(Type beginGroupAttributeType)
         {
-            if (_groupProperties != null)
+            if (_groupPropertiesCache.TryGetValue(beginGroupAttributeType, out var properties))
             {
-                return _groupProperties;
+                return properties;
             }
 
-            var beginGroupAttribute = (BeginGroupAttribute)Property.GetAttributes().FirstOrDefault(attr => attr is BeginGroupAttribute);
+            var beginGroupAttribute = (BeginGroupAttribute)Property.GetAttributes().FirstOrDefault(attr => attr.GetType() == beginGroupAttributeType);
             if (beginGroupAttribute == null)
             {
-                _groupProperties = new InspectorProperty[] { };
-                return _groupProperties;
+                properties = new InspectorProperty[] { };
+                _groupPropertiesCache[beginGroupAttributeType] = properties;
+                return properties;
             }
 
             var parent = Property.Parent;
@@ -36,13 +37,13 @@ namespace EasyToolKit.Inspector.Editor
 
             if (beginIndex >= parent.Children.Count - 1)
             {
-                _groupProperties = new InspectorProperty[] { };
-                return _groupProperties;
+                properties = new InspectorProperty[] { };
+                _groupPropertiesCache[beginGroupAttributeType] = properties;
+                return properties;
             }
             
 
             var groupName = beginGroupAttribute.GroupName;
-            var beginGroupAttributeType = beginGroupAttribute.GetType();
             var endGroupAttributeType =
                 InspectorAttributeUtility.GetCorrespondGroupAttributeType(beginGroupAttribute.GetType());
 
@@ -52,7 +53,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 var child = parent.Children[i];
 
-                var childBeginGroupAttribute = (BeginGroupAttribute)Property.GetAttributes().FirstOrDefault(attr => attr.GetType() == beginGroupAttributeType);
+                var childBeginGroupAttribute = (BeginGroupAttribute)child.GetAttributes().FirstOrDefault(attr => attr.GetType() == beginGroupAttributeType);
                 if (childBeginGroupAttribute != null)
                 {
                     var childGroupName = childBeginGroupAttribute.GroupName;
@@ -71,7 +72,7 @@ namespace EasyToolKit.Inspector.Editor
                     }
                 }
 
-                var childEndGroupAttribute = (EndGroupAttribute)Property.GetAttributes().FirstOrDefault(attr => attr.GetType() == endGroupAttributeType);
+                var childEndGroupAttribute = (EndGroupAttribute)child.GetAttributes().FirstOrDefault(attr => attr.GetType() == endGroupAttributeType);
                 if (childEndGroupAttribute != null)
                 {
                     if (subGroupPropertyStack.Count > 0)
@@ -87,8 +88,9 @@ namespace EasyToolKit.Inspector.Editor
                 groupPropertyList.Add(child);
             }
 
-            _groupProperties = groupPropertyList.ToArray();
-            return _groupProperties;
+            properties = groupPropertyList.ToArray();
+            _groupPropertiesCache[beginGroupAttributeType] = properties;
+            return properties;
         }
     }
 }

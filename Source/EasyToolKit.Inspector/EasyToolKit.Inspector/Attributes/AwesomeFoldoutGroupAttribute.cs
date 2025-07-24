@@ -1,10 +1,12 @@
 using EasyToolKit.Inspector;
+using System.Diagnostics;
 using UnityEngine;
 
-[assembly: RegisterGroupAttributeScope(typeof(AwesomeFoldoutGroupAttribute), typeof(AwesomeEndFoldoutGroupAttribute))]
+[assembly: RegisterGroupAttributeScope(typeof(AwesomeFoldoutGroupAttribute), typeof(EndAwesomeFoldoutGroupAttribute))]
 
 namespace EasyToolKit.Inspector
 {
+    [Conditional("UNITY_EDITOR")]
     public class AwesomeFoldoutGroupAttribute: BeginGroupAttribute
     {
         public string Label;
@@ -17,10 +19,11 @@ namespace EasyToolKit.Inspector
             Label = label;
         }
     }
-
-    public class AwesomeEndFoldoutGroupAttribute : EndGroupAttribute
+    
+    [Conditional("UNITY_EDITOR")]
+    public class EndAwesomeFoldoutGroupAttribute : EndGroupAttribute
     {
-        public AwesomeEndFoldoutGroupAttribute()
+        public EndAwesomeFoldoutGroupAttribute()
         {
         }
     }
