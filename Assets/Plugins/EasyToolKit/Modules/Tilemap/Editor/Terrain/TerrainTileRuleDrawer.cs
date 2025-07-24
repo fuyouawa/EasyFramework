@@ -9,7 +9,7 @@ namespace EasyToolKit.Tilemap.Editor
     public class TerrainTileRuleDrawer : EasyValueDrawer<TerrainTileRule>
     {
         public static readonly Color BackgroundColor = EditorGUIUtility.isProSkin
-            ? new Color(0.216f, 0.216f, 0.216f, 1f)
+            ? new Color(0.216f * 0.9f, 0.216f * 0.9f, 0.216f * 0.9f, 1f)
             : new Color(0.801f, 0.801f, 0.801f, 1.000f);
 
         private InspectorProperty _tilePrefabProperty;

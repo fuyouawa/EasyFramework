@@ -18,7 +18,7 @@ namespace EasyToolKit.Tweening
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(asm => asm.GetTypes())
                 .Where(t => t.IsClass && !t.IsInterface && !t.IsAbstract &&
-                            t.HasInterface(typeof(ITweenerProcessor)))
+                            t.IsInheritsFrom<ITweenerProcessor>())
                 .ToArray();
 
             _tweenerProcessorTypeMatcher.SetTypeMatchIndices(types.Select(type =>

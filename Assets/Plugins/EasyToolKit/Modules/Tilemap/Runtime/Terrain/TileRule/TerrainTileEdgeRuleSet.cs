@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [AwesomeFoldoutGroup("边缘规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainTileEdgeRuleSetIcon")]
+    [AwesomeFoldoutGroup("边缘规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainEdgeTypeIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainTileEdgeRuleSet : TerrainTileRuleSetBase
@@ -16,20 +16,23 @@ namespace EasyToolKit.Tilemap
         [LabelText("使用完整定义")]
         public bool UseFullDefinition;
 
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.TopEdge)]
-        [Space(3)]
         public TerrainTileRule TopRule;
-
+        
+        [ShowIf(nameof(UseFullDefinition))]
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.BottomEdge)]
-        [Space(3)]
         public TerrainTileRule BottomRule;
-
+        
+        [ShowIf(nameof(UseFullDefinition))]
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.LeftEdge)]
-        [Space(3)]
         public TerrainTileRule LeftRule;
-
-        [TerrainTileRuleType(TerrainType.RightEdge)]
+        
+        [ShowIf(nameof(UseFullDefinition))]
         [Space(3)]
+        [TerrainTileRuleType(TerrainType.RightEdge)]
         public TerrainTileRule RightRule;
 
         public override TerrainTileRuleSetType RuleSetType => TerrainTileRuleSetType.Edge;

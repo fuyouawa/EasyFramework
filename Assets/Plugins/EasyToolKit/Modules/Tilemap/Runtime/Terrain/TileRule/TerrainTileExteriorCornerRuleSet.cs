@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [AwesomeFoldoutGroup("外转角规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainTileExteriorCornerRuleSetIcon")]
+    [AwesomeFoldoutGroup("外转角规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainExteriorCornerTypeIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainTileExteriorCornerRuleSet : TerrainTileRuleSetBase
@@ -16,20 +16,23 @@ namespace EasyToolKit.Tilemap
         [LabelText("使用完整定义")]
         public bool UseFullDefinition;
 
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.TopLeftExteriorCorner)]
-        [Space(3)]
         public TerrainTileRule TopLeftRule;
-
+        
+        [ShowIf(nameof(UseFullDefinition))]
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.TopRightExteriorCorner)]
-        [Space(3)]
         public TerrainTileRule TopRightRule;
-
+        
+        [ShowIf(nameof(UseFullDefinition))]
+        [Space(3)]
         [TerrainTileRuleType(TerrainType.BottomLeftExteriorCorner)]
-        [Space(3)]
         public TerrainTileRule BottomLeftRule;
-
-        [TerrainTileRuleType(TerrainType.BottomRightExteriorCorner)]
+        
+        [ShowIf(nameof(UseFullDefinition))]
         [Space(3)]
+        [TerrainTileRuleType(TerrainType.BottomRightExteriorCorner)]
         public TerrainTileRule BottomRightRule;
 
         public override TerrainTileRuleSetType RuleSetType => TerrainTileRuleSetType.ExteriorCorner;

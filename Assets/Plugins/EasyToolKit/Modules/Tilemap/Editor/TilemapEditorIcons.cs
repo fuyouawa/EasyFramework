@@ -13,11 +13,11 @@ namespace EasyToolKit.Tilemap.Editor
         }
 
         private Texture2D[,] _terrainTypeIconsAtlas;
-        
-        public Texture2D TerrainTileFillRuleSetIcon => GetTerrainTypeIcon(TerrainType.Fill);
-        public Texture2D TerrainTileExteriorCornerRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopLeftExteriorCorner);
-        public Texture2D TerrainTileEdgeRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopEdge);
-        public Texture2D TerrainTileInteriorCornerRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopLeftInteriorCorner);
+
+        public Texture2D TerrainFillTypeIcon => GetTerrainTypeIcon(TerrainType.Fill);
+        public Texture2D TerrainExteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainType.TopLeftExteriorCorner);
+        public Texture2D TerrainEdgeTypeIcon => GetTerrainTypeIcon(TerrainType.TopEdge);
+        public Texture2D TerrainInteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainType.TopLeftInteriorCorner);
 
         public Texture2D GetTerrainTypeIcon(TerrainType terrainType)
         {
@@ -56,8 +56,8 @@ namespace EasyToolKit.Tilemap.Editor
 
         protected override void OnSingletonInit()
         {
-            var atlas = AssetDatabase.LoadAssetAtPath<Texture2D>(
-                EditorAssetPaths.GetModuleAssetDirectory("Tilemap") + "/TerrainTypeIconAtlas.png");
+            var directory = EditorAssetPaths.GetModuleAssetDirectory("Tilemap");
+            var atlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/TerrainTypeIconAtlas.png");
             _terrainTypeIconsAtlas = atlas.SliceByCount(4, 4);
         }
     }

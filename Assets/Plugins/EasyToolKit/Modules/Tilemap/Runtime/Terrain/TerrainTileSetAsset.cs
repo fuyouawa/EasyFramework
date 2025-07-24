@@ -8,6 +8,7 @@ namespace EasyToolKit.Tilemap
     [CreateAssetMenu(fileName = "TerrainTileSet", menuName = "EasyToolKit/Tilemap/Create TerrainTileSet")]
     public class TerrainTileSetAsset : ScriptableObject
     {
+        [AwesomeBoxGroup("地形瓦片规则集")]
         public TerrainTileFillRuleSet FillRuleSet;
         public TerrainTileEdgeRuleSet EdgeRuleSet;
         public TerrainTileExteriorCornerRuleSet ExteriorCornerRuleSet;
