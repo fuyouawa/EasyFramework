@@ -234,5 +234,19 @@ namespace EasyToolKit.Core.Editor
                 return s_foldout;
             }
         }
+        
+        private static GUIStyle s_whiteBoxStyle;
+        public static GUIStyle WhiteBoxStyle
+        {
+            get
+            {
+                if (s_whiteBoxStyle == null)
+                {
+                    s_whiteBoxStyle = new GUIStyle();
+                    s_whiteBoxStyle.normal.background = Texture2D.whiteTexture;
+                }
+                return s_whiteBoxStyle;
+            }
+        }
     }
 }

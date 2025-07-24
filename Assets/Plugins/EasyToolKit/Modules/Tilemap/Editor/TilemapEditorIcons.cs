@@ -13,6 +13,11 @@ namespace EasyToolKit.Tilemap.Editor
         }
 
         private Texture2D[,] _terrainTypeIconsAtlas;
+        
+        public Texture2D TerrainTileFillRuleSetIcon => GetTerrainTypeIcon(TerrainType.Fill);
+        public Texture2D TerrainTileExteriorCornerRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopLeftExteriorCorner);
+        public Texture2D TerrainTileEdgeRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopEdge);
+        public Texture2D TerrainTileInteriorCornerRuleSetIcon => GetTerrainTypeIcon(TerrainType.TopLeftInteriorCorner);
 
         public Texture2D GetTerrainTypeIcon(TerrainType terrainType)
         {

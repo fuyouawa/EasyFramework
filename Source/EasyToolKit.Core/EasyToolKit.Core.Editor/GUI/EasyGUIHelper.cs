@@ -34,15 +34,15 @@ namespace EasyToolKit.Core.Editor
         static EasyGUIHelper()
         {
             TopLevelLayoutGetter =
-                ReflectionUtility.CreateValueGetter<object>(typeof(GUILayoutUtility), "current.topLevel");
+                ReflectionUtility.CreateStaticValueGetter<object>(typeof(GUILayoutUtility), "current.topLevel");
             TopLevelLayoutRectGetter =
-                ReflectionUtility.CreateValueGetter<Rect>(typeof(GUILayoutUtility), "current.topLevel.rect");
+                ReflectionUtility.CreateStaticValueGetter<Rect>(typeof(GUILayoutUtility), "current.topLevel.rect");
             TopLevelLayoutMinHeightGetter =
-                ReflectionUtility.CreateValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.minHeight");
+                ReflectionUtility.CreateStaticValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.minHeight");
             TopLevelLayoutMaxHeightGetter =
-                ReflectionUtility.CreateValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.maxHeight");
+                ReflectionUtility.CreateStaticValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.maxHeight");
             
-            ContextWidthGetter = ReflectionUtility.CreateValueGetter<float>(typeof(EditorGUIUtility), "contextWidth");
+            ContextWidthGetter = ReflectionUtility.CreateStaticValueGetter<float>(typeof(EditorGUIUtility), "contextWidth");
             FieldInfo field = typeof (EditorGUIUtility).GetField("s_ContextWidth", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             if (field != null)
                 ContextWidthSetter = EmitUtilities.CreateStaticFieldSetter<float>(field);
@@ -50,7 +50,7 @@ namespace EasyToolKit.Core.Editor
                 ContextWidthStackGetter = EmitUtilities.CreateStaticFieldGetter<Stack<float>>(typeof (EditorGUIUtility).GetField("s_ContextWidthStack", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
 
             ActualLabelWidthGetter =
-                ReflectionUtility.CreateValueGetter<float>(typeof(EditorGUIUtility), "s_LabelWidth");
+                ReflectionUtility.CreateStaticValueGetter<float>(typeof(EditorGUIUtility), "s_LabelWidth");
 
             var layoutType = Type.GetType("UnityEngine.GUILayoutGroup, UnityEngine.IMGUIModule");
             TopLevelLayoutCalcHeightMethod = layoutType.GetMethod("CalcHeight");

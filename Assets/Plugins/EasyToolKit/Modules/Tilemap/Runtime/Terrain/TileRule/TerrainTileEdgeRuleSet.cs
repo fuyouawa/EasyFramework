@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [FoldoutGroup("边缘规则集")]
+    [AwesomeFoldoutGroup("边缘规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainTileEdgeRuleSetIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainTileEdgeRuleSet : TerrainTileRuleSetBase

@@ -169,29 +169,6 @@ namespace EasyToolKit.Core.Editor
             EndIndentedVertical();
         }
 
-        /// <summary>
-        /// Begins drawing a toolbar style box header. Remember to end with <see cref="EndToolbarBoxHeader"/>.
-        /// </summary>
-        /// <returns>The rect of the box.</returns>
-        public static Rect BeginToolbarBoxHeader()
-        {
-            GUILayout.Space(-3);
-            var headerBgRect =
-                EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true));
-            GUILayout.Space(0);
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                var rect = headerBgRect;
-                rect.x -= 3;
-                rect.width += 6;
-                //rect.y -= 1;
-                //rect.height += 2;
-                EasyGUIStyles.ToolbarBackground.Draw(rect, GUIContent.none, 0);
-            }
-
-            return headerBgRect;
-        }
         public static Rect BeginBoxHeader()
         {
             GUILayout.Space(-3);
@@ -201,8 +178,6 @@ namespace EasyToolKit.Core.Editor
             {
                 headerBgRect.x -= 3;
                 headerBgRect.width += 6;
-                //headerBgRect.y -= 2;
-                //headerBgRect.height += 4;
                 EasyGUIHelper.PushColor(EasyGUIStyles.HeaderBoxBackgroundColor);
                 GUI.DrawTexture(headerBgRect, Texture2D.whiteTexture);
                 EasyGUIHelper.PopColor();
@@ -213,23 +188,13 @@ namespace EasyToolKit.Core.Editor
         }
         
         /// <summary>
-        /// Ends drawing a box header started by <see cref="BeginToolbarBoxHeader"/>,
+        /// Ends drawing a box header started by <see cref="BeginBoxHeader"/>,
         /// </summary>
         public static void EndBoxHeader()
         {
             EasyGUIHelper.PopLabelWidth();
             EditorGUILayout.EndHorizontal();
         }
-
-        /// <summary>
-        /// Ends the drawing of a toolbar style box header started by <see cref="BeginToolbarBoxHeader"/>.
-        /// </summary>
-        public static void EndToolbarBoxHeader()
-        {
-            EditorGUILayout.EndHorizontal();
-        }
-
-
 
         public static bool IconButton(EditorIcon icon, GUIStyle style = null, int width = 18, int height = 18,
             string tooltip = "")

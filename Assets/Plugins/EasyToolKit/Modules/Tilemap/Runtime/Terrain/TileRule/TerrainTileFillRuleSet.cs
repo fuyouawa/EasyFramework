@@ -3,7 +3,7 @@ using EasyToolKit.Inspector;
 
 namespace EasyToolKit.Tilemap
 {
-    [FoldoutGroup("填充规则集")]
+    [AwesomeFoldoutGroup("填充规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainTileFillRuleSetIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainTileFillRuleSet : TerrainTileRuleSetBase

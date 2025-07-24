@@ -4,6 +4,7 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Linq;
+using static UnityEngine.GraphicsBuffer;
 
 namespace EasyToolKit.Core
 {
@@ -55,14 +56,14 @@ namespace EasyToolKit.Core
             }
         }
 
-        public static Func<TResult> CreateValueGetter<TResult>(Type rootType, string path, bool allowEmit = true)
+        public static Func<TResult> CreateStaticValueGetter<TResult>(Type rootType, string path)
         {
-            if (rootType == null)
-            {
-                throw new ArgumentNullException("rootType");
-            }
+            var getter = CreateWeakStaticValueGetter(typeof(TResult), rootType, path);
+            return () => (TResult)getter();
+        }
 
-            var resultType = typeof(TResult);
+        public static Func<object> CreateWeakStaticValueGetter(Type resultType, Type rootType, string path)
+        {
             bool rootIsStatic;
             var memberPath = GetMemberPath(rootType, ref resultType, path, out rootIsStatic, isSet: false);
 
@@ -73,23 +74,26 @@ namespace EasyToolKit.Core
             }
 
             var slowDelegate = CreateSlowDeepStaticValueGetterDelegate(memberPath);
-            return () => (TResult)slowDelegate();
+            return slowDelegate;
         }
 
-        public static Func<TTarget, TResult> CreateValueGetter<TTarget, TResult>(string path, bool allowEmit = true)
+        public static Func<TTarget, TResult> CreateInstanceValueGetter<TTarget, TResult>(string path)
         {
-            var resultType = typeof(TResult);
-            bool rootIsStatic;
-            var memberPath = GetMemberPath(typeof(TTarget), ref resultType, path, out rootIsStatic, isSet: false);
+            var getter = CreateWeakInstanceValueGetter(typeof(TTarget), typeof(TResult), path);
+            return target => (TResult)getter(target);
+        }
+
+        public static Func<object, object> CreateWeakInstanceValueGetter(Type targetType, Type resultType, string path)
+        {
+            var memberPath = GetMemberPath(targetType, ref resultType, path, out var rootIsStatic, isSet: false);
 
             if (rootIsStatic)
             {
-                throw new ArgumentException(
-                    "Given path root is static; use the generic overload without a target type.");
+                throw new ArgumentException();  //TODO 异常信息，提示使用CreateWeakStaticValueGetter
             }
 
             var slowDelegate = CreateSlowDeepInstanceValueGetterDelegate(memberPath);
-            return (target) => (TResult)slowDelegate(target);
+            return slowDelegate;
         }
 
         private static Func<object> CreateSlowDeepStaticValueGetterDelegate(List<PathStep> memberPath)
