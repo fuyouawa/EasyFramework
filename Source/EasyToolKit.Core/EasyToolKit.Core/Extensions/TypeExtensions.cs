@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace EasyToolKit.Core
 {
@@ -137,12 +138,25 @@ namespace EasyToolKit.Core
             return type == typeof(string);
         }
 
-        public static bool IsBasic(this Type type)
+        public static bool IsBasic([NotNull] this Type type)
         {
             if (type == null)
-                return false;
+                throw new ArgumentNullException(nameof(type));
 
             return type.IsEnum || type.IsString() || type.IsBoolean() | type.IsFloatingPoint() || type.IsInteger();
+        }
+
+        public static bool IsUnityObject([NotNull] this Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            return type.IsInheritsFrom<UnityEngine.Object>();
+        }
+
+        public static bool IsBasicOrUnityObject([NotNull] this Type type)
+        {
+            return type.IsBasic() || type.IsUnityObject();
         }
 
         public static T GetPropertyValue<T>(this Type type, string propertyName, BindingFlags flags, object target)
@@ -268,11 +282,6 @@ namespace EasyToolKit.Core
         public static bool IsInheritsFrom(this Type type, Type baseType)
         {
             return ThirdParty.OdinSerializer.Utilities.TypeExtensions.InheritsFrom(type, baseType);
-        }
-
-        public static bool HasInterface(this Type type, Type interfaceType)
-        {
-            return Array.Exists(type.GetInterfaces(), t => t == interfaceType);
         }
 
         public static Type[] GetArgumentsOfInheritedOpenGenericType(this Type candidateType, Type openGenericType)

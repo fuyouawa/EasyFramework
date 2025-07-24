@@ -58,11 +58,11 @@ namespace EasyToolKit.Core
 
         public static Func<TResult> CreateStaticValueGetter<TResult>(Type rootType, string path)
         {
-            var getter = CreateWeakStaticValueGetter(typeof(TResult), rootType, path);
+            var getter = CreateStaticValueGetter(typeof(TResult), rootType, path);
             return () => (TResult)getter();
         }
 
-        public static Func<object> CreateWeakStaticValueGetter(Type resultType, Type rootType, string path)
+        public static Func<object> CreateStaticValueGetter(Type resultType, Type rootType, string path)
         {
             bool rootIsStatic;
             var memberPath = GetMemberPath(rootType, ref resultType, path, out rootIsStatic, isSet: false);
@@ -79,11 +79,11 @@ namespace EasyToolKit.Core
 
         public static Func<TTarget, TResult> CreateInstanceValueGetter<TTarget, TResult>(string path)
         {
-            var getter = CreateWeakInstanceValueGetter(typeof(TTarget), typeof(TResult), path);
+            var getter = CreateInstanceValueGetter(typeof(TTarget), typeof(TResult), path);
             return target => (TResult)getter(target);
         }
 
-        public static Func<object, object> CreateWeakInstanceValueGetter(Type targetType, Type resultType, string path)
+        public static Func<object, object> CreateInstanceValueGetter(Type targetType, Type resultType, string path)
         {
             var memberPath = GetMemberPath(targetType, ref resultType, path, out var rootIsStatic, isSet: false);
 

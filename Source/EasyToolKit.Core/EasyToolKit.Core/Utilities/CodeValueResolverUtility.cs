@@ -4,7 +4,7 @@ namespace EasyToolKit.Core
 {
     public static class CodeValueResolverUtility
     {
-        public static ICodeValueResolver CreateWeak(string code, Type resultType, Type targetType = null, bool needStartFlag = false)
+        public static ICodeValueResolver CreateWeak(string code, Type resultType = null, Type targetType = null, bool needStartFlag = false)
         {
             if (needStartFlag)
             {

@@ -13,7 +13,7 @@ namespace EasyToolKit.Core
         private Func<object, object> _resolver;
         private string _error;
 
-        public DefaultCodeValueResolver(string code, Type resultType, Type targetType = null)
+        public DefaultCodeValueResolver(string code, Type resultType, Type targetType)
         {
             _code = code;
             _resultType = resultType;
@@ -76,12 +76,12 @@ namespace EasyToolKit.Core
             {
                 if (rootType != null)
                 {
-                    var getter = ReflectionUtility.CreateWeakStaticValueGetter(_resultType, rootType, path);
+                    var getter = ReflectionUtility.CreateStaticValueGetter(_resultType, rootType, path);
                     _resolver = o => getter();
                 }
                 else
                 {
-                    var getter = ReflectionUtility.CreateWeakInstanceValueGetter(targetType, _resultType, path);
+                    var getter = ReflectionUtility.CreateInstanceValueGetter(targetType, _resultType, path);
                     _resolver = o => getter(o);
                 }
             }
@@ -110,7 +110,7 @@ namespace EasyToolKit.Core
             return false;
         }
 
-        public object WeakResolve(object context)
+        public object ResolveWeak(object context)
         {
             return _resolver(context);
         }
@@ -118,13 +118,13 @@ namespace EasyToolKit.Core
 
     public class DefaultCodeValueResolver<T> : DefaultCodeValueResolver, ICodeValueResolver<T>
     {
-        public DefaultCodeValueResolver(string code, Type targetType = null) : base(code, typeof(T), targetType)
+        public DefaultCodeValueResolver(string code, Type targetType) : base(code, typeof(T), targetType)
         {
         }
 
         public T Resolve(object context)
         {
-            return (T)WeakResolve(context);
+            return (T)ResolveWeak(context);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace EasyToolKit.Core
             return false;
         }
 
-        public object WeakResolve(object context)
+        public object ResolveWeak(object context)
         {
             return _primitiveCode;
         }
@@ -31,7 +31,7 @@ namespace EasyToolKit.Core
 
         public T Resolve(object context)
         {
-            return (T)WeakResolve(context);
+            return (T)ResolveWeak(context);
         }
     }
 }

@@ -93,7 +93,7 @@ namespace EasyToolKit.Core
         {
             if (StatesById.TryGetValue(stateId, out var state))
             {
-                if (state.GetType().HasInterface(typeof(IFluentState)))
+                if (state.GetType().IsInheritsFrom<IFluentState>())
                 {
                     return (IFluentState)state;
                 }

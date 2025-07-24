@@ -6,7 +6,7 @@ namespace EasyToolKit.Core
     public interface ICodeValueResolver
     {
         bool HasError(out string error);
-        object WeakResolve(object context);
+        object ResolveWeak(object context);
     }
 
     public interface ICodeValueResolver<T> : ICodeValueResolver
