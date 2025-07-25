@@ -1,9 +1,0 @@
-a = {}
-with a.x   # Should be an error as we expect only a variable
-end
-===
-{{
-a = {}
-with a.x   # Should be an error as we expect only a variable
-end
-}}

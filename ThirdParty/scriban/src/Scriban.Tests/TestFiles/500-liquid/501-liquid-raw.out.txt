@@ -1,2 +1,0 @@
-This is plain This is raw {% with some tag %} and raw
-After raw

@@ -1,3 +1,0 @@
-{% if variable %}
-  This is a variable with 1
-{% end %}

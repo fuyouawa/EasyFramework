@@ -1,1 +1,0 @@
-text(7,8) : error : Error while parsing capture statement: Expecting <expression> instead of `\n` in: capture <variable> ... end

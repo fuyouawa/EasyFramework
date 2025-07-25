@@ -1,1 +1,0 @@
-{% include yes true: 6 %}

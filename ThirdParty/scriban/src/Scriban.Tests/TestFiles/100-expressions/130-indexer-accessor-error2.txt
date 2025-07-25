@@ -1,9 +1,0 @@
-Access an array variable with an invalid indexer
-
-x = []    # x is initialized
-x[null]   # accessing x without a null accessor
-===
-{{
-x = []
-x[null]
-}}

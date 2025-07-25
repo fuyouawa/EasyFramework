@@ -1,8 +1,0 @@
-
-
-
-  This is a variable with 1
-
-
-  This is not a variable with 0
-

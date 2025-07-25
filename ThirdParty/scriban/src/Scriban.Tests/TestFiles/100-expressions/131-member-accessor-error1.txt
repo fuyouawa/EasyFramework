@@ -1,7 +1,0 @@
-x = null     # x is null
-x.y          # x.y will fail
-===
-{{
-x = null     # x is null
-x.y          # x.y will fail
-}}

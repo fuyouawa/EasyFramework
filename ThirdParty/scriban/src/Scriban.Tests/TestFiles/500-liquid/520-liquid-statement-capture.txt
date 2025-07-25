@@ -1,4 +1,0 @@
-{%- capture variable -%}
-    This is a capture
-{%- endcapture -%}
-{{ variable }}

@@ -1,7 +1,0 @@
-x = 'value'  # x is a string
-x.y          # x.y will fail
-===
-{{
-x = 'value'  # x is a string
-x.y          # x.y will fail
-}}

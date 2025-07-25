@@ -1,1 +1,0 @@
-text(4,12) : error : Invalid token `}}`. Expecting a closing `)`.

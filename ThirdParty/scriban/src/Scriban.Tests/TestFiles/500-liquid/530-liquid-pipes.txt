@@ -1,2 +1,0 @@
-{% assign test = "abcdef" %}
-{{ test | truncate: 5 }}

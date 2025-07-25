@@ -1,8 +1,0 @@
-Test object initializer with string members instead of variable name (json like):
-{{
-myobject = {
-	"test": 1,
-	"test2" : 2
-}
-myobject.test + myobject.test2
-}}

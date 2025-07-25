@@ -1,3 +1,0 @@
-{%- for variable in (1..5) -%}
-    This is variable {{variable}}
-{% endfor -%}

@@ -1,5 +1,0 @@
-for.bad       # invalid variable
-===
-{{
-for.bad
-}}

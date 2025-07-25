@@ -1,9 +1,0 @@
-{{
-variable = 5
-case variable + 1
-    when 6
-        "OK"
-    else
-        "Not OK"
-end
-}}

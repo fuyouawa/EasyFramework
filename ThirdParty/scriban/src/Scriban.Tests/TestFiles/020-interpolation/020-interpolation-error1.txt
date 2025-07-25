@@ -1,5 +1,0 @@
-$"Interp: {2 + 4    # Interpolation not finished
-===
-{{
-$"Interp: {2 + 4 
-}End" }}

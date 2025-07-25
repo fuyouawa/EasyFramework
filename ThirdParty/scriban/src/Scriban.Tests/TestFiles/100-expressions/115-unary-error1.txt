@@ -1,3 +1,0 @@
-!}}  # A unary operator without an expression is not possible
-===
-{{!}}  # A unary operator without an expression is not possible

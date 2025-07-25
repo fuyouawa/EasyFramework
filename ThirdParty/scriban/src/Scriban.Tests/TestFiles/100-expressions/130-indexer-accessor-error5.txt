@@ -1,6 +1,0 @@
-x = [['yes']] # x is a double array
-x[0][ }}      # Don't close the indexer
-===
-{{
-x = [['yes']] # x is a double array
-x[0][ }}      # Don't close the indexer

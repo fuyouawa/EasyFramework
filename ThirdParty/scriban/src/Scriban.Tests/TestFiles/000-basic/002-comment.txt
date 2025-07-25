@@ -1,8 +1,0 @@
-This is a {{ "Hello " # A single line comment}}{{
-## This is 
-a multiline 
-comment
-that won't
-appear 
-in the output## 
-"World"}}

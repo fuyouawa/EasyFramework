@@ -1,4 +1,0 @@
-{test: %} # Expecting an expression instead of this token
-{{
-{test: %} # Expecting an expression instead of this token
-}}

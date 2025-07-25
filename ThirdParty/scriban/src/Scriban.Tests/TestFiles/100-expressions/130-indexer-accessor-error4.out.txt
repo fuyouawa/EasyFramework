@@ -1,1 +1,0 @@
-text(6,1) : error : Cannot use the int primitive `5` as a list.

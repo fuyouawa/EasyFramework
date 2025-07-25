@@ -1,4 +1,0 @@
-# Cannot assign to a builtin variable
-string = null
-===
-{{ string = null }}

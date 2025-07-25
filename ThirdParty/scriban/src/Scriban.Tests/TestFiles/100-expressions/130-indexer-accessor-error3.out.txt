@@ -1,1 +1,0 @@
-text(14,3) : error : Cannot set a value for the readonly member `y` in the indexer: x['y']

@@ -1,3 +1,0 @@
-This is a text
-{{-  ret -}}
-This text will not appear

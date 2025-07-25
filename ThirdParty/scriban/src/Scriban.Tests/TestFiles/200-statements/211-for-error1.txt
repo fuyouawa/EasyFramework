@@ -1,7 +1,0 @@
-for 15 in toto  # Expecting a variable instead of 15
-end
-===
-{{
-for 15 in toto  # Expecting a variable instead of 15
-end
-}}

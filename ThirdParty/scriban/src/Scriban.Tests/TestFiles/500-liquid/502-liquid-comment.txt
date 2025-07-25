@@ -1,2 +1,0 @@
-This is plain {% comment %}This is comment {% with ## some tag %} and comment{% endcomment %}
-After a comment
