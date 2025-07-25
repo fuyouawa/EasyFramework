@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
         protected override void Initialize()
         {
             var targetType = Property.Parent.ValueEntry.ValueType;
-            _conditionResolver = CodeValueResolverUtility.CreateWeak(Attribute.Condition, null, targetType);
+            _conditionResolver = CodeValueResolver.CreateWeak(Attribute.Condition, null, targetType);
         }
 
         protected override void DrawProperty(GUIContent label)

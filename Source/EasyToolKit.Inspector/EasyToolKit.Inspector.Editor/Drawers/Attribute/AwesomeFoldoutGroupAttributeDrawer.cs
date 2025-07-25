@@ -34,8 +34,8 @@ namespace EasyToolKit.Inspector.Editor
         protected override void Initialize()
         {
             var targetType = Property.Parent.ValueEntry.ValueType;
-            _labelResolver = CodeValueResolverUtility.Create<string>(Attribute.Label, targetType, true);
-            _iconTextureGetterResolver = CodeValueResolverUtility.Create<Texture>(Attribute.IconTextureGetter, targetType);
+            _labelResolver = CodeValueResolver.Create<string>(Attribute.Label, targetType, true);
+            _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(Attribute.IconTextureGetter, targetType);
         }
 
         protected override void DrawProperty(GUIContent label)

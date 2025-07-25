@@ -12,8 +12,7 @@ namespace EasyToolKit.Inspector.Editor
             var key2 = TwoWaySerializationBinder.Default.BindToName(drawer.Property.Tree.TargetType);
             var key3 = drawer.Property.Info.PropertyPath;
 
-            var hash = HashCode.Combine(key1, key2, key3, key);
-            return PersistentContext.GetLocal(hash, defaultValue);
+            return PersistentContext.GetLocal(string.Join("+", key1, key2, key3, key), defaultValue);
         }
     }
 }

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using EasyToolKit.Core;
-using EasyToolKit.ThirdParty.OdinSerializer;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -205,16 +203,6 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
         
-        public LocalPersistentContext<T> GetPersistentContext<T>(string key,
-            T defaultValue = default)
-        {
-            var key1 = TwoWaySerializationBinder.Default.BindToName(Tree.TargetType);
-            var key2 = Info.PropertyPath;
-
-            var hash = HashCode.Combine(key1, key2, key);
-            return PersistentContext.GetLocal(hash, defaultValue);
-        }
-
         internal void Update()
         {
             _isSelfReadOnlyCache = null;

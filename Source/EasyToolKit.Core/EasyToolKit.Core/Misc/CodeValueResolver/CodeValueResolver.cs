@@ -2,7 +2,7 @@ using System;
 
 namespace EasyToolKit.Core
 {
-    public static class CodeValueResolverUtility
+    public static class CodeValueResolver
     {
         public static ICodeValueResolver CreateWeak(string code, Type resultType = null, Type targetType = null, bool needStartFlag = false)
         {

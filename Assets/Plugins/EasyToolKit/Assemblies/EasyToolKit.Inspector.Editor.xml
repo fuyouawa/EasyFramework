@@ -9,12 +9,6 @@
             Context that persists across reloading and restarting Unity.
             </summary>
         </member>
-        <member name="P:EasyToolKit.Inspector.Editor.GlobalPersistentContext.TimeStamp">
-            <summary>
-            Time stamp for when the persistent context value was last used.
-            Used for purging unused context.
-            </summary>
-        </member>
         <member name="M:EasyToolKit.Inspector.Editor.GlobalPersistentContext.#ctor">
             <summary>
             Instatiates a persistent context.

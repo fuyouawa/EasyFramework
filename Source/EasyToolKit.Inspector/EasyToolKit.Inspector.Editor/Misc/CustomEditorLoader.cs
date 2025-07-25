@@ -1,10 +1,4 @@
-using System;
-using System.Linq;
-using EasyToolKit.Core;
-using EasyToolKit.Core.Editor;
-using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
@@ -13,7 +7,7 @@ namespace EasyToolKit.Inspector.Editor
         [DidReloadScripts]
         static CustomEditorLoader()
         {
-            InspectorConfig.Instance.UpdateEditors();
+            InspectorConfigAsset.Instance.UpdateEditors();
         }
     }
 }

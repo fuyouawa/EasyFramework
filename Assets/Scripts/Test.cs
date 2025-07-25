@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using EasyToolKit.GameConsole;
 using EasyToolKit.Inspector;
 using EasyToolKit.Inspector.Editor;
 using MyNamespace;
@@ -62,7 +61,6 @@ public class Test : MonoBehaviour
     {
         
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.GameConsole()
             .CreateLogger();
     }
 

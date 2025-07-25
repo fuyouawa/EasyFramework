@@ -1,20 +1,15 @@
 using System;
-using System.Reflection;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Core.Editor.Internal;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Rendering;
-using System.Collections.Generic;
 using System.Linq;
-using EasyToolKit.ThirdParty.OdinSerializer;
 
 namespace EasyToolKit.Inspector.Editor
 {
     [EditorConfigsPath]
-    public class InspectorConfig : ScriptableObjectSingleton<InspectorConfig>, ISerializationCallbackReceiver
+    public class InspectorConfigAsset : ScriptableObjectSingleton<InspectorConfigAsset>, ISerializationCallbackReceiver
     {
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {

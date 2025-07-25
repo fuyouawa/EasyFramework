@@ -2,18 +2,23 @@ using System;
 using System.Collections.Generic;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
+using EasyToolKit.Core.Editor.Internal;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEditor;
+using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
     [InitializeOnLoad]
-    [ScriptableObjectSingletonAssetPath("", UseAsset = false)]
-    public class PersistentContextCacheAsset : ScriptableObjectSingleton<PersistentContextCacheAsset>
+    [EditorConfigsPath]
+    public class PersistentContextCacheAsset : ScriptableObjectSingleton<PersistentContextCacheAsset>, ISerializationCallbackReceiver
     {
-        private readonly Dictionary<int, GlobalPersistentContext> _contextCacheByKey =
-            new Dictionary<int, GlobalPersistentContext>();
+        [NonSerialized, OdinSerialize]
+        private Dictionary<string, GlobalPersistentContext> _contextCache;
+
+        [SerializeField, HideInInspector]
+        private SerializationData _serializationData;
         
-        [NonSerialized]
         private bool _initialized = false;
 
         static PersistentContextCacheAsset()
@@ -30,19 +35,31 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        internal bool GetContext<TValue>(int key, out GlobalPersistentContext<TValue> context)
+        internal bool GetContext<TValue>(string key, out GlobalPersistentContext<TValue> context)
         {
             EnsureInitialize();
 
-            if (_contextCacheByKey.TryGetValue(key, out var originCtx) && originCtx is GlobalPersistentContext<TValue> castedCtx)
+            if (_contextCache.TryGetValue(key, out var originCtx) && originCtx is GlobalPersistentContext<TValue> castedCtx)
             {
                 context = castedCtx;
                 return false;
             }
 
             context = GlobalPersistentContext<TValue>.Create();
-            _contextCacheByKey[key] = context;
+            _contextCache[key] = context;
             return true;
+        }
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+            _contextCache ??= new Dictionary<string, GlobalPersistentContext>();
+            UnitySerializationUtility.SerializeUnityObject(this, ref _serializationData);
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            UnitySerializationUtility.DeserializeUnityObject(this, ref _serializationData);
+            _contextCache ??= new Dictionary<string, GlobalPersistentContext>();
         }
     }
 }

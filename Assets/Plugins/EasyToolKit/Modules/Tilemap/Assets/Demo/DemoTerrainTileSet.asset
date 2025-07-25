@@ -18,7 +18,7 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       ScaleOffset: {x: 0, y: 0, z: 0}
   EdgeRuleSet:
-    UseFullDefinition: 1
+    UseFullDefinition: 0
     TopRule:
       TilePrefab: {fileID: 0}
       RotationOffset: {x: 0, y: 0, z: 0}
@@ -36,7 +36,7 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       ScaleOffset: {x: 0, y: 0, z: 0}
   ExteriorCornerRuleSet:
-    UseFullDefinition: 1
+    UseFullDefinition: 0
     TopLeftRule:
       TilePrefab: {fileID: 0}
       RotationOffset: {x: 0, y: 0, z: 0}
@@ -54,7 +54,7 @@ MonoBehaviour:
       RotationOffset: {x: 0, y: 0, z: 0}
       ScaleOffset: {x: 0, y: 0, z: 0}
   InteriorCornerRuleSet:
-    UseFullDefinition: 1
+    UseFullDefinition: 0
     TopLeftRule:
       TilePrefab: {fileID: 0}
       RotationOffset: {x: 0, y: 0, z: 0}
