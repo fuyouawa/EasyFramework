@@ -74,8 +74,14 @@ namespace EasyToolKit.Inspector.Editor
 
             var labelText = _labelResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
 
+            var foldoutStyleFontSize = FoldoutStyle.fontSize;
+            if (Attribute.IsDefinedFontSize)
+            {
+                FoldoutStyle.fontSize = Attribute.FontSize;
+            }
             var foldoutRect = EditorGUILayout.GetControlRect(true, 30, FoldoutStyle);
             Property.State.Expanded = EasyEditorGUI.Foldout(foldoutRect, Property.State.Expanded, TempContent.SetText(labelText), FoldoutStyle);
+            FoldoutStyle.fontSize = foldoutStyleFontSize;
 
             EditorGUILayout.EndHorizontal();
 

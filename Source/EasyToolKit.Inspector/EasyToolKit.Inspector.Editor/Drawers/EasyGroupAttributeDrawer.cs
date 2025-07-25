@@ -12,7 +12,8 @@ namespace EasyToolKit.Inspector.Editor
             if (foldout)
             {
                 CallNextDrawer(label);
-                foreach (var groupProperty in Property.GetGroupProperties(typeof(TAttribute)))
+                var groupProperties = Property.GetGroupProperties(typeof(TAttribute));
+                foreach (var groupProperty in groupProperties)
                 {
                     groupProperty.Draw();
                     groupProperty.SkipDrawCount++;
@@ -20,7 +21,8 @@ namespace EasyToolKit.Inspector.Editor
             }
             else
             {
-                foreach (var groupProperty in Property.GetGroupProperties(typeof(TAttribute)))
+                var groupProperties = Property.GetGroupProperties(typeof(TAttribute));
+                foreach (var groupProperty in groupProperties)
                 {
                     groupProperty.SkipDrawCount++;
                 }

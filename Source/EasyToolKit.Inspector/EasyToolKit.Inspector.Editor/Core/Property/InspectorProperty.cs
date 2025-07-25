@@ -17,6 +17,7 @@ namespace EasyToolKit.Inspector.Editor
         private IGroupResolver _groupResolver;
         private IDrawerChainResolver _drawerChainResolver;
         private IAttributeResolver _attributeResolver;
+        private long _lastUpdateID;
 
         public InspectorProperty Parent { get; private set; }
         public PropertyTree Tree { get; }
@@ -205,6 +206,12 @@ namespace EasyToolKit.Inspector.Editor
         
         internal void Update()
         {
+            if (_lastUpdateID == Tree.UpdatedID)
+            {
+                return;
+            }
+            _lastUpdateID = Tree.UpdatedID;
+
             _isSelfReadOnlyCache = null;
             if (ValueEntry != null)
             {

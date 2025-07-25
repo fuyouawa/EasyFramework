@@ -13,6 +13,10 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_groupPropertiesCache.TryGetValue(beginGroupAttributeType, out var properties))
             {
+                foreach (var property in properties)
+                {
+                    property.Update();
+                }
                 return properties;
             }
 

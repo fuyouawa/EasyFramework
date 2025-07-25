@@ -19,25 +19,25 @@ namespace EasyToolKit.Inspector.Editor
         private static bool s_initialized = false;
         private static Type s_audioFilterGUIType;
 
-        private PropertyTree _propertyTree;
+        private PropertyTree _tree;
         private object _audioFilterGUIInstance;
 
-        public PropertyTree PropertyTree
+        public PropertyTree Tree
         {
             get
             {
-                if (_propertyTree == null)
+                if (_tree == null)
                 {
                     try
                     {
-                        _propertyTree = PropertyTree.Create(serializedObject);
+                        _tree = PropertyTree.Create(serializedObject);
                     }
                     catch (ArgumentException)
                     {
                     }
                 }
 
-                return _propertyTree;
+                return _tree;
             }
         }
 
@@ -93,7 +93,7 @@ namespace EasyToolKit.Inspector.Editor
 
         private void DrawInspector()
         {
-            if (PropertyTree == null)
+            if (Tree == null)
             {
                 base.OnInspectorGUI();
                 return;
@@ -102,8 +102,8 @@ namespace EasyToolKit.Inspector.Editor
             
             if (Event.current.type == EventType.Layout)
             {
-                PropertyTree.DrawMonoScriptObjectField = PropertyTree.SerializedObject != null &&
-                                                         PropertyTree.TargetType != null;
+                Tree.DrawMonoScriptObjectField = Tree.SerializedObject != null &&
+                                                         Tree.TargetType != null;
             }
 
             using (new LocalizationGroup(target))
@@ -128,7 +128,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected virtual void DrawTree()
         {
-            PropertyTree.Draw();
+            Tree.Draw();
         }
     }
 }

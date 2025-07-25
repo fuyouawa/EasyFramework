@@ -10,11 +10,17 @@ namespace EasyToolKit.Inspector.Editor
         {
             var value = ValueEntry.SmartValue;
             EditorGUI.BeginChangeCheck();
-            value = (T)EditorGUILayout.ObjectField(
-                label,
-                value,
-                typeof(T),
-                Property.GetAttribute<AssetsOnlyAttribute>() == null);
+
+            bool assetsOnly = Property.GetAttribute<AssetsOnlyAttribute>() == null;
+            if (label == null)
+            {
+                value = (T)EditorGUILayout.ObjectField(value, typeof(T), assetsOnly);
+            }
+            else
+            {
+                value = (T)EditorGUILayout.ObjectField(label, value, typeof(T), assetsOnly);
+            }
+
             if (EditorGUI.EndChangeCheck())
             {
                 ValueEntry.SmartValue = value;

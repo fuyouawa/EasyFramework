@@ -14,7 +14,7 @@ namespace EasyToolKit.Inspector.Editor
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
 
-        public int UpdatedFrame { get; private set; }
+        public int UpdatedID { get; private set; }
         public SerializedObject SerializedObject { get; }
         public InspectorProperty LogicRootProperty { get; }
 
@@ -80,7 +80,7 @@ namespace EasyToolKit.Inspector.Editor
             EndDraw();
         }
 
-        private void BeginDraw()
+        public void BeginDraw()
         {
             SerializedObject.UpdateIfRequiredOrScript();
             Update();
@@ -106,7 +106,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void DrawProperties()
+        public void DrawProperties()
         {
             foreach (var property in EnumerateTree(false))
             {
@@ -126,7 +126,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void EndDraw()
+        public void EndDraw()
         {
             DoPendingCallbacks();
             SerializedObject.ApplyModifiedProperties();
@@ -171,7 +171,7 @@ namespace EasyToolKit.Inspector.Editor
             ApplyChanges();
 
             LogicRootProperty.Update();
-            ++UpdatedFrame;
+            ++UpdatedID;
         }
 
 
