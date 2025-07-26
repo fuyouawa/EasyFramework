@@ -36,6 +36,12 @@ namespace EasyToolKit.Core
 
         private bool HasErrorImpl(out string error, Type targetType = null)
         {
+            if (_code.IsNullOrWhiteSpace())
+            {
+                error = "Code cannot be null or empty.";
+                return true;
+            }
+
             Type rootType = null;
             if (TryGetArgument("-t:", out var rootTypeText))
             {

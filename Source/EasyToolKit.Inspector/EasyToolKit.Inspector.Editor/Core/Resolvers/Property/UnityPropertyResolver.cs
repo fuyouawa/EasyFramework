@@ -52,7 +52,7 @@ namespace EasyToolKit.Inspector.Editor
 
                 if (!field.IsPublic)
                 {
-                    if (field.GetCustomAttribute<HideInInspector>() != null)
+                    if (field.HasCustomAttribute<HideInInspector>())
                     {
                         continue;
                     }
@@ -60,6 +60,11 @@ namespace EasyToolKit.Inspector.Editor
                     if (!field.HasCustomAttribute<SerializeField>() &&
                         !field.HasCustomAttribute<OdinSerializeAttribute>() &&
                         !field.HasCustomAttribute<ShowInInspectorAttribute>())
+                    {
+                        continue;
+                    }
+
+                    if (field.HasCustomAttribute<NonSerializedAttribute>())
                     {
                         continue;
                     }

@@ -15,7 +15,6 @@ namespace EasyToolKit.Inspector
         public string IconTextureGetter;
 
         private bool? _expanded;
-        private int? _fontSize;
 
         public bool Expanded
         {
@@ -23,14 +22,7 @@ namespace EasyToolKit.Inspector
             set => _expanded = value;
         }
 
-        public int FontSize
-        {
-            get => _fontSize ?? throw new InvalidOperationException();
-            set => _fontSize = value;
-        }
-
         public bool IsDefinedExpanded => _expanded.HasValue;
-        public bool IsDefinedFontSize => _fontSize.HasValue;
 
         public AwesomeFoldoutGroupAttribute(string label)
         {

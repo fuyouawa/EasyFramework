@@ -52,8 +52,8 @@ namespace EasyToolKit.Inspector.Editor
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
-            _contextCache ??= new Dictionary<string, GlobalPersistentContext>();
             UnitySerializationUtility.SerializeUnityObject(this, ref _serializationData);
+            _contextCache ??= new Dictionary<string, GlobalPersistentContext>();
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()

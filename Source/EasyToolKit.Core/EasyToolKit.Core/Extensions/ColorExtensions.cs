@@ -24,5 +24,37 @@ namespace EasyToolKit.Core
             color.a = a;
             return color;
         }
+
+        public static Color MulR(this Color color, float radio)
+        {
+            color.r *= radio;
+            return color;
+        }
+
+        public static Color MulG(this Color color, float radio)
+        {
+            color.g *= radio;
+            return color;
+        }
+
+        public static Color MulB(this Color color, float radio)
+        {
+            color.b *= radio;
+            return color;
+        }
+
+        public static Color MulA(this Color color, float radio)
+        {
+            color.a *= radio;
+            return color;
+        }
+
+        public static Color MulRGB(this Color color, float radio)
+        {
+            color.r *= radio;
+            color.g *= radio;
+            color.b *= radio;
+            return color;
+        }
     }
 }

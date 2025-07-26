@@ -183,10 +183,11 @@ namespace EasyToolKit.Core.Editor
                 EasyGUIHelper.PopColor();
                 DrawBorders(headerBgRect, 0, 0, 0, 1, new Color(0, 0, 0, 0.4f));
             }
+
             EasyGUIHelper.PushLabelWidth(EasyGUIHelper.BetterLabelWidth - 4);
             return headerBgRect;
         }
-        
+
         /// <summary>
         /// Ends drawing a box header started by <see cref="BeginBoxHeader"/>,
         /// </summary>
@@ -293,6 +294,7 @@ namespace EasyToolKit.Core.Editor
 
             return isVisible;
         }
+
 
         public static Rect BeginVerticalList(bool drawBorder = true, bool drawDarkBg = true,
             params GUILayoutOption[] options)

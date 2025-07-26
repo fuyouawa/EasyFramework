@@ -9,22 +9,6 @@ namespace EasyToolKit.Inspector.Editor
     {
         private static readonly GUIContent TempContent = new GUIContent();
 
-        private static GUIStyle s_boxStyle;
-
-        public static GUIStyle BoxHeaderStyle
-        {
-            get
-            {
-                if (s_boxStyle == null)
-                {
-                    s_boxStyle = new GUIStyle(EasyGUIStyles.BoxHeaderStyle)
-                    {
-                    };
-                }
-                return s_boxStyle;
-            }
-        }
-
         private static GUIStyle s_boxHeaderLabelStyle;
         public static GUIStyle BoxHeaderLabelStyle
         {
@@ -46,6 +30,8 @@ namespace EasyToolKit.Inspector.Editor
         public static readonly GUIStyle BoxContainerStyle = new GUIStyle("TextArea")
         {
         };
+
+        public static readonly Color HeaderBoxBackgroundColor = EasyGUIStyles.HeaderBoxBackgroundColor * 0.9f;
 
         private ICodeValueResolver<string> _labelResolver;
         private ICodeValueResolver<Texture> _iconTextureGetterResolver;
@@ -77,9 +63,19 @@ namespace EasyToolKit.Inspector.Editor
         protected override void BeginDrawProperty(GUIContent label, ref bool foldout)
         {
             EasyEditorGUI.BeginIndentedVertical(BoxContainerStyle);
-
+            
             GUILayout.Space(-3);
-            var headerRect = EditorGUILayout.BeginHorizontal(BoxHeaderStyle, GUILayout.ExpandWidth(true), GUILayout.Height(30));
+            var headerBgRect = EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true), GUILayout.Height(30));
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                headerBgRect.x -= 3;
+                headerBgRect.width += 6;
+                EasyGUIHelper.PushColor(HeaderBoxBackgroundColor);
+                GUI.DrawTexture(headerBgRect, Texture2D.whiteTexture);
+                EasyGUIHelper.PopColor();
+                EasyEditorGUI.DrawBorders(headerBgRect, 0, 0, 0, 1, EasyGUIStyles.BorderColor);
+            }
             
             if (Attribute.IconTextureGetter.IsNotNullOrEmpty())
             {
@@ -90,7 +86,6 @@ namespace EasyToolKit.Inspector.Editor
             var labelText = _labelResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
             GUILayout.Label(TempContent.SetText(labelText), BoxHeaderLabelStyle, GUILayout.Height(30));
 
-            EasyEditorGUI.DrawBorders(headerRect, 0, 0, 0, 1, EasyGUIStyles.BorderColor);
             EditorGUILayout.EndHorizontal();
         }
 
