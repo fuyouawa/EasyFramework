@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4ca8443bb2a45f45939ab6d12352443, type: 3}
+  m_Name: DemoTilemapAsset
+  m_EditorClassIdentifier: 
+  Settings:
+    BaseSize: {x: 20, y: 20}
+  TerrainTileDatas:
+  - Name: "\u6D4B\u8BD5"
+    Color: {r: 0, g: 1, b: 0, a: 1}
+    RuleSetsAsset: {fileID: 11400000, guid: a091e5a7ad0d90441b5324c2b9b43d07, type: 2}
+    _serializedGuid: 2a040de1d0c9d6394e9a332a0b5b08b54d
+    _serializedMapData: 022f000000000173000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b00530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b00530079007300740065006d002e0042007900740065002c0020006d00730063006f0072006c00690062005d005d002c0020006d00730063006f0072006c00690062005d005d002c0020006d00730063006f0072006c0069006200000000000600000000000000000705
+  - Name: 
+    Color: {r: 0, g: 1, b: 0, a: 1}
+    RuleSetsAsset: {fileID: 0}
+    _serializedGuid: 2a9ae90a31e1653441b400fffd78699e31
+    _serializedMapData: 2e
