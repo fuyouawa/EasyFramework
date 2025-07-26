@@ -46,6 +46,15 @@
             <param name="label">The label of the foldout.</param>
             <param name="style">The GUI style.</param>
         </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.Foldout(System.Boolean,UnityEngine.GUIContent,UnityEngine.Rect@,UnityEngine.GUIStyle)">
+            <summary>
+            Draws a foldout field where clicking on the label toggles to the foldout too.
+            </summary>
+            <param name="isVisible">The current state of the foldout.</param>
+            <param name="label">The label of the foldout.</param>
+            <param name="valueRect">The value rect.</param>
+            <param name="style">The GUI style.</param>
+        </member>
         <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.Foldout(UnityEngine.Rect,System.Boolean,UnityEngine.GUIContent,UnityEngine.GUIStyle)">
             <summary>
             Draws a foldout field where clicking on the label toggles to the foldout too.

@@ -239,6 +239,41 @@ namespace EasyToolKit.Core.Editor
 
             return Foldout(rect, isVisible, label, style);
         }
+        /// <summary>
+        /// Draws a foldout field where clicking on the label toggles to the foldout too.
+        /// </summary>
+        /// <param name="isVisible">The current state of the foldout.</param>
+        /// <param name="label">The label of the foldout.</param>
+        /// <param name="valueRect">The value rect.</param>
+        /// <param name="style">The GUI style.</param>
+        public static bool Foldout(bool isVisible, GUIContent label, out Rect valueRect, GUIStyle style = null)
+        {
+            Rect labelRect = EditorGUILayout.GetControlRect(false);
+            valueRect = labelRect;
+
+            if (label == null)
+            {
+                label = new GUIContent(" ");
+
+                if (EditorGUIUtility.hierarchyMode)
+                {
+                    labelRect.width = 2;
+                }
+                else
+                {
+                    labelRect.width = 18;
+                    valueRect.xMin += 18;
+                }
+            }
+            else
+            {
+                var indent = EasyGUIHelper.CurrentIndentAmount;
+                labelRect = new Rect(labelRect.x, labelRect.y, EasyGUIHelper.BetterLabelWidth - indent, labelRect.height);
+                valueRect.xMin = labelRect.xMax;
+            }
+
+            return Foldout(labelRect, isVisible, label);
+        }
 
         /// <summary>
         /// Draws a foldout field where clicking on the label toggles to the foldout too.

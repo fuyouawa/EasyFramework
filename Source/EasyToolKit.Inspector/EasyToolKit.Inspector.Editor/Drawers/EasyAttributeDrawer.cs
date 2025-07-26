@@ -15,6 +15,7 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     _attribute = Property.GetAttribute<TAttribute>();
                 }
+
                 return _attribute;
             }
         }
@@ -25,6 +26,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 return false;
             }
+
             return property.GetAttribute<TAttribute>() != null && CanDrawAttributeProperty(property);
         }
 
@@ -42,6 +44,22 @@ namespace EasyToolKit.Inspector.Editor
     public abstract class EasyAttributeDrawer<TAttribute, TValue> : EasyAttributeDrawer<TAttribute>
         where TAttribute : Attribute
     {
+        private IPropertyValueEntry<TValue> _valueEntry;
+
+        public IPropertyValueEntry<TValue> ValueEntry
+        {
+            get
+            {
+                if (_valueEntry == null)
+                {
+                    _valueEntry = Property.ValueEntry as IPropertyValueEntry<TValue>;
+                }
+
+                return _valueEntry;
+            }
+        }
+
+
         protected override bool CanDrawAttributeProperty(InspectorProperty property)
         {
             return property.ValueEntry != null &&

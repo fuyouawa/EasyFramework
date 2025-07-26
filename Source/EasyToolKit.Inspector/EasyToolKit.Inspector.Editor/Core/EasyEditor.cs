@@ -41,6 +41,8 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
+        public bool IsInlineEditor { get; set; }
+
         public override void OnInspectorGUI()
         {
             DrawInspector();
@@ -99,11 +101,12 @@ namespace EasyToolKit.Inspector.Editor
                 return;
             }
 
-            
+
             if (Event.current.type == EventType.Layout)
             {
                 Tree.DrawMonoScriptObjectField = Tree.SerializedObject != null &&
-                                                         Tree.TargetType != null;
+                                                 Tree.TargetType != null &&
+                                                 InspectorConfigAsset.Instance.DrawMonoScriptInEditor;
             }
 
             using (new LocalizationGroup(target))

@@ -15,32 +15,32 @@ namespace EasyToolKit.Inspector.Editor
     {
         private static readonly GUIContent TempContent = new GUIContent();
         
-        private static GUIStyle s_awesomeHeaderLabelStyle;
-        public static GUIStyle AwesomeHeaderLabelStyle
+        private static GUIStyle s_metroHeaderLabelStyle;
+        public static GUIStyle MetroHeaderLabelStyle
         {
             get
             {
-                if (s_awesomeHeaderLabelStyle == null)
+                if (s_metroHeaderLabelStyle == null)
                 {
-                    s_awesomeHeaderLabelStyle = new GUIStyle(GUI.skin.label)
+                    s_metroHeaderLabelStyle = new GUIStyle(GUI.skin.label)
                     {
                         fontSize = EasyGUIStyles.Foldout.fontSize + 1,
                         alignment = TextAnchor.MiddleLeft,
                     };
                 }
-                return s_awesomeHeaderLabelStyle;
+                return s_metroHeaderLabelStyle;
             }
         }
 
-        public static Color AwesomeHeaderBackgroundColor = new Color(0.8f, 0.8f, 0.8f);
-        public static Color AwesomeItemBackgroundColor = new Color(0.9f, 0.9f, 0.9f);
+        public static Color MetroHeaderBackgroundColor = new Color(0.8f, 0.8f, 0.8f);
+        public static Color MetroItemBackgroundColor = new Color(0.9f, 0.9f, 0.9f);
 
         public static GUIStyle ListItemStyle = new GUIStyle(GUIStyle.none)
         {
             padding = new RectOffset(25, 20, 3, 3)
         };
 
-        public static GUIStyle AwesomeListItemStyle = new GUIStyle(GUIStyle.none)
+        public static GUIStyle MetroListItemStyle = new GUIStyle(GUIStyle.none)
         {
             padding = new RectOffset(30, 37, 3, 3)
         };
@@ -61,7 +61,7 @@ namespace EasyToolKit.Inspector.Editor
             _collectionResolver = (ICollectionResolver)Property.ChildrenResolver;
             _orderedCollectionResolver = Property.ChildrenResolver as IOrderedCollectionResolver;
 
-            _listDrawerSettings = Property.GetAttribute<AwesomeListDrawerSettingsAttribute>();
+            _listDrawerSettings = Property.GetAttribute<MetroListDrawerSettingsAttribute>();
             if (_listDrawerSettings == null)
             {
                 _listDrawerSettings = Property.GetAttribute<ListDrawerSettingsAttribute>();
@@ -69,11 +69,11 @@ namespace EasyToolKit.Inspector.Editor
 
             var targetType = Property.Parent.ValueEntry.ValueType;
 
-            if (_listDrawerSettings is AwesomeListDrawerSettingsAttribute awesomeListDrawerSettings)
+            if (_listDrawerSettings is MetroListDrawerSettingsAttribute metroListDrawerSettings)
             {
-                if (awesomeListDrawerSettings.IconTextureGetter.IsNotNullOrEmpty())
+                if (metroListDrawerSettings.IconTextureGetter.IsNotNullOrEmpty())
                 {
-                    _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(awesomeListDrawerSettings.IconTextureGetter, targetType);
+                    _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(metroListDrawerSettings.IconTextureGetter, targetType);
                 }
             }
         }
@@ -89,10 +89,10 @@ namespace EasyToolKit.Inspector.Editor
 
             EasyEditorGUI.BeginIndentedVertical(EasyGUIStyles.PropertyPadding);
 
-            if (_listDrawerSettings is AwesomeListDrawerSettingsAttribute)
+            if (_listDrawerSettings is MetroListDrawerSettingsAttribute)
             {
-                DrawAwesomeHeader(label);
-                DrawAwesomeItems();
+                DrawMetroHeader(label);
+                DrawMetroItems();
             }
             else
             {
@@ -118,9 +118,9 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndHorizontalToolbar();
         }
 
-        private void DrawAwesomeHeader(GUIContent label)
+        private void DrawMetroHeader(GUIContent label)
         {
-            EasyGUIHelper.PushColor(AwesomeHeaderBackgroundColor);
+            EasyGUIHelper.PushColor(MetroHeaderBackgroundColor);
             EasyEditorGUI.BeginHorizontalToolbar(30);
             EasyGUIHelper.PopColor();
 
@@ -130,7 +130,7 @@ namespace EasyToolKit.Inspector.Editor
                 GUILayout.Label(iconTexture, GUILayout.Width(30), GUILayout.Height(30));
             }
 
-            GUILayout.Label(label, AwesomeHeaderLabelStyle, GUILayout.Height(30));
+            GUILayout.Label(label, MetroHeaderLabelStyle, GUILayout.Height(30));
 
             GUILayout.FlexibleSpace();
 
@@ -168,7 +168,7 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndVerticalList();
         }
 
-        private void DrawAwesomeItems()
+        private void DrawMetroItems()
         {
             EasyEditorGUI.BeginVerticalList();
 
@@ -209,8 +209,8 @@ namespace EasyToolKit.Inspector.Editor
 
         private void DrawAwesomeItem(InspectorProperty property, int index)
         {
-            EasyGUIHelper.PushColor(AwesomeItemBackgroundColor);
-            var rect = EasyEditorGUI.BeginListItem(false, AwesomeListItemStyle, GUILayout.MinHeight(25), GUILayout.ExpandWidth(true));
+            EasyGUIHelper.PushColor(MetroItemBackgroundColor);
+            var rect = EasyEditorGUI.BeginListItem(false, MetroListItemStyle, GUILayout.MinHeight(25), GUILayout.ExpandWidth(true));
             EasyGUIHelper.PopColor();
 
             var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 23, 23);

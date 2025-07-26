@@ -57,7 +57,14 @@ namespace EasyToolKit.Inspector.Editor
                     }
                     else if (type.IsImplementsOpenGenericType(typeof(EasyAttributeDrawer<>)))
                     {
-                        index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<>));
+                        if (type.IsImplementsOpenGenericType(typeof(EasyAttributeDrawer<,>)))
+                        {
+                            index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<,>));
+                        }
+                        else
+                        {
+                            index.Targets = type.GetArgumentsOfInheritedOpenGenericType(typeof(EasyAttributeDrawer<>));
+                        }
                     }
 
                     return index;
@@ -125,19 +132,19 @@ namespace EasyToolKit.Inspector.Editor
                 TypeMatcher.GetCachedMatches(Type.EmptyTypes),
             };
 
-            if (property.Info.PropertyType != null)
+            if (property.ValueEntry != null)
             {
-                resultsList.Add(TypeMatcher.GetCachedMatches(property.Info.PropertyType));
+                resultsList.Add(TypeMatcher.GetCachedMatches(property.ValueEntry.ValueType));
             }
 
             foreach (var attribute in property.GetAttributes())
             {
                 resultsList.Add(TypeMatcher.GetCachedMatches(attribute.GetType()));
 
-                // if (property.ValueEntry != null)
-                // {
-                //     resultsList.Add(TypeMatcher.GetCachedMatches(attribute.GetType(), property.ValueEntry.ValueType));
-                // }
+                if (property.ValueEntry != null)
+                {
+                    resultsList.Add(TypeMatcher.GetCachedMatches(attribute.GetType(), property.ValueEntry.ValueType));
+                }
             }
 
             return TypeMatcher.GetCachedMergedResults(resultsList)

@@ -5,33 +5,28 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class AwesomeBoxGroupAttributeDrawer : EasyGroupAttributeDrawer<AwesomeBoxGroupAttribute>
+    public class MetroFoldoutGroupAttributeDrawer : EasyGroupAttributeDrawer<MetroFoldoutGroupAttribute>
     {
         private static readonly GUIContent TempContent = new GUIContent();
 
-        private static GUIStyle s_boxHeaderLabelStyle;
-        public static GUIStyle BoxHeaderLabelStyle
+        private static GUIStyle s_foldoutStyle;
+
+        public static GUIStyle FoldoutStyle
         {
             get
             {
-                if (s_boxHeaderLabelStyle == null)
+                if (s_foldoutStyle == null)
                 {
-                    s_boxHeaderLabelStyle = new GUIStyle(GUI.skin.label)
+                    s_foldoutStyle = new GUIStyle(EasyGUIStyles.Foldout)
                     {
                         fontSize = EasyGUIStyles.Foldout.fontSize + 1,
                         alignment = TextAnchor.MiddleLeft,
                     };
-                    s_boxHeaderLabelStyle.margin.top += 4;
+                    s_foldoutStyle.margin.top += 4;
                 }
-                return s_boxHeaderLabelStyle;
+                return s_foldoutStyle;
             }
         }
-
-        public static readonly GUIStyle BoxContainerStyle = new GUIStyle("TextArea")
-        {
-        };
-
-        public static readonly Color HeaderBoxBackgroundColor = EasyGUIStyles.HeaderBoxBackgroundColor * 0.9f;
 
         private ICodeValueResolver<string> _labelResolver;
         private ICodeValueResolver<Texture> _iconTextureGetterResolver;
@@ -62,21 +57,15 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void BeginDrawProperty(GUIContent label, ref bool foldout)
         {
-            EasyEditorGUI.BeginIndentedVertical(BoxContainerStyle);
-            
-            GUILayout.Space(-3);
-            var headerBgRect = EditorGUILayout.BeginHorizontal(EasyGUIStyles.BoxHeaderStyle, GUILayout.ExpandWidth(true), GUILayout.Height(30));
+            EasyEditorGUI.BeginBox();
 
-            if (Event.current.type == EventType.Repaint)
-            {
-                headerBgRect.x -= 3;
-                headerBgRect.width += 6;
-                EasyGUIHelper.PushColor(HeaderBoxBackgroundColor);
-                GUI.DrawTexture(headerBgRect, Texture2D.whiteTexture);
-                EasyGUIHelper.PopColor();
-                EasyEditorGUI.DrawBorders(headerBgRect, 0, 0, 0, 1, EasyGUIStyles.BorderColor);
-            }
-            
+            GUILayout.Space(-3);
+            EditorGUILayout.BeginHorizontal("Button", GUILayout.ExpandWidth(true), GUILayout.Height(30));
+
+            EasyGUIHelper.PushColor(Attribute.SideLineColor);
+            GUILayout.Box(GUIContent.none, EasyGUIStyles.WhiteBoxStyle, GUILayout.Width(3), GUILayout.Height(30));
+            EasyGUIHelper.PopColor();
+
             if (Attribute.IconTextureGetter.IsNotNullOrEmpty())
             {
                 var iconTexture = _iconTextureGetterResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
@@ -84,14 +73,18 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             var labelText = _labelResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
-            GUILayout.Label(TempContent.SetText(labelText), BoxHeaderLabelStyle, GUILayout.Height(30));
+
+            var foldoutRect = EditorGUILayout.GetControlRect(true, 30, FoldoutStyle);
+            Property.State.Expanded = EasyEditorGUI.Foldout(foldoutRect, Property.State.Expanded, TempContent.SetText(labelText), FoldoutStyle);
 
             EditorGUILayout.EndHorizontal();
+
+            foldout = Property.State.Expanded;
         }
 
         protected override void EndDrawProperty()
         {
-            EasyEditorGUI.EndIndentedVertical();
+            EasyEditorGUI.EndBox();
         }
     }
 }

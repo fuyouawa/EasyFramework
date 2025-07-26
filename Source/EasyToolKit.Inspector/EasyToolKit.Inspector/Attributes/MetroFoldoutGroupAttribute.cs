@@ -3,12 +3,12 @@ using EasyToolKit.Inspector;
 using System.Diagnostics;
 using UnityEngine;
 
-[assembly: RegisterGroupAttributeScope(typeof(AwesomeFoldoutGroupAttribute), typeof(EndAwesomeFoldoutGroupAttribute))]
+[assembly: RegisterGroupAttributeScope(typeof(MetroFoldoutGroupAttribute), typeof(EndMetroFoldoutGroupAttribute))]
 
 namespace EasyToolKit.Inspector
 {
     [Conditional("UNITY_EDITOR")]
-    public class AwesomeFoldoutGroupAttribute: BeginGroupAttribute
+    public class MetroFoldoutGroupAttribute: BeginGroupAttribute
     {
         public string Label;
         public Color SideLineColor = Color.green;
@@ -24,16 +24,16 @@ namespace EasyToolKit.Inspector
 
         public bool IsDefinedExpanded => _expanded.HasValue;
 
-        public AwesomeFoldoutGroupAttribute(string label)
+        public MetroFoldoutGroupAttribute(string label)
         {
             Label = label;
         }
     }
     
     [Conditional("UNITY_EDITOR")]
-    public class EndAwesomeFoldoutGroupAttribute : EndGroupAttribute
+    public class EndMetroFoldoutGroupAttribute : EndGroupAttribute
     {
-        public EndAwesomeFoldoutGroupAttribute()
+        public EndMetroFoldoutGroupAttribute()
         {
         }
     }
