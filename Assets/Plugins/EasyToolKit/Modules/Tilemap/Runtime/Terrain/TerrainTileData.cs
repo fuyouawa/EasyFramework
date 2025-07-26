@@ -10,25 +10,25 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileData : ISerializationCallbackReceiver, IEquatable<TerrainTileData>
     {
         private Guid _guid;
-        private List<List<byte>> _mapData;
+        private Dictionary<Vector3Int, byte> _mapData;
 
         [LabelText("名称")]
-        public string Name;
+        [SerializeField] private string _name;
 
         [LabelText("瓦片颜色")]
-        public Color Color = Color.green;
+        [SerializeField] private Color _color = Color.green;
 
         [InlineEditor(Style = InlineEditorStyle.Foldout)]
         [LabelText("地形瓦片规则集")]
-        public TerrainTileRuleSetsAsset RuleSetsAsset;
+        [SerializeField] private TerrainTileRuleSetsAsset _ruleSetsAsset;
+
+        [SerializeField, HideInInspector] private byte[] _serializedGuid;
+        [SerializeField, HideInInspector] private byte[] _serializedMapData;
 
         public Guid Guid => _guid;
-
-        [SerializeField, HideInInspector]
-        private byte[] _serializedGuid;
-
-        [SerializeField, HideInInspector]
-        private byte[] _serializedMapData;
+        public string Name => _name;
+        public Color Color => _color;
+        public TerrainTileRuleSetsAsset RuleSetsAsset => _ruleSetsAsset;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
@@ -45,12 +45,12 @@ namespace EasyToolKit.Tilemap
         {
             if (_serializedMapData != null && _serializedMapData.Length > 0)
             {
-                _mapData = SerializationUtility.DeserializeValue<List<List<byte>>>(_serializedMapData,
+                _mapData = SerializationUtility.DeserializeValue<Dictionary<Vector3Int, byte>>(_serializedMapData,
                     DataFormat.Binary);
             }
             else
             {
-                _mapData = new List<List<byte>>();
+                _mapData = new Dictionary<Vector3Int, byte>();
             }
 
             if (_serializedGuid != null && _serializedGuid.Length > 0)

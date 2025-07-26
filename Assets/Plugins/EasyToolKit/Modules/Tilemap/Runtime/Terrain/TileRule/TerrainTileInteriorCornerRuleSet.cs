@@ -9,32 +9,39 @@ namespace EasyToolKit.Tilemap
     [Serializable]
     public class TerrainTileInteriorCornerRuleSet : TerrainTileRuleSetBase
     {
+        [LabelText("使用完整定义")]
+        [SerializeField] private bool _useFullDefinition;
+
+        [Space(3)]
+        [TerrainTileRuleType(TerrainType.TopLeftInteriorCorner)]
+        [SerializeField] private TerrainTileRule _topLeftRule;
+
+        [ShowIf(nameof(_useFullDefinition))]
+        [Space(3)]
+        [TerrainTileRuleType(TerrainType.TopRightInteriorCorner)]
+        [SerializeField] private TerrainTileRule _topRightRule;
+
+        [ShowIf(nameof(_useFullDefinition))]
+        [Space(3)]
+        [TerrainTileRuleType(TerrainType.BottomLeftInteriorCorner)]
+        [SerializeField] private TerrainTileRule _bottomLeftRule;
+
+        [ShowIf(nameof(_useFullDefinition))]
+        [Space(3)]
+        [TerrainTileRuleType(TerrainType.BottomRightInteriorCorner)]
+        [SerializeField] private TerrainTileRule _bottomRightRule;
+
+        public override TerrainTileRuleSetType RuleSetType => TerrainTileRuleSetType.InteriorCorner;
+
         /// <summary>
         /// 使用完整定义。
         /// 如果为 false，则使用<see cref="TopLeftRule"/>作为基准规则，其他方向的规则将基于此规则进行调整。
         /// </summary>
-        [LabelText("使用完整定义")]
-        public bool UseFullDefinition;
+        public bool UseFullDefinition => _useFullDefinition;
 
-        [Space(3)]
-        [TerrainTileRuleType(TerrainType.TopLeftInteriorCorner)]
-        public TerrainTileRule TopLeftRule;
-        
-        [ShowIf(nameof(UseFullDefinition))]
-        [Space(3)]
-        [TerrainTileRuleType(TerrainType.TopRightInteriorCorner)]
-        public TerrainTileRule TopRightRule;
-        
-        [ShowIf(nameof(UseFullDefinition))]
-        [Space(3)]
-        [TerrainTileRuleType(TerrainType.BottomLeftInteriorCorner)]
-        public TerrainTileRule BottomLeftRule;
-        
-        [ShowIf(nameof(UseFullDefinition))]
-        [Space(3)]
-        [TerrainTileRuleType(TerrainType.BottomRightInteriorCorner)]
-        public TerrainTileRule BottomRightRule;
-
-        public override TerrainTileRuleSetType RuleSetType => TerrainTileRuleSetType.InteriorCorner;
+        public TerrainTileRule TopLeftRule => _topLeftRule;
+        public TerrainTileRule TopRightRule => _useFullDefinition ? _topRightRule : _topLeftRule;
+        public TerrainTileRule BottomLeftRule => _useFullDefinition ? _bottomLeftRule : _topLeftRule;
+        public TerrainTileRule BottomRightRule => _useFullDefinition ? _bottomRightRule : _topLeftRule;
     }
 }

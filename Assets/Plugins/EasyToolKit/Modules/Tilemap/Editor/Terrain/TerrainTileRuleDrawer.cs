@@ -12,17 +12,6 @@ namespace EasyToolKit.Tilemap.Editor
             ? new Color(0.216f * 0.9f, 0.216f * 0.9f, 0.216f * 0.9f, 1f)
             : new Color(0.801f, 0.801f, 0.801f, 1.000f);
 
-        private InspectorProperty _tilePrefabProperty;
-        private InspectorProperty _rotationOffsetProperty;
-        private InspectorProperty _scaleOffsetProperty;
-
-        protected override void Initialize()
-        {
-            _tilePrefabProperty = Property.Children[nameof(TerrainTileRule.TilePrefab)];
-            _rotationOffsetProperty = Property.Children[nameof(TerrainTileRule.RotationOffset)];
-            _scaleOffsetProperty = Property.Children[nameof(TerrainTileRule.ScaleOffset)];
-        }
-
         protected override void DrawProperty(GUIContent label)
         {
             var type = Property.GetAttribute<TerrainTileRuleTypeAttribute>();
@@ -48,9 +37,10 @@ namespace EasyToolKit.Tilemap.Editor
 
             EditorGUILayout.BeginVertical();
 
-            _tilePrefabProperty.Draw();
-            _rotationOffsetProperty.Draw();
-            _scaleOffsetProperty.Draw();
+            for (int i = 0; i < Property.Children.Count; i++)
+            {
+                Property.Children[i].Draw();
+            }
 
             EditorGUILayout.EndVertical();
 

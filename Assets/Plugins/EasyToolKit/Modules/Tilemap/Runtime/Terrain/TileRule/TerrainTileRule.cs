@@ -8,6 +8,7 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileRuleTypeAttribute : Attribute
     {
         public TerrainType TerrainType;
+
         public TerrainTileRuleTypeAttribute(TerrainType terrainType)
         {
             TerrainType = terrainType;
@@ -19,10 +20,16 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileRule
     {
         [LabelText("预制体")]
-        public GameObject TilePrefab;
+        [SerializeField] private GameObject _tilePrefab;
+
         [LabelText("旋转偏移")]
-        public Vector3 RotationOffset;
+        [SerializeField] private Vector3 _rotationOffset;
+
         [LabelText("缩放偏移")]
-        public Vector3 ScaleOffset;
+        [SerializeField] private Vector3 _scaleOffset;
+
+        public GameObject TilePrefab => _tilePrefab;
+        public Vector3 RotationOffset => _rotationOffset;
+        public Vector3 ScaleOffset => _scaleOffset;
     }
 }

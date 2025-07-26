@@ -1,5 +1,6 @@
 using System;
 using EasyToolKit.Inspector;
+using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
@@ -9,8 +10,10 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileFillRuleSet : TerrainTileRuleSetBase
     {
         [TerrainTileRuleType(TerrainType.Fill)]
-        public TerrainTileRule FillRule;
+        [SerializeField] private TerrainTileRule _fillRule;
 
         public override TerrainTileRuleSetType RuleSetType => TerrainTileRuleSetType.Fill;
+
+        public TerrainTileRule FillRule => _fillRule;
     }
 }

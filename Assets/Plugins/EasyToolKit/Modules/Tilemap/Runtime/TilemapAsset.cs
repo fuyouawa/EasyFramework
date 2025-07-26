@@ -18,12 +18,14 @@ namespace EasyToolKit.Tilemap
     {
         [FoldoutGroup("设置")]
         [HideLabel]
-        public TilemapSettings Settings = new TilemapSettings();
+        [SerializeField] private TilemapSettings _settings = new TilemapSettings();
 
         [EndFoldoutGroup]
-
         [MetroListDrawerSettings]
         [LabelText("地形瓦片数据表")]
-        public List<TerrainTileData> TerrainTileDatas = new List<TerrainTileData>();
+        [SerializeField] private List<TerrainTileData> _terrainTileDataList = new List<TerrainTileData>();
+
+        public TilemapSettings Settings => _settings;
+        public List<TerrainTileData> TerrainTileDataList => _terrainTileDataList;
     }
 }
