@@ -1,3 +1,4 @@
+using System;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Inspector.Editor;
@@ -7,12 +8,12 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class TerrainTileDrawer : EasyValueDrawer<TerrainTile>
+    public class TerrainTileDefinitionDrawer : EasyValueDrawer<TerrainTileDefinition>
     {
         private static readonly GUIContent TempContent = new GUIContent();
         private static readonly Color SelectedButtonColor = new Color(0, 0.7f, 1f, 1);
 
-        [CanBeNull] public static TerrainTile SelectedItem { get; private set; }
+        [CanBeNull] public static Guid? SelectedItemGuid { get; private set; }
         public static DrawMode SelectedDrawMode { get; private set; }
 
         protected override void DrawProperty(GUIContent label)
@@ -56,7 +57,7 @@ namespace EasyToolKit.Tilemap.Editor
 
         private bool IsSelected(DrawMode drawMode)
         {
-            if (SelectedItem == null || !SelectedItem.Equals(ValueEntry.SmartValue))
+            if (SelectedItemGuid == null || SelectedItemGuid != ValueEntry.SmartValue.Guid)
                 return false;
 
             return SelectedDrawMode == drawMode;
@@ -85,15 +86,15 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (clicked)
             {
-                if (SelectedItem != null &&
-                    SelectedItem.Equals(ValueEntry.SmartValue) &&
+                if (SelectedItemGuid != null &&
+                    SelectedItemGuid == ValueEntry.SmartValue.Guid &&
                     SelectedDrawMode == drawMode)
                 {
-                    SelectedItem = null;
+                    SelectedItemGuid = null;
                 }
                 else
                 {
-                    SelectedItem = ValueEntry.SmartValue;
+                    SelectedItemGuid = ValueEntry.SmartValue.Guid;
                 }
 
                 SelectedDrawMode = drawMode;

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EasyToolKit.Tilemap
 {
     [Serializable]
-    public class TerrainTile : ISerializationCallbackReceiver, IEquatable<TerrainTile>
+    public class TerrainTileDefinition : ISerializationCallbackReceiver, IEquatable<TerrainTileDefinition>
     {
         private Guid _guid;
 
@@ -16,8 +16,11 @@ namespace EasyToolKit.Tilemap
         [LabelText("瓦片颜色")]
         [SerializeField] private Color _color = Color.green;
 
+        [LabelText("绘制调试块")]
+        [SerializeField] private bool _drawDebugCube = false;
+
         [InlineEditor(Style = InlineEditorStyle.Foldout)]
-        [LabelText("地形瓦片规则集")]
+        [LabelText("规则集")]
         [SerializeField] private TerrainTileRuleSetsAsset _ruleSetsAsset;
 
         [SerializeField, HideInInspector] private byte[] _serializedGuid;
@@ -26,6 +29,7 @@ namespace EasyToolKit.Tilemap
         public Guid Guid => _guid;
         public string Name => _name;
         public Color Color => _color;
+        public bool DrawDebugCube => _drawDebugCube;
         public TerrainTileRuleSetsAsset RuleSetsAsset => _ruleSetsAsset;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
@@ -50,9 +54,22 @@ namespace EasyToolKit.Tilemap
             }
         }
 
-        public bool Equals(TerrainTile other)
+        public static bool operator==(TerrainTileDefinition left, TerrainTileDefinition right)
         {
-            if (other == null) return false;
+            if (ReferenceEquals(left, null))
+                return ReferenceEquals(right, null);
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(TerrainTileDefinition left, TerrainTileDefinition right)
+        {
+            return !(left == right);
+        }
+
+        public bool Equals(TerrainTileDefinition other)
+        {
+            if (ReferenceEquals(other, null)) return false;
             return _guid == other._guid;
         }
     }
