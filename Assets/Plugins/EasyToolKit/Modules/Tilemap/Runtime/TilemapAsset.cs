@@ -1,20 +1,14 @@
 using System;
 using System.Collections.Generic;
 using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [Serializable]
-    public class TilemapSettings
-    {
-        [LabelText("地基大小")]
-        public Vector2 BaseSize = new Vector2(20, 20);
-    }
-
     [CreateAssetMenu(menuName = "EasyToolKit/Tilemap/Create TilemapAsset", fileName = "TilemapAsset")]
     [EasyInspector]
-    public class TilemapAsset : ScriptableObject
+    public class TilemapAsset : SerializedScriptableObject
     {
         [FoldoutGroup("设置")]
         [HideLabel]
@@ -22,10 +16,12 @@ namespace EasyToolKit.Tilemap
 
         [EndFoldoutGroup]
         [MetroListDrawerSettings]
-        [LabelText("地形瓦片数据表")]
-        [SerializeField] private List<TerrainTileData> _terrainTileDataList = new List<TerrainTileData>();
+        [LabelText("地形瓦片表")]
+        [SerializeField] private List<TerrainTile> _terrainTiles = new List<TerrainTile>();
+
+        [OdinSerialize] private Dictionary<Vector3Int, Guid> _terrainTileMap = new Dictionary<Vector3Int, Guid>();
 
         public TilemapSettings Settings => _settings;
-        public List<TerrainTileData> TerrainTileDataList => _terrainTileDataList;
+        public List<TerrainTile> TerrainTiles => _terrainTiles;
     }
 }

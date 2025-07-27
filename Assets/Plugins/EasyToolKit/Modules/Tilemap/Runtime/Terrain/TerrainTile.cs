@@ -1,5 +1,4 @@
 using EasyToolKit.Inspector;
-using System.Collections.Generic;
 using System;
 using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
@@ -7,10 +6,9 @@ using UnityEngine;
 namespace EasyToolKit.Tilemap
 {
     [Serializable]
-    public class TerrainTileData : ISerializationCallbackReceiver, IEquatable<TerrainTileData>
+    public class TerrainTile : ISerializationCallbackReceiver, IEquatable<TerrainTile>
     {
         private Guid _guid;
-        private Dictionary<Vector3Int, byte> _mapData;
 
         [LabelText("名称")]
         [SerializeField] private string _name;
@@ -38,21 +36,10 @@ namespace EasyToolKit.Tilemap
             }
 
             _serializedGuid = SerializationUtility.SerializeValue(_guid, DataFormat.Binary);
-            _serializedMapData = SerializationUtility.SerializeValue(_mapData, DataFormat.Binary);
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
-            if (_serializedMapData != null && _serializedMapData.Length > 0)
-            {
-                _mapData = SerializationUtility.DeserializeValue<Dictionary<Vector3Int, byte>>(_serializedMapData,
-                    DataFormat.Binary);
-            }
-            else
-            {
-                _mapData = new Dictionary<Vector3Int, byte>();
-            }
-
             if (_serializedGuid != null && _serializedGuid.Length > 0)
             {
                 _guid = SerializationUtility.DeserializeValue<Guid>(_serializedGuid, DataFormat.Binary);
@@ -63,7 +50,7 @@ namespace EasyToolKit.Tilemap
             }
         }
 
-        public bool Equals(TerrainTileData other)
+        public bool Equals(TerrainTile other)
         {
             if (other == null) return false;
             return _guid == other._guid;

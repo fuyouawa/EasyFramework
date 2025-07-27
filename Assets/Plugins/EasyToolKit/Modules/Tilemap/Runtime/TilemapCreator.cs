@@ -8,7 +8,6 @@ namespace EasyToolKit.Tilemap
     {
         [SerializeField, InlineEditor] private TilemapAsset _asset;
         
-        private Camera _sceneViewCamera;
         private GameObject _target;
 
         public TilemapAsset Asset => _asset;

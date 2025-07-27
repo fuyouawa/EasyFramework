@@ -12,7 +12,7 @@ namespace EasyToolKit.Core.Editor
         Right
     }
 
-    public static class HandlesUtility
+    public class EasyHandles
     {
         public static Rect GetWorldUnitsRectWithScaleFactor(Vector3 worldPosition, float sizeInWorldUnits)
         {

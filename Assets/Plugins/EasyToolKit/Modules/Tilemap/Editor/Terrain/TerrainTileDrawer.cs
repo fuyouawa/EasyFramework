@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class TerrainTileDataDrawer : EasyValueDrawer<TerrainTileData>
+    public class TerrainTileDrawer : EasyValueDrawer<TerrainTile>
     {
         private static readonly GUIContent TempContent = new GUIContent();
         private static readonly Color SelectedButtonColor = new Color(0, 0.7f, 1f, 1);
 
-        [CanBeNull] public static TerrainTileData SelectedItem { get; private set; }
+        [CanBeNull] public static TerrainTile SelectedItem { get; private set; }
         public static DrawMode SelectedDrawMode { get; private set; }
 
         protected override void DrawProperty(GUIContent label)
