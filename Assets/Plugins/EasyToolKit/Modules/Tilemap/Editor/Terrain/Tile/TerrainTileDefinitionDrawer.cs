@@ -1,8 +1,8 @@
-using System;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Inspector.Editor;
 using JetBrains.Annotations;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -26,7 +26,7 @@ namespace EasyToolKit.Tilemap.Editor
             EasyGUIHelper.PushColor(ValueEntry.SmartValue.DebugCubeColor.SetA(1f));
             GUILayout.Box(GUIContent.none, EasyGUIStyles.WhiteBoxStyle, GUILayout.Width(3), GUILayout.Height(30));
             EasyGUIHelper.PopColor();
-            
+
             var foldoutRect = EditorGUILayout.GetControlRect(true, 30, MetroFoldoutGroupAttributeDrawer.FoldoutStyle);
 
             var title = ValueEntry.SmartValue.Name.DefaultIfNullOrEmpty("TODO");
@@ -40,7 +40,7 @@ namespace EasyToolKit.Tilemap.Editor
             if (Property.State.Expanded)
             {
                 CallNextDrawer(label);
-                
+
                 EasyEditorGUI.BeginBox();
                 EditorGUILayout.BeginHorizontal();
 

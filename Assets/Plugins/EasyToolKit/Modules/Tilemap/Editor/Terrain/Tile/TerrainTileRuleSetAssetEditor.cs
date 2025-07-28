@@ -14,7 +14,7 @@ namespace EasyToolKit.Tilemap.Editor
         protected override void DrawTree()
         {
             Tree.BeginDraw();
-            
+
             if (!IsInlineEditor)
             {
                 EditorGUILayout.LabelField(

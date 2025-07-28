@@ -1,5 +1,5 @@
-using System;
 using EasyToolKit.Inspector;
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
@@ -52,47 +52,47 @@ namespace EasyToolKit.Tilemap
                 case TerrainRuleType.TopEdge:
                     return TopObject.TryInstantiate();
                 case TerrainRuleType.LeftEdge:
-                {
-                    if (UseFullDefinition)
                     {
-                        return LeftObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return LeftObject.TryInstantiate();
+                        }
+
+                        var instance = TopObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                        return instance;
                     }
-
-                    var instance = TopObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
-                    return instance;
-                }
                 case TerrainRuleType.BottomEdge:
-                {
-                    if (UseFullDefinition)
                     {
-                        return BottomObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return BottomObject.TryInstantiate();
+                        }
+
+                        var instance = TopObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                        return instance;
                     }
-
-                    var instance = TopObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
-                    return instance;
-                }
                 case TerrainRuleType.RightEdge:
-                {
-                    if (UseFullDefinition)
                     {
-                        return RightObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return RightObject.TryInstantiate();
+                        }
+
+                        var instance = TopObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
+                        return instance;
                     }
-
-                    var instance = TopObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
-                    return instance;
-                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
             }

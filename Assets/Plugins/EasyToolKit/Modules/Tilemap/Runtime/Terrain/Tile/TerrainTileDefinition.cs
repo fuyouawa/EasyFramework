@@ -1,6 +1,6 @@
 using EasyToolKit.Inspector;
-using System;
 using EasyToolKit.ThirdParty.OdinSerializer;
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
@@ -54,7 +54,7 @@ namespace EasyToolKit.Tilemap
             }
         }
 
-        public static bool operator==(TerrainTileDefinition left, TerrainTileDefinition right)
+        public static bool operator ==(TerrainTileDefinition left, TerrainTileDefinition right)
         {
             if (ReferenceEquals(left, null))
                 return ReferenceEquals(right, null);

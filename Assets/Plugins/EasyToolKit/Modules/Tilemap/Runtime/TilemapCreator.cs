@@ -1,5 +1,5 @@
-using System;
 using EasyToolKit.Inspector;
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
@@ -7,7 +7,7 @@ namespace EasyToolKit.Tilemap
     public class TilemapCreator : MonoBehaviour
     {
         [SerializeField, InlineEditor] private TilemapAsset _asset;
-        
+
         private GameObject _target;
 
         public TilemapAsset Asset => _asset;

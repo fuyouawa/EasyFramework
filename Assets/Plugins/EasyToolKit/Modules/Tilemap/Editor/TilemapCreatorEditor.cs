@@ -1,10 +1,9 @@
-using System;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Inspector.Editor;
+using System;
 using UnityEditor;
 using UnityEngine;
-using static Codice.Client.Commands.WkTree.WorkspaceTreeNode;
 
 namespace EasyToolKit.Tilemap.Editor
 {
@@ -24,7 +23,7 @@ namespace EasyToolKit.Tilemap.Editor
             var selectedItemGuid = TerrainTileDefinitionDrawer.SelectedItemGuid;
             if (selectedItemGuid.HasValue)
             {
-                _terrainTileDefinition = _target.Asset.TryGetTerrainTileDefinitionByGuid(selectedItemGuid.Value);
+                _terrainTileDefinition = _target.Asset.TryGetTerrainTileByGuid(selectedItemGuid.Value);
             }
             else
             {
@@ -125,7 +124,7 @@ namespace EasyToolKit.Tilemap.Editor
 
             var tilePosition = _target.WorldPositionToTilePosition(hitPoint);
             var blockPosition = _target.TilePositionToWorldPosition(tilePosition);
-            var targetTerrainTileDefinition = _target.Asset.TryGetTerrainTileDefinitionInTilePosition(tilePosition);
+            var targetTerrainTileDefinition = _target.Asset.TryGetTerrainTileAt(tilePosition);
 
             var isErase = TerrainTileDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
             bool drawCube = true;

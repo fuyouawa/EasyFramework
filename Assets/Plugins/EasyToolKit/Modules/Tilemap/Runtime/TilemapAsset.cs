@@ -1,9 +1,10 @@
+using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EasyToolKit.Inspector;
-using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
+using Guid = System.Guid;
 
 namespace EasyToolKit.Tilemap
 {
@@ -24,14 +25,15 @@ namespace EasyToolKit.Tilemap
         [EndFoldoutGroup]
         [MetroListDrawerSettings]
         [LabelText("地形瓦片表")]
-        [SerializeField] private List<TerrainTileDefinition> _terrainTileDefinitions = new List<TerrainTileDefinition>();
+        [SerializeField]
+        private List<TerrainTileDefinition> _terrainTileDefinitions = new List<TerrainTileDefinition>();
 
         [OdinSerialize] private Dictionary<Vector3Int, Guid> _terrainTileMap = new Dictionary<Vector3Int, Guid>();
 
         public TilemapSettings Settings => _settings;
         public List<TerrainTileDefinition> TerrainTileDefinitions => _terrainTileDefinitions;
 
-        public TerrainTileDefinition TryGetTerrainTileDefinitionByGuid(Guid guid)
+        public TerrainTileDefinition TryGetTerrainTileByGuid(Guid guid)
         {
             return TerrainTileDefinitions.FirstOrDefault(terrainTile => terrainTile.Guid == guid);
         }
@@ -41,12 +43,13 @@ namespace EasyToolKit.Tilemap
             _terrainTileMap[tilePosition] = terrainTileDefinition.Guid;
         }
 
-        public TerrainTileDefinition TryGetTerrainTileDefinitionInTilePosition(Vector3Int tilePosition)
+        public TerrainTileDefinition TryGetTerrainTileAt(Vector3Int tilePosition)
         {
             if (_terrainTileMap.TryGetValue(tilePosition, out var guid))
             {
-                return TryGetTerrainTileDefinitionByGuid(guid);
+                return TryGetTerrainTileByGuid(guid);
             }
+
             return null;
         }
 
@@ -56,7 +59,7 @@ namespace EasyToolKit.Tilemap
             {
                 var tilePosition = kvp.Key;
                 var guid = kvp.Value;
-                var definition = TryGetTerrainTileDefinitionByGuid(guid);
+                var definition = TryGetTerrainTileByGuid(guid);
                 if (definition != null)
                 {
                     yield return new TerrainTileBlock
@@ -67,6 +70,141 @@ namespace EasyToolKit.Tilemap
                 }
             }
         }
+
+        private Guid? TryGetMatchedTileGuidAt(Vector3Int tilePosition, Guid matchGuid)
+        {
+            var guid = _terrainTileMap.GetValueOrDefault(tilePosition, Guid.Empty);
+            if (guid == Guid.Empty || guid == matchGuid)
+            {
+                return null;
+            }
+
+            return guid;
+        }
+
+        private Guid?[,] GetTileGuidSudokuAt(Vector3Int tilePosition)
+        {
+            var sudoku = new Guid?[3, 3];
+            var map = _terrainTileMap;
+            var grid = map.GetValueOrDefault(tilePosition, Guid.Empty);
+
+            sudoku[0, 2] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.up + Vector3Int.left, grid);
+            sudoku[1, 2] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.up, grid);
+            sudoku[2, 2] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.up + Vector3Int.right, grid);
+
+            sudoku[0, 1] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.left, grid);
+            sudoku[1, 1] = grid;
+            sudoku[2, 1] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.right, grid);
+
+            sudoku[0, 0] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.down + Vector3Int.left, grid);
+            sudoku[1, 0] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.down, grid);
+            sudoku[2, 0] = TryGetMatchedTileGuidAt(tilePosition + Vector3Int.down + Vector3Int.right, grid);
+
+            return sudoku;
+        }
+
+        public TerrainRuleType CalculateTerrainRuleTypeAt(Vector3Int tilePosition)
+        {
+            var sudoku = GetTileGuidSudokuAt(tilePosition);
+            
+            // Fill
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.Fill;
+            }
+            
+            // Edge
+            if (sudoku[0, 2] == null && sudoku[1, 2] == null && sudoku[2, 2] == null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.TopEdge;
+            }
+
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] == null && sudoku[1, 0] == null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.BottomEdge;
+            }
+
+            if (sudoku[0, 2] == null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] == null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] == null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.LeftEdge;
+            }
+
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] == null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] == null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.RightEdge;
+            }
+            
+            // Exterior corner
+            if (sudoku[0, 2] == null && sudoku[1, 2] == null && sudoku[2, 2] == null &&
+                sudoku[0, 1] == null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] == null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.TopLeftExteriorCorner;
+            }
+
+            if (sudoku[0, 2] == null && sudoku[1, 2] == null && sudoku[2, 2] == null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] == null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.TopRightExteriorCorner;
+            }
+
+            if (sudoku[0, 2] == null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] == null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] == null && sudoku[1, 0] == null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.BottomLeftExteriorCorner;
+            }
+
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] == null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] == null &&
+                sudoku[0, 0] == null && sudoku[1, 0] == null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.BottomRightExteriorCorner;
+            }
+
+            // Interior corner
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] == null)
+            {
+                return TerrainRuleType.TopLeftInteriorCorner;
+            }
+
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] == null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.TopRightInteriorCorner;
+            }
+
+            if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] == null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.BottomLeftInteriorCorner;
+            }
+
+            if (sudoku[0, 2] == null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
+                sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
+                sudoku[0, 0] != null && sudoku[1, 0] != null && sudoku[2, 0] != null)
+            {
+                return TerrainRuleType.BottomRightInteriorCorner;
+            }
+
+            return TerrainRuleType.Fill;
+        }
+
 
         public bool RemoveTerrainTile(Vector3Int tilePosition)
         {

@@ -1,5 +1,5 @@
-using System;
 using EasyToolKit.Inspector;
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
@@ -22,7 +22,7 @@ namespace EasyToolKit.Tilemap
             {
                 return FillObject.TryInstantiate();
             }
-            
+
             throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
         }
     }

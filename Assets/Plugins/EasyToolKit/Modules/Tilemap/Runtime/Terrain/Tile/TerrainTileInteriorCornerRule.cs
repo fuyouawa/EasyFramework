@@ -51,47 +51,47 @@ namespace EasyToolKit.Tilemap
                 case TerrainRuleType.TopLeftInteriorCorner:
                     return TopLeftObject.TryInstantiate();
                 case TerrainRuleType.TopRightInteriorCorner:
-                {
-                    if (UseFullDefinition)
                     {
-                        return TopRightObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return TopRightObject.TryInstantiate();
+                        }
+
+                        var instance = TopLeftObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                        return instance;
                     }
-
-                    var instance = TopLeftObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
-                    return instance;
-                }
                 case TerrainRuleType.BottomRightInteriorCorner:
-                {
-                    if (UseFullDefinition)
                     {
-                        return BottomRightObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return BottomRightObject.TryInstantiate();
+                        }
+
+                        var instance = TopLeftObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                        return instance;
                     }
-
-                    var instance = TopLeftObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
-                    return instance;
-                }
                 case TerrainRuleType.BottomLeftInteriorCorner:
-                {
-                    if (UseFullDefinition)
                     {
-                        return BottomLeftObject.TryInstantiate();
+                        if (UseFullDefinition)
+                        {
+                            return BottomLeftObject.TryInstantiate();
+                        }
+
+                        var instance = TopLeftObject.TryInstantiate();
+                        if (instance == null)
+                            return null;
+
+                        instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
+                        return instance;
                     }
-
-                    var instance = TopLeftObject.TryInstantiate();
-                    if (instance == null)
-                        return null;
-
-                    instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
-                    return instance;
-                }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
             }

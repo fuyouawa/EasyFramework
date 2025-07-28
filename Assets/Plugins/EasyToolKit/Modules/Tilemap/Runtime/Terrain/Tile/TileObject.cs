@@ -1,6 +1,6 @@
-using System;
 using EasyToolKit.Inspector;
 using JetBrains.Annotations;
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
 using EasyToolKit.Inspector;
-using EasyToolKit.Inspector.Editor;
 using MyNamespace;
 using Serilog;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 
 [Serializable]
@@ -59,7 +57,7 @@ public class Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
         Log.Logger = new LoggerConfiguration()
             .CreateLogger();
     }
