@@ -13,8 +13,8 @@ namespace EasyToolKit.Tilemap
         [LabelText("名称")]
         [SerializeField] private string _name;
 
-        [LabelText("瓦片颜色")]
-        [SerializeField] private Color _color = Color.green;
+        [LabelText("调试块颜色")]
+        [SerializeField] private Color _debugCubeColor = Color.green;
 
         [LabelText("绘制调试块")]
         [SerializeField] private bool _drawDebugCube = false;
@@ -28,7 +28,7 @@ namespace EasyToolKit.Tilemap
 
         public Guid Guid => _guid;
         public string Name => _name;
-        public Color Color => _color;
+        public Color DebugCubeColor => _debugCubeColor;
         public bool DrawDebugCube => _drawDebugCube;
         public TerrainTileRuleSetsAsset RuleSetsAsset => _ruleSetsAsset;
 
@@ -67,10 +67,24 @@ namespace EasyToolKit.Tilemap
             return !(left == right);
         }
 
-        public bool Equals(TerrainTileDefinition other)
+        public bool Equals(TerrainTileDefinition obj)
         {
-            if (ReferenceEquals(other, null)) return false;
-            return _guid == other._guid;
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return _guid == obj._guid;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((TerrainTileDefinition)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _guid.GetHashCode();
         }
     }
 }

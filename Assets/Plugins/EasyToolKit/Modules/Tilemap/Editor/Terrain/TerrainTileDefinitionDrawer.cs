@@ -23,7 +23,7 @@ namespace EasyToolKit.Tilemap.Editor
             GUILayout.Space(-3);
             EditorGUILayout.BeginHorizontal("Button", GUILayout.ExpandWidth(true), GUILayout.Height(30));
 
-            EasyGUIHelper.PushColor(ValueEntry.SmartValue.Color);
+            EasyGUIHelper.PushColor(ValueEntry.SmartValue.DebugCubeColor.SetA(1f));
             GUILayout.Box(GUIContent.none, EasyGUIStyles.WhiteBoxStyle, GUILayout.Width(3), GUILayout.Height(30));
             EasyGUIHelper.PopColor();
             

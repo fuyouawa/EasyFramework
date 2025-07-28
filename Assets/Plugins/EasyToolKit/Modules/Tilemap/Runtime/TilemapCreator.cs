@@ -12,14 +12,14 @@ namespace EasyToolKit.Tilemap
 
         public TilemapAsset Asset => _asset;
 
-        public Vector3Int WorldPositionToTilePosition(Vector3 worldTilePosition)
+        public Vector3Int WorldPositionToTilePosition(Vector3 worldPosition)
         {
             if (_asset == null)
             {
                 throw new NullReferenceException();
             }
 
-            var local = worldTilePosition - transform.position;
+            var local = worldPosition - transform.position;
             var tileSize = _asset.Settings.TileSize;
             int gridX = Mathf.FloorToInt(local.x / tileSize);
             int gridY = Mathf.FloorToInt(local.y / tileSize);
@@ -37,6 +37,11 @@ namespace EasyToolKit.Tilemap
 
             var tileSize = _asset.Settings.TileSize;
             return transform.position + new Vector3(tilePosition.x * tileSize, tilePosition.y * tileSize, tilePosition.z * tileSize);
+        }
+
+        public Vector3 WorldPositionToBlockPosition(Vector3 worldPosition)
+        {
+            return TilePositionToWorldPosition(WorldPositionToTilePosition(worldPosition));
         }
     }
 }

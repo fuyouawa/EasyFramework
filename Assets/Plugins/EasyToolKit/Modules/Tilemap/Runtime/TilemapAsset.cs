@@ -41,7 +41,7 @@ namespace EasyToolKit.Tilemap
             _terrainTileMap[tilePosition] = terrainTileDefinition.Guid;
         }
 
-        public TerrainTileDefinition TryGetTerrainTile(Vector3Int tilePosition)
+        public TerrainTileDefinition TryGetTerrainTileDefinitionInTilePosition(Vector3Int tilePosition)
         {
             if (_terrainTileMap.TryGetValue(tilePosition, out var guid))
             {
