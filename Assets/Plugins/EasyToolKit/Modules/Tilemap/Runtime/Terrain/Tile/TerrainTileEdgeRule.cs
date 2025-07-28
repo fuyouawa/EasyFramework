@@ -13,22 +13,22 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private bool _useFullDefinition;
 
         [Space(3)]
-        [TerrainType(TerrainType.TopEdge)]
+        [TerrainRuleType(TerrainRuleType.TopEdge)]
         [SerializeField] private TileObject _topObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.BottomEdge)]
+        [TerrainRuleType(TerrainRuleType.BottomEdge)]
         [SerializeField] private TileObject _bottomObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.LeftEdge)]
+        [TerrainRuleType(TerrainRuleType.LeftEdge)]
         [SerializeField] private TileObject _leftObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.RightEdge)]
+        [TerrainRuleType(TerrainRuleType.RightEdge)]
         [SerializeField] private TileObject _rightObject;
 
         public override TerrainTileRuleType RuleType => TerrainTileRuleType.Edge;
@@ -43,5 +43,59 @@ namespace EasyToolKit.Tilemap
         public TileObject BottomObject => _bottomObject;
         public TileObject LeftObject => _leftObject;
         public TileObject RightObject => _rightObject;
+
+
+        public override GameObject GetTileInstanceByRuleType(TerrainRuleType ruleType)
+        {
+            switch (ruleType)
+            {
+                case TerrainRuleType.TopEdge:
+                    return TopObject.TryInstantiate();
+                case TerrainRuleType.LeftEdge:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return LeftObject.TryInstantiate();
+                    }
+
+                    var instance = TopObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                    return instance;
+                }
+                case TerrainRuleType.BottomEdge:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return BottomObject.TryInstantiate();
+                    }
+
+                    var instance = TopObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                    return instance;
+                }
+                case TerrainRuleType.RightEdge:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return RightObject.TryInstantiate();
+                    }
+
+                    var instance = TopObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
+                    return instance;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
+            }
+        }
     }
 }

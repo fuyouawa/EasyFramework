@@ -1,7 +1,6 @@
 using System;
 using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace EasyToolKit.Tilemap
 {
@@ -21,6 +20,32 @@ namespace EasyToolKit.Tilemap
         public TerrainTileEdgeRule EdgeRule => _edgeRule;
         public TerrainTileExteriorCornerRule ExteriorCornerRule => _exteriorCornerRule;
         public TerrainTileInteriorCornerRule InteriorCornerRule => _interiorCornerRule;
+
+        public GameObject GetTileInstanceByRuleType(TerrainRuleType ruleType)
+        {
+            switch (ruleType)
+            {
+                case TerrainRuleType.Fill:
+                    return FillRule.GetTileInstanceByRuleType(ruleType);
+                case TerrainRuleType.TopEdge:
+                case TerrainRuleType.LeftEdge:
+                case TerrainRuleType.BottomEdge:
+                case TerrainRuleType.RightEdge:
+                    return EdgeRule.GetTileInstanceByRuleType(ruleType);
+                case TerrainRuleType.TopLeftExteriorCorner:
+                case TerrainRuleType.TopRightExteriorCorner:
+                case TerrainRuleType.BottomRightExteriorCorner:
+                case TerrainRuleType.BottomLeftExteriorCorner:
+                    return ExteriorCornerRule.GetTileInstanceByRuleType(ruleType);
+                case TerrainRuleType.TopLeftInteriorCorner:
+                case TerrainRuleType.TopRightInteriorCorner:
+                case TerrainRuleType.BottomRightInteriorCorner:
+                case TerrainRuleType.BottomLeftInteriorCorner:
+                    return InteriorCornerRule.GetTileInstanceByRuleType(ruleType);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
+            }
+        }
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {

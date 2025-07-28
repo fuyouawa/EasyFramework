@@ -13,22 +13,22 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private bool _useFullDefinition;
 
         [Space(3)]
-        [TerrainType(TerrainType.TopLeftInteriorCorner)]
+        [TerrainRuleType(TerrainRuleType.TopLeftInteriorCorner)]
         [SerializeField] private TileObject _topLeftObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.TopRightInteriorCorner)]
+        [TerrainRuleType(TerrainRuleType.TopRightInteriorCorner)]
         [SerializeField] private TileObject _topRightObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.BottomLeftInteriorCorner)]
+        [TerrainRuleType(TerrainRuleType.BottomLeftInteriorCorner)]
         [SerializeField] private TileObject _bottomLeftObject;
 
         [ShowIf(nameof(_useFullDefinition))]
         [Space(3)]
-        [TerrainType(TerrainType.BottomRightInteriorCorner)]
+        [TerrainRuleType(TerrainRuleType.BottomRightInteriorCorner)]
         [SerializeField] private TileObject _bottomRightObject;
 
         public override TerrainTileRuleType RuleType => TerrainTileRuleType.InteriorCorner;
@@ -43,5 +43,58 @@ namespace EasyToolKit.Tilemap
         public TileObject TopRightObject => _topRightObject;
         public TileObject BottomLeftObject => _bottomLeftObject;
         public TileObject BottomRightObject => _bottomRightObject;
+
+        public override GameObject GetTileInstanceByRuleType(TerrainRuleType ruleType)
+        {
+            switch (ruleType)
+            {
+                case TerrainRuleType.TopLeftInteriorCorner:
+                    return TopLeftObject.TryInstantiate();
+                case TerrainRuleType.TopRightInteriorCorner:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return TopRightObject.TryInstantiate();
+                    }
+
+                    var instance = TopLeftObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 90, 0);
+                    return instance;
+                }
+                case TerrainRuleType.BottomRightInteriorCorner:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return BottomRightObject.TryInstantiate();
+                    }
+
+                    var instance = TopLeftObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
+                    return instance;
+                }
+                case TerrainRuleType.BottomLeftInteriorCorner:
+                {
+                    if (UseFullDefinition)
+                    {
+                        return BottomLeftObject.TryInstantiate();
+                    }
+
+                    var instance = TopLeftObject.TryInstantiate();
+                    if (instance == null)
+                        return null;
+
+                    instance.transform.rotation *= Quaternion.Euler(0, 270, 0);
+                    return instance;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
+            }
+        }
     }
 }

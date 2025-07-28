@@ -9,11 +9,21 @@ namespace EasyToolKit.Tilemap
     [Serializable]
     public class TerrainTileFillRule : TerrainTileRuleBase
     {
-        [TerrainType(TerrainType.Fill)]
+        [TerrainRuleType(TerrainRuleType.Fill)]
         [SerializeField] private TileObject _fillObject;
 
         public override TerrainTileRuleType RuleType => TerrainTileRuleType.Fill;
 
         public TileObject FillObject => _fillObject;
+
+        public override GameObject GetTileInstanceByRuleType(TerrainRuleType ruleType)
+        {
+            if (ruleType == TerrainRuleType.Fill)
+            {
+                return FillObject.TryInstantiate();
+            }
+            
+            throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace EasyToolKit.Tilemap
 
         public TerrainTileDefinition TryGetTerrainTileDefinitionByGuid(Guid guid)
         {
-            return _terrainTileDefinitions.FirstOrDefault(terrainTile => terrainTile.Guid == guid);
+            return TerrainTileDefinitions.FirstOrDefault(terrainTile => terrainTile.Guid == guid);
         }
 
         public void SetTerrainTile(Vector3Int tilePosition, TerrainTileDefinition terrainTileDefinition)

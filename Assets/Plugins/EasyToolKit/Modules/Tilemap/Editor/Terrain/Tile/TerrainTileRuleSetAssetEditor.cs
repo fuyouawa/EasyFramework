@@ -15,12 +15,12 @@ namespace EasyToolKit.Tilemap.Editor
         {
             Tree.BeginDraw();
             
-            EditorGUILayout.LabelField(
-                TempContent.SetText("GUID"),
-                TempContent2.SetText(((TerrainTileRuleSetAsset)target).Guid.ToString("D")));
-
             if (!IsInlineEditor)
             {
+                EditorGUILayout.LabelField(
+                    TempContent.SetText("GUID"),
+                    TempContent2.SetText(((TerrainTileRuleSetAsset)target).Guid.ToString("D")));
+
                 MetroBoxGroupAttributeDrawer.BeginDraw(TempContent.SetText("地形瓦片规则集"), null);
             }
 

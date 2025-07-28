@@ -55,43 +55,43 @@ namespace EasyToolKit.Tilemap.Editor
             }
         }
 
-        public Texture2D TerrainFillTypeIcon => GetTerrainTypeIcon(TerrainType.Fill);
-        public Texture2D TerrainExteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainType.TopLeftExteriorCorner);
-        public Texture2D TerrainEdgeTypeIcon => GetTerrainTypeIcon(TerrainType.TopEdge);
-        public Texture2D TerrainInteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainType.TopLeftInteriorCorner);
+        public Texture2D TerrainFillTypeIcon => GetTerrainTypeIcon(TerrainRuleType.Fill);
+        public Texture2D TerrainExteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopLeftExteriorCorner);
+        public Texture2D TerrainEdgeTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopEdge);
+        public Texture2D TerrainInteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopLeftInteriorCorner);
 
-        public Texture2D GetTerrainTypeIcon(TerrainType terrainType)
+        public Texture2D GetTerrainTypeIcon(TerrainRuleType terrainRuleType)
         {
-            switch (terrainType)
+            switch (terrainRuleType)
             {
-                case TerrainType.BottomLeftInteriorCorner:
+                case TerrainRuleType.BottomLeftInteriorCorner:
                     return TerrainTypeIcons[0, 0];
-                case TerrainType.BottomRightInteriorCorner:
+                case TerrainRuleType.BottomRightInteriorCorner:
                     return TerrainTypeIcons[0, 1];
-                case TerrainType.TopRightInteriorCorner:
+                case TerrainRuleType.TopRightInteriorCorner:
                     return TerrainTypeIcons[0, 2];
-                case TerrainType.TopLeftInteriorCorner:
+                case TerrainRuleType.TopLeftInteriorCorner:
                     return TerrainTypeIcons[0, 3];
-                case TerrainType.BottomRightExteriorCorner:
+                case TerrainRuleType.BottomRightExteriorCorner:
                     return TerrainTypeIcons[1, 0];
-                case TerrainType.BottomLeftExteriorCorner:
+                case TerrainRuleType.BottomLeftExteriorCorner:
                     return TerrainTypeIcons[1, 1];
-                case TerrainType.TopRightExteriorCorner:
+                case TerrainRuleType.TopRightExteriorCorner:
                     return TerrainTypeIcons[1, 2];
-                case TerrainType.TopLeftExteriorCorner:
+                case TerrainRuleType.TopLeftExteriorCorner:
                     return TerrainTypeIcons[1, 3];
-                case TerrainType.RightEdge:
+                case TerrainRuleType.RightEdge:
                     return TerrainTypeIcons[2, 0];
-                case TerrainType.BottomEdge:
+                case TerrainRuleType.BottomEdge:
                     return TerrainTypeIcons[2, 1];
-                case TerrainType.LeftEdge:
+                case TerrainRuleType.LeftEdge:
                     return TerrainTypeIcons[2, 2];
-                case TerrainType.TopEdge:
+                case TerrainRuleType.TopEdge:
                     return TerrainTypeIcons[2, 3];
-                case TerrainType.Fill:
+                case TerrainRuleType.Fill:
                     return TerrainTypeIcons[3, 0];
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(terrainType), terrainType, null);
+                    throw new ArgumentOutOfRangeException(nameof(terrainRuleType), terrainRuleType, null);
             }
         }
 

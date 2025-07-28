@@ -14,14 +14,14 @@ namespace EasyToolKit.Tilemap.Editor
 
         protected override void DrawProperty(GUIContent label)
         {
-            var type = Property.GetAttribute<TerrainTypeAttribute>();
+            var type = Property.GetAttribute<TerrainRuleTypeAttribute>();
             if (type == null)
             {
                 EditorGUILayout.HelpBox("TerrainTileRuleTypeAttribute is missing.", MessageType.Error);
                 return;
             }
 
-            var icon = TilemapEditorIcons.Instance.GetTerrainTypeIcon(type.TerrainType);
+            var icon = TilemapEditorIcons.Instance.GetTerrainTypeIcon(type.TerrainRuleType);
 
             var totalRect = EditorGUILayout.BeginHorizontal();
             totalRect.xMin += EasyGUIHelper.CurrentIndentAmount;

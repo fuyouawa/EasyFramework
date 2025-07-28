@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
@@ -13,5 +14,7 @@ namespace EasyToolKit.Tilemap
     public abstract class TerrainTileRuleBase
     {
         public abstract TerrainTileRuleType RuleType { get; }
+
+        public abstract GameObject GetTileInstanceByRuleType(TerrainRuleType ruleType);
     }
 }
