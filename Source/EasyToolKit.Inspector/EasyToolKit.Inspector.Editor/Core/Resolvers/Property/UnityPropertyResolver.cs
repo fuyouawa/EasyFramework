@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using EasyToolKit.Core;
-using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEditor;
 using UnityEngine;
 
@@ -58,7 +56,6 @@ namespace EasyToolKit.Inspector.Editor
                     }
 
                     if (!field.HasCustomAttribute<SerializeField>() &&
-                        !field.HasCustomAttribute<OdinSerializeAttribute>() &&
                         !field.HasCustomAttribute<ShowInInspectorAttribute>())
                     {
                         continue;
