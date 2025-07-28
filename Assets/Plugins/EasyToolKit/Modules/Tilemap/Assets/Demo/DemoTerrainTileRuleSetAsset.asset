@@ -9,65 +9,66 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d928320bec65f84bbfc3c515c3e0e3f, type: 3}
-  m_Name: DemoTerrainTileRuleSetsAsset
+  m_Script: {fileID: 11500000, guid: 231af627f0a3b5a4c95a59c2f834c6c9, type: 3}
+  m_Name: DemoTerrainTileRuleSetAsset
   m_EditorClassIdentifier: 
-  _fillRuleSet:
-    _fillRule:
+  _serializedGuid: 2afbdaaf5daea4434fb147acd17e944919
+  _fillRule:
+    _fillObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-  _edgeRuleSet:
+  _edgeRule:
     _useFullDefinition: 0
-    _topRule:
+    _topObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _bottomRule:
+    _bottomObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _leftRule:
+    _leftObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _rightRule:
+    _rightObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-  _exteriorCornerRuleSet:
+  _exteriorCornerRule:
     _useFullDefinition: 0
-    _topLeftRule:
+    _topLeftObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _topRightRule:
+    _topRightObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _bottomLeftRule:
+    _bottomLeftObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _bottomRightRule:
+    _bottomRightObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-  _interiorCornerRuleSet:
+  _interiorCornerRule:
     _useFullDefinition: 0
-    _topLeftRule:
+    _topLeftObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _topRightRule:
+    _topRightObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _bottomLeftRule:
+    _bottomLeftObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}
-    _bottomRightRule:
+    _bottomRightObject:
       _tilePrefab: {fileID: 0}
       _rotationOffset: {x: 0, y: 0, z: 0}
       _scaleOffset: {x: 0, y: 0, z: 0}

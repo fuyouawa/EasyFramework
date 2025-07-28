@@ -21,7 +21,7 @@ namespace EasyToolKit.Tilemap
 
         [InlineEditor(Style = InlineEditorStyle.Foldout)]
         [LabelText("规则集")]
-        [SerializeField] private TerrainTileRuleSetsAsset _ruleSetsAsset;
+        [SerializeField] private TerrainTileRuleSetAsset _ruleSetAsset;
 
         [SerializeField, HideInInspector] private byte[] _serializedGuid;
         [SerializeField, HideInInspector] private byte[] _serializedMapData;
@@ -30,7 +30,7 @@ namespace EasyToolKit.Tilemap
         public string Name => _name;
         public Color DebugCubeColor => _debugCubeColor;
         public bool DrawDebugCube => _drawDebugCube;
-        public TerrainTileRuleSetsAsset RuleSetsAsset => _ruleSetsAsset;
+        public TerrainTileRuleSetAsset RuleSetAsset => _ruleSetAsset;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {

@@ -4,20 +4,9 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    public class TerrainTileRuleTypeAttribute : Attribute
-    {
-        public TerrainType TerrainType;
-
-        public TerrainTileRuleTypeAttribute(TerrainType terrainType)
-        {
-            TerrainType = terrainType;
-        }
-    }
-
     [Serializable]
     [HideLabel]
-    public class TerrainTileRule
+    public class TileObject
     {
         [LabelText("预制体")]
         [SerializeField] private GameObject _tilePrefab;

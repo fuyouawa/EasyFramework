@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class TerrainTileRuleDrawer : EasyValueDrawer<TerrainTileRule>
+    public class TileObjectDrawer : EasyValueDrawer<TileObject>
     {
         public static readonly Color BackgroundColor = EditorGUIUtility.isProSkin
             ? new Color(0.216f * 0.9f, 0.216f * 0.9f, 0.216f * 0.9f, 1f)
@@ -14,7 +14,7 @@ namespace EasyToolKit.Tilemap.Editor
 
         protected override void DrawProperty(GUIContent label)
         {
-            var type = Property.GetAttribute<TerrainTileRuleTypeAttribute>();
+            var type = Property.GetAttribute<TerrainTypeAttribute>();
             if (type == null)
             {
                 EditorGUILayout.HelpBox("TerrainTileRuleTypeAttribute is missing.", MessageType.Error);
