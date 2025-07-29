@@ -176,7 +176,7 @@ namespace EasyToolKit.Core
             return type.GetPropertyValue<T>(propertyName, BindingFlagsHelper.All(), target);
         }
 
-        public static MethodInfo GetMethodEx(this Type type, string methodName, BindingFlags flags, Type[] argTypes)
+        public static MethodInfo GetMethodEx(this Type type, string methodName, BindingFlags flags, params Type[] argTypes)
         {
             return type.GetMethods(flags).FirstOrDefault(m =>
             {

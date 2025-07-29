@@ -24,7 +24,7 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private TilemapSettings _settings = new TilemapSettings();
 
         [EndFoldoutGroup]
-        [MetroListDrawerSettings]
+        [MetroListDrawerSettings(OnRemovedElementCallback = nameof(OnRemovedTerrainTileDefinition))]
         [LabelText("地形瓦片定义表")]
         [SerializeField]
         private List<TerrainTileDefinition> _terrainTileDefinitions = new List<TerrainTileDefinition>();
@@ -228,10 +228,35 @@ namespace EasyToolKit.Tilemap
             return TerrainRuleType.Fill;
         }
 
-
         public bool RemoveTerrainTileAt(Vector3Int tilePosition)
         {
             return _terrainTileMap.Remove(tilePosition);
         }
+
+        public void ClearTerrainTileMap(Guid targetTerrainTileDefinitionGuid)
+        {
+            var tilePositionsToRemove = _terrainTileMap
+                .Where(kvp => kvp.Value == targetTerrainTileDefinitionGuid)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            foreach (var tilePosition in tilePositionsToRemove)
+            {
+                _terrainTileMap.Remove(tilePosition);
+            }
+        }
+
+#if UNITY_EDITOR
+        private void OnRemovedTerrainTileDefinition(object weakTerrainTileDefinition)
+        {
+            var terrainTileDefinition = weakTerrainTileDefinition as TerrainTileDefinition;
+            if (terrainTileDefinition == null)
+            {
+                return;
+            }
+
+            ClearTerrainTileMap(terrainTileDefinition.Guid);
+        }
+#endif
     }
 }

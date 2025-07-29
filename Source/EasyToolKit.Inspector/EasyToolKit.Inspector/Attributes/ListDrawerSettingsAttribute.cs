@@ -14,6 +14,13 @@ namespace EasyToolKit.Inspector
             set => _expanded = value;
         }
 
+        public string OnAddedElementCallback;
+        public string OnRemovedElementCallback;
+
+        public string CustomCreateElementFunction;
+        public string CustomRemoveIndexFunction;
+        public string CustomRemoveElementFunction;
+
         public bool IsDefinedExpanded => _expanded.HasValue;
 
         public ListDrawerSettingsAttribute()

@@ -4,6 +4,7 @@ using System.Reflection;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.ThirdParty.OdinSerializer;
+using EasyToolKit.ThirdParty.OdinSerializer.Utilities;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace EasyToolKit.Inspector.Editor
     public class CollectionDrawer<T> : EasyValueDrawer<T>
     {
         private static readonly GUIContent TempContent = new GUIContent();
-        
+
         private static GUIStyle s_metroHeaderLabelStyle;
         public static GUIStyle MetroHeaderLabelStyle
         {
@@ -51,10 +52,19 @@ namespace EasyToolKit.Inspector.Editor
         }
 
         private ICollectionResolver _collectionResolver;
-        private IOrderedCollectionResolver _orderedCollectionResolver;
-        private ListDrawerSettingsAttribute _listDrawerSettings;
+        [CanBeNull] private IOrderedCollectionResolver _orderedCollectionResolver;
+        [CanBeNull] private ListDrawerSettingsAttribute _listDrawerSettings;
 
         [CanBeNull] private ICodeValueResolver<Texture> _iconTextureGetterResolver;
+
+        [CanBeNull] private Action<object, object> _onAddedElementCallback;
+        [CanBeNull] private Action<object, object> _onRemovedElementCallback;
+
+        [CanBeNull] private Func<object, object> _customCreateElementFunction;
+        [CanBeNull] private Action<object, object> _customRemoveElementFunction;
+        [CanBeNull] private Action<object, int> _customRemoveIndexFunction;
+
+        private string _error;
 
         protected override void Initialize()
         {
@@ -69,23 +79,92 @@ namespace EasyToolKit.Inspector.Editor
 
             var targetType = Property.Parent.ValueEntry.ValueType;
 
-            if (_listDrawerSettings is MetroListDrawerSettingsAttribute metroListDrawerSettings)
+            if (_listDrawerSettings != null)
             {
-                if (metroListDrawerSettings.IconTextureGetter.IsNotNullOrEmpty())
+                if (_listDrawerSettings is MetroListDrawerSettingsAttribute metroListDrawerSettings)
                 {
-                    _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(metroListDrawerSettings.IconTextureGetter, targetType);
+                    if (metroListDrawerSettings.IconTextureGetter.IsNotNullOrEmpty())
+                    {
+                        _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(metroListDrawerSettings.IconTextureGetter, targetType);
+                    }
+                }
+
+                try
+                {
+                    if (_listDrawerSettings.OnAddedElementCallback.IsNotNullOrEmpty())
+                    {
+                        var onAddedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnAddedElementCallback, BindingFlagsHelper.All(), typeof(object))
+                            ?? throw new Exception($"Cannot find method '{_listDrawerSettings.OnAddedElementCallback}' in '{targetType}'");
+
+                        _onAddedElementCallback = (instance, value) =>
+                        {
+                            onAddedElementMethod.Invoke(instance, new object[] { value });
+                        };
+                    }
+
+                    if (_listDrawerSettings.OnRemovedElementCallback.IsNotNullOrEmpty())
+                    {
+                        var onRemovedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnRemovedElementCallback, BindingFlagsHelper.All(), typeof(object))
+                            ?? throw new Exception($"Cannot find method '{_listDrawerSettings.OnRemovedElementCallback}' in '{targetType}'");
+
+                        _onRemovedElementCallback = (instance, value) =>
+                        {
+                            onRemovedElementMethod.Invoke(instance, new object[] { value });
+                        };
+                    }
+
+                    if (_listDrawerSettings.CustomCreateElementFunction.IsNotNullOrEmpty())
+                    {
+                        var customCreateElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomCreateElementFunction, BindingFlagsHelper.All())
+                            ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomCreateElementFunction}' in '{targetType}'");
+
+                        _customCreateElementFunction = instance =>
+                        {
+                            return customCreateElementFunction.Invoke(instance, null);
+                        };
+                    }
+
+                    if (_listDrawerSettings.CustomRemoveElementFunction.IsNotNullOrEmpty())
+                    {
+                        var customRemoveElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveElementFunction, BindingFlagsHelper.All())
+                            ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomRemoveElementFunction}' in '{targetType}'");
+
+                        _customRemoveElementFunction = (instance, value) =>
+                        {
+                            customRemoveElementFunction.Invoke(instance, new object[] { value });
+                        };
+                    }
+
+                    if (_listDrawerSettings.CustomRemoveIndexFunction.IsNotNullOrEmpty())
+                    {
+                        var customRemoveIndexFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveIndexFunction, BindingFlagsHelper.All(), typeof(int)) 
+                            ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomRemoveIndexFunction}' in '{targetType}'");
+                        _customRemoveIndexFunction = (instance, index) =>
+                        {
+                            customRemoveIndexFunction.Invoke(instance, new object[] { index });
+                        };
+                    }
+                }
+                catch (Exception e)
+                {
+                    _error = e.Message;
                 }
             }
         }
 
         protected override void DrawProperty(GUIContent label)
         {
+            if (_error.IsNotNullOrEmpty())
+            {
+                EditorGUILayout.HelpBox(_error, MessageType.Error);
+                return;
+            }
+
             if (_iconTextureGetterResolver != null && _iconTextureGetterResolver.HasError(out var error))
             {
                 EditorGUILayout.HelpBox(error, MessageType.Error);
                 return;
             }
-
 
             EasyEditorGUI.BeginIndentedVertical(EasyGUIStyles.PropertyPadding);
 
@@ -112,9 +191,9 @@ namespace EasyToolKit.Inspector.Editor
 
             if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
             {
-                _collectionResolver.QueueInsertElement(GetValueToAdd());
+                DoAddElement(GetValueToAdd());
             }
-            
+
             EasyEditorGUI.EndHorizontalToolbar();
         }
 
@@ -140,18 +219,18 @@ namespace EasyToolKit.Inspector.Editor
                 GUILayout.ExpandWidth(false),
                 GUILayout.Width(30),
                 GUILayout.Height(30));
-            
+
             if (GUI.Button(btnRect, GUIContent.none, "Button"))
             {
                 EasyGUIHelper.RemoveFocusControl();
-                _collectionResolver.QueueInsertElement(GetValueToAdd());
+                DoAddElement(GetValueToAdd());
             }
-            
+
             if (Event.current.type == EventType.Repaint)
             {
                 EasyEditorIcons.Plus.Draw(btnRect.AlignCenter(25, 25));
             }
-            
+
             EasyEditorGUI.EndHorizontalToolbar();
         }
 
@@ -187,7 +266,7 @@ namespace EasyToolKit.Inspector.Editor
 
             var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 20, 20);
             var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 22, dragHandleRect.y + 1, 14, 14);
-                
+
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
             property.Draw(null);
@@ -196,11 +275,11 @@ namespace EasyToolKit.Inspector.Editor
             {
                 if (_orderedCollectionResolver != null)
                 {
-                    _orderedCollectionResolver.QueueRemoveElementAt(index);
+                    DoRemoveElementAt(index, property.ValueEntry.WeakSmartValue);
                 }
                 else
                 {
-                    //TODO 非顺序容器的元素删除
+                    DoRemoveElement(property.ValueEntry.WeakSmartValue);
                 }
             }
 
@@ -215,7 +294,7 @@ namespace EasyToolKit.Inspector.Editor
 
             var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 23, 23);
             var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 37, dragHandleRect.y - 5, 30, 30);
-                
+
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
             property.Draw(null);
@@ -226,14 +305,14 @@ namespace EasyToolKit.Inspector.Editor
 
                 if (_orderedCollectionResolver != null)
                 {
-                    _orderedCollectionResolver.QueueRemoveElementAt(index);
+                    DoRemoveElementAt(index, property.ValueEntry.WeakSmartValue);
                 }
                 else
                 {
-                    //TODO 非顺序容器的元素删除
+                    DoRemoveElement(property.ValueEntry.WeakSmartValue);
                 }
             }
-            
+
             if (Event.current.type == EventType.Repaint)
             {
                 EasyEditorIcons.X.Draw(removeBtnRect.AlignCenter(25, 25));
@@ -243,13 +322,53 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndListItem();
         }
 
+        private void DoAddElement(object valueToAdd)
+        {
+            _collectionResolver.QueueInsertElement(valueToAdd);
+            _onAddedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, valueToAdd);
+        }
+
+        private void DoRemoveElementAt(int index, object elementToRemove)
+        {
+            if (_customRemoveIndexFunction != null)
+            {
+                _customRemoveIndexFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue, index);
+            }
+            else
+            {
+                Assert.IsNotNull(_orderedCollectionResolver);
+                _orderedCollectionResolver.QueueRemoveElementAt(index);
+            }
+
+            _onRemovedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+        }
+
+        private void DoRemoveElement(object elementToRemove)
+        {
+            if (_customRemoveElementFunction != null)
+            {
+                _customRemoveElementFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+            }
+            else
+            {
+                _collectionResolver.QueueRemoveElement(elementToRemove);
+            }
+
+            _onRemovedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+        }
+
         private object GetValueToAdd()
         {
+            if (_customCreateElementFunction != null)
+            {
+                return _customCreateElementFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue);
+            }
+
             if (_collectionResolver.ElementType.IsInheritsFrom<UnityEngine.Object>())
             {
                 return null;
             }
-        
+
             return UnitySerializationUtility.CreateDefaultUnityInitializedObject(_collectionResolver.ElementType);
         }
     }

@@ -64,8 +64,7 @@ namespace EasyToolKit.Core
 
         public static Func<object> CreateStaticValueGetter(Type resultType, Type rootType, string path)
         {
-            bool rootIsStatic;
-            var memberPath = GetMemberPath(rootType, ref resultType, path, out rootIsStatic, isSet: false);
+            var memberPath = GetMemberPath(rootType, ref resultType, path, out bool rootIsStatic);
 
             if (rootIsStatic == false)
             {
@@ -85,7 +84,7 @@ namespace EasyToolKit.Core
 
         public static Func<object, object> CreateInstanceValueGetter(Type targetType, Type resultType, string path)
         {
-            var memberPath = GetMemberPath(targetType, ref resultType, path, out var rootIsStatic, isSet: false);
+            var memberPath = GetMemberPath(targetType, ref resultType, path, out var rootIsStatic);
 
             if (rootIsStatic)
             {
@@ -168,7 +167,7 @@ namespace EasyToolKit.Core
         }
 
         private static List<PathStep> GetMemberPath(Type rootType, ref Type resultType, string path,
-            out bool rootIsStatic, bool isSet)
+            out bool rootIsStatic)
         {
             if (path.IsNullOrWhitespace())
             {

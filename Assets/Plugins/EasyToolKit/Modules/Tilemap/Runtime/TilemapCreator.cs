@@ -10,7 +10,7 @@ namespace EasyToolKit.Tilemap
     {
         [SerializeField, InlineEditor] private TilemapAsset _asset;
 
-        [SerializeField] private GameObject _mapObject;
+        [SerializeField, HideInInspector] private GameObject _mapObject;
 
         public TilemapAsset Asset => _asset;
 
@@ -73,20 +73,18 @@ namespace EasyToolKit.Tilemap
                 }
             }
 
-            foreach (var terrainTileDef in Asset.TerrainTileDefinitions)
+            foreach (var terrainTileDefiniton in Asset.TerrainTileDefinitions)
             {
-                var terrainObject = terrainObjects.FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDef.Guid);
+                var terrainObject = terrainObjects.FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefiniton.Guid);
                 if (terrainObject == null)
                 {
-                    terrainObject = CreateTerrainObject(terrainTileDef);
+                    terrainObject = CreateTerrainObject(terrainTileDefiniton);
                 }
             }
         }
 
         public void ClearAllMap()
         {
-            EnsureInitializeMap();
-
             foreach (var terrainObject in MapObject.GetComponentsInChildren<TerrainObject>(true))
             {
                 terrainObject.ClearTiles();
@@ -95,6 +93,8 @@ namespace EasyToolKit.Tilemap
 
         public void ClearMap(Guid targetTerrainTileDefinitionGuid)
         {
+            EnsureInitializeMap();
+
             var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
             if (targetTerrainObject == null)
             {
@@ -120,20 +120,19 @@ namespace EasyToolKit.Tilemap
                 .FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefinitionGuid);
         }
 
-        public TerrainObject FindOrCreateTerrainObject(Guid terrainTileDefinitionGuid)
+        public void GenerateAllMap()
         {
-            var terrainObject = FindTerrainObject(terrainTileDefinitionGuid);
-
-            if (terrainObject == null)
+            foreach (var terrainTileDefinition in Asset.TerrainTileDefinitions)
             {
-                terrainObject = CreateTerrainObject(Asset.TryGetTerrainTileDefinitionByGuid(terrainTileDefinitionGuid));
+                GenerateMap(terrainTileDefinition.Guid);
             }
-            return terrainObject;
         }
 
         public void GenerateMap(Guid targetTerrainTileDefinitionGuid)
         {
-            var targetTerrainObject = FindOrCreateTerrainObject(targetTerrainTileDefinitionGuid);
+            EnsureInitializeMap();
+
+            var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
 
             foreach (var terrainTile in Asset.EnumerateTerrainTiles(targetTerrainTileDefinitionGuid))
             {

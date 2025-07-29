@@ -1,19 +1,19 @@
 using EasyToolKit.ThirdParty.OdinSerializer;
+using JetBrains.Annotations;
 using System;
 
 namespace EasyToolKit.Core
 {
-
     public class DefaultCodeValueResolver : ICodeValueResolver
     {
         private readonly string _code;
         private readonly Type _resultType;
-        private readonly Type _targetType;
+        [CanBeNull] private readonly Type _targetType;
         private bool _isChecked;
         private Func<object, object> _resolver;
         private string _error;
 
-        public DefaultCodeValueResolver(string code, Type resultType, Type targetType)
+        public DefaultCodeValueResolver(string code, Type resultType, [CanBeNull] Type targetType)
         {
             _code = code;
             _resultType = resultType;
@@ -34,16 +34,13 @@ namespace EasyToolKit.Core
             return suc;
         }
 
-        private bool HasErrorImpl(out string error, Type targetType = null)
+        public static bool TryAnalyseCode(string code, [CanBeNull] Type targetType, out Type rootType, out string path, out string error)
         {
-            if (_code.IsNullOrWhiteSpace())
-            {
-                error = "Code cannot be null or empty.";
-                return true;
-            }
+            rootType = null;
+            path = null;
+            error = null;
 
-            Type rootType = null;
-            if (TryGetArgument("-t:", out var rootTypeText))
+            if (TryGetArgument(code, "-t:", out var rootTypeText))
             {
                 try
                 {
@@ -52,7 +49,7 @@ namespace EasyToolKit.Core
                 catch (Exception e)
                 {
                     error = $"Get root type '{rootTypeText}' failed: {e.Message}";
-                    return true;
+                    return false;
                 }
             }
             else
@@ -60,22 +57,53 @@ namespace EasyToolKit.Core
                 if (targetType == null)
                 {
                     error = "Target type cannot be null when argument '-t:' is specified.";
-                    return true;
+                    return false;
                 }
             }
 
-            string path = null;
-            if (!TryGetArgument("-p:", out path))
+            path = null;
+            if (!TryGetArgument(code, "-p:", out path))
             {
                 if (rootType != null)
                 {
                     error = "Path argument '-p:' is required when '-t:' is specified.";
-                    return true;
+                    return false;
                 }
                 else
                 {
-                    path = _code;
+                    path = code;
                 }
+            }
+
+            return true;
+        }
+
+        private static bool TryGetArgument(string code, string argumentType, out string argumentContent)
+        {
+            var i = code.IndexOf(argumentType, StringComparison.OrdinalIgnoreCase);
+            if (i != -1)
+            {
+                i += argumentType.Length;
+                var rest = code[i..];
+                argumentContent = rest.Split(' ')[0];
+                return true;
+            }
+
+            argumentContent = null;
+            return false;
+        }
+
+        private bool HasErrorImpl(out string error, Type targetType = null)
+        {
+            if (_code.IsNullOrWhiteSpace())
+            {
+                error = "Code cannot be null or empty.";
+                return true;
+            }
+
+            if (!TryAnalyseCode(_code, targetType, out var rootType, out var path, out error))
+            {
+                return true;
             }
 
             try
@@ -98,21 +126,6 @@ namespace EasyToolKit.Core
             }
 
             error = null;
-            return false;
-        }
-
-        private bool TryGetArgument(string argumentType, out string argumentContent)
-        {
-            var i = _code.IndexOf(argumentType, StringComparison.OrdinalIgnoreCase);
-            if (i != -1)
-            {
-                i += argumentType.Length;
-                var rest = _code[i..];
-                argumentContent = rest.Split(' ')[0];
-                return true;
-            }
-
-            argumentContent = null;
             return false;
         }
 
