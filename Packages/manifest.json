@@ -1,10 +1,10 @@
 {
   "dependencies": {
-    "com.boxqkrtm.ide.cursor": "git@github.com:boxqkrtm/com.unity.ide.cursor.git",
     "com.cysharp.unitask": "2.5.10",
     "com.github-glitchenzo.nugetforunity": "4.4.0",
     "com.unity.collab-proxy": "2.8.2",
     "com.unity.feature.development": "1.0.1",
+    "com.unity.ide.cursor": "2.0.23",
     "com.unity.textmeshpro": "3.0.7",
     "com.unity.timeline": "1.7.6",
     "com.unity.ugui": "1.0.0",
@@ -47,7 +47,8 @@
       "url": "https://package.openupm.com",
       "scopes": [
         "com.cysharp.unitask",
-        "com.github-glitchenzo.nugetforunity"
+        "com.github-glitchenzo.nugetforunity",
+        "com.unity.ide.cursor"
       ]
     }
   ]

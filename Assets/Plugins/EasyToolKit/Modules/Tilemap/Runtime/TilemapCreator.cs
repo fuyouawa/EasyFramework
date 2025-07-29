@@ -8,6 +8,7 @@ namespace EasyToolKit.Tilemap
 {
     public class TilemapCreator : MonoBehaviour
     {
+        [LabelText("地图资产")]
         [SerializeField, InlineEditor] private TilemapAsset _asset;
 
         [SerializeField, HideInInspector] private GameObject _mapObject;
@@ -67,13 +68,13 @@ namespace EasyToolKit.Tilemap
 
             foreach (var terrainObject in terrainObjects)
             {
-                if (!Asset.TerrainTileDefinitions.Any(terrainTile => terrainTile.Guid == terrainObject.TargetTerrainTileDefinitionGuid))
+                if (!Asset.TerrainTileMap.DefinitionsAsset.Contains(terrainObject.TargetTerrainTileDefinitionGuid))
                 {
                     Destroy(terrainObject.gameObject);
                 }
             }
 
-            foreach (var terrainTileDefiniton in Asset.TerrainTileDefinitions)
+            foreach (var terrainTileDefiniton in Asset.TerrainTileMap.DefinitionsAsset)
             {
                 var terrainObject = terrainObjects.FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefiniton.Guid);
                 if (terrainObject == null)
@@ -122,7 +123,7 @@ namespace EasyToolKit.Tilemap
 
         public void GenerateAllMap()
         {
-            foreach (var terrainTileDefinition in Asset.TerrainTileDefinitions)
+            foreach (var terrainTileDefinition in Asset.TerrainTileMap.DefinitionsAsset)
             {
                 GenerateMap(terrainTileDefinition.Guid);
             }
@@ -134,11 +135,11 @@ namespace EasyToolKit.Tilemap
 
             var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
 
-            foreach (var terrainTile in Asset.EnumerateTerrainTiles(targetTerrainTileDefinitionGuid))
+            foreach (var terrainTile in Asset.TerrainTileMap.EnumerateMatchedMap(targetTerrainTileDefinitionGuid))
             {
                 var tilePosition = terrainTile.TilePosition;
                 var tileWorldPosition = TilePositionToWorldPosition(tilePosition);
-                var ruleType = Asset.CalculateTerrainRuleTypeAt(tilePosition);
+                var ruleType = Asset.TerrainTileMap.CalculateRuleTypeAt(tilePosition);
                 var tileInstance = terrainTile.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
                 tileInstance.transform.SetParent(targetTerrainObject.transform);
                 tileInstance.transform.position = tileWorldPosition;

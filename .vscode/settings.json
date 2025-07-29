@@ -26,10 +26,10 @@
         "**/Logs/**": true,
         "**/Build/**": true
     },
-    "dotnet.defaultSolution": "EasyToolKit.sln",
     "dotrush.roslyn.projectOrSolutionFiles": [
         "e:\\Code\\Unity\\EasyToolKit\\Source\\EasyToolKit.Core\\EasyToolKit.Core.sln",
         "e:\\Code\\Unity\\EasyToolKit\\Source\\EasyToolKit.Inspector\\EasyToolKit.Inspector.sln",
         "e:\\Code\\Unity\\EasyToolKit\\EasyToolKit.sln"
-    ]
+    ],
+    "dotnet.defaultSolution": "EasyToolKit.sln"
 }
