@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1028f667e25e654f9b84d7fa2ef2426, type: 3}
   m_Name: DemoTerrainTileDefinitionsAsset
   m_EditorClassIdentifier: 
-  _definitions: []
+  _definitions:
+  - _name: 
+    _debugCubeColor: {r: 0, g: 1, b: 0, a: 1}
+    _drawDebugCube: 1
+    _ruleSetAsset: {fileID: 0}
+    _serializedGuid: 2afcc860be94ac48498f6651c79d0f6fc0
+    _serializedMapData: 

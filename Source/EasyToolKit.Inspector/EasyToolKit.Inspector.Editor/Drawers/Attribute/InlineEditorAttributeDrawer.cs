@@ -18,6 +18,13 @@ namespace EasyToolKit.Inspector.Editor
                     DrawObjectField(label);
                     DrawEditor();
                     break;
+                case InlineEditorStyle.PlaceWithHide:
+                    if (ValueEntry.SmartValue == null)
+                    {
+                        DrawObjectField(label);
+                    }
+                    DrawEditor();
+                    break;
                 case InlineEditorStyle.Box:
                     DrawObjectField(label);
                     break;

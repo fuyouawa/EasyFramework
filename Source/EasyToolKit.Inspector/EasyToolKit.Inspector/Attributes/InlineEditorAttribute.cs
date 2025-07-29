@@ -6,6 +6,7 @@ namespace EasyToolKit.Inspector
     public enum InlineEditorStyle
     {
         Place,
+        PlaceWithHide,
         Box,
         Foldout,
     }

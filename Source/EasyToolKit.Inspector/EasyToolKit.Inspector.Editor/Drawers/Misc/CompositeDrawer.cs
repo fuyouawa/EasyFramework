@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
+    [DrawerPriority(DrawerPriorityLevel.Value - 1)]
     public class CompositeDrawer<T> : EasyValueDrawer<T>
     {
         protected override bool CanDrawValueProperty(InspectorProperty property)

@@ -19,7 +19,8 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileMap : ISerializationCallbackReceiver, IEnumerable<TerrainTileBlockDefinition>
     {
         [LabelText("地形瓦片定义表资产")]
-        [SerializeField, InlineEditor] private TerrainTileDefinitionsAsset _definitionsAsset;
+        [InlineEditor(Style = InlineEditorStyle.PlaceWithHide)]
+        [SerializeField] private TerrainTileDefinitionsAsset _definitionsAsset;
         
         private Dictionary<Vector3Int, Guid> _definitionGuidMap = new Dictionary<Vector3Int, Guid>();
 
@@ -42,10 +43,10 @@ namespace EasyToolKit.Tilemap
             return null;
         }
 
-        public void ClearInvalidTiles()
+        public bool ClearInvalidTiles()
         {
             var invalidTilePositions = _definitionGuidMap
-                .Where(kvp => !DefinitionsAsset.Definitions.Any(definition => definition.Guid == kvp.Value))
+                .Where(kvp => !DefinitionsAsset.Contains(kvp.Value))
                 .Select(kvp => kvp.Key)
                 .ToList();
 
@@ -53,6 +54,9 @@ namespace EasyToolKit.Tilemap
             {
                 RemoveTileAt(tilePosition);
             }
+
+            Debug.Log($"Clear invalid tiles: {invalidTilePositions.Count}");
+            return invalidTilePositions.Count > 0;
         }
 
         public IEnumerable<TerrainTileBlockDefinition> EnumerateMatchedMap(Guid matchDefinitionGuid)
@@ -216,7 +220,7 @@ namespace EasyToolKit.Tilemap
             return _definitionGuidMap.Remove(tilePosition);
         }
 
-        public void ClearMatchedMap(Guid matchDefinitionGuid)
+        public bool ClearMatchedMap(Guid matchDefinitionGuid)
         {
             var tilePositionsToRemove = _definitionGuidMap
                 .Where(kvp => kvp.Value == matchDefinitionGuid)
@@ -227,6 +231,8 @@ namespace EasyToolKit.Tilemap
             {
                 _definitionGuidMap.Remove(tilePosition);
             }
+
+            return tilePositionsToRemove.Count > 0;
         }
 
         public IEnumerator<TerrainTileBlockDefinition> GetEnumerator()

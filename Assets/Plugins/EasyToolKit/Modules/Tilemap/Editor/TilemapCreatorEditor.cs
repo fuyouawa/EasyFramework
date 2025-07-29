@@ -13,6 +13,12 @@ namespace EasyToolKit.Tilemap.Editor
         private TerrainTileDefinition _terrainTileDefinition;
         private TilemapCreator _target;
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _target = (TilemapCreator)target;
+        }
+
         protected override void DrawTree()
         {
             Tree.BeginDraw();
@@ -39,8 +45,6 @@ namespace EasyToolKit.Tilemap.Editor
 
         void OnSceneGUI()
         {
-            _target = (TilemapCreator)target;
-
             if (_target.Asset == null)
                 return;
 
@@ -185,17 +189,22 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (IsMouseDown())
             {
+
                 switch (TerrainTileDefinitionDrawer.SelectedDrawMode)
                 {
                     case DrawMode.Brush:
+                        Undo.RecordObject(_target.Asset, $"Brush tile at {tilePosition} in {_target.Asset.name}");
                         _target.Asset.TerrainTileMap.SetTileAt(tilePosition, _terrainTileDefinition.Guid);
                         break;
                     case DrawMode.Eraser:
+                        Undo.RecordObject(_target.Asset, $"Erase tile at {tilePosition} in {_target.Asset.name}");
                         _target.Asset.TerrainTileMap.RemoveTileAt(tilePosition);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
+                EasyEditorUtility.SetUnityObjectDirty(_target.Asset);
 
                 FinishMouseDown();
             }

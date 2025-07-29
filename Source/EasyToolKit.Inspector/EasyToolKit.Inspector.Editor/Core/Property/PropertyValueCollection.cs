@@ -11,6 +11,8 @@ namespace EasyToolKit.Inspector.Editor
     {
         InspectorProperty Property { get; }
         bool Dirty { get; }
+        void ForceMakeDirty();
+
         internal void Update();
         internal bool ApplyChanges();
     }
@@ -84,6 +86,11 @@ namespace EasyToolKit.Inspector.Editor
         private void ClearDirty()
         {
             Dirty = false;
+        }
+
+        public void ForceMakeDirty()
+        {
+            MakeDirty();
         }
 
         void IPropertyValueCollection.Update()

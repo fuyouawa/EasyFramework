@@ -10,7 +10,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class PropertyTree
     {
-        private readonly List<InspectorProperty> _dirtyProperties = new List<InspectorProperty>();
+        private readonly HashSet<InspectorProperty> _dirtyProperties = new HashSet<InspectorProperty>();
         private Action _pendingCallbacks;
         private Action _pendingCallbacksUntilRepaint;
 
@@ -182,7 +182,10 @@ namespace EasyToolKit.Inspector.Editor
             {
                 if (property.ChildrenResolver != null)
                 {
-                    property.ChildrenResolver.ApplyChanges();
+                    if (property.ChildrenResolver.ApplyChanges())
+                    {
+                        changed = true;
+                    }
                 }
 
                 if (property.ValueEntry != null)

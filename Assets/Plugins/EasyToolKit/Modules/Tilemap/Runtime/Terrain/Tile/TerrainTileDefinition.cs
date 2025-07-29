@@ -17,7 +17,7 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private Color _debugCubeColor = Color.green;
 
         [LabelText("绘制调试块")]
-        [SerializeField] private bool _drawDebugCube = false;
+        [SerializeField] private bool _drawDebugCube = true;
 
         [InlineEditor(Style = InlineEditorStyle.Foldout)]
         [LabelText("规则集")]

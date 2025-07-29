@@ -17,7 +17,10 @@ namespace EasyToolKit.Tilemap
         private List<TerrainTileDefinition> _definitions = new List<TerrainTileDefinition>();
 
         public List<TerrainTileDefinition> Definitions => _definitions;
+
+#if UNITY_EDITOR
         public event Action<TerrainTileDefinition> OnRemovedDefinition;
+#endif
 
         public IEnumerator<TerrainTileDefinition> GetEnumerator()
         {
@@ -31,6 +34,11 @@ namespace EasyToolKit.Tilemap
 
         public bool Contains(Guid guid)
         {
+            if (_definitions.Count == 0)
+            {
+                return false;
+            }
+
             return _definitions.Any(definition => definition.Guid == guid);
         }
 
@@ -39,10 +47,12 @@ namespace EasyToolKit.Tilemap
             return GetEnumerator();
         }
 
+#if UNITY_EDITOR
         private void TriggerRemovedDefinition(object weakDefinition)
         {
             var definition = weakDefinition as TerrainTileDefinition;
             OnRemovedDefinition?.Invoke(definition);
         }
+#endif
     }
 }
