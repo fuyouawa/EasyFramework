@@ -360,7 +360,7 @@ namespace EasyToolKit.Core
                 return new Type[] { };
             }
 
-            Assert.True(sourceArgs.Length == targetArgs.Length);
+            Assert.IsTrue(sourceArgs.Length == targetArgs.Length);
 
             var missingArgs = new List<Type>();
             for (int i = 0; i < sourceArgs.Length; i++)

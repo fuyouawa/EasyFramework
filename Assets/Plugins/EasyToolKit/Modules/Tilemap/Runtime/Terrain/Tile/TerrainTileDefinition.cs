@@ -56,8 +56,8 @@ namespace EasyToolKit.Tilemap
 
         public static bool operator ==(TerrainTileDefinition left, TerrainTileDefinition right)
         {
-            if (ReferenceEquals(left, null))
-                return ReferenceEquals(right, null);
+            if (left is null)
+                return right is null;
 
             return left.Equals(right);
         }

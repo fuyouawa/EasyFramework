@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: -1081994611, guid: 81aeb58f16b246a49966556b632e412f, type: 3}
   m_Name: InspectorConfigAsset
   m_EditorClassIdentifier: 
+  DrawMonoScriptInEditor: 1

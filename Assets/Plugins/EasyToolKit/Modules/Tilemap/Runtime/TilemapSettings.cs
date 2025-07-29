@@ -7,6 +7,9 @@ namespace EasyToolKit.Tilemap
     [Serializable]
     public class TilemapSettings
     {
+        [LabelText("地图名称")]
+        [SerializeField] private string _mapName = "TilemapCreator_Map";
+
         [LabelText("地基范围")]
         [SerializeField] private Vector2Int _baseRange = new Vector2Int(20, 20);
 
@@ -19,6 +22,8 @@ namespace EasyToolKit.Tilemap
 
         [LabelText("显示调试数据")]
         [SerializeField] private bool _drawDebugData = false;
+
+        public string MapName => _mapName;
 
         public Vector2Int BaseRange => _baseRange;
 

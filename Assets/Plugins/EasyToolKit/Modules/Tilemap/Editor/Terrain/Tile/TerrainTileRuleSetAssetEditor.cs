@@ -9,7 +9,6 @@ namespace EasyToolKit.Tilemap.Editor
     public class TerrainTileRuleSetAssetEditor : EasyEditor
     {
         private static readonly GUIContent TempContent = new GUIContent();
-        private static readonly GUIContent TempContent2 = new GUIContent();
 
         protected override void DrawTree()
         {
@@ -17,10 +16,6 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (!IsInlineEditor)
             {
-                EditorGUILayout.LabelField(
-                    TempContent.SetText("GUID"),
-                    TempContent2.SetText(((TerrainTileRuleSetAsset)target).Guid.ToString("D")));
-
                 MetroBoxGroupAttributeDrawer.BeginDraw(TempContent.SetText("地形瓦片规则集"), null);
             }
 

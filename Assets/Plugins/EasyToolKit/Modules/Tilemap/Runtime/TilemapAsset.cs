@@ -1,3 +1,4 @@
+using EasyToolKit.Core;
 using EasyToolKit.Inspector;
 using EasyToolKit.ThirdParty.OdinSerializer;
 using System;
@@ -24,7 +25,7 @@ namespace EasyToolKit.Tilemap
 
         [EndFoldoutGroup]
         [MetroListDrawerSettings]
-        [LabelText("地形瓦片表")]
+        [LabelText("地形瓦片定义表")]
         [SerializeField]
         private List<TerrainTileDefinition> _terrainTileDefinitions = new List<TerrainTileDefinition>();
 
@@ -33,34 +34,56 @@ namespace EasyToolKit.Tilemap
         public TilemapSettings Settings => _settings;
         public List<TerrainTileDefinition> TerrainTileDefinitions => _terrainTileDefinitions;
 
-        public TerrainTileDefinition TryGetTerrainTileByGuid(Guid guid)
+        public TerrainTileDefinition TryGetTerrainTileDefinitionByGuid(Guid guid)
         {
             return TerrainTileDefinitions.FirstOrDefault(terrainTile => terrainTile.Guid == guid);
         }
 
-        public void SetTerrainTile(Vector3Int tilePosition, TerrainTileDefinition terrainTileDefinition)
+        public void SetTileAt(Vector3Int tilePosition, Guid terrainTileDefinitionGuid)
         {
-            _terrainTileMap[tilePosition] = terrainTileDefinition.Guid;
+            _terrainTileMap[tilePosition] = terrainTileDefinitionGuid;
         }
 
-        public TerrainTileDefinition TryGetTerrainTileAt(Vector3Int tilePosition)
+        public TerrainTileDefinition TryGetTerrainTileDefinitionAt(Vector3Int tilePosition)
         {
             if (_terrainTileMap.TryGetValue(tilePosition, out var guid))
             {
-                return TryGetTerrainTileByGuid(guid);
+                return TryGetTerrainTileDefinitionByGuid(guid);
             }
 
             return null;
         }
 
-        public IEnumerable<TerrainTileBlock> EnumerateTerrainTiles()
+        public IEnumerable<TerrainTileBlock> EnumerateAllTerrainTiles()
         {
             foreach (var kvp in _terrainTileMap)
             {
                 var tilePosition = kvp.Key;
                 var guid = kvp.Value;
-                var definition = TryGetTerrainTileByGuid(guid);
-                if (definition != null)
+                var definition = TryGetTerrainTileDefinitionByGuid(guid);
+                Assert.IsNotNull(definition);
+                Assert.IsTrue(guid != Guid.Empty);
+
+                yield return new TerrainTileBlock
+                {
+                    TilePosition = tilePosition,
+                    Definition = definition,
+                };
+            }
+        }
+
+        public IEnumerable<TerrainTileBlock> EnumerateTerrainTiles(Guid targetTerrainTileDefinitionGuid)
+        {
+            var definition = TryGetTerrainTileDefinitionByGuid(targetTerrainTileDefinitionGuid);
+            Assert.IsNotNull(definition);
+
+            foreach (var kvp in _terrainTileMap)
+            {
+                var tilePosition = kvp.Key;
+                var guid = kvp.Value;
+                Assert.IsTrue(guid != Guid.Empty);
+
+                if (guid == targetTerrainTileDefinitionGuid)
                 {
                     yield return new TerrainTileBlock
                     {
@@ -106,7 +129,7 @@ namespace EasyToolKit.Tilemap
         public TerrainRuleType CalculateTerrainRuleTypeAt(Vector3Int tilePosition)
         {
             var sudoku = GetTileGuidSudokuAt(tilePosition);
-            
+
             // Fill
             if (sudoku[0, 2] != null && sudoku[1, 2] != null && sudoku[2, 2] != null &&
                 sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
@@ -114,7 +137,7 @@ namespace EasyToolKit.Tilemap
             {
                 return TerrainRuleType.Fill;
             }
-            
+
             // Edge
             if (sudoku[0, 2] == null && sudoku[1, 2] == null && sudoku[2, 2] == null &&
                 sudoku[0, 1] != null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
@@ -143,7 +166,7 @@ namespace EasyToolKit.Tilemap
             {
                 return TerrainRuleType.RightEdge;
             }
-            
+
             // Exterior corner
             if (sudoku[0, 2] == null && sudoku[1, 2] == null && sudoku[2, 2] == null &&
                 sudoku[0, 1] == null && sudoku[1, 1] != null && sudoku[2, 1] != null &&
@@ -206,7 +229,7 @@ namespace EasyToolKit.Tilemap
         }
 
 
-        public bool RemoveTerrainTile(Vector3Int tilePosition)
+        public bool RemoveTerrainTileAt(Vector3Int tilePosition)
         {
             return _terrainTileMap.Remove(tilePosition);
         }

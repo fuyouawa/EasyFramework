@@ -10,7 +10,7 @@ namespace EasyToolKit.Tilemap.Editor
     [CustomEditor(typeof(TilemapCreator))]
     public class TilemapCreatorEditor : EasyEditor
     {
-        private TerrainTileDefinition _terrainTileDefinition;
+        private TerrainTileDefinition _terrainTileDef;
         private TilemapCreator _target;
 
         void OnSceneGUI()
@@ -23,11 +23,11 @@ namespace EasyToolKit.Tilemap.Editor
             var selectedItemGuid = TerrainTileDefinitionDrawer.SelectedItemGuid;
             if (selectedItemGuid.HasValue)
             {
-                _terrainTileDefinition = _target.Asset.TryGetTerrainTileByGuid(selectedItemGuid.Value);
+                _terrainTileDef = _target.Asset.TryGetTerrainTileDefinitionByGuid(selectedItemGuid.Value);
             }
             else
             {
-                _terrainTileDefinition = null;
+                _terrainTileDef = null;
             }
 
             DrawBase();
@@ -71,7 +71,7 @@ namespace EasyToolKit.Tilemap.Editor
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
             float previousRaycastDistance = float.MaxValue;
-            foreach (var block in _target.Asset.EnumerateTerrainTiles())
+            foreach (var block in _target.Asset.EnumerateAllTerrainTiles())
             {
                 var blockPosition = _target.TilePositionToWorldPosition(block.TilePosition);
 
@@ -80,7 +80,7 @@ namespace EasyToolKit.Tilemap.Editor
                     DrawCube(blockPosition, block.Definition.DebugCubeColor);
                 }
 
-                if (_terrainTileDefinition != null)
+                if (_terrainTileDef != null)
                 {
                     var center = blockPosition + Vector3.one * (tileSize * 0.5f);
                     var bounds = new Bounds(center, tileSize * Vector3.one);
@@ -98,7 +98,7 @@ namespace EasyToolKit.Tilemap.Editor
                 }
             }
 
-            if (_terrainTileDefinition != null && !handledHit)
+            if (_terrainTileDef != null && !handledHit)
             {
                 Plane plane = new Plane(Vector3.up, _target.transform.position);
                 if (plane.Raycast(ray, out float enter))
@@ -124,20 +124,20 @@ namespace EasyToolKit.Tilemap.Editor
 
             var tilePosition = _target.WorldPositionToTilePosition(hitPoint);
             var blockPosition = _target.TilePositionToWorldPosition(tilePosition);
-            var targetTerrainTileDefinition = _target.Asset.TryGetTerrainTileAt(tilePosition);
+            var targetTerrainTileDef = _target.Asset.TryGetTerrainTileDefinitionAt(tilePosition);
 
             var isErase = TerrainTileDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
             bool drawCube = true;
             if (isErase)
             {
-                if (targetTerrainTileDefinition != _terrainTileDefinition)
+                if (targetTerrainTileDef != _terrainTileDef)
                 {
                     drawCube = false;
                 }
             }
             else
             {
-                if (targetTerrainTileDefinition != null)
+                if (targetTerrainTileDef != null)
                 {
                     FixHitBlockPosition(ref blockPosition, hitPoint);
                     if (!IsInRange(blockPosition))
@@ -151,7 +151,7 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (drawCube)
             {
-                DrawCube(blockPosition, _terrainTileDefinition.DebugCubeColor);
+                DrawCube(blockPosition, _terrainTileDef.DebugCubeColor);
                 if (isErase)
                 {
                     DrawCube(blockPosition, Color.red.SetA(0.2f));
@@ -163,10 +163,10 @@ namespace EasyToolKit.Tilemap.Editor
                 switch (TerrainTileDefinitionDrawer.SelectedDrawMode)
                 {
                     case DrawMode.Brush:
-                        _target.Asset.SetTerrainTile(tilePosition, _terrainTileDefinition);
+                        _target.Asset.SetTileAt(tilePosition, _terrainTileDef.Guid);
                         break;
                     case DrawMode.Eraser:
-                        _target.Asset.RemoveTerrainTile(tilePosition);
+                        _target.Asset.RemoveTerrainTileAt(tilePosition);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

@@ -100,8 +100,8 @@ namespace EasyToolKit.Inspector.Editor
             }
             else
             {
-                Assert.True(Property.Parent.ValueEntry != null);
-                Assert.True(Property.Info.ValueAccessor != null);
+                Assert.IsNotNull(Property.Parent.ValueEntry);
+                Assert.IsNotNull(Property.Info.ValueAccessor);
 
                 for (int i = 0; i < Property.Tree.Targets.Length; i++)
                 {
@@ -120,8 +120,8 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (!Dirty) return false;
             
-            Assert.True(Property.Parent.ValueEntry != null);
-            Assert.True(Property.Info.ValueAccessor != null);
+            Assert.IsNotNull(Property.Parent.ValueEntry);
+            Assert.IsNotNull(Property.Info.ValueAccessor);
 
             for (int i = 0; i < _values.Length; i++)
             {

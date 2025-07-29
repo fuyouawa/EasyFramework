@@ -61,7 +61,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (valueType.IsImplementsOpenGenericType(typeof(ICollection<>)))
             {
-                Assert.True(serializedProperty.isArray);
+                Assert.IsTrue(serializedProperty.isArray);
                 var elementType = valueType.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>))[0];
 
                 var accessorType = typeof(UnityCollectionAccessor<,,>)
