@@ -17,5 +17,5 @@ MonoBehaviour:
     _debugCubeColor: {r: 0, g: 1, b: 0, a: 1}
     _drawDebugCube: 1
     _ruleSetAsset: {fileID: 0}
-    _serializedGuid: 2afcc860be94ac48498f6651c79d0f6fc0
+    _serializedGuid: 2a68284d2368542949aa68a327ab59a1ff
     _serializedMapData: 

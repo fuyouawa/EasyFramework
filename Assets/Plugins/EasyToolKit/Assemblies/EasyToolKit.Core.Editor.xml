@@ -64,6 +64,13 @@
             <param name="label">The label of the foldout.</param>
             <param name="style">The style.</param>
         </member>
+        <member name="M:EasyToolKit.Core.Editor.EasyEditorGUI.HorizontalLineSeparator(UnityEngine.Color,System.Int32)">
+            <summary>
+            Draws a horizontal line separator.
+            </summary>
+            <param name="color">The color of the line.</param>
+            <param name="lineWidth">The size of the line.</param>
+        </member>
         <member name="P:EasyToolKit.Core.Editor.EasyGUIHelper.CurrentIndentAmount">
             <summary>
             Gets the current indent amount.
@@ -173,6 +180,11 @@
             Pops the label color pushed by <see cref="M:EasyToolKit.Core.Editor.EasyGUIHelper.PushLabelColor(UnityEngine.Color)"/>.
             </summary>
         </member>
+        <member name="F:EasyToolKit.Core.Editor.EasyGUIStyles.LightBorderColor">
+            <summary>
+            A light border color.
+            </summary>
+        </member>
         <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoxContainer">
             <summary>
             Box container style.
@@ -186,6 +198,51 @@
         <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.PropertyPadding">
             <summary>
             Property padding.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.Title">
+            <summary>
+            Title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoldTitle">
+            <summary>
+            Bold title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoldTitleCentered">
+            <summary>
+            Centered bold title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.BoldTitleRight">
+            <summary>
+            Right aligned bold title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.TitleCentered">
+            <summary>
+            Centered title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.TitleRight">
+            <summary>
+            Right aligned title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.Subtitle">
+            <summary>
+            Subtitle style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.SubtitleCentered">
+            <summary>
+            Centered sub-title style.
+            </summary>
+        </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.SubtitleRight">
+            <summary>
+            Right aligned sub-title style.
             </summary>
         </member>
         <member name="T:EasyToolKit.Core.Editor.GUIFrameCounter">

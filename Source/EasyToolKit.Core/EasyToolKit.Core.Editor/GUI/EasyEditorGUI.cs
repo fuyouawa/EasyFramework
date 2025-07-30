@@ -406,6 +406,64 @@ namespace EasyToolKit.Core.Editor
             GUILayout.EndVertical();
         }
 
+        /// <summary>
+        /// Draws a horizontal line separator.
+        /// </summary>
+        /// <param name="color">The color of the line.</param>
+        /// <param name="lineWidth">The size of the line.</param>
+        public static void HorizontalLineSeparator(Color color, int lineWidth = 1)
+        {
+            Rect rect = GUILayoutUtility.GetRect(lineWidth, lineWidth, GUILayout.ExpandWidth(true));
+            DrawSolidRect(rect, color, true);
+        }
+
+        public static void Title(string title, string subtitle = null, TextAlignment textAlignment = TextAlignment.Left, bool horizontalLine = true, bool boldLabel = true)
+        {
+            GUIStyle titleStyle = null;
+            GUIStyle subtitleStyle = null;
+
+            switch (textAlignment)
+            {
+                case TextAlignment.Left:
+                    titleStyle = boldLabel ? EasyGUIStyles.BoldTitle : EasyGUIStyles.Title;
+                    subtitleStyle = EasyGUIStyles.Subtitle;
+                    break;
+
+                case TextAlignment.Center:
+                    titleStyle = boldLabel ? EasyGUIStyles.BoldTitleCentered : EasyGUIStyles.TitleCentered;
+                    subtitleStyle = EasyGUIStyles.SubtitleCentered;
+                    break;
+
+                case TextAlignment.Right:
+                    titleStyle = boldLabel ? EasyGUIStyles.BoldTitleRight : EasyGUIStyles.TitleRight;
+                    subtitleStyle = EasyGUIStyles.SubtitleRight;
+                    break;
+
+                default:
+                    // Hidden feature by calling: Title("title", "subTitle", (TextAlignment)3, true, true);
+                    // This hidden feature is added because the TitleAlignment enum located in the Sirenix.OdinInspector.Attribute assembly have an extra split option.
+                    // But we don't have access to the assembly from here.
+                    titleStyle = boldLabel ? EasyGUIStyles.BoldTitle : EasyGUIStyles.Title;
+                    subtitleStyle = EasyGUIStyles.SubtitleRight;
+                    break;
+            }
+
+            Rect rect = EditorGUI.IndentedRect(EditorGUILayout.GetControlRect(false, 19, titleStyle));
+            GUI.Label(rect, title, titleStyle);
+
+            if (subtitle != null && !subtitle.IsNullOrWhiteSpace())
+            {
+                rect = EditorGUI.IndentedRect(GUILayoutUtility.GetRect(EasyGUIHelper.TempContent(subtitle), subtitleStyle));
+                GUI.Label(rect, subtitle, subtitleStyle);
+            }
+
+            if (horizontalLine)
+            {
+                DrawSolidRect(rect.AlignBottom(1), EasyGUIStyles.LightBorderColor);
+                GUILayout.Space(3f);
+            }
+        }
+
         public static void DrawBorders(Rect rect, int left, int right, int top, int bottom, bool usePlayModeTint = true)
         {
             DrawBorders(rect, left, right, top, bottom, EasyGUIStyles.BorderColor, usePlayModeTint);

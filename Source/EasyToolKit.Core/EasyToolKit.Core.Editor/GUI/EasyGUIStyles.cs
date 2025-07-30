@@ -48,6 +48,11 @@ namespace EasyToolKit.Core.Editor
         public static readonly Color HighlightedTextColor =
             EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 1) : new Color(0, 0, 0, 1);
 
+        /// <summary>
+        /// A light border color.
+        /// </summary>
+        public static readonly Color LightBorderColor = new Color32(90, 90, 90, 255);
+        
         private static GUIStyle s_none;
 
         public static GUIStyle None
@@ -246,6 +251,198 @@ namespace EasyToolKit.Core.Editor
                     s_whiteBoxStyle.normal.background = Texture2D.whiteTexture;
                 }
                 return s_whiteBoxStyle;
+            }
+        }
+
+        private static GUIStyle s_title;
+        private static GUIStyle s_boldTitle;
+        private static GUIStyle s_boldTitleCentered;
+        private static GUIStyle s_boldTitleRight;
+        private static GUIStyle s_titleCentered;
+        private static GUIStyle s_titleRight;
+        private static GUIStyle s_subtitle;
+        private static GUIStyle s_subtitleCentered;
+        private static GUIStyle s_subtitleRight;
+
+        /// <summary>
+        /// Title style.
+        /// </summary>
+        public static GUIStyle Title
+        {
+            get
+            {
+                if (s_title == null)
+                {
+                    s_title = new GUIStyle(EditorStyles.label)
+                    {
+                    };
+                    s_title.fontSize += 1;
+                }
+
+                return s_title;
+            }
+        }
+
+        /// <summary>
+        /// Bold title style.
+        /// </summary>
+        public static GUIStyle BoldTitle
+        {
+            get
+            {
+                if (s_boldTitle == null)
+                {
+                    s_boldTitle = new GUIStyle(Title)
+                    {
+                        fontStyle = FontStyle.Bold,
+                    };
+                    s_title.fontSize += 1;
+                }
+
+                return s_boldTitle;
+            }
+        }
+
+        /// <summary>
+        /// Centered bold title style.
+        /// </summary>
+        public static GUIStyle BoldTitleCentered
+        {
+            get
+            {
+                if (s_boldTitleCentered == null)
+                {
+                    s_boldTitleCentered = new GUIStyle(BoldTitle)
+                    {
+                        alignment = TextAnchor.MiddleCenter
+                    };
+                    s_boldTitleCentered.fontSize += 1;
+                }
+
+                return s_boldTitleCentered;
+            }
+        }
+
+        /// <summary>
+        /// Right aligned bold title style.
+        /// </summary>
+        public static GUIStyle BoldTitleRight
+        {
+            get
+            {
+                if (s_boldTitleRight == null)
+                {
+                    s_boldTitleRight = new GUIStyle(BoldTitle)
+                    {
+                        alignment = TextAnchor.MiddleRight
+                    };
+                    s_boldTitleRight.fontSize += 1;
+                }
+
+                return s_boldTitleRight;
+            }
+        }
+
+        /// <summary>
+        /// Centered title style.
+        /// </summary>
+        public static GUIStyle TitleCentered
+        {
+            get
+            {
+                if (s_titleCentered == null)
+                {
+                    s_titleCentered = new GUIStyle(Title)
+                    {
+                        alignment = TextAnchor.MiddleCenter
+                    };
+                    s_titleCentered.fontSize += 1;
+                }
+
+                return s_titleCentered;
+            }
+        }
+
+        /// <summary>
+        /// Right aligned title style.
+        /// </summary>
+        public static GUIStyle TitleRight
+        {
+            get
+            {
+                if (s_titleRight == null)
+                {
+                    s_titleRight = new GUIStyle(Title)
+                    {
+                        alignment = TextAnchor.MiddleRight
+                    };
+                    s_titleRight.fontSize += 1;
+                }
+
+                return s_titleRight;
+            }
+        }
+
+        /// <summary>
+        /// Subtitle style.
+        /// </summary>
+        public static GUIStyle Subtitle
+        {
+            get
+            {
+                if (s_subtitle == null)
+                {
+                    s_subtitle = new GUIStyle(Title)
+                    {
+                        font = GUI.skin.button.font,
+                        fontSize = 10,
+                        contentOffset = new Vector2(0, -3),
+                        fixedHeight = 16,
+                    };
+                    var c = s_subtitle.normal.textColor;
+                    c.a *= 0.7f;
+                    s_subtitle.normal.textColor = c;
+                }
+
+                return s_subtitle;
+            }
+        }
+
+        /// <summary>
+        /// Centered sub-title style.
+        /// </summary>
+        public static GUIStyle SubtitleCentered
+        {
+            get
+            {
+                if (s_subtitleCentered == null)
+                {
+                    s_subtitleCentered = new GUIStyle(Subtitle)
+                    {
+                        alignment = TextAnchor.MiddleCenter
+                    };
+                }
+
+                return s_subtitleCentered;
+            }
+        }
+
+        /// <summary>
+        /// Right aligned sub-title style.
+        /// </summary>
+        public static GUIStyle SubtitleRight
+        {
+            get
+            {
+                if (s_subtitleRight == null)
+                {
+                    s_subtitleRight = new GUIStyle(Subtitle)
+                    {
+                        alignment = TextAnchor.MiddleRight
+                    };
+                }
+
+                return s_subtitleRight;
             }
         }
     }

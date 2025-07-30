@@ -6,6 +6,11 @@ namespace EasyToolKit.Core
     {
         public static ICodeValueResolver CreateWeak(string code, Type resultType = null, Type targetType = null, bool needStartFlag = false)
         {
+            if (code.IsNullOrWhiteSpace())
+            {
+                return new PrimitiveCodeValueResolver(code);
+            }
+
             if (needStartFlag)
             {
                 if (code.StartsWith("@"))
@@ -25,6 +30,11 @@ namespace EasyToolKit.Core
 
         public static ICodeValueResolver<T> Create<T>(string code, Type targetType = null, bool needStartFlag = false)
         {
+            if (code.IsNullOrWhiteSpace())
+            {
+                return new PrimitiveCodeValueResolver<T>(code);
+            }
+
             if (needStartFlag)
             {
                 if (code.StartsWith("@"))

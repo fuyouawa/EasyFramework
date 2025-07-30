@@ -70,7 +70,11 @@ namespace EasyToolKit.Tilemap
             {
                 if (!Asset.TerrainTileMap.DefinitionsAsset.Contains(terrainObject.TargetTerrainTileDefinitionGuid))
                 {
+#if UNITY_EDITOR
+                    DestroyImmediate(terrainObject.gameObject);
+#else
                     Destroy(terrainObject.gameObject);
+#endif
                 }
             }
 
@@ -141,6 +145,12 @@ namespace EasyToolKit.Tilemap
                 var tileWorldPosition = TilePositionToWorldPosition(tilePosition);
                 var ruleType = Asset.TerrainTileMap.CalculateRuleTypeAt(tilePosition);
                 var tileInstance = terrainTile.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
+                if (tileInstance == null)
+                {
+                    Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
+                    continue;
+                }
+
                 tileInstance.transform.SetParent(targetTerrainObject.transform);
                 tileInstance.transform.position = tileWorldPosition;
             }

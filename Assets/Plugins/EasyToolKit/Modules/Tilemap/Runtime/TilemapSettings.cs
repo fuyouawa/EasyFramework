@@ -16,7 +16,7 @@ namespace EasyToolKit.Tilemap
         [LabelText("瓦片大小")]
         [SerializeField] private float _tileSize = 1f;
 
-        [Header("调试")]
+        [Title("调试")]
         [LabelText("地基颜色")]
         [SerializeField] private Color _baseColor = Color.white;
 

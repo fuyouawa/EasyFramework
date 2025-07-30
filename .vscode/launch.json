@@ -12,8 +12,13 @@
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.dll",
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.Editor.dll",
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.dll",
-                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.Editor.dll",
+                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.Editor.dll"
             ],
+            "request": "attach"
+        },
+        {
+            "name": "Attach to Unity",
+            "type": "vstuc",
             "request": "attach"
         }
     ]

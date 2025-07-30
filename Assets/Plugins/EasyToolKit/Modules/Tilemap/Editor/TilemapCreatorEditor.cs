@@ -2,6 +2,7 @@ using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Inspector.Editor;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace EasyToolKit.Tilemap.Editor
     {
         private TerrainTileDefinition _terrainTileDefinition;
         private TilemapCreator _target;
+
+        private bool _isMarkingRuleType = false;
+        private Dictionary<Vector3Int, TerrainRuleType> _ruleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
 
         protected override void OnEnable()
         {
@@ -24,6 +28,18 @@ namespace EasyToolKit.Tilemap.Editor
             Tree.BeginDraw();
             Tree.DrawProperties();
 
+            EasyEditorGUI.Title("调试", textAlignment: TextAlignment.Center);
+            _isMarkingRuleType = GUILayout.Toggle(_isMarkingRuleType, "标注瓦片规则类型");
+            if (GUILayout.Button("重新扫描规则类型", GUILayout.Height(30)))
+            {
+                _ruleTypeMapCache.Clear();
+                foreach (var block in _target.Asset.TerrainTileMap)
+                {
+                    _ruleTypeMapCache[block.TilePosition] = _target.Asset.TerrainTileMap.CalculateRuleTypeAt(block.TilePosition);
+                }
+            }
+
+            EasyEditorGUI.Title("地图生成", textAlignment: TextAlignment.Center);
             if (GUILayout.Button("初始化地图", GUILayout.Height(30)))
             {
                 _target.EnsureInitializeMap();
@@ -64,6 +80,17 @@ namespace EasyToolKit.Tilemap.Editor
             {
                 DoHit(hitPoint);
                 SceneView.RepaintAll();
+            }
+            
+            if (_isMarkingRuleType)
+            {
+                foreach (var kvp in _ruleTypeMapCache)
+                {
+                    var tilePosition = kvp.Key;
+                    var ruleType = kvp.Value;
+                    var tileWorldPosition = _target.TilePositionToWorldPosition(tilePosition);
+                    DrawDebugRuleTypeGUI(tileWorldPosition, ruleType);
+                }
             }
         }
 
@@ -278,6 +305,34 @@ namespace EasyToolKit.Tilemap.Editor
 
             Vector2 guiPosition = HandleUtility.WorldToGUIPoint(hitPoint);
             GUI.Label(new Rect(guiPosition.x + 10, guiPosition.y - 10, 200, 20), $"{hitPoint}");
+
+            Handles.EndGUI();
+        }
+
+        private void DrawDebugRuleTypeGUI(Vector3 tileWorldPosition, TerrainRuleType ruleType)
+        {
+            var ruleTypeText = ruleType switch
+            {
+                TerrainRuleType.Fill => "填充",
+                TerrainRuleType.TopEdge => "顶边缘",
+                TerrainRuleType.LeftEdge => "左边缘",
+                TerrainRuleType.BottomEdge => "底边缘",
+                TerrainRuleType.RightEdge => "右边缘",
+                TerrainRuleType.TopLeftExteriorCorner => "左上外角",
+                TerrainRuleType.TopRightExteriorCorner => "右上外角",
+                TerrainRuleType.BottomRightExteriorCorner => "右下外角",
+                TerrainRuleType.BottomLeftExteriorCorner => "左下外角",
+                TerrainRuleType.TopLeftInteriorCorner => "左上内角",
+                TerrainRuleType.TopRightInteriorCorner => "右上内角",
+                TerrainRuleType.BottomRightInteriorCorner => "右下内角",
+                TerrainRuleType.BottomLeftInteriorCorner => "左下内角",
+                _ => throw new NotImplementedException(),
+            };
+            
+            Handles.BeginGUI();
+
+            Vector2 guiPosition = HandleUtility.WorldToGUIPoint(tileWorldPosition);
+            GUI.Label(new Rect(guiPosition.x, guiPosition.y - 20, 200, 20), $"{ruleTypeText}");
 
             Handles.EndGUI();
         }
