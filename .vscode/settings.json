@@ -27,9 +27,9 @@
         "**/Build/**": true
     },
     "dotrush.roslyn.projectOrSolutionFiles": [
-        "e:\\Code\\Unity\\EasyToolKit\\Source\\EasyToolKit.Core\\EasyToolKit.Core.sln",
-        "e:\\Code\\Unity\\EasyToolKit\\Source\\EasyToolKit.Inspector\\EasyToolKit.Inspector.sln",
-        "e:\\Code\\Unity\\EasyToolKit\\EasyToolKit.sln"
+        "${workspaceFolder}/Source/EasyToolKit.Core/EasyToolKit.Core.sln",
+        "${workspaceFolder}/Source/EasyToolKit.Inspector/EasyToolKit.Inspector.sln",
+        "${workspaceFolder}/EasyToolKit.sln"
     ],
-    "dotnet.defaultSolution": "EasyToolKit.sln"
+    "dotnet.defaultSolution": "${workspaceFolder}/EasyToolKit.sln"
 }

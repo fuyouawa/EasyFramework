@@ -4,11 +4,16 @@
         {
             "name": "Attach to Unity",
             "type": "unity",
-            "request": "attach"
-        },
-        {
-            "name": "Attach to Unity",
-            "type": "vstuc",
+            "userAssemblies": [
+                "${workspaceFolder}/Library/ScriptAssemblies/Assembly-CSharp.dll",
+                "${workspaceFolder}/Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll",
+                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.Tilemap.dll",
+                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.Tilemap.Editor.dll",
+                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.dll",
+                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.Editor.dll",
+                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.dll",
+                "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.Editor.dll",
+            ],
             "request": "attach"
         }
     ]
