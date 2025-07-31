@@ -10,7 +10,7 @@ using UnityEngine;
 namespace EasyToolKit.Inspector.Editor
 {
     [InitializeOnLoad]
-    [EditorConfigsPath]
+    [ModuleEditorConfigsPath("Inspector")]
     public class PersistentContextCacheAsset : ScriptableObjectSingleton<PersistentContextCacheAsset>, ISerializationCallbackReceiver
     {
         [NonSerialized, OdinSerialize]

@@ -25,7 +25,7 @@ namespace EasyToolKit.Tilemap.Editor
             {
                 if (_terrainTypeIconsAtlas == null)
                 {
-                    var directory = EditorAssetPaths.GetModuleAssetDirectory("Tilemap");
+                    var directory = EditorAssetPaths.GetModuleEditorDirectory("Tilemap");
                     _terrainTypeIconsAtlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/TerrainTypeIconAtlas.png");
                 }
 
@@ -44,7 +44,7 @@ namespace EasyToolKit.Tilemap.Editor
             {
                 if (_drawIconAtlas == null)
                 {
-                    var directory = EditorAssetPaths.GetModuleAssetDirectory("Tilemap");
+                    var directory = EditorAssetPaths.GetModuleEditorDirectory("Tilemap");
                     _drawIconAtlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/DrawIconAtlas.png");
                 }
                 if (_drawIcons == null || _drawIcons.Length == 0 || _drawIcons[0, 0] == null)

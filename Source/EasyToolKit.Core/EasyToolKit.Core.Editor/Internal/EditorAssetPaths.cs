@@ -4,64 +4,21 @@ namespace EasyToolKit.Core.Editor.Internal
 {
     public static class EditorAssetPaths
     {
-        public static string GetAssetDirectory()
+        public static string GetModuleEditorDirectory(string moduleName)
         {
-            return GetDirectory("Assets");
-        }
-        public static string GetModuleAssetDirectory(string folderName)
-        {
-            return GetModuleDirectory(folderName, "Assets");
+            return $"Assets/{AssetPaths.GetModuleAssetDirectory(moduleName)}/Editor";
         }
 
-        public static string GetConfigsDirectory()
+        public static string GetModuleConfigsDirectory(string moduleName)
         {
-            return GetDirectory("Configs");
-        }
-
-        public static string GetModuleConfigsDirectory(string folderName)
-        {
-            return GetModuleDirectory(folderName, "Configs");
-        }
-
-        private static string GetDirectory(string assetType)
-        {
-            return $"Assets/{AssetPaths.GetPluginsDirectory()}/{assetType}/Editor";
-        }
-
-
-        private static string GetModuleDirectory(string folderName, string assetType)
-        {
-            return $"Assets/{AssetPaths.GetPluginsDirectory()}/Modules/{folderName}/{assetType}/Editor";
-        }
-    }
-
-    public class EditorAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public EditorAssetPathAttribute() : base(EditorAssetPaths.GetAssetDirectory())
-        {
-        }
-    }
-
-    public class EditorModuleAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public EditorModuleAssetPathAttribute(string folderName) : base(EditorAssetPaths.GetModuleAssetDirectory(folderName))
-        {
-        }
-    }
-
-
-    public class EditorConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public EditorConfigsPathAttribute() : base(
-            EditorAssetPaths.GetConfigsDirectory())
-        {
+            return $"{GetModuleEditorDirectory(moduleName)}/Configs";
         }
     }
 
     public class ModuleEditorConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public ModuleEditorConfigsPathAttribute(string folderName) : base(
-            EditorAssetPaths.GetModuleAssetDirectory(folderName))
+        public ModuleEditorConfigsPathAttribute(string moduleName) : base(
+            EditorAssetPaths.GetModuleConfigsDirectory(moduleName))
         {
         }
     }

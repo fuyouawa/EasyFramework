@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _definitions:
   - _name: 
-    _debugCubeColor: {r: 0, g: 1, b: 0, a: 1}
+    _debugCubeColor: {r: 0, g: 1, b: 0, a: 0}
     _drawDebugCube: 1
-    _ruleSetAsset: {fileID: 0}
+    _ruleSetAsset: {fileID: 11400000, guid: 85438dcf49c676d468a7209647900f66, type: 2}
     _serializedGuid: 2a68284d2368542949aa68a327ab59a1ff
     _serializedMapData: 

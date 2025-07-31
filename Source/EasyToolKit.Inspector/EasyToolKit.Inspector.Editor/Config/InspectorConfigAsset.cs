@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    [EditorConfigsPath]
+    [ModuleEditorConfigsPath("Inspector")]
     public class InspectorConfigAsset : ScriptableObjectSingleton<InspectorConfigAsset>, ISerializationCallbackReceiver
     {
         public bool DrawMonoScriptInEditor = true;

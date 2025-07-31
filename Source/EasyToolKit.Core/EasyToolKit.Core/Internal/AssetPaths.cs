@@ -8,61 +8,25 @@ namespace EasyToolKit.Core.Internal
             return "Plugins/EasyToolKit";
         }
 
-        public static string GetAssetDirectory()
+        public static string GetModuleAssetDirectory(string moduleName)
         {
-            return GetDirectory("Assets");
+            return $"{GetPluginsDirectory()}/{moduleName}/Assets";
         }
 
-        public static string GetConfigsDirectory()
+        public static string GetModuleResourcesDirectory(string moduleName)
         {
-            return GetDirectory("Configs");
+            return $"{GetModuleAssetDirectory(moduleName)}/Resources";
         }
 
-        public static string GetModuleAssetDirectory(string folderName)
+        public static string GetModuleConfigsDirectory(string moduleName)
         {
-            return GetModuleDirectory(folderName, "Assets");
-        }
-
-        public static string GetModuleConfigsDirectory(string folderName)
-        {
-            return GetModuleDirectory(folderName, "Configs");
-        }
-
-        private static string GetDirectory(string assetType)
-        {
-            return $"{GetPluginsDirectory()}/{assetType}/Resources";
-        }
-
-        private static string GetModuleDirectory(string folderName, string assetType)
-        {
-            return $"{GetPluginsDirectory()}/Modules/{folderName}/{assetType}/Resources";
-        }
-    }
-
-    public class AssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public AssetPathAttribute() : base(AssetPaths.GetAssetDirectory())
-        {
-        }
-    }
-
-    public class ModuleAssetPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public ModuleAssetPathAttribute(string folderName) : base(AssetPaths.GetModuleAssetDirectory(folderName))
-        {
-        }
-    }
-
-    public class ConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
-    {
-        public ConfigsPathAttribute() : base(AssetPaths.GetConfigsDirectory())
-        {
+            return $"{GetModuleResourcesDirectory(moduleName)}/Configs";
         }
     }
 
     public class ModuleConfigsPathAttribute : ScriptableObjectSingletonAssetPathAttribute
     {
-        public ModuleConfigsPathAttribute(string folderName) : base(AssetPaths.GetModuleConfigsDirectory(folderName))
+        public ModuleConfigsPathAttribute(string moduleName) : base(AssetPaths.GetModuleConfigsDirectory(moduleName))
         {
         }
     }
