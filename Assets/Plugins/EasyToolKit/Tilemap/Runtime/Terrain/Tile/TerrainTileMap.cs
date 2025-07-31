@@ -21,7 +21,7 @@ namespace EasyToolKit.Tilemap
         [LabelText("地形瓦片定义表资产")]
         [InlineEditor(Style = InlineEditorStyle.PlaceWithHide)]
         [SerializeField] private TerrainTileDefinitionsAsset _definitionsAsset;
-        
+
         private Dictionary<Vector3Int, Guid> _definitionGuidMap = new Dictionary<Vector3Int, Guid>();
 
         [SerializeField, HideInInspector] private byte[] _serializedDefinitionGuidMap;
