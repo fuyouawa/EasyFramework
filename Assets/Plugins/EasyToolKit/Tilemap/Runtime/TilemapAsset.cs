@@ -13,7 +13,7 @@ namespace EasyToolKit.Tilemap
 
         [EndFoldoutGroup]
         [SerializeField, HideLabel] private TerrainTileMap _terrainTileMap = new TerrainTileMap();
-    
+
         public TilemapSettings Settings => _settings;
         public TerrainTileMap TerrainTileMap => _terrainTileMap;
     }

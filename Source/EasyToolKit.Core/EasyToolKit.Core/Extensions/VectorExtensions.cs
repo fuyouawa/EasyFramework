@@ -72,25 +72,13 @@ namespace EasyToolKit.Core
 
         public static Vector2 Round(this Vector2 v)
         {
-            return new Vector2(v.x.Round(), v.y.Round());
+            return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
         }
 
 
         public static Vector3 Round(this Vector3 v)
         {
-            return new Vector3(v.x.Round(), v.y.Round(), v.z.Round());
-        }
-
-
-        public static Vector2 Round(this Vector2 v, int decimals)
-        {
-            return new Vector2(v.x.Round(decimals), v.y.Round(decimals));
-        }
-
-
-        public static Vector3 Round(this Vector3 v, int decimals)
-        {
-            return new Vector3(v.x.Round(decimals), v.y.Round(decimals), v.z.Round(decimals));
+            return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
         }
 
         public static Vector2 ToVec2(this Vector2Int v)

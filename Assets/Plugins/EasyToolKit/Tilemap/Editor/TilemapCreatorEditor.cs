@@ -11,11 +11,15 @@ namespace EasyToolKit.Tilemap.Editor
     [CustomEditor(typeof(TilemapCreator))]
     public class TilemapCreatorEditor : EasyEditor
     {
+        private static readonly float Epsilon = TilemapCreator.Epsilon;
+
         private TerrainTileDefinition _terrainTileDefinition;
         private TilemapCreator _target;
 
         private bool _isMarkingRuleType = false;
         private Dictionary<Vector3Int, TerrainRuleType> _ruleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
+
+        private Vector3? _hittedBlockPosition;
 
         protected override void OnEnable()
         {
@@ -81,7 +85,7 @@ namespace EasyToolKit.Tilemap.Editor
                 DoHit(hitPoint);
                 SceneView.RepaintAll();
             }
-            
+
             if (_isMarkingRuleType)
             {
                 foreach (var kvp in _ruleTypeMapCache)
@@ -122,6 +126,7 @@ namespace EasyToolKit.Tilemap.Editor
             var tileSize = _target.Asset.Settings.TileSize;
             bool handledHit = false;
             hitPoint = Vector3.zero;
+            _hittedBlockPosition = null;
 
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
@@ -146,6 +151,7 @@ namespace EasyToolKit.Tilemap.Editor
                         if (distance < previousRaycastDistance)
                         {
                             hitPoint = ray.GetPoint(distance);
+                            _hittedBlockPosition = blockPosition;
                             handledHit = true;
                             previousRaycastDistance = distance;
                         }
@@ -178,8 +184,8 @@ namespace EasyToolKit.Tilemap.Editor
                 return;
             DrawDebugHitPointGUI(hitPoint);
 
-            var tilePosition = _target.WorldPositionToTilePosition(hitPoint);
-            var blockPosition = _target.TilePositionToWorldPosition(tilePosition);
+            var blockPosition = _hittedBlockPosition ?? _target.WorldPositionToBlockPosition(hitPoint);
+            var tilePosition = _target.WorldPositionToTilePosition(blockPosition);
             var targetTerrainTileDefinition = _target.Asset.TerrainTileMap.TryGetDefinitionAt(tilePosition);
 
             var isErase = TerrainTileDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
@@ -195,7 +201,7 @@ namespace EasyToolKit.Tilemap.Editor
             {
                 if (targetTerrainTileDefinition != null)
                 {
-                    FixHitBlockPosition(ref blockPosition, hitPoint);
+                    FixHitBlockPositionWithExclude(ref blockPosition, hitPoint);
                     if (!IsInRange(blockPosition))
                     {
                         return;
@@ -237,7 +243,7 @@ namespace EasyToolKit.Tilemap.Editor
             }
         }
 
-        private void FixHitBlockPosition(ref Vector3 blockPosition, Vector3 hitPoint)
+        private void FixHitBlockPositionWithExclude(ref Vector3 blockPosition, Vector3 hitPoint)
         {
             var tileSize = _target.Asset.Settings.TileSize;
 
@@ -245,14 +251,14 @@ namespace EasyToolKit.Tilemap.Editor
                 blockPosition.x, blockPosition.y,
                 tileSize, tileSize);
 
-            if (hitPoint.z.Approximately(blockPosition.z) &&
+            if (hitPoint.z.IsApproximatelyOf(blockPosition.z, Epsilon) &&
                 front.Contains(new Vector2(hitPoint.x, hitPoint.y)))
             {
                 blockPosition.z -= tileSize;
                 return;
             }
 
-            if (hitPoint.z.Approximately(blockPosition.z + 1) &&
+            if (hitPoint.z.IsApproximatelyOf(blockPosition.z + 1, Epsilon) &&
                 front.Contains(new Vector2(hitPoint.x, hitPoint.y)))
             {
                 blockPosition.z += tileSize;
@@ -263,14 +269,14 @@ namespace EasyToolKit.Tilemap.Editor
                 blockPosition.z, blockPosition.y,
                 tileSize, tileSize);
 
-            if (hitPoint.x.Approximately(blockPosition.x) &&
+            if (hitPoint.x.IsApproximatelyOf(blockPosition.x, Epsilon) &&
                 side.Contains(new Vector2(hitPoint.z, hitPoint.y)))
             {
                 blockPosition.x -= tileSize;
                 return;
             }
 
-            if (hitPoint.x.Approximately(blockPosition.x + 1) &&
+            if (hitPoint.x.IsApproximatelyOf(blockPosition.x + 1, Epsilon) &&
                 side.Contains(new Vector2(hitPoint.z, hitPoint.y)))
             {
                 blockPosition.x += tileSize;
@@ -281,14 +287,14 @@ namespace EasyToolKit.Tilemap.Editor
                 blockPosition.x, blockPosition.z,
                 tileSize, tileSize);
 
-            if (hitPoint.y.Approximately(blockPosition.y) &&
+            if (hitPoint.y.IsApproximatelyOf(blockPosition.y, Epsilon) &&
                 top.Contains(new Vector2(hitPoint.x, hitPoint.z)))
             {
                 blockPosition.y -= tileSize;
                 return;
             }
 
-            if (hitPoint.y.Approximately(blockPosition.y + 1) &&
+            if (hitPoint.y.IsApproximatelyOf(blockPosition.y + 1, Epsilon) &&
                 top.Contains(new Vector2(hitPoint.x, hitPoint.z)))
             {
                 blockPosition.y += tileSize;
@@ -328,7 +334,7 @@ namespace EasyToolKit.Tilemap.Editor
                 TerrainRuleType.BottomLeftInteriorCorner => "左下内角",
                 _ => throw new NotImplementedException(),
             };
-            
+
             Handles.BeginGUI();
 
             Vector2 guiPosition = HandleUtility.WorldToGUIPoint(tileWorldPosition);
@@ -361,8 +367,8 @@ namespace EasyToolKit.Tilemap.Editor
             var baseRange = _target.Asset.Settings.BaseRange;
 
             var local = hitPoint - _target.transform.position;
-            var gridX = Mathf.FloorToInt(local.x / tileSize);
-            var grisZ = Mathf.FloorToInt(local.z / tileSize);
+            var gridX = (local.x / tileSize).SafeFloorToInt(Epsilon);
+            var grisZ = (local.z / tileSize).SafeFloorToInt(Epsilon);
 
             if (gridX < 0 || gridX >= baseRange.x || grisZ < 0 || grisZ >= baseRange.y)
                 return false;
@@ -378,7 +384,7 @@ namespace EasyToolKit.Tilemap.Editor
             var center = blockPosition + Vector3.one * (tileSize * 0.5f);
             Handles.DrawWireCube(center, Vector3.one * tileSize);
 
-            if (!color.a.Approximately(0f))
+            if (!color.a.IsApproximatelyOf(0f, Epsilon))
             {
                 Handles.color = color;
                 Handles.CubeHandleCap(0, center, Quaternion.identity, tileSize, EventType.Repaint);

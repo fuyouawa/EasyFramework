@@ -1,71 +1,98 @@
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.Core
 {
     public static class MathExtensions
     {
-        public static float Round(this float value, int decimals)
+        public static float SafeFloor(this float value, float? epsilon = null)
         {
-            return (float)System.Math.Round(value, decimals);
+            var rounded = Mathf.Round(value);
+            if (value.IsApproximatelyOf(rounded, epsilon))
+            {
+                return rounded;
+            }
+            else
+            {
+                return Mathf.Floor(value);
+            }
         }
 
-        public static float Round(this float value)
+        public static float SafeFloorMultipleOf(this float a, float multiple, float? epsilon = null)
         {
-            return (float)System.Math.Round(value);
+            if (multiple.IsApproximatelyOf(0f, epsilon))
+                throw new ArgumentException("multiple cannot be 0", nameof(multiple));
+
+            var quotient = a / multiple;
+            var rounded = Mathf.Round(quotient);
+
+            if (quotient.IsApproximatelyOf(rounded, epsilon))
+            {
+                return rounded * multiple;
+            }
+            else
+            {
+                var floored = Mathf.Floor(quotient);
+                return floored * multiple;
+            }
         }
 
-        public static float Abs(this float value)
+        public static float SafeCeil(this float value, float? epsilon = null)
         {
-            return Mathf.Abs(value);
+            var rounded = Mathf.Round(value);
+            if (value.IsApproximatelyOf(rounded, epsilon))
+            {
+                return rounded;
+            }
+            else
+            {
+                return Mathf.Ceil(value);
+            }
         }
 
-        public static int Abs(this int value)
+        public static int SafeFloorToInt(this float value, float? epsilon = null)
         {
-            return Mathf.Abs(value);
+            return (int)value.SafeFloor(epsilon);
         }
 
-        public static int Sign(this int value)
+        public static int SafeCeilToInt(this float value, float? epsilon = null)
         {
-            return value >= 0 ? 1 : -1;
+            return (int)value.SafeCeil(epsilon);
         }
 
-        public static int Clamp(this int value, int min, int max)
+        public static bool IsApproximatelyOf(this float a, float b, float? epsilon = null)
         {
-            return Mathf.Clamp(value, min, max);
+            if (epsilon == null)
+            {
+                return Mathf.Approximately(a, b);
+            }
+            else
+            {
+                return Mathf.Abs(a - b) < epsilon.Value;
+            }
         }
 
-        public static float Clamp(this float value, float min, float max)
-        {
-            return Mathf.Clamp(value, min, max);
-        }
-
-        public static float Sign(this float value)
-        {
-            return Mathf.Sign(value);
-        }
-
-        public static int FloorToInt(this float value)
-        {
-            return Mathf.FloorToInt(value);
-        }
-
-        public static bool Approximately(this float a, float b)
-        {
-            return Mathf.Approximately(a, b);
-        }
-
-        public static bool Approximately(this Quaternion a, Quaternion b, float similarityThreshold = 0.99f)
+        public static bool IsApproximatelyOf(this Quaternion a, Quaternion b, float similarityThreshold = 0.99f)
         {
             var dot = Quaternion.Dot(a, b);
             var threshold = Mathf.Clamp(similarityThreshold, 0f, 1f);
             return dot >= threshold;
         }
 
-        public static bool Approximately(this Vector3 a, Vector3 b, float similarityThreshold = 0.99f)
+        public static bool IsApproximatelyOf(this Vector3 a, Vector3 b, float similarityThreshold = 0.99f)
         {
             var distance = Vector3.Distance(a, b);
             var threshold = Mathf.Clamp(similarityThreshold, 0f, 1f);
             return distance <= 1 - threshold;
+        }
+
+        public static bool IsApproximatelyMultipleOf(this float a, float multiple, float? epsilon = null)
+        {
+            if (multiple.IsApproximatelyOf(0f, epsilon))
+                throw new ArgumentException("multiple cannot be 0", nameof(multiple));
+
+            var quotient = a / multiple;
+            return (quotient - Mathf.Round(quotient)).IsApproximatelyOf(0f, epsilon);
         }
     }
 }

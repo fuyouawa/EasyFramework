@@ -1,3 +1,4 @@
+using EasyToolKit.Core;
 using EasyToolKit.Inspector;
 using System;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace EasyToolKit.Tilemap
 {
     public class TilemapCreator : MonoBehaviour
     {
+        public static readonly float Epsilon = 0.00001f;
+
         [LabelText("地图资产")]
         [SerializeField, InlineEditor] private TilemapAsset _asset;
 
@@ -39,9 +42,9 @@ namespace EasyToolKit.Tilemap
 
             var local = worldPosition - transform.position;
             var tileSize = Asset.Settings.TileSize;
-            int gridX = Mathf.FloorToInt(local.x / tileSize);
-            int gridY = Mathf.FloorToInt(local.y / tileSize);
-            int gridZ = Mathf.FloorToInt(local.z / tileSize);
+            int gridX = (local.x / tileSize).SafeFloorToInt(Epsilon);
+            int gridY = (local.y / tileSize).SafeFloorToInt(Epsilon);
+            int gridZ = (local.z / tileSize).SafeFloorToInt(Epsilon);
 
             return new Vector3Int(gridX, gridY, gridZ);
         }
