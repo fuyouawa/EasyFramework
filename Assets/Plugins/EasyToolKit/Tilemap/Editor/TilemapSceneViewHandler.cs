@@ -76,7 +76,10 @@ namespace EasyToolKit.Tilemap.Editor
             targetDrawer.SelectedTerrainTileDefinition = selectedItemGuid != null ?
                 target.Asset.TerrainTileMap.DefinitionSet.TryGetByGuid(selectedItemGuid.Value) : null;
 
-            targetDrawer.DrawBase();
+            if (target.Asset.Settings.DrawDebugBase)
+            {
+                targetDrawer.DrawBase();
+            }
 
             if (targetDrawer.DrawHit(out var hitPoint, out hitBlockPosition))
             {
@@ -131,10 +134,10 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (drawCube)
             {
-                targetDrawer.DrawCube(blockPosition);
+                targetDrawer.DrawCube(blockPosition, targetDrawer.SelectedTerrainTileDefinition.DebugCubeColor.SetA(1f));
                 if (isErase)
                 {
-                    targetDrawer.DrawCube(blockPosition, Color.red.SetA(0.2f));
+                    targetDrawer.DrawFillCube(blockPosition, Color.red.SetA(0.2f));
                 }
             }
 

@@ -158,7 +158,7 @@ namespace EasyToolKit.Tilemap
                 }
 
                 tileInstance.transform.SetParent(targetTerrainObject.transform);
-                tileInstance.transform.position = tileWorldPosition;
+                tileInstance.transform.position += tileWorldPosition;
             }
         }
     }

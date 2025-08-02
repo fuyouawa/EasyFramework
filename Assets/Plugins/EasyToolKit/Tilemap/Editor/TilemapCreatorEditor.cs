@@ -91,7 +91,12 @@ namespace EasyToolKit.Tilemap.Editor
 
         void OnSceneGUI()
         {
-            TilemapSceneViewHandler.DrawSceneGUIFor(_target, _drawer, _context.Value.IsMarkingRuleType, _context.Value.RuleTypeMapCache, ref _hittedBlockPosition);
+            TilemapSceneViewHandler.DrawSceneGUIFor(
+                _target,
+                _drawer,
+                _context.Value.IsMarkingRuleType,
+                _context.Value.RuleTypeMapCache,
+                ref _hittedBlockPosition);
         }
 
         private bool IsMouseDown()

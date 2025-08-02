@@ -17,8 +17,11 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private float _tileSize = 1f;
 
         [Title("调试")]
-        [LabelText("地基颜色")]
-        [SerializeField] private Color _baseColor = Color.white;
+        [LabelText("绘制调试地基")]
+        [SerializeField] private bool _drawDebugBase = true;
+
+        [LabelText("地基调试颜色")]
+        [SerializeField] private Color _baseDebugColor = Color.white;
 
         [LabelText("显示调试数据")]
         [SerializeField] private bool _drawDebugData = false;
@@ -27,7 +30,9 @@ namespace EasyToolKit.Tilemap
 
         public Vector2Int BaseRange => _baseRange;
 
-        public Color BaseColor => _baseColor;
+        public bool DrawDebugBase => _drawDebugBase;
+
+        public Color BaseDebugColor => _baseDebugColor;
 
         public float TileSize => _tileSize;
 

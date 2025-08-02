@@ -29,7 +29,7 @@ namespace EasyToolKit.Tilemap.Editor
             var baseRange = _creator.Asset.Settings.BaseRange;
             var tileSize = _creator.Asset.Settings.TileSize;
 
-            EasyHandleHelper.PushColor(_creator.Asset.Settings.BaseColor);
+            EasyHandleHelper.PushColor(_creator.Asset.Settings.BaseDebugColor);
             for (int x = 0; x <= baseRange.x; x++)
             {
                 var start = _creator.transform.position + Vector3.right * (x * tileSize);
@@ -217,24 +217,24 @@ namespace EasyToolKit.Tilemap.Editor
             Handles.EndGUI();
         }
 
-        public void DrawCube(Vector3 blockPosition)
-        {
-            DrawCube(blockPosition, _selectedTerrainTileDefinition.DebugCubeColor);
-        }
-
         public void DrawCube(Vector3 blockPosition, Color color)
         {
             var tileSize = _creator.Asset.Settings.TileSize;
-            EasyHandleHelper.PushColor(color.SetA(1f));
+            EasyHandleHelper.PushColor(color);
 
             var center = blockPosition + Vector3.one * (tileSize * 0.5f);
             Handles.DrawWireCube(center, Vector3.one * tileSize);
 
-            if (!color.a.IsApproximatelyOf(0f, Epsilon))
-            {
-                Handles.color = color;
-                Handles.CubeHandleCap(0, center, Quaternion.identity, tileSize, EventType.Repaint);
-            }
+            EasyHandleHelper.PopColor();
+        }
+
+        public void DrawFillCube(Vector3 blockPosition, Color color)
+        {
+            var tileSize = _creator.Asset.Settings.TileSize;
+            EasyHandleHelper.PushColor(color);
+
+            var center = blockPosition + Vector3.one * (tileSize * 0.5f);
+            Handles.CubeHandleCap(0, center, Quaternion.identity, tileSize, EventType.Repaint);
 
             EasyHandleHelper.PopColor();
         }

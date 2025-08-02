@@ -12,29 +12,236 @@ MonoBehaviour:
   m_Script: {fileID: 1038159986, guid: 81aeb58f16b246a49966556b632e412f, type: 3}
   m_Name: PersistentContextCacheAsset
   m_EditorClassIdentifier: 
+  _saveCacheOnUnityQuit: 1
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 0}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _contextCacheByKey
+    - Name: _contextCache
       Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[System.Int32, mscorlib],[EasyToolKit.Inspector.Editor.GlobalPersistentContext,
+      Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[EasyToolKit.Inspector.Editor.GlobalPersistentContext,
         EasyToolKit.Inspector.Editor]], mscorlib
     - Name: comparer
       Entry: 7
-      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.Int32,
+      Data: 1|System.Collections.Generic.GenericEqualityComparer`1[[System.String,
         mscorlib]], mscorlib
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 12
+      Data: 8
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TilemapCreator, EasyToolKit.Tilemap++TilemapCreatorEditorContext
+    - Name: $v
+      Entry: 7
+      Data: 2|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[EasyToolKit.Tilemap.Editor.TilemapCreatorEditorContext,
+        EasyToolKit.Tilemap.Editor]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393509313846
+    - Name: value
+      Entry: 7
+      Data: 3|EasyToolKit.Tilemap.Editor.TilemapCreatorEditorContext, EasyToolKit.Tilemap.Editor
+    - Name: Target
+      Entry: 10
       Data: 0
+    - Name: IsMarkingRuleType
+      Entry: 5
+      Data: false
+    - Name: RuleTypeMapCache
+      Entry: 7
+      Data: 4|System.Collections.Generic.Dictionary`2[[UnityEngine.Vector3Int, UnityEngine.CoreModule],[EasyToolKit.Tilemap.TerrainRuleType,
+        EasyToolKit.Tilemap]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 5|System.Collections.Generic.GenericEqualityComparer`1[[UnityEngine.Vector3Int,
+        UnityEngine.CoreModule]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TilemapAsset, EasyToolKit.Tilemap+_settings+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 6|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393509803192
+    - Name: value
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TilemapAsset, EasyToolKit.Tilemap+_terrainTileMap._definitionSet._definitions.Array.data[0]+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 7|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393510437233
+    - Name: value
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TilemapAsset, EasyToolKit.Tilemap+_terrainTileMap._definitionSet._definitions.Array.data[0]._ruleSetAsset+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 8|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393510487309
+    - Name: value
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TerrainTileRuleSetAsset, EasyToolKit.Tilemap+_fillRule+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 9|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393528338889
+    - Name: value
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TerrainTileRuleSetAsset, EasyToolKit.Tilemap+_edgeRule+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 10|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393520262394
+    - Name: value
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TerrainTileRuleSetAsset, EasyToolKit.Tilemap+_exteriorCornerRule+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 11|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393510594239
+    - Name: value
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: EasyToolKit.Tilemap.TerrainTileRuleSetAsset, EasyToolKit.Tilemap+_interiorCornerRule+_expanded
+    - Name: $v
+      Entry: 7
+      Data: 12|EasyToolKit.Inspector.Editor.GlobalPersistentContext`1[[System.Boolean,
+        mscorlib]], EasyToolKit.Inspector.Editor
+    - Name: _timeStamp
+      Entry: 3
+      Data: 638897393510614240
+    - Name: value
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 

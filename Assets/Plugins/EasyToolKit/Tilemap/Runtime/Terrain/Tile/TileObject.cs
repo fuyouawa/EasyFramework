@@ -12,6 +12,9 @@ namespace EasyToolKit.Tilemap
         [LabelText("预制体")]
         [SerializeField] private GameObject _prefab;
 
+        [LabelText("位置偏移")]
+        [SerializeField] private Vector3 _positionOffset;
+
         [LabelText("旋转偏移")]
         [SerializeField] private Vector3 _rotationOffset;
 
@@ -19,6 +22,7 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private Vector3 _scaleOffset;
 
         public GameObject Prefab => _prefab;
+        public Vector3 PositionOffset => _positionOffset;
         public Vector3 RotationOffset => _rotationOffset;
         public Vector3 ScaleOffset => _scaleOffset;
 
@@ -31,6 +35,7 @@ namespace EasyToolKit.Tilemap
             }
 
             var result = GameObject.Instantiate(Prefab);
+            result.transform.position = PositionOffset;
             result.transform.rotation *= Quaternion.Euler(RotationOffset);
             result.transform.localScale += ScaleOffset;
             return result;
