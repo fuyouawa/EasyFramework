@@ -16,6 +16,9 @@ namespace EasyToolKit.Tilemap
         [LabelText("瓦片大小")]
         [SerializeField] private float _tileSize = 1f;
 
+        [LabelText("实时增量构建")]
+        [SerializeField] private bool _realTimeIncrementalBuild = true;
+
         [Title("调试")]
         [LabelText("绘制调试地基")]
         [SerializeField] private bool _drawDebugBase = true;
@@ -27,6 +30,8 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private bool _drawDebugData = false;
 
         public string MapName => _mapName;
+
+        public bool RealTimeIncrementalBuild => _realTimeIncrementalBuild;
 
         public Vector2Int BaseRange => _baseRange;
 

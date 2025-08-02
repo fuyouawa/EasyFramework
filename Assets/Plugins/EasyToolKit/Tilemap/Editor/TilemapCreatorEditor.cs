@@ -69,16 +69,16 @@ namespace EasyToolKit.Tilemap.Editor
                 }
             }
 
-            EasyEditorGUI.Title("地图生成", textAlignment: TextAlignment.Center);
+            EasyEditorGUI.Title("地图构建", textAlignment: TextAlignment.Center);
             if (GUILayout.Button("初始化地图", GUILayout.Height(30)))
             {
                 _target.EnsureInitializeMap();
             }
 
-            if (GUILayout.Button("重新生成所有地图", GUILayout.Height(30)))
+            if (GUILayout.Button("重新构建所有地图", GUILayout.Height(30)))
             {
                 _target.ClearAllMap();
-                _target.GenerateAllMap();
+                _target.BuildAllMap();
             }
 
             if (GUILayout.Button("清除所有地图", GUILayout.Height(30)))

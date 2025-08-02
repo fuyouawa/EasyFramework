@@ -131,15 +131,15 @@ namespace EasyToolKit.Tilemap
                 .FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefinitionGuid);
         }
 
-        public void GenerateAllMap()
+        public void BuildAllMap()
         {
             foreach (var terrainTileDefinition in Asset.TerrainTileMap.DefinitionSet)
             {
-                GenerateMap(terrainTileDefinition.Guid);
+                BuildMapFor(terrainTileDefinition.Guid);
             }
         }
 
-        public void GenerateMap(Guid targetTerrainTileDefinitionGuid)
+        public void BuildMapFor(Guid targetTerrainTileDefinitionGuid)
         {
             EnsureInitializeMap();
 
@@ -147,19 +147,38 @@ namespace EasyToolKit.Tilemap
 
             foreach (var terrainTile in Asset.TerrainTileMap.EnumerateMatchedMap(targetTerrainTileDefinitionGuid))
             {
-                var tilePosition = terrainTile.TilePosition;
-                var tileWorldPosition = TilePositionToWorldPosition(tilePosition);
-                var ruleType = Asset.TerrainTileMap.CalculateRuleTypeAt(tilePosition);
-                var tileInstance = terrainTile.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
-                if (tileInstance == null)
-                {
-                    Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
-                    continue;
-                }
-
-                tileInstance.transform.SetParent(targetTerrainObject.transform);
-                tileInstance.transform.position += tileWorldPosition;
+                BuildTile(targetTerrainObject, terrainTile);
             }
+        }
+
+        public void IncrementalBuildAt(Guid targetTerrainTileDefinitionGuid, Vector3Int tilePosition)
+        {
+            EnsureInitializeMap();
+
+            var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
+
+            foreach (var terrainTile in Asset.TerrainTileMap.EnumerateNearlyMatchedMap(targetTerrainTileDefinitionGuid, tilePosition))
+            {
+                BuildTile(targetTerrainObject, terrainTile);
+            }
+        }
+
+        private bool BuildTile(TerrainObject targetTerrainObject, TerrainTileBlockDefinition tile)
+        {
+            var tilePosition = tile.TilePosition;
+            var tileWorldPosition = TilePositionToWorldPosition(tilePosition);
+            var ruleType = Asset.TerrainTileMap.CalculateRuleTypeAt(tilePosition);
+            var tileInstance = tile.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
+            if (tileInstance == null)
+            {
+                Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
+                return false;
+            }
+
+            tileInstance.transform.SetParent(targetTerrainObject.transform);
+            tileInstance.transform.position += tileWorldPosition;
+
+            return true;
         }
     }
 }

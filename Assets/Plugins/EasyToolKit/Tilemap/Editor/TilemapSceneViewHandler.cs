@@ -160,6 +160,11 @@ namespace EasyToolKit.Tilemap.Editor
                 EasyEditorUtility.SetUnityObjectDirty(target.Asset);
 
                 FinishMouseDown();
+
+                if (target.Asset.Settings.RealTimeIncrementalBuild)
+                {
+                    target.IncrementalBuildAt(targetDrawer.SelectedTerrainTileDefinition.Guid, tilePosition);
+                }
             }
         }
 

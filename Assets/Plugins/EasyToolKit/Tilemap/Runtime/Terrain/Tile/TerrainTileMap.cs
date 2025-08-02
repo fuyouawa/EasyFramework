@@ -81,6 +81,66 @@ namespace EasyToolKit.Tilemap
             }
         }
 
+        public IEnumerable<TerrainTileBlockDefinition> EnumerateNearlyMatchedMap(Guid matchDefinitionGuid, Vector3Int tilePosition)
+        {
+            var definition = DefinitionSet.TryGetByGuid(matchDefinitionGuid);
+            Assert.IsNotNull(definition);
+
+            // Use HashSet to track visited positions to avoid duplicates
+            var visited = new HashSet<Vector3Int>();
+            // Use Queue for breadth-first search
+            var queue = new Queue<Vector3Int>();
+
+            // Start with the initial position
+            queue.Enqueue(tilePosition);
+            visited.Add(tilePosition);
+
+            // Directions to check (only x and z axes, y stays fixed)
+            var directions = new[]
+            {
+                new Vector3Int(1, 0, 0),   // Right
+                new Vector3Int(-1, 0, 0),  // Left
+                new Vector3Int(0, 0, 1),   // Forward
+                new Vector3Int(0, 0, -1),  // Back
+            };
+
+            while (queue.Count > 0)
+            {
+                var currentPos = queue.Dequeue();
+
+                // Check if the current position has the matching definition
+                if (_definitionGuidMap.TryGetValue(currentPos, out var guid) && guid == matchDefinitionGuid)
+                {
+                    // Yield the matching tile
+                    yield return new TerrainTileBlockDefinition
+                    {
+                        TilePosition = currentPos,
+                        Definition = definition,
+                    };
+
+                    // Check adjacent tiles in the four directions
+                    foreach (var dir in directions)
+                    {
+                        var neighborPos = currentPos + dir;
+
+                        // Skip already visited positions
+                        if (visited.Contains(neighborPos))
+                            continue;
+
+                        // Mark as visited
+                        visited.Add(neighborPos);
+
+                        // Only add to queue if it has the matching definition
+                        if (_definitionGuidMap.TryGetValue(neighborPos, out var neighborGuid) &&
+                            neighborGuid == matchDefinitionGuid)
+                        {
+                            queue.Enqueue(neighborPos);
+                        }
+                    }
+                }
+            }
+        }
+
         private Guid? TryGetMatchedDefinitionGuidAt(Vector3Int tilePosition, Guid matchDefinitionGuid)
         {
             var guid = _definitionGuidMap.GetValueOrDefault(tilePosition, Guid.Empty);
