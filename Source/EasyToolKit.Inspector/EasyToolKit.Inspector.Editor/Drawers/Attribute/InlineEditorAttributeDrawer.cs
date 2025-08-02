@@ -103,10 +103,7 @@ namespace EasyToolKit.Inspector.Editor
                 }
             }
 
-            var prev = InspectorConfigAsset.Instance.DrawMonoScriptInEditor;
-            InspectorConfigAsset.Instance.DrawMonoScriptInEditor = false;
             _editor.OnInspectorGUI();
-            InspectorConfigAsset.Instance.DrawMonoScriptInEditor = prev;
         }
 
         private void DestroyEditor()

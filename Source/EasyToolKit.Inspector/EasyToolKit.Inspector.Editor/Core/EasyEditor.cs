@@ -106,7 +106,8 @@ namespace EasyToolKit.Inspector.Editor
             {
                 Tree.DrawMonoScriptObjectField = Tree.SerializedObject != null &&
                                                  Tree.TargetType != null &&
-                                                 InspectorConfigAsset.Instance.DrawMonoScriptInEditor;
+                                                 InspectorConfigAsset.Instance.DrawMonoScriptInEditor &&
+                                                 !IsInlineEditor;
             }
 
             using (new LocalizationGroup(target))

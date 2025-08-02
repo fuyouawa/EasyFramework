@@ -11,7 +11,8 @@ namespace EasyToolKit.Inspector.Editor
     [ModuleEditorConfigsPath("Inspector")]
     public class InspectorConfigAsset : ScriptableObjectSingleton<InspectorConfigAsset>, ISerializationCallbackReceiver
     {
-        public bool DrawMonoScriptInEditor = true;
+        [SerializeField] private bool _drawMonoScriptInEditor = true;
+        public bool DrawMonoScriptInEditor => _drawMonoScriptInEditor;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
