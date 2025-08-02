@@ -7,9 +7,8 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [CreateAssetMenu(menuName = "EasyToolKit/Tilemap/Create TerrainTileDefinitionsAsset", fileName = "TerrainTileDefinitionsAsset")]
-    [EasyInspector]
-    public class TerrainTileDefinitionsAsset : ScriptableObject, IEnumerable<TerrainTileDefinition>
+    [Serializable]
+    public class TerrainTileDefinitionSet : IEnumerable<TerrainTileDefinition>
     {
         [MetroListDrawerSettings(OnRemovedElementCallback = nameof(TriggerRemovedDefinition))]
         [LabelText("地形瓦片定义表")]

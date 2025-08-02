@@ -8,6 +8,13 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
+    public class TilemapCreatorEditorContext
+    {
+        public TilemapCreator Target;
+        public bool IsMarkingRuleType = false;
+        public Dictionary<Vector3Int, TerrainRuleType> RuleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
+    }
+
     [CustomEditor(typeof(TilemapCreator))]
     public class TilemapCreatorEditor : EasyEditor
     {
@@ -16,8 +23,7 @@ namespace EasyToolKit.Tilemap.Editor
         private TilemapCreator _target;
         private TilemapCreatorDrawer _drawer;
 
-        private bool _isMarkingRuleType = false;
-        private readonly Dictionary<Vector3Int, TerrainRuleType> _ruleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
+        private LocalPersistentContext<TilemapCreatorEditorContext> _context;
 
         private Vector3? _hittedBlockPosition;
 
@@ -26,6 +32,15 @@ namespace EasyToolKit.Tilemap.Editor
             base.OnEnable();
             _target = (TilemapCreator)target;
             _drawer = new TilemapCreatorDrawer(_target);
+
+            _context = Tree.LogicRootProperty.GetPersistentContext(nameof(TilemapCreatorEditorContext), new TilemapCreatorEditorContext());
+
+            if (_context.Value.Target != _target)
+            {
+                _context.Value.Target = _target;
+                _context.Value.IsMarkingRuleType = false;
+                _context.Value.RuleTypeMapCache.Clear();
+            }
         }
 
         protected override void DrawTree()
@@ -34,13 +49,23 @@ namespace EasyToolKit.Tilemap.Editor
             Tree.DrawProperties();
 
             EasyEditorGUI.Title("调试", textAlignment: TextAlignment.Center);
-            _isMarkingRuleType = GUILayout.Toggle(_isMarkingRuleType, "标注瓦片规则类型");
+            var newMarkingState = GUILayout.Toggle(_context.Value.IsMarkingRuleType, "标注瓦片规则类型");
+            if (newMarkingState != _context.Value.IsMarkingRuleType)
+            {
+                _context.Value.IsMarkingRuleType = newMarkingState;
+                TilemapSceneViewHandler.SetRuleTypeMarking(_context.Value.IsMarkingRuleType);
+            }
+
             if (GUILayout.Button("重新扫描规则类型", GUILayout.Height(30)))
             {
-                _ruleTypeMapCache.Clear();
+                _context.Value.RuleTypeMapCache.Clear();
+                TilemapSceneViewHandler.ClearRuleTypeCache();
+
                 foreach (var block in _target.Asset.TerrainTileMap)
                 {
-                    _ruleTypeMapCache[block.TilePosition] = _target.Asset.TerrainTileMap.CalculateRuleTypeAt(block.TilePosition);
+                    var ruleType = _target.Asset.TerrainTileMap.CalculateRuleTypeAt(block.TilePosition);
+                    _context.Value.RuleTypeMapCache[block.TilePosition] = ruleType;
+                    TilemapSceneViewHandler.AddRuleTypeToCache(block.TilePosition, ruleType);
                 }
             }
 
@@ -66,95 +91,7 @@ namespace EasyToolKit.Tilemap.Editor
 
         void OnSceneGUI()
         {
-            if (_target.Asset == null)
-                return;
-
-            var selectedItemGuid = TerrainTileDefinitionDrawer.SelectedItemGuid;
-            _drawer.SelectedTerrainTileDefinition = selectedItemGuid != null ? _target.Asset.TerrainTileMap.DefinitionsAsset.TryGetByGuid(selectedItemGuid.Value) : null;
-
-            _drawer.DrawBase();
-
-            if (_drawer.DrawHit(out var hitPoint, out _hittedBlockPosition))
-            {
-                DoHit(hitPoint);
-                SceneView.RepaintAll();
-            }
-
-            if (_isMarkingRuleType)
-            {
-                foreach (var kvp in _ruleTypeMapCache)
-                {
-                    var tilePosition = kvp.Key;
-                    var ruleType = kvp.Value;
-                    var tileWorldPosition = _target.TilePositionToWorldPosition(tilePosition);
-                    _drawer.DrawDebugRuleTypeGUI(tileWorldPosition, ruleType);
-                }
-            }
-        }
-
-        private void DoHit(Vector3 hitPoint)
-        {
-            if (!_drawer.IsInRange(hitPoint))
-                return;
-            _drawer.DrawDebugHitPointGUI(hitPoint);
-
-            var blockPosition = _hittedBlockPosition ?? _target.WorldPositionToBlockPosition(hitPoint);
-            var tilePosition = _target.WorldPositionToTilePosition(blockPosition);
-            var targetTerrainTileDefinition = _target.Asset.TerrainTileMap.TryGetDefinitionAt(tilePosition);
-
-            var isErase = TerrainTileDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
-            bool drawCube = true;
-            if (isErase)
-            {
-                if (targetTerrainTileDefinition != _drawer.SelectedTerrainTileDefinition)
-                {
-                    drawCube = false;
-                }
-            }
-            else
-            {
-                if (targetTerrainTileDefinition != null)
-                {
-                    _drawer.FixHitBlockPositionWithExclude(ref blockPosition, hitPoint);
-                    if (!_drawer.IsInRange(blockPosition))
-                    {
-                        return;
-                    }
-
-                    tilePosition = _target.WorldPositionToTilePosition(blockPosition);
-                }
-            }
-
-            if (drawCube)
-            {
-                _drawer.DrawCube(blockPosition);
-                if (isErase)
-                {
-                    _drawer.DrawCube(blockPosition, Color.red.SetA(0.2f));
-                }
-            }
-
-            if (IsMouseDown())
-            {
-
-                switch (TerrainTileDefinitionDrawer.SelectedDrawMode)
-                {
-                    case DrawMode.Brush:
-                        Undo.RecordObject(_target.Asset, $"Brush tile at {tilePosition} in {_target.Asset.name}");
-                        _target.Asset.TerrainTileMap.SetTileAt(tilePosition, _drawer.SelectedTerrainTileDefinition.Guid);
-                        break;
-                    case DrawMode.Eraser:
-                        Undo.RecordObject(_target.Asset, $"Erase tile at {tilePosition} in {_target.Asset.name}");
-                        _target.Asset.TerrainTileMap.RemoveTileAt(tilePosition);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-
-                EasyEditorUtility.SetUnityObjectDirty(_target.Asset);
-
-                FinishMouseDown();
-            }
+            TilemapSceneViewHandler.DrawSceneGUIFor(_target, _drawer, _context.Value.IsMarkingRuleType, _context.Value.RuleTypeMapCache, ref _hittedBlockPosition);
         }
 
         private bool IsMouseDown()

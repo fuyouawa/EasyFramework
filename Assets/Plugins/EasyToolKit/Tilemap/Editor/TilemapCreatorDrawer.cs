@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    internal class TilemapCreatorDrawer
+    public class TilemapCreatorDrawer
     {
         private static readonly float Epsilon = TilemapCreator.Epsilon;
 

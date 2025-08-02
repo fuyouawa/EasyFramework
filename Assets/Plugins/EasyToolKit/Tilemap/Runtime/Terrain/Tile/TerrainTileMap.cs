@@ -19,14 +19,14 @@ namespace EasyToolKit.Tilemap
     public class TerrainTileMap : ISerializationCallbackReceiver, IEnumerable<TerrainTileBlockDefinition>
     {
         [LabelText("地形瓦片定义表资产")]
-        [InlineEditor(Style = InlineEditorStyle.PlaceWithHide)]
-        [SerializeField] private TerrainTileDefinitionsAsset _definitionsAsset;
+        [HideLabel]
+        [SerializeField] private TerrainTileDefinitionSet _definitionSet;
 
         private Dictionary<Vector3Int, Guid> _definitionGuidMap = new Dictionary<Vector3Int, Guid>();
 
         [SerializeField, HideInInspector] private byte[] _serializedDefinitionGuidMap;
 
-        public TerrainTileDefinitionsAsset DefinitionsAsset => _definitionsAsset;
+        public TerrainTileDefinitionSet DefinitionSet => _definitionSet;
 
         public void SetTileAt(Vector3Int tilePosition, Guid terrainTileDefinitionGuid)
         {
@@ -37,7 +37,7 @@ namespace EasyToolKit.Tilemap
         {
             if (_definitionGuidMap.TryGetValue(tilePosition, out var guid))
             {
-                return DefinitionsAsset.TryGetByGuid(guid);
+                return DefinitionSet.TryGetByGuid(guid);
             }
 
             return null;
@@ -46,7 +46,7 @@ namespace EasyToolKit.Tilemap
         public bool ClearInvalidTiles()
         {
             var invalidTilePositions = _definitionGuidMap
-                .Where(kvp => !DefinitionsAsset.Contains(kvp.Value))
+                .Where(kvp => !DefinitionSet.Contains(kvp.Value))
                 .Select(kvp => kvp.Key)
                 .ToList();
 
@@ -61,7 +61,7 @@ namespace EasyToolKit.Tilemap
 
         public IEnumerable<TerrainTileBlockDefinition> EnumerateMatchedMap(Guid matchDefinitionGuid)
         {
-            var definition = DefinitionsAsset.TryGetByGuid(matchDefinitionGuid);
+            var definition = DefinitionSet.TryGetByGuid(matchDefinitionGuid);
             Assert.IsNotNull(definition);
 
             foreach (var kvp in _definitionGuidMap)
@@ -159,7 +159,7 @@ namespace EasyToolKit.Tilemap
             {
                 var tilePosition = kvp.Key;
                 var guid = kvp.Value;
-                var definition = DefinitionsAsset.TryGetByGuid(guid);
+                var definition = DefinitionSet.TryGetByGuid(guid);
                 Assert.IsNotNull(definition);
                 Assert.IsTrue(guid != Guid.Empty);
 

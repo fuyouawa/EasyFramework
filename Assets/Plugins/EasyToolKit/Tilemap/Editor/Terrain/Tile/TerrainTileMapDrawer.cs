@@ -8,9 +8,9 @@ namespace EasyToolKit.Tilemap
     {
         protected override void DrawProperty(GUIContent label)
         {
-            ValueEntry.SmartValue.DefinitionsAsset.OnRemovedDefinition += OnRemovedDefinition;
+            ValueEntry.SmartValue.DefinitionSet.OnRemovedDefinition += OnRemovedDefinition;
             CallNextDrawer(label);
-            ValueEntry.SmartValue.DefinitionsAsset.OnRemovedDefinition -= OnRemovedDefinition;
+            ValueEntry.SmartValue.DefinitionSet.OnRemovedDefinition -= OnRemovedDefinition;
 
             if (GUILayout.Button("清除无效瓦片", GUILayout.Height(30)))
             {

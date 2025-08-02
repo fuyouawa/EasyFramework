@@ -17,9 +17,18 @@ namespace EasyToolKit.Tilemap
 
         public void ClearTiles()
         {
-            foreach (Transform child in transform)
+            var childCount = transform.childCount;
+            for (int i = 0; i < childCount; i++)
             {
-                Destroy(child.gameObject);
+                var child = transform.GetChild(0);
+                if (Application.isPlaying)
+                {
+                    Destroy(child.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(child.gameObject);
+                }
             }
         }
     }

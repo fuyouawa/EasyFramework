@@ -71,17 +71,20 @@ namespace EasyToolKit.Tilemap
 
             foreach (var terrainObject in terrainObjects)
             {
-                if (!Asset.TerrainTileMap.DefinitionsAsset.Contains(terrainObject.TargetTerrainTileDefinitionGuid))
+                if (!Asset.TerrainTileMap.DefinitionSet.Contains(terrainObject.TargetTerrainTileDefinitionGuid))
                 {
-#if UNITY_EDITOR
-                    DestroyImmediate(terrainObject.gameObject);
-#else
-                    Destroy(terrainObject.gameObject);
-#endif
+                    if (Application.isPlaying)
+                    {
+                        Destroy(terrainObject.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(terrainObject.gameObject);
+                    }
                 }
             }
 
-            foreach (var terrainTileDefiniton in Asset.TerrainTileMap.DefinitionsAsset)
+            foreach (var terrainTileDefiniton in Asset.TerrainTileMap.DefinitionSet)
             {
                 var terrainObject = terrainObjects.FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefiniton.Guid);
                 if (terrainObject == null)
@@ -130,7 +133,7 @@ namespace EasyToolKit.Tilemap
 
         public void GenerateAllMap()
         {
-            foreach (var terrainTileDefinition in Asset.TerrainTileMap.DefinitionsAsset)
+            foreach (var terrainTileDefinition in Asset.TerrainTileMap.DefinitionSet)
             {
                 GenerateMap(terrainTileDefinition.Guid);
             }
