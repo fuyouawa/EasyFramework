@@ -12,9 +12,9 @@ namespace EasyToolKit.Tilemap
         [SerializeField] private TilemapSettings _settings = new TilemapSettings();
 
         [EndFoldoutGroup]
-        [SerializeField, HideLabel] private TerrainTileMap _terrainTileMap = new TerrainTileMap();
+        [SerializeField, HideLabel] private TerrainMap _terrainMap = new TerrainMap();
 
         public TilemapSettings Settings => _settings;
-        public TerrainTileMap TerrainTileMap => _terrainTileMap;
+        public TerrainMap TerrainMap => _terrainMap;
     }
 }

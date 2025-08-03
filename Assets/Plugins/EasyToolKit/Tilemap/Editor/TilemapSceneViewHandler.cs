@@ -14,7 +14,7 @@ namespace EasyToolKit.Tilemap.Editor
         private static TilemapCreator currentTarget;
         private static TilemapCreatorDrawer drawer;
         private static bool isMarkingRuleType = false;
-        private static Dictionary<Vector3Int, TerrainRuleType> ruleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
+        private static Dictionary<Vector3Int, TerrainTileRuleType> ruleTypeMapCache = new Dictionary<Vector3Int, TerrainTileRuleType>();
         private static Vector3? hittedBlockPosition;
 
         static TilemapSceneViewHandler()
@@ -55,26 +55,26 @@ namespace EasyToolKit.Tilemap.Editor
             ruleTypeMapCache.Clear();
         }
 
-        public static void AddRuleTypeToCache(Vector3Int tilePosition, TerrainRuleType ruleType)
+        public static void AddRuleTypeToCache(Vector3Int tilePosition, TerrainTileRuleType ruleType)
         {
             ruleTypeMapCache[tilePosition] = ruleType;
         }
 
         public static void DrawSceneGUIFor(TilemapCreator target, TilemapCreatorDrawer targetDrawer,
-            bool markingRuleType, Dictionary<Vector3Int, TerrainRuleType> ruleTypeCache, ref Vector3? hitBlockPosition)
+            bool markingRuleType, Dictionary<Vector3Int, TerrainTileRuleType> ruleTypeCache, ref Vector3? hitBlockPosition)
         {
             DrawSceneGUIInternal(target, targetDrawer, markingRuleType, ruleTypeCache, ref hitBlockPosition);
         }
 
         private static void DrawSceneGUIInternal(TilemapCreator target, TilemapCreatorDrawer targetDrawer,
-            bool markingRuleType, Dictionary<Vector3Int, TerrainRuleType> ruleTypeCache, ref Vector3? hitBlockPosition)
+            bool markingRuleType, Dictionary<Vector3Int, TerrainTileRuleType> ruleTypeCache, ref Vector3? hitBlockPosition)
         {
             if (target.Asset == null)
                 return;
 
-            var selectedItemGuid = TerrainTileDefinitionDrawer.SelectedItemGuid;
-            targetDrawer.SelectedTerrainTileDefinition = selectedItemGuid != null ?
-                target.Asset.TerrainTileMap.DefinitionSet.TryGetByGuid(selectedItemGuid.Value) : null;
+            var selectedItemGuid = TerrainDefinitionDrawer.SelectedGuid;
+            targetDrawer.SelectedTerrainDefinition = selectedItemGuid != null ?
+                target.Asset.TerrainMap.DefinitionSet.TryGetByGuid(selectedItemGuid.Value) : null;
 
             if (target.Asset.Settings.DrawDebugBase)
             {
@@ -107,20 +107,20 @@ namespace EasyToolKit.Tilemap.Editor
 
             var blockPosition = hitBlockPosition ?? target.WorldPositionToBlockPosition(hitPoint);
             var tilePosition = target.WorldPositionToTilePosition(blockPosition);
-            var targetTerrainTileDefinition = target.Asset.TerrainTileMap.TryGetDefinitionAt(tilePosition);
+            var targetTerrainDefinition = target.Asset.TerrainMap.TryGetDefinitionAt(tilePosition);
 
-            var isErase = TerrainTileDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
+            var isErase = TerrainDefinitionDrawer.SelectedDrawMode == DrawMode.Eraser;
             bool drawCube = true;
             if (isErase)
             {
-                if (targetTerrainTileDefinition != targetDrawer.SelectedTerrainTileDefinition)
+                if (targetTerrainDefinition != targetDrawer.SelectedTerrainDefinition)
                 {
                     drawCube = false;
                 }
             }
             else
             {
-                if (targetTerrainTileDefinition != null)
+                if (targetTerrainDefinition != null)
                 {
                     targetDrawer.FixHitBlockPositionWithExclude(ref blockPosition, hitPoint);
                     if (!targetDrawer.IsInRange(blockPosition))
@@ -134,7 +134,7 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (drawCube)
             {
-                targetDrawer.DrawCube(blockPosition, targetDrawer.SelectedTerrainTileDefinition.DebugCubeColor.SetA(1f));
+                targetDrawer.DrawCube(blockPosition, targetDrawer.SelectedTerrainDefinition.DebugCubeColor.SetA(1f));
                 if (isErase)
                 {
                     targetDrawer.DrawFillCube(blockPosition, Color.red.SetA(0.2f));
@@ -143,15 +143,15 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (IsMouseDown())
             {
-                switch (TerrainTileDefinitionDrawer.SelectedDrawMode)
+                switch (TerrainDefinitionDrawer.SelectedDrawMode)
                 {
                     case DrawMode.Brush:
                         Undo.RecordObject(target.Asset, $"Brush tile at {tilePosition} in {target.Asset.name}");
-                        target.Asset.TerrainTileMap.SetTileAt(tilePosition, targetDrawer.SelectedTerrainTileDefinition.Guid);
+                        target.Asset.TerrainMap.SetTileAt(tilePosition, targetDrawer.SelectedTerrainDefinition.Guid);
                         break;
                     case DrawMode.Eraser:
                         Undo.RecordObject(target.Asset, $"Erase tile at {tilePosition} in {target.Asset.name}");
-                        target.Asset.TerrainTileMap.RemoveTileAt(tilePosition);
+                        target.Asset.TerrainMap.RemoveTileAt(tilePosition);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -163,7 +163,7 @@ namespace EasyToolKit.Tilemap.Editor
 
                 if (target.Asset.Settings.RealTimeIncrementalBuild)
                 {
-                    target.IncrementalBuildAt(targetDrawer.SelectedTerrainTileDefinition.Guid, tilePosition);
+                    target.IncrementalBuildAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
                 }
             }
         }

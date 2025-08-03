@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 1038159986, guid: 81aeb58f16b246a49966556b632e412f, type: 3}
   m_Name: PersistentContextCacheAsset
   m_EditorClassIdentifier: 
-  _saveCacheOnUnityQuit: 1
+  _saveCacheOnUnityQuit: 0
   _serializationData:
     SerializedFormat: 2
     SerializedBytes: 
@@ -23,7 +23,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: _contextCache
+    - Name: _cache
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[EasyToolKit.Inspector.Editor.GlobalPersistentContext,
         EasyToolKit.Inspector.Editor]], mscorlib
@@ -49,7 +49,7 @@ MonoBehaviour:
         EasyToolKit.Tilemap.Editor]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393509313846
+      Data: 638897683655380115
     - Name: value
       Entry: 7
       Data: 3|EasyToolKit.Tilemap.Editor.TilemapCreatorEditorContext, EasyToolKit.Tilemap.Editor
@@ -100,10 +100,10 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393509803192
+      Data: 638897683659455965
     - Name: value
       Entry: 5
-      Data: false
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -122,7 +122,7 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393510437233
+      Data: 638897683659481017
     - Name: value
       Entry: 5
       Data: true
@@ -144,7 +144,7 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393510487309
+      Data: 638897683659486046
     - Name: value
       Entry: 5
       Data: true
@@ -166,10 +166,10 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393528338889
+      Data: 638897683659496054
     - Name: value
       Entry: 5
-      Data: false
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -188,7 +188,7 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393520262394
+      Data: 638897683659516056
     - Name: value
       Entry: 5
       Data: true
@@ -210,10 +210,10 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393510594239
+      Data: 638897683659542080
     - Name: value
       Entry: 5
-      Data: false
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -232,10 +232,10 @@ MonoBehaviour:
         mscorlib]], EasyToolKit.Inspector.Editor
     - Name: _timeStamp
       Entry: 3
-      Data: 638897393510614240
+      Data: 638897683659567098
     - Name: value
       Entry: 5
-      Data: false
+      Data: true
     - Name: 
       Entry: 8
       Data: 

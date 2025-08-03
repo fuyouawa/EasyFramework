@@ -8,18 +8,22 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
+    [Serializable]
     public class TilemapCreatorEditorContext
     {
+        [SerializeField] private Dictionary<Vector3Int, TerrainTileRuleType> _ruleTypeMapCache =
+            new Dictionary<Vector3Int, TerrainTileRuleType>();
+
         public TilemapCreator Target;
         public bool IsMarkingRuleType = false;
-        public Dictionary<Vector3Int, TerrainRuleType> RuleTypeMapCache = new Dictionary<Vector3Int, TerrainRuleType>();
+
+        public Dictionary<Vector3Int, TerrainTileRuleType> RuleTypeMapCache =>
+            _ruleTypeMapCache ??= new Dictionary<Vector3Int, TerrainTileRuleType>();
     }
 
     [CustomEditor(typeof(TilemapCreator))]
     public class TilemapCreatorEditor : EasyEditor
     {
-        private static readonly float Epsilon = TilemapCreator.Epsilon;
-
         private TilemapCreator _target;
         private TilemapCreatorDrawer _drawer;
 
@@ -61,9 +65,9 @@ namespace EasyToolKit.Tilemap.Editor
                 _context.Value.RuleTypeMapCache.Clear();
                 TilemapSceneViewHandler.ClearRuleTypeCache();
 
-                foreach (var block in _target.Asset.TerrainTileMap)
+                foreach (var block in _target.Asset.TerrainMap)
                 {
-                    var ruleType = _target.Asset.TerrainTileMap.CalculateRuleTypeAt(block.TilePosition);
+                    var ruleType = _target.Asset.TerrainMap.CalculateRuleTypeAt(block.TilePosition);
                     _context.Value.RuleTypeMapCache[block.TilePosition] = ruleType;
                     TilemapSceneViewHandler.AddRuleTypeToCache(block.TilePosition, ruleType);
                 }

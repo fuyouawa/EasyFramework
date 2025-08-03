@@ -1,8 +1,6 @@
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using EasyToolKit.Inspector.Editor;
-using JetBrains.Annotations;
-using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,97 +8,43 @@ namespace EasyToolKit.Tilemap.Editor
 {
     public class TerrainTileDefinitionDrawer : EasyValueDrawer<TerrainTileDefinition>
     {
-        private static readonly GUIContent TempContent = new GUIContent();
-        private static readonly Color SelectedButtonColor = new Color(0, 0.7f, 1f, 1);
-
-        [CanBeNull] public static Guid? SelectedItemGuid { get; private set; }
-        public static DrawMode SelectedDrawMode { get; private set; }
+        public static readonly Color BackgroundColor = EditorGUIUtility.isProSkin
+            ? new Color(0.216f * 0.9f, 0.216f * 0.9f, 0.216f * 0.9f, 1f)
+            : new Color(0.801f, 0.801f, 0.801f, 1.000f);
 
         protected override void DrawProperty(GUIContent label)
         {
-            EasyEditorGUI.BeginBox();
+            var type = Property.GetAttribute<TerrainTileRuleTypeAttribute>();
+            if (type == null)
+            {
+                EditorGUILayout.HelpBox("TerrainTileRuleTypeAttribute is missing.", MessageType.Error);
+                return;
+            }
 
-            GUILayout.Space(-3);
-            EditorGUILayout.BeginHorizontal("Button", GUILayout.ExpandWidth(true), GUILayout.Height(30));
+            var icon = TilemapEditorIcons.Instance.GetTerrainTileTypeIcon(type.RuleType);
 
-            EasyGUIHelper.PushColor(ValueEntry.SmartValue.DebugCubeColor.SetA(1f));
-            GUILayout.Box(GUIContent.none, EasyGUIStyles.WhiteBoxStyle, GUILayout.Width(3), GUILayout.Height(30));
-            EasyGUIHelper.PopColor();
+            var totalRect = EditorGUILayout.BeginHorizontal();
+            totalRect.xMin += EasyGUIHelper.CurrentIndentAmount;
+            totalRect.xMax += EasyGUIHelper.CurrentIndentAmount;
+            EasyEditorGUI.DrawSolidRect(totalRect, BackgroundColor);
 
-            var foldoutRect = EditorGUILayout.GetControlRect(true, 30, MetroFoldoutGroupAttributeDrawer.FoldoutStyle);
+            var iconRect = GUILayoutUtility.GetRect(64, 64, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+            iconRect = iconRect.AlignCenter(32, 32);
+            iconRect.xMin += EasyGUIHelper.CurrentIndentAmount;
+            iconRect.xMax += EasyGUIHelper.CurrentIndentAmount;
 
-            var title = ValueEntry.SmartValue.Name.DefaultIfNullOrEmpty("TODO");
-            Property.State.Expanded = EasyEditorGUI.Foldout(
-                foldoutRect, Property.State.Expanded,
-                TempContent.SetText(title).SetTooltip(ValueEntry.SmartValue.Guid.ToString("D")),
-                MetroFoldoutGroupAttributeDrawer.FoldoutStyle);
+            GUI.DrawTexture(iconRect, icon);
+
+            EditorGUILayout.BeginVertical();
+
+            for (int i = 0; i < Property.Children.Count; i++)
+            {
+                Property.Children[i].Draw();
+            }
+
+            EditorGUILayout.EndVertical();
 
             EditorGUILayout.EndHorizontal();
-
-            if (Property.State.Expanded)
-            {
-                CallNextDrawer(label);
-
-                EasyEditorGUI.BeginBox();
-                EditorGUILayout.BeginHorizontal();
-
-                Button(DrawMode.Brush);
-                EditorGUILayout.Space(3, false);
-                Button(DrawMode.Eraser);
-
-                EditorGUILayout.EndHorizontal();
-                EasyEditorGUI.EndBox();
-            }
-
-            EasyEditorGUI.EndBox();
-        }
-
-        private bool IsSelected(DrawMode drawMode)
-        {
-            if (SelectedItemGuid == null || SelectedItemGuid != ValueEntry.SmartValue.Guid)
-                return false;
-
-            return SelectedDrawMode == drawMode;
-        }
-
-        private bool Button(DrawMode drawMode)
-        {
-            var isSelected = IsSelected(drawMode);
-            if (isSelected)
-            {
-                EasyGUIHelper.PushColor(SelectedButtonColor);
-            }
-            var btnRect = GUILayoutUtility.GetRect(30, 30, GUILayout.ExpandWidth(false));
-            var clicked = GUI.Button(btnRect, GUIContent.none);
-
-            if (isSelected)
-            {
-                EasyGUIHelper.PopColor();
-            }
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                var icon = TilemapEditorIcons.Instance.GetDrawModeIcon(drawMode);
-                GUI.DrawTexture(btnRect.AlignCenter(25, 25), icon);
-            }
-
-            if (clicked)
-            {
-                if (SelectedItemGuid != null &&
-                    SelectedItemGuid == ValueEntry.SmartValue.Guid &&
-                    SelectedDrawMode == drawMode)
-                {
-                    SelectedItemGuid = null;
-                }
-                else
-                {
-                    SelectedItemGuid = ValueEntry.SmartValue.Guid;
-                }
-
-                SelectedDrawMode = drawMode;
-            }
-
-            return clicked;
         }
     }
 }

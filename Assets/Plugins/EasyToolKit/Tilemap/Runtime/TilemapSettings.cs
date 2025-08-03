@@ -19,6 +19,9 @@ namespace EasyToolKit.Tilemap
         [LabelText("实时增量构建")]
         [SerializeField] private bool _realTimeIncrementalBuild = true;
 
+        [LabelText("最大增量构建深度")]
+        [SerializeField] private int _maxIncrementalBuildDepth = 5;
+
         [Title("调试")]
         [LabelText("绘制调试地基")]
         [SerializeField] private bool _drawDebugBase = true;
@@ -38,6 +41,8 @@ namespace EasyToolKit.Tilemap
         public bool DrawDebugBase => _drawDebugBase;
 
         public Color BaseDebugColor => _baseDebugColor;
+
+        public int MaxIncrementalBuildDepth => _maxIncrementalBuildDepth;
 
         public float TileSize => _tileSize;
 

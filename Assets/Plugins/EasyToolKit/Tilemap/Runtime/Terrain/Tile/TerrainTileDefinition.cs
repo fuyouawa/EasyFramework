@@ -1,90 +1,45 @@
 using EasyToolKit.Inspector;
-using EasyToolKit.ThirdParty.OdinSerializer;
+using JetBrains.Annotations;
 using System;
 using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
     [Serializable]
-    public class TerrainTileDefinition : ISerializationCallbackReceiver, IEquatable<TerrainTileDefinition>
+    [HideLabel]
+    public class TerrainTileDefinition
     {
-        private Guid _guid;
+        [LabelText("预制体")]
+        [SerializeField] private GameObject _prefab;
 
-        [LabelText("名称")]
-        [SerializeField] private string _name;
+        [LabelText("位置偏移")]
+        [SerializeField] private Vector3 _positionOffset;
 
-        [LabelText("调试块颜色")]
-        [SerializeField] private Color _debugCubeColor = Color.green;
+        [LabelText("旋转偏移")]
+        [SerializeField] private Vector3 _rotationOffset;
 
-        [LabelText("绘制调试块")]
-        [SerializeField] private bool _drawDebugCube = true;
+        [LabelText("缩放偏移")]
+        [SerializeField] private Vector3 _scaleOffset;
 
-        [InlineEditor(Style = InlineEditorStyle.Foldout)]
-        [LabelText("规则集")]
-        [SerializeField] private TerrainTileRuleSetAsset _ruleSetAsset;
+        public GameObject Prefab => _prefab;
+        public Vector3 PositionOffset => _positionOffset;
+        public Vector3 RotationOffset => _rotationOffset;
+        public Vector3 ScaleOffset => _scaleOffset;
 
-        [SerializeField, HideInInspector] private byte[] _serializedGuid;
-        [SerializeField, HideInInspector] private byte[] _serializedMapData;
-
-        public Guid Guid => _guid;
-        public string Name => _name;
-        public Color DebugCubeColor => _debugCubeColor;
-        public bool DrawDebugCube => _drawDebugCube;
-        public TerrainTileRuleSetAsset RuleSetAsset => _ruleSetAsset;
-
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        [CanBeNull]
+        public GameObject TryInstantiate()
         {
-            if (_guid == Guid.Empty)
+            if (_prefab == null)
             {
-                _guid = Guid.NewGuid();
+                return null;
             }
 
-            _serializedGuid = SerializationUtility.SerializeValue(_guid, DataFormat.Binary);
-        }
-
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
-        {
-            if (_serializedGuid != null && _serializedGuid.Length > 0)
-            {
-                _guid = SerializationUtility.DeserializeValue<Guid>(_serializedGuid, DataFormat.Binary);
-            }
-            else
-            {
-                _guid = Guid.NewGuid();
-            }
-        }
-
-        public static bool operator ==(TerrainTileDefinition left, TerrainTileDefinition right)
-        {
-            if (left is null)
-                return right is null;
-
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(TerrainTileDefinition left, TerrainTileDefinition right)
-        {
-            return !(left == right);
-        }
-
-        public bool Equals(TerrainTileDefinition obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return _guid == obj._guid;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((TerrainTileDefinition)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return _guid.GetHashCode();
+            var result = GameObject.Instantiate(Prefab);
+            result.transform.position = PositionOffset;
+            result.transform.rotation *= Quaternion.Euler(RotationOffset);
+            result.transform.localScale += ScaleOffset;
+            result.name = Prefab.name;
+            return result;
         }
     }
 }

@@ -11,9 +11,8 @@ namespace EasyToolKit.Tilemap.Editor
         protected override void DrawTree()
         {
             Tree.BeginDraw();
-
-            EditorGUILayout.LabelField("地形瓦片定义GUID", ((TerrainObject)target).TargetTerrainTileDefinitionGuid.ToString("D"));
-
+            EditorGUILayout.LabelField("地形定义GUID", ((TerrainObject)target).TargetTerrainDefinitionGuid.ToString("D"));
+            Tree.DrawProperties();
             Tree.EndDraw();
         }
     }

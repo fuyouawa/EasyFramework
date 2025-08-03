@@ -11,17 +11,17 @@ namespace EasyToolKit.Tilemap.Editor
         private static readonly float Epsilon = TilemapCreator.Epsilon;
 
         private TilemapCreator _creator;
-        private TerrainTileDefinition _selectedTerrainTileDefinition;
+        private TerrainDefinition _selectedTerrainDefinition;
 
         public TilemapCreatorDrawer(TilemapCreator creator)
         {
             _creator = creator;
         }
 
-        public TerrainTileDefinition SelectedTerrainTileDefinition
+        public TerrainDefinition SelectedTerrainDefinition
         {
-            get => _selectedTerrainTileDefinition;
-            set => _selectedTerrainTileDefinition = value;
+            get => _selectedTerrainDefinition;
+            set => _selectedTerrainDefinition = value;
         }
 
         public void DrawBase()
@@ -57,7 +57,7 @@ namespace EasyToolKit.Tilemap.Editor
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
             float previousRaycastDistance = float.MaxValue;
-            foreach (var block in _creator.Asset.TerrainTileMap)
+            foreach (var block in _creator.Asset.TerrainMap)
             {
                 var blockPosition = _creator.TilePositionToWorldPosition(block.TilePosition);
 
@@ -66,7 +66,7 @@ namespace EasyToolKit.Tilemap.Editor
                     DrawCube(blockPosition, block.Definition.DebugCubeColor);
                 }
 
-                if (_selectedTerrainTileDefinition != null)
+                if (_selectedTerrainDefinition != null)
                 {
                     var center = blockPosition + Vector3.one * (tileSize * 0.5f);
                     var bounds = new Bounds(center, tileSize * Vector3.one);
@@ -85,7 +85,7 @@ namespace EasyToolKit.Tilemap.Editor
                 }
             }
 
-            if (_selectedTerrainTileDefinition != null && !handledHit)
+            if (_selectedTerrainDefinition != null && !handledHit)
             {
                 var plane = new Plane(Vector3.up, _creator.transform.position);
                 if (plane.Raycast(ray, out float enter))
@@ -176,23 +176,23 @@ namespace EasyToolKit.Tilemap.Editor
             Handles.EndGUI();
         }
 
-        public void DrawDebugRuleTypeGUI(Vector3 tileWorldPosition, TerrainRuleType ruleType)
+        public void DrawDebugRuleTypeGUI(Vector3 tileWorldPosition, TerrainTileRuleType ruleType)
         {
             var ruleTypeText = ruleType switch
             {
-                TerrainRuleType.Fill => "填充",
-                TerrainRuleType.TopEdge => "顶边缘",
-                TerrainRuleType.LeftEdge => "左边缘",
-                TerrainRuleType.BottomEdge => "底边缘",
-                TerrainRuleType.RightEdge => "右边缘",
-                TerrainRuleType.TopLeftExteriorCorner => "左上外角",
-                TerrainRuleType.TopRightExteriorCorner => "右上外角",
-                TerrainRuleType.BottomRightExteriorCorner => "右下外角",
-                TerrainRuleType.BottomLeftExteriorCorner => "左下外角",
-                TerrainRuleType.TopLeftInteriorCorner => "左上内角",
-                TerrainRuleType.TopRightInteriorCorner => "右上内角",
-                TerrainRuleType.BottomRightInteriorCorner => "右下内角",
-                TerrainRuleType.BottomLeftInteriorCorner => "左下内角",
+                TerrainTileRuleType.Fill => "填充",
+                TerrainTileRuleType.TopEdge => "顶边缘",
+                TerrainTileRuleType.LeftEdge => "左边缘",
+                TerrainTileRuleType.BottomEdge => "底边缘",
+                TerrainTileRuleType.RightEdge => "右边缘",
+                TerrainTileRuleType.TopLeftExteriorCorner => "左上外角",
+                TerrainTileRuleType.TopRightExteriorCorner => "右上外角",
+                TerrainTileRuleType.BottomRightExteriorCorner => "右下外角",
+                TerrainTileRuleType.BottomLeftExteriorCorner => "左下外角",
+                TerrainTileRuleType.TopLeftInteriorCorner => "左上内角",
+                TerrainTileRuleType.TopRightInteriorCorner => "右上内角",
+                TerrainTileRuleType.BottomRightInteriorCorner => "右下内角",
+                TerrainTileRuleType.BottomLeftInteriorCorner => "左下内角",
                 _ => throw new NotImplementedException(),
             };
 

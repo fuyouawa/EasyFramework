@@ -8,7 +8,6 @@ namespace EasyToolKit.Tilemap.Editor
 {
     public class TilemapEditorIcons : Singleton<TilemapEditorIcons>
     {
-
         private Texture2D _terrainTypeIconsAtlas;
         private Texture2D[,] _terrainTypeIcons;
 
@@ -26,7 +25,8 @@ namespace EasyToolKit.Tilemap.Editor
                 if (_terrainTypeIconsAtlas == null)
                 {
                     var directory = EditorAssetPaths.GetModuleEditorDirectory("Tilemap");
-                    _terrainTypeIconsAtlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/TerrainTypeIconAtlas.png");
+                    _terrainTypeIconsAtlas =
+                        AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/TerrainTypeIconAtlas.png");
                 }
 
                 if (_terrainTypeIcons == null || _terrainTypeIcons.Length == 0 || _terrainTypeIcons[0, 0] == null)
@@ -47,51 +47,60 @@ namespace EasyToolKit.Tilemap.Editor
                     var directory = EditorAssetPaths.GetModuleEditorDirectory("Tilemap");
                     _drawIconAtlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/DrawIconAtlas.png");
                 }
+
                 if (_drawIcons == null || _drawIcons.Length == 0 || _drawIcons[0, 0] == null)
                 {
                     _drawIcons = _drawIconAtlas.SliceByCount(1, 2);
                 }
+
                 return _drawIcons;
             }
         }
 
-        public Texture2D TerrainFillTypeIcon => GetTerrainTypeIcon(TerrainRuleType.Fill);
-        public Texture2D TerrainExteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopLeftExteriorCorner);
-        public Texture2D TerrainEdgeTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopEdge);
-        public Texture2D TerrainInteriorCornerTypeIcon => GetTerrainTypeIcon(TerrainRuleType.TopLeftInteriorCorner);
+        public Texture2D TerrainFillTypeIcon =>
+            GetTerrainTileTypeIcon(TerrainTileRuleType.Fill);
 
-        public Texture2D GetTerrainTypeIcon(TerrainRuleType terrainRuleType)
+        public Texture2D TerrainExteriorCornerTypeIcon =>
+            GetTerrainTileTypeIcon(TerrainTileRuleType.TopLeftExteriorCorner);
+
+        public Texture2D TerrainEdgeTypeIcon =>
+            GetTerrainTileTypeIcon(TerrainTileRuleType.TopEdge);
+
+        public Texture2D TerrainInteriorCornerTypeIcon =>
+            GetTerrainTileTypeIcon(TerrainTileRuleType.TopLeftInteriorCorner);
+
+        public Texture2D GetTerrainTileTypeIcon(TerrainTileRuleType ruleType)
         {
-            switch (terrainRuleType)
+            switch (ruleType)
             {
-                case TerrainRuleType.BottomLeftInteriorCorner:
+                case TerrainTileRuleType.BottomLeftInteriorCorner:
                     return TerrainTypeIcons[0, 0];
-                case TerrainRuleType.BottomRightInteriorCorner:
+                case TerrainTileRuleType.BottomRightInteriorCorner:
                     return TerrainTypeIcons[0, 1];
-                case TerrainRuleType.TopRightInteriorCorner:
+                case TerrainTileRuleType.TopRightInteriorCorner:
                     return TerrainTypeIcons[0, 2];
-                case TerrainRuleType.TopLeftInteriorCorner:
+                case TerrainTileRuleType.TopLeftInteriorCorner:
                     return TerrainTypeIcons[0, 3];
-                case TerrainRuleType.BottomRightExteriorCorner:
+                case TerrainTileRuleType.BottomRightExteriorCorner:
                     return TerrainTypeIcons[1, 0];
-                case TerrainRuleType.BottomLeftExteriorCorner:
+                case TerrainTileRuleType.BottomLeftExteriorCorner:
                     return TerrainTypeIcons[1, 1];
-                case TerrainRuleType.TopRightExteriorCorner:
+                case TerrainTileRuleType.TopRightExteriorCorner:
                     return TerrainTypeIcons[1, 2];
-                case TerrainRuleType.TopLeftExteriorCorner:
+                case TerrainTileRuleType.TopLeftExteriorCorner:
                     return TerrainTypeIcons[1, 3];
-                case TerrainRuleType.RightEdge:
+                case TerrainTileRuleType.RightEdge:
                     return TerrainTypeIcons[2, 0];
-                case TerrainRuleType.BottomEdge:
+                case TerrainTileRuleType.BottomEdge:
                     return TerrainTypeIcons[2, 1];
-                case TerrainRuleType.LeftEdge:
+                case TerrainTileRuleType.LeftEdge:
                     return TerrainTypeIcons[2, 2];
-                case TerrainRuleType.TopEdge:
+                case TerrainTileRuleType.TopEdge:
                     return TerrainTypeIcons[2, 3];
-                case TerrainRuleType.Fill:
+                case TerrainTileRuleType.Fill:
                     return TerrainTypeIcons[3, 0];
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(terrainRuleType), terrainRuleType, null);
+                    throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
             }
         }
 

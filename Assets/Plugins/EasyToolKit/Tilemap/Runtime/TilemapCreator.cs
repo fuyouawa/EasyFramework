@@ -29,6 +29,7 @@ namespace EasyToolKit.Tilemap
                     _mapObject.transform.SetPositionAndRotation(transform.position, transform.rotation);
                     _mapObject.transform.localScale = Vector3.one;
                 }
+
                 return _mapObject;
             }
         }
@@ -57,7 +58,8 @@ namespace EasyToolKit.Tilemap
             }
 
             var tileSize = Asset.Settings.TileSize;
-            return transform.position + new Vector3(tilePosition.x * tileSize, tilePosition.y * tileSize, tilePosition.z * tileSize);
+            return transform.position + new Vector3(tilePosition.x * tileSize, tilePosition.y * tileSize,
+                tilePosition.z * tileSize);
         }
 
         public Vector3 WorldPositionToBlockPosition(Vector3 worldPosition)
@@ -71,7 +73,7 @@ namespace EasyToolKit.Tilemap
 
             foreach (var terrainObject in terrainObjects)
             {
-                if (!Asset.TerrainTileMap.DefinitionSet.Contains(terrainObject.TargetTerrainTileDefinitionGuid))
+                if (!Asset.TerrainMap.DefinitionSet.Contains(terrainObject.TargetTerrainDefinitionGuid))
                 {
                     if (Application.isPlaying)
                     {
@@ -84,13 +86,16 @@ namespace EasyToolKit.Tilemap
                 }
             }
 
-            foreach (var terrainTileDefiniton in Asset.TerrainTileMap.DefinitionSet)
+            foreach (var terrainTileDefiniton in Asset.TerrainMap.DefinitionSet)
             {
-                var terrainObject = terrainObjects.FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefiniton.Guid);
+                var terrainObject = terrainObjects.FirstOrDefault(terrainObject =>
+                    terrainObject.TargetTerrainDefinitionGuid == terrainTileDefiniton.Guid);
                 if (terrainObject == null)
                 {
                     terrainObject = CreateTerrainObject(terrainTileDefiniton);
                 }
+
+                terrainObject.TilemapCreator = this;
             }
         }
 
@@ -102,11 +107,11 @@ namespace EasyToolKit.Tilemap
             }
         }
 
-        public void ClearMap(Guid targetTerrainTileDefinitionGuid)
+        public void ClearMap(Guid targetTerrainDefinitionGuid)
         {
             EnsureInitializeMap();
 
-            var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
+            var targetTerrainObject = FindTerrainObject(targetTerrainDefinitionGuid);
             if (targetTerrainObject == null)
             {
                 return;
@@ -115,70 +120,58 @@ namespace EasyToolKit.Tilemap
             targetTerrainObject.ClearTiles();
         }
 
-        public TerrainObject CreateTerrainObject(TerrainTileDefinition terrainTileDefinition)
+        public TerrainObject CreateTerrainObject(TerrainDefinition terrainDefinition)
         {
-            var terrainObject = new GameObject(terrainTileDefinition.Name).AddComponent<TerrainObject>();
+            var terrainObject = new GameObject(terrainDefinition.Name).AddComponent<TerrainObject>();
             terrainObject.transform.SetParent(MapObject.transform);
             terrainObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             terrainObject.transform.localScale = Vector3.one;
-            terrainObject.TargetTerrainTileDefinitionGuid = terrainTileDefinition.Guid;
+            terrainObject.TargetTerrainDefinitionGuid = terrainDefinition.Guid;
+            terrainObject.TilemapCreator = this;
             return terrainObject;
         }
 
-        public TerrainObject FindTerrainObject(Guid terrainTileDefinitionGuid)
+        public TerrainObject FindTerrainObject(Guid terrainDefinitionGuid)
         {
             return MapObject.GetComponentsInChildren<TerrainObject>(true)
-                .FirstOrDefault(terrainObject => terrainObject.TargetTerrainTileDefinitionGuid == terrainTileDefinitionGuid);
+                .FirstOrDefault(terrainObject =>
+                    terrainObject.TargetTerrainDefinitionGuid == terrainDefinitionGuid);
         }
 
         public void BuildAllMap()
         {
-            foreach (var terrainTileDefinition in Asset.TerrainTileMap.DefinitionSet)
+            foreach (var terrainTileDefinition in Asset.TerrainMap.DefinitionSet)
             {
                 BuildMapFor(terrainTileDefinition.Guid);
             }
         }
 
-        public void BuildMapFor(Guid targetTerrainTileDefinitionGuid)
+        public void BuildMapFor(Guid targetTerrainDefinitionGuid)
         {
             EnsureInitializeMap();
 
-            var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
+            var targetTerrainObject = FindTerrainObject(targetTerrainDefinitionGuid);
 
-            foreach (var terrainTile in Asset.TerrainTileMap.EnumerateMatchedMap(targetTerrainTileDefinitionGuid))
+            foreach (var terrainTilePosition in Asset.TerrainMap.EnumerateMatchedMap(targetTerrainDefinitionGuid))
             {
-                BuildTile(targetTerrainObject, terrainTile);
+                targetTerrainObject.BuildTile(terrainTilePosition);
             }
         }
 
-        public void IncrementalBuildAt(Guid targetTerrainTileDefinitionGuid, Vector3Int tilePosition)
+        public void IncrementalBuildAt(Guid targetTerrainDefinitionGuid, Vector3Int tilePosition)
         {
             EnsureInitializeMap();
 
-            var targetTerrainObject = FindTerrainObject(targetTerrainTileDefinitionGuid);
+            var targetTerrainObject = FindTerrainObject(targetTerrainDefinitionGuid);
 
-            foreach (var terrainTile in Asset.TerrainTileMap.EnumerateNearlyMatchedMap(targetTerrainTileDefinitionGuid, tilePosition))
+            foreach (var terrainTilePosition in Asset.TerrainMap.EnumerateNearlyMatchedMap(
+                         targetTerrainDefinitionGuid,
+                         tilePosition,
+                         Asset.Settings.MaxIncrementalBuildDepth))
             {
-                BuildTile(targetTerrainObject, terrainTile);
+                targetTerrainObject.DestroyTileAt(terrainTilePosition.TilePosition);
+                targetTerrainObject.BuildTile(terrainTilePosition);
             }
-        }
-
-        private bool BuildTile(TerrainObject targetTerrainObject, TerrainTileBlockDefinition tile)
-        {
-            var tilePosition = tile.TilePosition;
-            var tileWorldPosition = TilePositionToWorldPosition(tilePosition);
-            var ruleType = Asset.TerrainTileMap.CalculateRuleTypeAt(tilePosition);
-            var tileInstance = tile.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
-            if (tileInstance == null)
-            {
-                Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
-                return false;
-            }
-
-            tileInstance.transform.SetParent(targetTerrainObject.transform);
-            tileInstance.transform.position += tileWorldPosition;
-
-            return true;
         }
     }
 }

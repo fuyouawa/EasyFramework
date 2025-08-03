@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da9035972983524caddc2ddc7bed3f7, type: 3}
+  m_Name: TerrainConfigAsset
+  m_EditorClassIdentifier: 
+  _ruleConfigs:
+  - _sudoku: 010101010101010101
+    _ruleType: 0
+  - _sudoku: 000000010101010101
+    _ruleType: 1
+  - _sudoku: 010101010101000000
+    _ruleType: 3
+  - _sudoku: 010100010100010100
+    _ruleType: 2
+  - _sudoku: 000101000101000101
+    _ruleType: 4
+  - _sudoku: 000000000101000101
+    _ruleType: 5
+  - _sudoku: 000000010100010100
+    _ruleType: 6
+  - _sudoku: 010100010100000000
+    _ruleType: 7
+  - _sudoku: 000101000101000000
+    _ruleType: 8
+  - _sudoku: 000101010101010101
+    _ruleType: 9
+  - _sudoku: 010100010101010101
+    _ruleType: 10
+  - _sudoku: 010101010101010100
+    _ruleType: 11
+  - _sudoku: 010101010101000101
+    _ruleType: 12
+  - _sudoku: 000000000101010101
+    _ruleType: 5
+  - _sudoku: 000000010100010101
+    _ruleType: 6
+  - _sudoku: 010101010100000000
+    _ruleType: 7
+  - _sudoku: 010101000101000000
+    _ruleType: 12
+  - _sudoku: 000001000101000101
+    _ruleType: 5
+  - _sudoku: 010000010100010100
+    _ruleType: 6
+  - _sudoku: 010100010100010000
+    _ruleType: 7
+  - _sudoku: 000101000101000001
+    _ruleType: 8
