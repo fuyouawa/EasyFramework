@@ -86,10 +86,6 @@ namespace EasyToolKit.Tilemap
             // Use Queue for breadth-first search with tuple of position and depth
             var queue = new Queue<(Vector3Int position, int depth)>();
 
-            // Start with the initial position at depth 0
-            queue.Enqueue((tilePosition, 0));
-            visited.Add(tilePosition);
-
             // Directions to check (only x and z axes, y stays fixed)
             var directions = new[]
             {
@@ -99,42 +95,86 @@ namespace EasyToolKit.Tilemap
                 new Vector3Int(0, 0, -1), // Back
             };
 
+            // Special handling for initial position
+            visited.Add(tilePosition);
+
+            // Check if the starting position has the matching definition
+            bool hasStartingTile = _definitionGuidMap.TryGetValue(tilePosition, out var startGuid) &&
+                                  startGuid == matchDefinitionGuid;
+
+            // If starting position has the matching tile, add it to results and queue
+            if (hasStartingTile)
+            {
+                yield return new TerrainTilePosition
+                {
+                    TilePosition = tilePosition,
+                    Definition = definition,
+                };
+
+                queue.Enqueue((tilePosition, 0));
+            }
+            else
+            {
+                // If starting position doesn't have matching tile, directly check surrounding tiles
+                foreach (var dir in directions)
+                {
+                    var neighborPos = tilePosition + dir;
+
+                    // Skip already visited positions
+                    if (visited.Contains(neighborPos))
+                        continue;
+
+                    // Mark as visited
+                    visited.Add(neighborPos);
+
+                    // Check if the neighbor has the matching definition
+                    if (_definitionGuidMap.TryGetValue(neighborPos, out var neighborGuid) &&
+                        neighborGuid == matchDefinitionGuid)
+                    {
+                        // Add to results
+                        yield return new TerrainTilePosition
+                        {
+                            TilePosition = neighborPos,
+                            Definition = definition,
+                        };
+
+                        // Add to queue for further exploration
+                        queue.Enqueue((neighborPos, 1));
+                    }
+                }
+            }
+
             while (queue.Count > 0)
             {
                 var (currentPos, currentDepth) = queue.Dequeue();
 
-                // Check if the current position has the matching definition
-                if (_definitionGuidMap.TryGetValue(currentPos, out var guid) && guid == matchDefinitionGuid)
-                {
-                    // Yield the matching tile
-                    yield return new TerrainTilePosition
-                    {
-                        TilePosition = currentPos,
-                        Definition = definition,
-                    };
+                // Stop expanding if we've reached max depth
+                if (currentDepth >= maxDepth)
+                    continue;
 
-                    // Stop expanding if we've reached max depth
-                    if (currentDepth >= maxDepth)
+                // Check adjacent tiles in the four directions
+                foreach (var dir in directions)
+                {
+                    var neighborPos = currentPos + dir;
+
+                    // Skip already visited positions
+                    if (visited.Contains(neighborPos))
                         continue;
 
-                    // Check adjacent tiles in the four directions
-                    foreach (var dir in directions)
+                    // Mark as visited
+                    visited.Add(neighborPos);
+
+                    // Only add to queue if it has the matching definition
+                    if (_definitionGuidMap.TryGetValue(neighborPos, out var neighborGuid) &&
+                        neighborGuid == matchDefinitionGuid)
                     {
-                        var neighborPos = currentPos + dir;
-
-                        // Skip already visited positions
-                        if (visited.Contains(neighborPos))
-                            continue;
-
-                        // Mark as visited
-                        visited.Add(neighborPos);
-
-                        // Only add to queue if it has the matching definition
-                        if (_definitionGuidMap.TryGetValue(neighborPos, out var neighborGuid) &&
-                            neighborGuid == matchDefinitionGuid)
+                        yield return new TerrainTilePosition
                         {
-                            queue.Enqueue((neighborPos, currentDepth + 1));
-                        }
+                            TilePosition = neighborPos,
+                            Definition = definition,
+                        };
+
+                        queue.Enqueue((neighborPos, currentDepth + 1));
                     }
                 }
             }

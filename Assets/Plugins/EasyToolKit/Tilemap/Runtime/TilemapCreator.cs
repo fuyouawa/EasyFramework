@@ -173,5 +173,13 @@ namespace EasyToolKit.Tilemap
                 targetTerrainObject.BuildTile(terrainTilePosition);
             }
         }
+
+        public void DestroyTileAt(Guid targetTerrainDefinitionGuid, Vector3Int tilePosition)
+        {
+            EnsureInitializeMap();
+
+            var targetTerrainObject = FindTerrainObject(targetTerrainDefinitionGuid);
+            targetTerrainObject.DestroyTileAt(tilePosition);
+        }
     }
 }

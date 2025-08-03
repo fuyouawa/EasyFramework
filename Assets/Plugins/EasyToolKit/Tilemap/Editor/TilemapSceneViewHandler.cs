@@ -152,6 +152,11 @@ namespace EasyToolKit.Tilemap.Editor
                     case DrawMode.Eraser:
                         Undo.RecordObject(target.Asset, $"Erase tile at {tilePosition} in {target.Asset.name}");
                         target.Asset.TerrainMap.RemoveTileAt(tilePosition);
+
+                        if (target.Asset.Settings.RealTimeIncrementalBuild)
+                        {
+                            target.DestroyTileAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
+                        }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -159,12 +164,12 @@ namespace EasyToolKit.Tilemap.Editor
 
                 EasyEditorUtility.SetUnityObjectDirty(target.Asset);
 
-                FinishMouseDown();
-
                 if (target.Asset.Settings.RealTimeIncrementalBuild)
                 {
                     target.IncrementalBuildAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
                 }
+
+                FinishMouseDown();
             }
         }
 
