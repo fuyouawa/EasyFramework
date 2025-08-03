@@ -59,6 +59,28 @@ namespace EasyToolKit.Tilemap
         {
             foreach (Transform child in transform)
             {
+                var tileObject = child.GetComponent<TerrainTileObject>();
+                if (tileObject == null)
+                    continue;
+
+                if (tileObject.TerrainObject != this)
+                {
+                    Debug.LogError($"The tile object '{child.name}' is not belong to this terrain object.");
+                    continue;
+                }
+
+                if (tileObject.TilePosition == tilePosition)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(child.gameObject);
+                    }
+                    return true;
+                }
             }
             return false;
         }
@@ -68,6 +90,10 @@ namespace EasyToolKit.Tilemap
         {
             tileInstance.transform.SetParent(transform);
             tileInstance.transform.position += TilemapCreator.TilePositionToWorldPosition(tilePosition);
+            var tileObject = tileInstance.AddComponent<TerrainTileObject>();
+            tileObject.TerrainObject = this;
+            tileObject.RuleType = ruleType;
+            tileObject.TilePosition = tilePosition;
         }
     }
 }
