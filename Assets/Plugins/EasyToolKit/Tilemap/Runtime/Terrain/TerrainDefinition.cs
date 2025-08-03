@@ -13,15 +13,19 @@ namespace EasyToolKit.Tilemap
         [LabelText("名称")]
         [SerializeField] private string _name;
 
+        [InlineEditor(Style = InlineEditorStyle.Foldout)]
+        [LabelText("规则集")]
+        [SerializeField] private TerrainRuleSetAsset _ruleSetAsset;
+
+        [Title("调试")]
         [LabelText("调试块颜色")]
-        [SerializeField] private Color _debugCubeColor = Color.green;
+        [SerializeField] private Color _debugCubeColor = new Color(0, 1, 0, 0.5f);
 
         [LabelText("绘制调试块")]
         [SerializeField] private bool _drawDebugCube = true;
 
-        [InlineEditor(Style = InlineEditorStyle.Foldout)]
-        [LabelText("规则集")]
-        [SerializeField] private TerrainRuleSetAsset _ruleSetAsset;
+        [LabelText("为调试块启用深度测试")]
+        [SerializeField] private bool _enableZTestForDebugCube = true;
 
         [SerializeField, HideInInspector] private byte[] _serializedGuid;
         [SerializeField, HideInInspector] private byte[] _serializedMapData;
@@ -30,6 +34,7 @@ namespace EasyToolKit.Tilemap
         public string Name => _name;
         public Color DebugCubeColor => _debugCubeColor;
         public bool DrawDebugCube => _drawDebugCube;
+        public bool EnableZTestForDebugCube => _enableZTestForDebugCube;
         public TerrainRuleSetAsset RuleSetAsset => _ruleSetAsset;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()

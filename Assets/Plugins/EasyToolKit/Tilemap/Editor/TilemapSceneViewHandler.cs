@@ -76,6 +76,8 @@ namespace EasyToolKit.Tilemap.Editor
             targetDrawer.SelectedTerrainDefinition = selectedItemGuid != null ?
                 target.Asset.TerrainMap.DefinitionSet.TryGetByGuid(selectedItemGuid.Value) : null;
 
+            // targetDrawer.DrawBaseRange();
+
             if (target.Asset.Settings.DrawDebugBase)
             {
                 targetDrawer.DrawBase();
@@ -134,11 +136,9 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (drawCube)
             {
-                targetDrawer.DrawCube(blockPosition, targetDrawer.SelectedTerrainDefinition.DebugCubeColor.SetA(1f));
-                if (isErase)
-                {
-                    targetDrawer.DrawFillCube(blockPosition, Color.red.SetA(0.2f));
-                }
+                var hitColor = isErase ? Color.red.SetA(0.4f) : targetDrawer.SelectedTerrainDefinition.DebugCubeColor;
+                var surroundingColor = Color.white.SetA(0.2f);
+                targetDrawer.DrawHitCube(blockPosition, hitColor, surroundingColor);
             }
 
             if (IsMouseDown())

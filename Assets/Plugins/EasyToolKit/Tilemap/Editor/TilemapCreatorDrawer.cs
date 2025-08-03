@@ -24,11 +24,28 @@ namespace EasyToolKit.Tilemap.Editor
             set => _selectedTerrainDefinition = value;
         }
 
+        public void DrawBaseRange()
+        {
+            var baseRange = _creator.Asset.Settings.BaseRange;
+            var tileSize = _creator.Asset.Settings.TileSize;
+
+            EasyHandleHelper.PushColor(_creator.Asset.Settings.BaseDebugColor.SetA(1f));
+
+            var start = _creator.transform.position;
+            var size = new Vector3(baseRange.x * tileSize, 0, baseRange.y * tileSize);
+            var center = start + size * 0.5f;
+
+            Handles.DrawWireCube(center, size);
+
+            EasyHandleHelper.PopColor();
+        }
+
         public void DrawBase()
         {
             var baseRange = _creator.Asset.Settings.BaseRange;
             var tileSize = _creator.Asset.Settings.TileSize;
 
+            EasyHandleHelper.PushZTest(UnityEngine.Rendering.CompareFunction.LessEqual);
             EasyHandleHelper.PushColor(_creator.Asset.Settings.BaseDebugColor);
             for (int x = 0; x <= baseRange.x; x++)
             {
@@ -45,6 +62,7 @@ namespace EasyToolKit.Tilemap.Editor
             }
 
             EasyHandleHelper.PopColor();
+            EasyHandleHelper.PopZTest();
         }
 
         public bool DrawHit(out Vector3 hitPoint, out Vector3? hittedBlockPosition)
@@ -57,13 +75,24 @@ namespace EasyToolKit.Tilemap.Editor
             Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
             float previousRaycastDistance = float.MaxValue;
+
             foreach (var block in _creator.Asset.TerrainMap)
             {
                 var blockPosition = _creator.TilePositionToWorldPosition(block.TilePosition);
 
                 if (block.Definition.DrawDebugCube)
                 {
+                    if (block.Definition.EnableZTestForDebugCube)
+                    {
+                        EasyHandleHelper.PushZTest(UnityEngine.Rendering.CompareFunction.LessEqual);
+                    }
+
                     DrawCube(blockPosition, block.Definition.DebugCubeColor);
+
+                    if (block.Definition.EnableZTestForDebugCube)
+                    {
+                        EasyHandleHelper.PopZTest();
+                    }
                 }
 
                 if (_selectedTerrainDefinition != null)
@@ -215,6 +244,31 @@ namespace EasyToolKit.Tilemap.Editor
             GUI.Label(new Rect(guiPosition.x, guiPosition.y - 20, 200, 20), $"{gridWorldPosition} - {distance:F2}");
 
             Handles.EndGUI();
+        }
+
+        public void DrawHitCube(Vector3 blockPosition, Color hitColor, Color surroundingColor)
+        {
+            DrawCube(blockPosition, hitColor);
+            DrawFillCube(blockPosition, hitColor.MulA(0.7f));
+            DrawSquare(blockPosition + Vector3.forward, surroundingColor);
+            DrawSquare(blockPosition + Vector3.back, surroundingColor);
+            DrawSquare(blockPosition + Vector3.left, surroundingColor);
+            DrawSquare(blockPosition + Vector3.right, surroundingColor);
+
+            DrawSquare(blockPosition + Vector3.forward + Vector3.left, surroundingColor.MulA(0.5f));
+            DrawSquare(blockPosition + Vector3.forward + Vector3.right, surroundingColor.MulA(0.5f));
+            DrawSquare(blockPosition + Vector3.back + Vector3.left, surroundingColor.MulA(0.5f));
+            DrawSquare(blockPosition + Vector3.back + Vector3.right, surroundingColor.MulA(0.5f));
+        }
+
+        public void DrawSquare(Vector3 blockPosition, Color color)
+        {
+            var tileSize = _creator.Asset.Settings.TileSize;
+            var size = new Vector3(1f, 0.05f, 1f) * tileSize;
+            var center = blockPosition + 0.5f * tileSize * new Vector3(1f, 0f, 1f);
+            EasyHandleHelper.PushColor(color);
+            Handles.DrawWireCube(center, size);
+            EasyHandleHelper.PopColor();
         }
 
         public void DrawCube(Vector3 blockPosition, Color color)

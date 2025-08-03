@@ -41,6 +41,7 @@ namespace EasyToolKit.Tilemap.Editor
             {
                 CallNextDrawer(label);
 
+                EasyEditorGUI.Title("绘制工具");
                 EasyEditorGUI.BeginBox();
                 EditorGUILayout.BeginHorizontal();
 
