@@ -32,6 +32,7 @@ namespace EasyToolKit.Tilemap.Editor
         {
             { DrawMode.Brush, new BrushTool() },
             { DrawMode.Eraser, new EraseTool() },
+            { DrawMode.Rectangle, new RectangeDrawTool() },
         };
 
         protected override void OnEnable()

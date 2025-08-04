@@ -10,8 +10,22 @@ namespace EasyToolKit.Tilemap.Editor
     {
         private static readonly float Epsilon = TilemapUtility.Epsilon;
 
-        protected override Vector3 AdjustBlockPosition(Vector3 blockPosition, float tileSize, Vector3 hitPoint)
+        protected override Vector3 AdjustBlockPosition(
+            TilemapCreator target,
+            Vector3 blockPosition,
+            Vector3 hitPoint,
+            List<Vector3Int> dragTilePositionPath)
         {
+            var tileSize = target.Asset.Settings.TileSize;
+            var tilePosition = TilemapUtility.WorldPositionToTilePosition(
+                target.transform.position, blockPosition, tileSize);
+
+            var targetTerrainDefinition = target.Asset.TerrainMap.TryGetDefinitionAt(tilePosition);
+            if (targetTerrainDefinition == null)
+            {
+                return blockPosition;
+            }
+
             var front = new Rect(
                 blockPosition.x, blockPosition.y,
                 tileSize, tileSize);
@@ -69,9 +83,12 @@ namespace EasyToolKit.Tilemap.Editor
             return blockPosition;
         }
 
-        protected override IEnumerable<Vector3Int> GetDrawingTiles(TilemapCreator target, List<Vector3Int> dragTilePath)
+        protected override IEnumerable<Vector3Int> GetDrawingTilePositions(
+            TilemapCreator target,
+            Vector3Int hitTilePosition,
+            List<Vector3Int> dragTilePositionPath)
         {
-            return dragTilePath;
+            return dragTilePositionPath;
         }
 
         protected override void DoTile(TilemapCreator target, Vector3Int tilePosition)

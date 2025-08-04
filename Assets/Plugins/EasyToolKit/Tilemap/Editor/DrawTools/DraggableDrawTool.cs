@@ -8,37 +8,32 @@ namespace EasyToolKit.Tilemap.Editor
 {
     public abstract class DraggableDrawTool : IDrawTool
     {
-        private List<Vector3Int> _dragTilePath = new List<Vector3Int>();
+        private List<Vector3Int> _dragTilePositionPath = new List<Vector3Int>();
         private bool _isDragging = false;
 
-        public void OnSceneGUI(TilemapCreator target, Vector3 hitPoint, Vector3? hittedBlockPosition)
+        public void OnSceneGUI(TilemapCreator target, Vector3 hitPoint, Vector3? hitBlockPosition)
         {
             var tileSize = target.Asset.Settings.TileSize;
 
-            var blockPosition = hittedBlockPosition ?? TilemapUtility.WorldPositionToBlockPosition(
+            var blockPosition = hitBlockPosition ?? TilemapUtility.WorldPositionToBlockPosition(
                 target.transform.position, hitPoint, tileSize);
 
             var tilePosition = TilemapUtility.WorldPositionToTilePosition(
                 target.transform.position, blockPosition, tileSize);
 
-            var targetTerrainDefinition = target.Asset.TerrainMap.TryGetDefinitionAt(tilePosition);
-
-            if (targetTerrainDefinition != null)
+            var newBlockPosition = AdjustBlockPosition(target, blockPosition, hitPoint, _dragTilePositionPath);
+            if (newBlockPosition != blockPosition)
             {
-                var newBlockPosition = AdjustBlockPosition(blockPosition, tileSize, hitPoint);
-                if (newBlockPosition != blockPosition)
+                blockPosition = newBlockPosition;
+                if (!IsInRange(target.transform.position, target.Asset.Settings.BaseRange, tileSize, blockPosition))
                 {
-                    blockPosition = newBlockPosition;
-                    if (!IsInRange(target.transform.position, target.Asset.Settings.BaseRange, tileSize, blockPosition))
-                    {
-                        return;
-                    }
-
-                    tilePosition = TilemapUtility.WorldPositionToTilePosition(
-                        target.transform.position,
-                        blockPosition,
-                        tileSize);
+                    return;
                 }
+
+                tilePosition = TilemapUtility.WorldPositionToTilePosition(
+                    target.transform.position,
+                    blockPosition,
+                    tileSize);
             }
 
             if (!FilterHitTile(target, tilePosition))
@@ -50,29 +45,29 @@ namespace EasyToolKit.Tilemap.Editor
             if (IsMouseDown())
             {
                 // Start a new drag operation
-                _dragTilePath.Clear();
-                _dragTilePath.Add(tilePosition);
+                _dragTilePositionPath.Clear();
+                _dragTilePositionPath.Add(tilePosition);
                 _isDragging = true;
                 FinishMouse();
             }
             else if (IsMouseDrag() && _isDragging)
             {
                 // Continue the drag operation
-                if (!_dragTilePath.Contains(tilePosition))
+                if (!_dragTilePositionPath.Contains(tilePosition))
                 {
-                    _dragTilePath.Add(tilePosition);
+                    _dragTilePositionPath.Add(tilePosition);
                 }
                 FinishMouse();
             }
             else if (IsMouseUp() && _isDragging)
             {
                 // End the drag operation - now apply all changes at once
-                if (_dragTilePath.Count > 0)
+                if (_dragTilePositionPath.Count > 0)
                 {
                     // Record a single undo operation for all changes
                     Undo.RecordObject(target.Asset, $"Draw tiles in {target.Asset.name}");
 
-                    foreach (var dragTilePosition in GetDrawingTiles(target, _dragTilePath))
+                    foreach (var dragTilePosition in GetDrawingTilePositions(target, tilePosition, _dragTilePositionPath))
                     {
                         DoTile(target, dragTilePosition);
                     }
@@ -82,7 +77,7 @@ namespace EasyToolKit.Tilemap.Editor
                 }
 
                 _isDragging = false;
-                _dragTilePath.Clear();
+                _dragTilePositionPath.Clear();
                 FinishMouse();
             }
 
@@ -92,7 +87,7 @@ namespace EasyToolKit.Tilemap.Editor
             TilemapHandles.DrawHitCube(blockPosition, tileSize, hitColor, surroundingColor);
 
             // Draw all tiles in the drag operation
-            foreach (var dragTilePosition in GetDrawingTiles(target, _dragTilePath))
+            foreach (var dragTilePosition in GetDrawingTilePositions(target, tilePosition, _dragTilePositionPath))
             {
                 var dragWorldPosition = TilemapUtility.TilePositionToWorldPosition(
                     target.transform.position, dragTilePosition, tileSize);
@@ -100,14 +95,17 @@ namespace EasyToolKit.Tilemap.Editor
             }
         }
 
-        protected virtual Vector3 AdjustBlockPosition(Vector3 blockPosition, float tileSize, Vector3 hitPoint)
+        protected virtual Vector3 AdjustBlockPosition(TilemapCreator target, Vector3 blockPosition, Vector3 hitPoint, List<Vector3Int> dragTilePositionPath)
         {
             return blockPosition;
         }
 
-        protected virtual IEnumerable<Vector3Int> GetDrawingTiles(TilemapCreator target, List<Vector3Int> dragTilePath)
+        protected virtual IEnumerable<Vector3Int> GetDrawingTilePositions(
+            TilemapCreator target,
+            Vector3Int hitTilePosition,
+            List<Vector3Int> dragTilePositionPath)
         {
-            return dragTilePath;
+            return dragTilePositionPath;
         }
 
         protected abstract Color GetHitColor(TilemapCreator target);
