@@ -16,6 +16,8 @@ namespace EasyToolKit.Tilemap.Editor
         private static bool isMarkingRuleType = false;
         private static Dictionary<Vector3Int, TerrainTileRuleType> ruleTypeMapCache = new Dictionary<Vector3Int, TerrainTileRuleType>();
         private static Vector3? hittedBlockPosition;
+        private static HashSet<Vector3Int> dragTilePositions = new HashSet<Vector3Int>();
+        private static bool isDragging = false;
 
         static TilemapSceneViewHandler()
         {
@@ -134,42 +136,88 @@ namespace EasyToolKit.Tilemap.Editor
                 }
             }
 
+            var hitColor = isErase ? Color.red.SetA(0.4f) : targetDrawer.SelectedTerrainDefinition.DebugCubeColor;
             if (drawCube)
             {
-                var hitColor = isErase ? Color.red.SetA(0.4f) : targetDrawer.SelectedTerrainDefinition.DebugCubeColor;
                 var surroundingColor = Color.white.SetA(0.2f);
                 targetDrawer.DrawHitCube(blockPosition, hitColor, surroundingColor);
             }
 
+            foreach (var dragTilePosition in dragTilePositions)
+            {
+                targetDrawer.DrawHitCube(dragTilePosition, hitColor.MulA(0.7f));
+            }
+
             if (IsMouseDown())
             {
-                switch (TerrainDefinitionDrawer.SelectedDrawMode)
-                {
-                    case DrawMode.Brush:
-                        Undo.RecordObject(target.Asset, $"Brush tile at {tilePosition} in {target.Asset.name}");
-                        target.Asset.TerrainMap.SetTileAt(tilePosition, targetDrawer.SelectedTerrainDefinition.Guid);
-                        break;
-                    case DrawMode.Eraser:
-                        Undo.RecordObject(target.Asset, $"Erase tile at {tilePosition} in {target.Asset.name}");
-                        target.Asset.TerrainMap.RemoveTileAt(tilePosition);
+                // Start a new drag operation
+                dragTilePositions.Clear();
+                dragTilePositions.Add(tilePosition);
+                isDragging = true;
 
-                        if (target.Asset.Settings.RealTimeIncrementalBuild)
-                        {
-                            target.DestroyTileAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                // We don't apply changes immediately anymore, just store the position
+                FinishMouse();
+            }
+            else if (IsMouseDrag() && isDragging)
+            {
+                // Continue the drag operation
+                if (!dragTilePositions.Contains(tilePosition))
+                {
+                    dragTilePositions.Add(tilePosition);
+                }
+                FinishMouse();
+            }
+            else if (IsMouseUp() && isDragging)
+            {
+                // End the drag operation - now apply all changes at once
+                if (dragTilePositions.Count > 0)
+                {
+                    // Record a single undo operation for all changes
+                    Undo.RecordObject(target.Asset, $"Draw tiles in {target.Asset.name}");
+
+                    // Apply all tile changes
+                    foreach (var pos in dragTilePositions)
+                    {
+                        ApplyTileChange(target, targetDrawer, pos, false);
+                    }
+
+                    // Mark the asset as dirty once for all changes
+                    EasyEditorUtility.SetUnityObjectDirty(target.Asset);
                 }
 
+                isDragging = false;
+                dragTilePositions.Clear();
+                FinishMouse();
+            }
+        }
+
+        private static void ApplyTileChange(TilemapCreator target, TilemapCreatorDrawer targetDrawer, Vector3Int tilePosition, bool markDirty = true)
+        {
+            switch (TerrainDefinitionDrawer.SelectedDrawMode)
+            {
+                case DrawMode.Brush:
+                    target.Asset.TerrainMap.SetTileAt(tilePosition, targetDrawer.SelectedTerrainDefinition.Guid);
+                    break;
+                case DrawMode.Eraser:
+                    target.Asset.TerrainMap.RemoveTileAt(tilePosition);
+
+                    if (target.Asset.Settings.RealTimeIncrementalBuild)
+                    {
+                        target.DestroyTileAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (target.Asset.Settings.RealTimeIncrementalBuild)
+            {
+                target.IncrementalBuildAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
+            }
+
+            if (markDirty)
+            {
                 EasyEditorUtility.SetUnityObjectDirty(target.Asset);
-
-                if (target.Asset.Settings.RealTimeIncrementalBuild)
-                {
-                    target.IncrementalBuildAt(targetDrawer.SelectedTerrainDefinition.Guid, tilePosition);
-                }
-
-                FinishMouseDown();
             }
         }
 
@@ -179,7 +227,19 @@ namespace EasyToolKit.Tilemap.Editor
             return e.type == EventType.MouseDown && e.button == 0;
         }
 
-        private static void FinishMouseDown()
+        private static bool IsMouseDrag()
+        {
+            var e = Event.current;
+            return e.type == EventType.MouseDrag && e.button == 0;
+        }
+
+        private static bool IsMouseUp()
+        {
+            var e = Event.current;
+            return e.type == EventType.MouseUp && e.button == 0;
+        }
+
+        private static void FinishMouse()
         {
             Event.current.Use();
         }

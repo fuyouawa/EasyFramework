@@ -246,19 +246,23 @@ namespace EasyToolKit.Tilemap.Editor
             Handles.EndGUI();
         }
 
-        public void DrawHitCube(Vector3 blockPosition, Color hitColor, Color surroundingColor)
+        public void DrawHitCube(Vector3 blockPosition, Color hitColor, Color? surroundingColor = null)
         {
             DrawCube(blockPosition, hitColor);
             DrawFillCube(blockPosition, hitColor.MulA(0.7f));
-            DrawSquare(blockPosition + Vector3.forward, surroundingColor);
-            DrawSquare(blockPosition + Vector3.back, surroundingColor);
-            DrawSquare(blockPosition + Vector3.left, surroundingColor);
-            DrawSquare(blockPosition + Vector3.right, surroundingColor);
 
-            DrawSquare(blockPosition + Vector3.forward + Vector3.left, surroundingColor.MulA(0.5f));
-            DrawSquare(blockPosition + Vector3.forward + Vector3.right, surroundingColor.MulA(0.5f));
-            DrawSquare(blockPosition + Vector3.back + Vector3.left, surroundingColor.MulA(0.5f));
-            DrawSquare(blockPosition + Vector3.back + Vector3.right, surroundingColor.MulA(0.5f));
+            if (surroundingColor != null)
+            {
+                DrawSquare(blockPosition + Vector3.forward, surroundingColor.Value);
+                DrawSquare(blockPosition + Vector3.back, surroundingColor.Value);
+                DrawSquare(blockPosition + Vector3.left, surroundingColor.Value);
+                DrawSquare(blockPosition + Vector3.right, surroundingColor.Value);
+
+                DrawSquare(blockPosition + Vector3.forward + Vector3.left, surroundingColor.Value.MulA(0.5f));
+                DrawSquare(blockPosition + Vector3.forward + Vector3.right, surroundingColor.Value.MulA(0.5f));
+                DrawSquare(blockPosition + Vector3.back + Vector3.left, surroundingColor.Value.MulA(0.5f));
+                DrawSquare(blockPosition + Vector3.back + Vector3.right, surroundingColor.Value.MulA(0.5f));
+            }
         }
 
         public void DrawSquare(Vector3 blockPosition, Color color)
