@@ -50,7 +50,7 @@ namespace EasyToolKit.Tilemap.Editor
 
                 if (_drawIcons == null || _drawIcons.Length == 0 || _drawIcons[0, 0] == null)
                 {
-                    _drawIcons = _drawIconAtlas.SliceByCount(1, 2);
+                    _drawIcons = _drawIconAtlas.SliceByCount(1, 4);
                 }
 
                 return _drawIcons;
@@ -112,6 +112,10 @@ namespace EasyToolKit.Tilemap.Editor
                     return DrawIcons[0, 0];
                 case DrawMode.Eraser:
                     return DrawIcons[0, 1];
+                case DrawMode.Line:
+                    return DrawIcons[0, 2];
+                case DrawMode.Rectangle:
+                    return DrawIcons[0, 3];
                 default:
                     throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);
             }

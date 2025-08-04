@@ -9,7 +9,6 @@ namespace EasyToolKit.Tilemap
 {
     public class TilemapCreator : MonoBehaviour
     {
-        public static readonly float Epsilon = 0.00001f;
 
         [LabelText("地图资产")]
         [SerializeField, InlineEditor] private TilemapAsset _asset;
@@ -32,39 +31,6 @@ namespace EasyToolKit.Tilemap
 
                 return _mapObject;
             }
-        }
-
-        public Vector3Int WorldPositionToTilePosition(Vector3 worldPosition)
-        {
-            if (Asset == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            var local = worldPosition - transform.position;
-            var tileSize = Asset.Settings.TileSize;
-            int gridX = (local.x / tileSize).SafeFloorToInt(Epsilon);
-            int gridY = (local.y / tileSize).SafeFloorToInt(Epsilon);
-            int gridZ = (local.z / tileSize).SafeFloorToInt(Epsilon);
-
-            return new Vector3Int(gridX, gridY, gridZ);
-        }
-
-        public Vector3 TilePositionToWorldPosition(Vector3Int tilePosition)
-        {
-            if (Asset == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            var tileSize = Asset.Settings.TileSize;
-            return transform.position + new Vector3(tilePosition.x * tileSize, tilePosition.y * tileSize,
-                tilePosition.z * tileSize);
-        }
-
-        public Vector3 WorldPositionToBlockPosition(Vector3 worldPosition)
-        {
-            return TilePositionToWorldPosition(WorldPositionToTilePosition(worldPosition));
         }
 
         public void EnsureInitializeMap()

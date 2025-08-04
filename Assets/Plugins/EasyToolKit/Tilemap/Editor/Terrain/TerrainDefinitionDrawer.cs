@@ -48,6 +48,10 @@ namespace EasyToolKit.Tilemap.Editor
                 Button(DrawMode.Brush);
                 EditorGUILayout.Space(3, false);
                 Button(DrawMode.Eraser);
+                EditorGUILayout.Space(3, false);
+                Button(DrawMode.Line);
+                EditorGUILayout.Space(3, false);
+                Button(DrawMode.Rectangle);
 
                 EditorGUILayout.EndHorizontal();
                 EasyEditorGUI.EndBox();

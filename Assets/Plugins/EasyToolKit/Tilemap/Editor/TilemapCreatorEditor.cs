@@ -11,7 +11,8 @@ namespace EasyToolKit.Tilemap.Editor
     [Serializable]
     public class TilemapCreatorEditorContext
     {
-        [SerializeField] private Dictionary<Vector3Int, TerrainTileRuleType> _ruleTypeMapCache =
+        [SerializeField]
+        private Dictionary<Vector3Int, TerrainTileRuleType> _ruleTypeMapCache =
             new Dictionary<Vector3Int, TerrainTileRuleType>();
 
         public TilemapCreator Target;
@@ -25,19 +26,21 @@ namespace EasyToolKit.Tilemap.Editor
     public class TilemapCreatorEditor : EasyEditor
     {
         private TilemapCreator _target;
-        private TilemapCreatorDrawer _drawer;
-
         private LocalPersistentContext<TilemapCreatorEditorContext> _context;
 
-        private Vector3? _hittedBlockPosition;
+        private static readonly Dictionary<DrawMode, IDrawTool> DrawToolsByMode = new Dictionary<DrawMode, IDrawTool>
+        {
+            { DrawMode.Brush, new BrushTool() },
+            { DrawMode.Eraser, new EraseTool() },
+        };
 
         protected override void OnEnable()
         {
             base.OnEnable();
             _target = (TilemapCreator)target;
-            _drawer = new TilemapCreatorDrawer(_target);
 
-            _context = Tree.LogicRootProperty.GetPersistentContext(nameof(TilemapCreatorEditorContext), new TilemapCreatorEditorContext());
+            _context = Tree.LogicRootProperty.GetPersistentContext(nameof(TilemapCreatorEditorContext),
+                new TilemapCreatorEditorContext());
 
             if (_context.Value.Target != _target)
             {
@@ -97,21 +100,85 @@ namespace EasyToolKit.Tilemap.Editor
         {
             TilemapSceneViewHandler.DrawSceneGUIFor(
                 _target,
-                _drawer,
                 _context.Value.IsMarkingRuleType,
-                _context.Value.RuleTypeMapCache,
-                ref _hittedBlockPosition);
+                _context.Value.RuleTypeMapCache);
+
+            if (TryGetHit(out var hitPoint, out var hittedBlockPosition))
+            {
+                if (_target.Asset.Settings.DrawDebugData)
+                {
+                    TilemapHandles.DrawDebugHitPointGUI(hitPoint);
+                }
+
+                DrawToolsByMode[TerrainDefinitionDrawer.SelectedDrawMode].OnSceneGUI(_target, hitPoint, hittedBlockPosition);
+                SceneView.RepaintAll();
+            }
         }
 
-        private bool IsMouseDown()
-        {
-            var e = Event.current;
-            return e.type == EventType.MouseDown && e.button == 0;
-        }
 
-        private void FinishMouseDown()
+        private bool TryGetHit(out Vector3 hitPoint, out Vector3? hittedBlockPosition)
         {
-            Event.current.Use();
+            hitPoint = Vector3.zero;
+            hittedBlockPosition = null;
+            if (TerrainDefinitionDrawer.SelectedGuid == null)
+            {
+                return false;
+            }
+
+            var tileSize = _target.Asset.Settings.TileSize;
+            bool handledHit = false;
+
+            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+
+            float previousRaycastDistance = float.MaxValue;
+
+            foreach (var block in _target.Asset.TerrainMap.EnumerateMatchedMap(
+                         TerrainDefinitionDrawer.SelectedGuid.Value))
+            {
+                var blockPosition = TilemapUtility.TilePositionToWorldPosition(
+                    _target.transform.position,
+                    block.TilePosition,
+                        tileSize);
+
+                var center = blockPosition + Vector3.one * (tileSize * 0.5f);
+                var bounds = new Bounds(center, tileSize * Vector3.one);
+
+                if (bounds.IntersectRay(ray, out var distance))
+                {
+                    if (_target.Asset.Settings.DrawDebugData)
+                    {
+                        TilemapHandles.DrawDebugBlockGUI(blockPosition, distance);
+                    }
+
+                    if (distance < previousRaycastDistance)
+                    {
+                        hitPoint = ray.GetPoint(distance);
+                        hittedBlockPosition = blockPosition;
+                        handledHit = true;
+                        previousRaycastDistance = distance;
+                    }
+                }
+            }
+
+            if (!handledHit)
+            {
+                var plane = new Plane(Vector3.up, _target.transform.position);
+                if (plane.Raycast(ray, out float enter))
+                {
+                    hitPoint = ray.GetPoint(enter);
+                    if (hitPoint.y < 0)
+                    {
+                        hitPoint = hitPoint.SetY(0);
+                    }
+
+                    TilemapHandles.DrawDebugBlockGUI(
+                        TilemapUtility.WorldPositionToBlockPosition(_target.transform.position, hitPoint, tileSize),
+                        enter);
+                    handledHit = true;
+                }
+            }
+
+            return handledHit;
         }
     }
 }

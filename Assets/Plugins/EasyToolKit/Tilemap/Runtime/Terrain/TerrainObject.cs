@@ -89,7 +89,11 @@ namespace EasyToolKit.Tilemap
         private void RegisterTile(GameObject tileInstance, Vector3Int tilePosition, TerrainTileRuleType ruleType)
         {
             tileInstance.transform.SetParent(transform);
-            tileInstance.transform.position += TilemapCreator.TilePositionToWorldPosition(tilePosition);
+            tileInstance.transform.position += TilemapUtility.TilePositionToWorldPosition(
+                TilemapCreator.transform.position,
+                tilePosition,
+                TilemapCreator.Asset.Settings.TileSize);
+
             var tileObject = tileInstance.AddComponent<TerrainTileObject>();
             tileObject.TerrainObject = this;
             tileObject.RuleType = ruleType;
