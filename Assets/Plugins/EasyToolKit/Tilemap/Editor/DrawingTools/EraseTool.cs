@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class EraseTool : DraggableDrawTool
+    public class EraseTool : DraggableDrawingTool
     {
         protected override void DoTile(TilemapCreator target, Vector3Int tilePosition)
         {

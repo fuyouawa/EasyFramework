@@ -4,7 +4,7 @@ namespace EasyToolKit.Tilemap.Editor
     {
         Brush,
         Eraser,
-        Line,
-        Rectangle
+        LineBrush,
+        RectangleBrush
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public interface IDrawTool
+    public interface IDrawingTool
     {
         void OnSceneGUI(TilemapCreator target, Vector3 hitPoint, Vector3? hitBlockPosition);
     }

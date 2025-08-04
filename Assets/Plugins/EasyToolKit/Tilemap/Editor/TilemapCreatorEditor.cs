@@ -28,11 +28,12 @@ namespace EasyToolKit.Tilemap.Editor
         private TilemapCreator _target;
         private LocalPersistentContext<TilemapCreatorEditorContext> _context;
 
-        private static readonly Dictionary<DrawMode, IDrawTool> DrawToolsByMode = new Dictionary<DrawMode, IDrawTool>
+        private static readonly Dictionary<DrawMode, IDrawingTool> DrawToolsByMode = new Dictionary<DrawMode, IDrawingTool>
         {
             { DrawMode.Brush, new BrushTool() },
             { DrawMode.Eraser, new EraseTool() },
-            { DrawMode.Rectangle, new RectangeDrawTool() },
+            { DrawMode.LineBrush, new LineBrushTool() },
+            { DrawMode.RectangleBrush, new RectangeBrushTool() },
         };
 
         protected override void OnEnable()

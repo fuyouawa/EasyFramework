@@ -112,9 +112,9 @@ namespace EasyToolKit.Tilemap.Editor
                     return DrawIcons[0, 0];
                 case DrawMode.Eraser:
                     return DrawIcons[0, 1];
-                case DrawMode.Line:
+                case DrawMode.LineBrush:
                     return DrawIcons[0, 2];
-                case DrawMode.Rectangle:
+                case DrawMode.RectangleBrush:
                     return DrawIcons[0, 3];
                 default:
                     throw new ArgumentOutOfRangeException(nameof(drawMode), drawMode, null);

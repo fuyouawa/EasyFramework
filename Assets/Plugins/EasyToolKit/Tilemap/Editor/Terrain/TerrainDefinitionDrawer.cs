@@ -49,9 +49,9 @@ namespace EasyToolKit.Tilemap.Editor
                 EditorGUILayout.Space(3, false);
                 Button(DrawMode.Eraser);
                 EditorGUILayout.Space(3, false);
-                Button(DrawMode.Line);
+                Button(DrawMode.LineBrush);
                 EditorGUILayout.Space(3, false);
-                Button(DrawMode.Rectangle);
+                Button(DrawMode.RectangleBrush);
 
                 EditorGUILayout.EndHorizontal();
                 EasyEditorGUI.EndBox();

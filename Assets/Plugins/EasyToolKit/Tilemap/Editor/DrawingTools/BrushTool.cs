@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class BrushTool : DraggableDrawTool
+    public class BrushTool : DraggableDrawingTool
     {
         private static readonly float Epsilon = TilemapUtility.Epsilon;
 

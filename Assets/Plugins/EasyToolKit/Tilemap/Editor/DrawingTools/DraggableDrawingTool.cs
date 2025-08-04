@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public abstract class DraggableDrawTool : IDrawTool
+    public abstract class DraggableDrawingTool : IDrawingTool
     {
         private List<Vector3Int> _dragTilePositionPath = new List<Vector3Int>();
         private bool _isDragging = false;

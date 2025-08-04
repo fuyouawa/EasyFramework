@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class RectangeDrawTool : BrushTool
+    public class RectangeBrushTool : BrushTool
     {
         protected override Vector3 AdjustBlockPosition(TilemapCreator target, Vector3 blockPosition, Vector3 hitPoint, List<Vector3Int> dragTilePositionPath)
         {
