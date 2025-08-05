@@ -6,6 +6,17 @@ namespace EasyToolKit.Core.Editor
 {
     public static class EasyGUIStyles
     {
+        private static GUIStyle s_title;
+        private static GUIStyle s_boldTitle;
+        private static GUIStyle s_boldTitleCentered;
+        private static GUIStyle s_boldTitleRight;
+        private static GUIStyle s_titleCentered;
+        private static GUIStyle s_titleRight;
+        private static GUIStyle s_subtitle;
+        private static GUIStyle s_subtitleCentered;
+        private static GUIStyle s_subtitleRight;
+        private static GUIStyle s_messageBox;
+
         public static readonly Color HeaderBoxBackgroundColor =
             EditorGUIUtility.isProSkin ? new Color(1, 1, 1, 0.06f) : new Color(1, 1, 1, 0.26f);
 
@@ -52,7 +63,7 @@ namespace EasyToolKit.Core.Editor
         /// A light border color.
         /// </summary>
         public static readonly Color LightBorderColor = new Color32(90, 90, 90, 255);
-        
+
         private static GUIStyle s_none;
 
         public static GUIStyle None
@@ -63,7 +74,8 @@ namespace EasyToolKit.Core.Editor
                 {
                     s_none = new GUIStyle()
                     {
-                        margin = new RectOffset(0, 0, 0, 0), padding = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(0, 0, 0, 0),
+                        padding = new RectOffset(0, 0, 0, 0),
                         border = new RectOffset(0, 0, 0, 0)
                     };
                 }
@@ -212,7 +224,7 @@ namespace EasyToolKit.Core.Editor
                 if (s_propertyPadding == null)
                 {
                     s_propertyPadding = new GUIStyle(GUIStyle.none)
-                        { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
+                    { padding = new RectOffset(0, 0, 0, 3), margin = new RectOffset(0, 0, 0, 0) };
                 }
 
                 return s_propertyPadding;
@@ -239,7 +251,7 @@ namespace EasyToolKit.Core.Editor
                 return s_foldout;
             }
         }
-        
+
         private static GUIStyle s_whiteBoxStyle;
         public static GUIStyle WhiteBoxStyle
         {
@@ -253,16 +265,6 @@ namespace EasyToolKit.Core.Editor
                 return s_whiteBoxStyle;
             }
         }
-
-        private static GUIStyle s_title;
-        private static GUIStyle s_boldTitle;
-        private static GUIStyle s_boldTitleCentered;
-        private static GUIStyle s_boldTitleRight;
-        private static GUIStyle s_titleCentered;
-        private static GUIStyle s_titleRight;
-        private static GUIStyle s_subtitle;
-        private static GUIStyle s_subtitleCentered;
-        private static GUIStyle s_subtitleRight;
 
         /// <summary>
         /// Title style.
@@ -443,6 +445,28 @@ namespace EasyToolKit.Core.Editor
                 }
 
                 return s_subtitleRight;
+            }
+        }
+
+        /// <summary>
+        /// Message box style.
+        /// </summary>
+        public static GUIStyle MessageBox
+        {
+            get
+            {
+                if (s_messageBox == null)
+                {
+                    s_messageBox = new GUIStyle("HelpBox")
+                    {
+                        margin = new RectOffset(0, 0, 3, 2),
+                        padding = new RectOffset(4, 4, 4, 4),
+                        fontSize = 12,
+                        richText = true
+                    };
+                }
+
+                return s_messageBox;
             }
         }
     }

@@ -14,6 +14,9 @@ namespace EasyToolKit.Tilemap.Editor
         private Texture2D _drawIconAtlas;
         private Texture2D[,] _drawIcons;
 
+        private Texture2D _miscAtlas;
+        private Texture2D[,] _miscIcons;
+
         private TilemapIcons()
         {
         }
@@ -54,6 +57,25 @@ namespace EasyToolKit.Tilemap.Editor
                 }
 
                 return _drawIcons;
+            }
+        }
+
+        private Texture2D[,] MiscIcons
+        {
+            get
+            {
+                if (_miscAtlas == null)
+                {
+                    var directory = EditorAssetPaths.GetModuleEditorDirectory("Tilemap");
+                    _miscAtlas = AssetDatabase.LoadAssetAtPath<Texture2D>(directory + "/MiscIconAtlas.png");
+                }
+
+                if (_miscIcons == null || _miscIcons.Length == 0 || _miscIcons[0, 0] == null)
+                {
+                    _miscIcons = _miscAtlas.SliceByCount(1, 4);
+                }
+
+                return _miscIcons;
             }
         }
 
@@ -101,6 +123,23 @@ namespace EasyToolKit.Tilemap.Editor
                     return TerrainTypeIcons[3, 0];
                 default:
                     throw new ArgumentOutOfRangeException(nameof(ruleType), ruleType, null);
+            }
+        }
+
+        public Texture2D GetTerrainRuleGridTypeIcon(TerrainRuleGridType gridType)
+        {
+            switch (gridType)
+            {
+                case TerrainRuleGridType.Empty:
+                    return MiscIcons[0, 1];
+                case TerrainRuleGridType.Contain:
+                    return MiscIcons[0, 0];
+                case TerrainRuleGridType.Option:
+                    return MiscIcons[0, 2];
+                case TerrainRuleGridType.Union:
+                    return MiscIcons[0, 3];
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(gridType), gridType, null);
             }
         }
 

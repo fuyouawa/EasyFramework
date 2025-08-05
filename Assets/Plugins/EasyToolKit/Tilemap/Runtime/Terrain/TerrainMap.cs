@@ -12,7 +12,7 @@ namespace EasyToolKit.Tilemap
     [Serializable]
     public class TerrainMap : ISerializationCallbackReceiver, IEnumerable<TerrainTilePosition>
     {
-        [LabelText("地形瓦片定义表资产")]
+        [LabelText("地形瓦片定义表")]
         [HideLabel]
         [SerializeField] private TerrainDefinitionSet _definitionSet;
 
@@ -226,11 +226,11 @@ namespace EasyToolKit.Tilemap
             return booleanSudoku;
         }
 
-        public TerrainTileRuleType CalculateRuleTypeAt(Vector3Int tilePosition)
+        public TerrainTileRuleType CalculateRuleTypeAt(TerrainConfigAsset terrainConfigAsset, Vector3Int tilePosition)
         {
             var sudoku = GetDefinitionGuidSudokuAt(tilePosition);
             var booleanSudoku = ToBooleanDefinitionSudoku(sudoku);
-            return TerrainConfigAsset.Instance.GetRuleTypeBySudoku(booleanSudoku);
+            return terrainConfigAsset.GetRuleTypeBySudoku(booleanSudoku);
         }
 
         public bool RemoveTileAt(Vector3Int tilePosition)

@@ -9,13 +9,16 @@ namespace EasyToolKit.Tilemap
 {
     public class TilemapCreator : MonoBehaviour
     {
-
-        [LabelText("地图资产")]
+        [LabelText("瓦片地图")]
         [SerializeField, InlineEditor] private TilemapAsset _asset;
+
+        [LabelText("地形配置")]
+        [SerializeField, InlineEditor(Style = InlineEditorStyle.Foldout)] private TerrainConfigAsset _terrainConfigAsset;
 
         [SerializeField, HideInInspector] private GameObject _mapObject;
 
         public TilemapAsset Asset => _asset;
+        public TerrainConfigAsset TerrainConfigAsset => _terrainConfigAsset;
 
         public GameObject MapObject
         {

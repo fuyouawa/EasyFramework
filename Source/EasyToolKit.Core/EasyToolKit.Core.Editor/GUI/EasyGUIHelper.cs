@@ -28,6 +28,7 @@ namespace EasyToolKit.Core.Editor
         private static readonly Func<float> ContextWidthGetter;
         private static readonly Action<float> ContextWidthSetter;
         private static readonly Func<Stack<float>> ContextWidthStackGetter;
+        private static readonly Func<MessageType, Texture> HelpIconGetter;
         private static int numberOfFramesToRepaint;
         private static float betterContextWidth;
 
@@ -41,16 +42,22 @@ namespace EasyToolKit.Core.Editor
                 ReflectionUtility.CreateStaticValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.minHeight");
             TopLevelLayoutMaxHeightGetter =
                 ReflectionUtility.CreateStaticValueGetter<float>(typeof(GUILayoutUtility), "current.topLevel.maxHeight");
-            
+
             ContextWidthGetter = ReflectionUtility.CreateStaticValueGetter<float>(typeof(EditorGUIUtility), "contextWidth");
-            FieldInfo field = typeof (EditorGUIUtility).GetField("s_ContextWidth", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            FieldInfo field = typeof(EditorGUIUtility).GetField("s_ContextWidth", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             if (field != null)
                 ContextWidthSetter = EmitUtilities.CreateStaticFieldSetter<float>(field);
             else
-                ContextWidthStackGetter = EmitUtilities.CreateStaticFieldGetter<Stack<float>>(typeof (EditorGUIUtility).GetField("s_ContextWidthStack", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
+                ContextWidthStackGetter = EmitUtilities.CreateStaticFieldGetter<Stack<float>>(typeof(EditorGUIUtility).GetField("s_ContextWidthStack", BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy));
 
             ActualLabelWidthGetter =
                 ReflectionUtility.CreateStaticValueGetter<float>(typeof(EditorGUIUtility), "s_LabelWidth");
+
+            var method = typeof(EditorGUIUtility).GetMethod("GetHelpIcon", BindingFlagsHelper.AllStatic());
+            HelpIconGetter = (messageType) =>
+            {
+                return method.Invoke(null, new object[] { messageType }) as Texture;
+            };
 
             var layoutType = Type.GetType("UnityEngine.GUILayoutGroup, UnityEngine.IMGUIModule");
             TopLevelLayoutCalcHeightMethod = layoutType.GetMethod("CalcHeight");
@@ -88,7 +95,7 @@ namespace EasyToolKit.Core.Editor
                 {
                     return EditorGUIUtility.labelWidth;
                 }
-                
+
                 // Unity only ever knows the exact labelWidth in repaint events.
                 // But you often need it in Layout events as well.
                 // See BetterContextWidths to learn more. 
@@ -126,7 +133,7 @@ namespace EasyToolKit.Core.Editor
                 betterContextWidth = value;
             }
         }
-        
+
 
         /// <summary>
         /// Gets or sets the actual EditorGUIUtility.LabelWidth, regardless of the current hierarchy mode or context width.
@@ -161,7 +168,7 @@ namespace EasyToolKit.Core.Editor
             DragAndDrop.activeControlID = 0;
             GUIUtility.keyboardControl = 0;
         }
-        
+
         public static void RequestRepaint()
         {
             numberOfFramesToRepaint = Math.Max(numberOfFramesToRepaint, 2);
@@ -264,8 +271,8 @@ namespace EasyToolKit.Core.Editor
             s_tempContent.tooltip = tooltip;
             return s_tempContent;
         }
-        
-        
+
+
         /// <summary>
         /// Pushes the hierarchy mode to the stack. Remember to pop the state with <see cref="PopHierarchyMode"/>.
         /// </summary>
@@ -289,7 +296,7 @@ namespace EasyToolKit.Core.Editor
             EditorGUIUtility.hierarchyMode = HierarchyModeStack.Pop();
             ActualLabelWidth = LabelWidthStack.Pop();
         }
-        
+
         /// <summary>
         /// Pushes the width to the editor GUI label width to the stack. Remmeber to Pop with <see cref="PopLabelWidth"/>.
         /// </summary>
@@ -364,6 +371,11 @@ namespace EasyToolKit.Core.Editor
             EditorStyles.label.normal.textColor = color;
             EasyGUIStyles.Foldout.normal.textColor = color;
             EasyGUIStyles.Foldout.onNormal.textColor = color;
+        }
+
+        public static Texture GetHelpIcon(MessageType messageType)
+        {
+            return HelpIconGetter(messageType);
         }
     }
 }

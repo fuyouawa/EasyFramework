@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [CreateAssetMenu(menuName = "EasyToolKit/Tilemap/Create TilemapAsset", fileName = "TilemapAsset")]
+    [CreateAssetMenu(menuName = "EasyToolKit/Tilemap/Tilemap", fileName = "Tilemap")]
     [EasyInspector]
     public class TilemapAsset : ScriptableObject
     {

@@ -43,7 +43,7 @@ namespace EasyToolKit.Tilemap
         public bool BuildTile(TerrainTilePosition terrainTilePosition)
         {
             var tilePosition = terrainTilePosition.TilePosition;
-            var ruleType = TilemapCreator.Asset.TerrainMap.CalculateRuleTypeAt(tilePosition);
+            var ruleType = TilemapCreator.Asset.TerrainMap.CalculateRuleTypeAt(TilemapCreator.TerrainConfigAsset, tilePosition);
             var tileInstance = terrainTilePosition.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
             if (tileInstance == null)
             {

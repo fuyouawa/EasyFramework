@@ -13,7 +13,7 @@ namespace EasyToolKit.Core
                 new Rect(0, 0, texture.width, texture.height),
                 new Vector2(0.5f, 0.5f));
         }
-        
+
         public static Texture2D[,] SliceByCount([NotNull] this Texture2D texture, int rows, int columns)
         {
             if (texture == null)
@@ -21,9 +21,9 @@ namespace EasyToolKit.Core
 
             int sliceWidth = texture.width / columns;
             int sliceHeight = texture.height / rows;
-            
+
             Texture2D[,] slices = new Texture2D[rows, columns];
-            
+
             for (int y = 0; y < rows; y++)
             {
                 for (int x = 0; x < columns; x++)
@@ -31,10 +31,10 @@ namespace EasyToolKit.Core
                     slices[y, x] = CreateSlice(texture, x, y, sliceWidth, sliceHeight);
                 }
             }
-            
+
             return slices;
         }
-        
+
         private static Texture2D CreateSlice(Texture2D sourceTexture, int columnIndex, int rowIndex, int sliceWidth, int sliceHeight)
         {
             Texture2D slice = new Texture2D(sliceWidth, sliceHeight);

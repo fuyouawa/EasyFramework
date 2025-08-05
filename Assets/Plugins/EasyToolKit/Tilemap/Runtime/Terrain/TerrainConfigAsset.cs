@@ -7,16 +7,24 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [ModuleConfigsPath("Tilemap")]
-    public class TerrainConfigAsset : ScriptableObjectSingleton<TerrainConfigAsset>
+    public enum TerrainRuleGridType
+    {
+        Empty,
+        Contain,
+        Option,
+        Union
+    }
+
+    [CreateAssetMenu(fileName = "TerrainConfig", menuName = "EasyToolKit/Tilemap/TerrainConfig")]
+    public class TerrainConfigAsset : ScriptableObject
     {
         [Serializable]
         public class RuleConfig
         {
-            [SerializeField, HideInInspector] private bool[] _sudoku = new bool[9];
+            [SerializeField, HideInInspector] private TerrainRuleGridType[] _sudoku = new TerrainRuleGridType[9];
             [SerializeField, HideLabel] private TerrainTileRuleType _ruleType;
 
-            public bool[] Sudoku => _sudoku;
+            public TerrainRuleGridType[] Sudoku => _sudoku;
             public TerrainTileRuleType RuleType => _ruleType;
         }
 
@@ -27,7 +35,8 @@ namespace EasyToolKit.Tilemap
 
         public TerrainTileRuleType GetRuleTypeBySudoku(bool[,] sudoku)
         {
-            bool[,] tempSudoku = new bool[3, 3];
+            TerrainRuleGridType[,] tempSudoku = new TerrainRuleGridType[3, 3];
+            bool? firstUnion = null;
             foreach (var ruleConfig in _ruleConfigs)
             {
                 tempSudoku[0, 2] = ruleConfig.Sudoku[0];
@@ -46,9 +55,32 @@ namespace EasyToolKit.Tilemap
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        if (tempSudoku[i, j] != sudoku[i, j])
+                        switch (tempSudoku[i, j])
                         {
-                            goto NextRuleConfig;
+                            case TerrainRuleGridType.Empty:
+                                if (sudoku[i, j])
+                                {
+                                    goto NextRuleConfig;
+                                }
+                                break;
+                            case TerrainRuleGridType.Contain:
+                                if (!sudoku[i, j])
+                                {
+                                    goto NextRuleConfig;
+                                }
+                                break;
+                            case TerrainRuleGridType.Option:
+                                break;
+                            case TerrainRuleGridType.Union:
+                                if (firstUnion == null)
+                                {
+                                    firstUnion = sudoku[i, j];
+                                }
+                                else if (firstUnion != sudoku[i, j])
+                                {
+                                    goto NextRuleConfig;
+                                }
+                                break;
                         }
                     }
                 }

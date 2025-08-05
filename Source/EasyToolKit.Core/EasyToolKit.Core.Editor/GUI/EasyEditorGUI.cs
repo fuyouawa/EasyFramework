@@ -464,6 +464,20 @@ namespace EasyToolKit.Core.Editor
             }
         }
 
+        public static void MessageBox(string message, MessageType messageType)
+        {
+            MessageBox(message, messageType, EasyGUIStyles.MessageBox);
+        }
+
+        public static void MessageBox(string message, MessageType messageType, GUIStyle messageStyle)
+        {
+            var icon = EasyGUIHelper.GetHelpIcon(messageType);
+            var content = EasyGUIHelper.TempContent(message, image: icon);
+            var rect = GUILayoutUtility.GetRect(content, messageStyle);
+            rect = EditorGUI.IndentedRect(rect);
+            GUI.Label(rect, content, messageStyle);
+        }
+
         public static void DrawBorders(Rect rect, int left, int right, int top, int bottom, bool usePlayModeTint = true)
         {
             DrawBorders(rect, left, right, top, bottom, EasyGUIStyles.BorderColor, usePlayModeTint);

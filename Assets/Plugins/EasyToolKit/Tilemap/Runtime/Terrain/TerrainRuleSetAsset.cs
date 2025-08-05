@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [CreateAssetMenu(fileName = "TerrainRuleSetAsset", menuName = "EasyToolKit/Tilemap/Create TerrainRuleSetAsset")]
+    [CreateAssetMenu(fileName = "TerrainRuleSet", menuName = "EasyToolKit/Tilemap/TerrainRuleSet")]
     public class TerrainRuleSetAsset : ScriptableObject
     {
         [SerializeField] private TerrainFillRule _fillRule;

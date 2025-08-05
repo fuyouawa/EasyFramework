@@ -245,6 +245,11 @@
             Right aligned sub-title style.
             </summary>
         </member>
+        <member name="P:EasyToolKit.Core.Editor.EasyGUIStyles.MessageBox">
+            <summary>
+            Message box style.
+            </summary>
+        </member>
         <member name="T:EasyToolKit.Core.Editor.GUIFrameCounter">
             <summary>
             A utility class for properly counting frames and helps determine when a frame has started in an editor window.

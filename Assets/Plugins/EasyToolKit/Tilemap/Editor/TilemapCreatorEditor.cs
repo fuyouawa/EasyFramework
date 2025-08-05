@@ -52,7 +52,7 @@ namespace EasyToolKit.Tilemap.Editor
 
                 foreach (var block in _target.Asset.TerrainMap)
                 {
-                    var ruleType = _target.Asset.TerrainMap.CalculateRuleTypeAt(block.TilePosition);
+                    var ruleType = _target.Asset.TerrainMap.CalculateRuleTypeAt(_target.TerrainConfigAsset, block.TilePosition);
                     _context.Value.RuleTypeMapCache[block.TilePosition] = ruleType;
                 }
             }
