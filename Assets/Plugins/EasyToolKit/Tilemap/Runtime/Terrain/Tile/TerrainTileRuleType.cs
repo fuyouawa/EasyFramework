@@ -13,9 +13,9 @@ namespace EasyToolKit.Tilemap
         TopEdge,
 
         /// <summary>
-        /// 左边缘地形
+        /// 右边缘地形
         /// </summary>
-        LeftEdge,
+        RightEdge,
 
         /// <summary>
         /// 下边缘地形
@@ -23,9 +23,9 @@ namespace EasyToolKit.Tilemap
         BottomEdge,
 
         /// <summary>
-        /// 右边缘地形
+        /// 左边缘地形
         /// </summary>
-        RightEdge,
+        LeftEdge,
 
         /// <summary>
         /// 左上部分的外转角地形

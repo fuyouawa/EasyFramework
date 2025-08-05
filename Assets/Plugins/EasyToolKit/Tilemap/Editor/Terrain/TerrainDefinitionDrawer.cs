@@ -85,7 +85,7 @@ namespace EasyToolKit.Tilemap.Editor
 
             if (Event.current.type == EventType.Repaint)
             {
-                var icon = TilemapEditorIcons.Instance.GetDrawModeIcon(drawMode);
+                var icon = TilemapIcons.Instance.GetDrawModeIcon(drawMode);
                 GUI.DrawTexture(btnRect.AlignCenter(25, 25), icon);
             }
 

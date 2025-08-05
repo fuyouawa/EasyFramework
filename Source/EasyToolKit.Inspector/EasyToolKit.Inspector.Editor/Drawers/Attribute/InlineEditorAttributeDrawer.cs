@@ -47,6 +47,28 @@ namespace EasyToolKit.Inspector.Editor
                         DrawObjectField(label);
                     }
                     break;
+                case InlineEditorStyle.FoldoutBox:
+                    if (ValueEntry.SmartValue != null)
+                    {
+                        EasyEditorGUI.BeginBox();
+                        EasyEditorGUI.BeginBoxHeader();
+                        Property.State.Expanded = EasyEditorGUI.Foldout(
+                            Property.State.Expanded, label, out var valueRect);
+
+                        EasyEditorGUI.EndBoxHeader();
+                        DrawObjectField(valueRect, GUIContent.none);
+
+                        if (Property.State.Expanded)
+                        {
+                            DrawEditor();
+                        }
+                        EasyEditorGUI.EndBox();
+                    }
+                    else
+                    {
+                        DrawObjectField(label);
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

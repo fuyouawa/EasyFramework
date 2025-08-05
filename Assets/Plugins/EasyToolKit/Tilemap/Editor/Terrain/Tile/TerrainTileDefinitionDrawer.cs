@@ -21,7 +21,7 @@ namespace EasyToolKit.Tilemap.Editor
                 return;
             }
 
-            var icon = TilemapEditorIcons.Instance.GetTerrainTileTypeIcon(type.RuleType);
+            var icon = TilemapIcons.Instance.GetTerrainTileTypeIcon(type.RuleType);
 
             var totalRect = EditorGUILayout.BeginHorizontal();
             totalRect.xMin += EasyGUIHelper.CurrentIndentAmount;

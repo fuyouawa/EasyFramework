@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [MetroFoldoutGroup("内转角规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainInteriorCornerTypeIcon")]
+    [MetroFoldoutGroup("内转角规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapIcons -p:Instance.TerrainInteriorCornerTypeIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainInteriorCornerRule : TerrainRuleBase

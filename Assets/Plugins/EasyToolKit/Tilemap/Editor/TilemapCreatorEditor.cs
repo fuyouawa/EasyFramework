@@ -8,25 +8,11 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    [Serializable]
-    public class TilemapCreatorEditorContext
-    {
-        [SerializeField]
-        private Dictionary<Vector3Int, TerrainTileRuleType> _ruleTypeMapCache =
-            new Dictionary<Vector3Int, TerrainTileRuleType>();
-
-        public TilemapCreator Target;
-        public bool IsMarkingRuleType = false;
-
-        public Dictionary<Vector3Int, TerrainTileRuleType> RuleTypeMapCache =>
-            _ruleTypeMapCache ??= new Dictionary<Vector3Int, TerrainTileRuleType>();
-    }
-
     [CustomEditor(typeof(TilemapCreator))]
     public class TilemapCreatorEditor : EasyEditor
     {
         private TilemapCreator _target;
-        private LocalPersistentContext<TilemapCreatorEditorContext> _context;
+        private LocalPersistentContext<TilemapContext> _context;
 
         private static readonly Dictionary<DrawMode, IDrawingTool> DrawToolsByMode = new Dictionary<DrawMode, IDrawingTool>
         {
@@ -41,8 +27,8 @@ namespace EasyToolKit.Tilemap.Editor
             base.OnEnable();
             _target = (TilemapCreator)target;
 
-            _context = Tree.LogicRootProperty.GetPersistentContext(nameof(TilemapCreatorEditorContext),
-                new TilemapCreatorEditorContext());
+            _context = Tree.LogicRootProperty.GetPersistentContext(nameof(TilemapContext),
+                new TilemapContext());
 
             if (_context.Value.Target != _target)
             {
@@ -58,23 +44,16 @@ namespace EasyToolKit.Tilemap.Editor
             Tree.DrawProperties();
 
             EasyEditorGUI.Title("调试", textAlignment: TextAlignment.Center);
-            var newMarkingState = GUILayout.Toggle(_context.Value.IsMarkingRuleType, "标注瓦片规则类型");
-            if (newMarkingState != _context.Value.IsMarkingRuleType)
-            {
-                _context.Value.IsMarkingRuleType = newMarkingState;
-                TilemapSceneViewHandler.SetRuleTypeMarking(_context.Value.IsMarkingRuleType);
-            }
+            _context.Value.IsMarkingRuleType = GUILayout.Toggle(_context.Value.IsMarkingRuleType, "标注瓦片规则类型");
 
             if (GUILayout.Button("重新扫描规则类型", GUILayout.Height(30)))
             {
                 _context.Value.RuleTypeMapCache.Clear();
-                TilemapSceneViewHandler.ClearRuleTypeCache();
 
                 foreach (var block in _target.Asset.TerrainMap)
                 {
                     var ruleType = _target.Asset.TerrainMap.CalculateRuleTypeAt(block.TilePosition);
                     _context.Value.RuleTypeMapCache[block.TilePosition] = ruleType;
-                    TilemapSceneViewHandler.AddRuleTypeToCache(block.TilePosition, ruleType);
                 }
             }
 
@@ -100,10 +79,7 @@ namespace EasyToolKit.Tilemap.Editor
 
         void OnSceneGUI()
         {
-            TilemapSceneViewHandler.DrawSceneGUIFor(
-                _target,
-                _context.Value.IsMarkingRuleType,
-                _context.Value.RuleTypeMapCache);
+            TilemapSceneViewHandler.DrawSceneGUI(_context.Value);
 
             if (TryGetHit(out var hitPoint, out var hittedBlockPosition))
             {

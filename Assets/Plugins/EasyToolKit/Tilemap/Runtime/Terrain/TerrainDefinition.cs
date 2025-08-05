@@ -17,7 +17,7 @@ namespace EasyToolKit.Tilemap
         [LabelText("规则集")]
         [SerializeField] private TerrainRuleSetAsset _ruleSetAsset;
 
-        [Title("调试")]
+        [FoldoutGroup("调试")]
         [LabelText("调试块颜色")]
         [SerializeField] private Color _debugCubeColor = new Color(0, 1, 0, 0.5f);
 

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class FoldoutGroupAttributeDrawer : EasyGroupAttributeDrawer<FoldoutGroupAttribute>
+    public class FoldoutBoxGroupAttributeDrawer : EasyGroupAttributeDrawer<FoldoutBoxGroupAttribute>
     {
         private static readonly GUIContent TempContent = new GUIContent();
 
@@ -30,16 +30,18 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void BeginDrawProperty(GUIContent label, ref bool foldout)
         {
+            EasyEditorGUI.BeginBox();
+            EasyEditorGUI.BeginBoxHeader();
             var labelText = _labelResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
             Property.State.Expanded = EasyEditorGUI.Foldout(Property.State.Expanded, TempContent.SetText(labelText));
+            EasyEditorGUI.EndBoxHeader();
 
             foldout = Property.State.Expanded;
-            EditorGUI.indentLevel++;
         }
 
         protected override void EndDrawProperty()
         {
-            EditorGUI.indentLevel--;
+            EasyEditorGUI.EndBox();
         }
     }
 }

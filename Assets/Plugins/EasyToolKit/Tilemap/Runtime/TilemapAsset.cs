@@ -7,11 +7,11 @@ namespace EasyToolKit.Tilemap
     [EasyInspector]
     public class TilemapAsset : ScriptableObject
     {
-        [FoldoutGroup("设置")]
+        [FoldoutBoxGroup("设置")]
         [HideLabel]
         [SerializeField] private TilemapSettings _settings = new TilemapSettings();
 
-        [EndFoldoutGroup]
+        [EndFoldoutBoxGroup]
         [SerializeField, HideLabel] private TerrainMap _terrainMap = new TerrainMap();
 
         public TilemapSettings Settings => _settings;

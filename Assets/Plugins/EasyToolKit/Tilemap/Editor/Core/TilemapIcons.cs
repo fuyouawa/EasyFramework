@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap.Editor
 {
-    public class TilemapEditorIcons : Singleton<TilemapEditorIcons>
+    public class TilemapIcons : Singleton<TilemapIcons>
     {
         private Texture2D _terrainTypeIconsAtlas;
         private Texture2D[,] _terrainTypeIcons;
@@ -14,7 +14,7 @@ namespace EasyToolKit.Tilemap.Editor
         private Texture2D _drawIconAtlas;
         private Texture2D[,] _drawIcons;
 
-        private TilemapEditorIcons()
+        private TilemapIcons()
         {
         }
 

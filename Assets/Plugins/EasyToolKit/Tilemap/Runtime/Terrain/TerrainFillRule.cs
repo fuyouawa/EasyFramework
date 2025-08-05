@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [MetroFoldoutGroup("填充规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainFillTypeIcon")]
+    [MetroFoldoutGroup("填充规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapIcons -p:Instance.TerrainFillTypeIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainFillRule : TerrainRuleBase

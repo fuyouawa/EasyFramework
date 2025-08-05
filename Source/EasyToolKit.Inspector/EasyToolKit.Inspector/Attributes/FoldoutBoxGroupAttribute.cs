@@ -2,24 +2,24 @@ using System;
 using System.Diagnostics;
 using EasyToolKit.Inspector;
 
-[assembly: RegisterGroupAttributeScope(typeof(FoldoutGroupAttribute), typeof(EndFoldoutGroupAttribute))]
+[assembly: RegisterGroupAttributeScope(typeof(FoldoutBoxGroupAttribute), typeof(EndFoldoutBoxGroupAttribute))]
 
 namespace EasyToolKit.Inspector
 {
     [Conditional("UNITY_EDITOR")]
-    public class FoldoutGroupAttribute : BeginGroupAttribute
+    public class FoldoutBoxGroupAttribute : BeginGroupAttribute
     {
         public string Label;
         public bool? Expanded;
 
-        public FoldoutGroupAttribute(string label)
+        public FoldoutBoxGroupAttribute(string label)
         {
             Label = label;
         }
     }
 
     [Conditional("UNITY_EDITOR")]
-    public class EndFoldoutGroupAttribute : EndGroupAttribute
+    public class EndFoldoutBoxGroupAttribute : EndGroupAttribute
     {
     }
 }

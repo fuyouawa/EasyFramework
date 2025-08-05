@@ -9,6 +9,7 @@ namespace EasyToolKit.Inspector
         PlaceWithHide,
         Box,
         Foldout,
+        FoldoutBox,
     }
 
     [Conditional("UNITY_EDITOR")]

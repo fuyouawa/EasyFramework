@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Tilemap
 {
-    [MetroFoldoutGroup("边缘规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapEditorIcons -p:Instance.TerrainEdgeTypeIcon")]
+    [MetroFoldoutGroup("边缘规则集", IconTextureGetter = "-t:EasyToolKit.Tilemap.Editor.TilemapIcons -p:Instance.TerrainEdgeTypeIcon")]
     [HideLabel]
     [Serializable]
     public class TerrainEdgeRule : TerrainRuleBase
@@ -51,11 +51,11 @@ namespace EasyToolKit.Tilemap
             {
                 case TerrainTileRuleType.TopEdge:
                     return TopTileDefinition.TryInstantiate();
-                case TerrainTileRuleType.LeftEdge:
+                case TerrainTileRuleType.RightEdge:
                     {
                         if (UseFullDefinition)
                         {
-                            return LeftTileDefinition.TryInstantiate();
+                            return RightTileDefinition.TryInstantiate();
                         }
 
                         var instance = TopTileDefinition.TryInstantiate();
@@ -79,11 +79,11 @@ namespace EasyToolKit.Tilemap
                         instance.transform.rotation *= Quaternion.Euler(0, 180, 0);
                         return instance;
                     }
-                case TerrainTileRuleType.RightEdge:
+                case TerrainTileRuleType.LeftEdge:
                     {
                         if (UseFullDefinition)
                         {
-                            return RightTileDefinition.TryInstantiate();
+                            return LeftTileDefinition.TryInstantiate();
                         }
 
                         var instance = TopTileDefinition.TryInstantiate();
