@@ -45,7 +45,7 @@ namespace EasyToolKit.Core.Editor
 
         public static void DrawRectangle2D(Vector2 position, Vector2 size)
         {
-            DrawRectangle(position.ToVec3(), size.ToVec3());
+            DrawRectangle(position.ToVector3(), size.ToVector3());
         }
 
         public static void LabelWithScaleFactor(Vector3 worldPosition, string text, GUIStyle style)
@@ -64,7 +64,7 @@ namespace EasyToolKit.Core.Editor
 
         public static void DrawLine2D(Vector2 p1, Vector2 p2)
         {
-            Handles.DrawLine(p1.ToVec3(), p2.ToVec3());
+            Handles.DrawLine(p1.ToVector3(), p2.ToVector3());
         }
 
         public static void DrawRectangle(Vector3 position, Vector3 size)

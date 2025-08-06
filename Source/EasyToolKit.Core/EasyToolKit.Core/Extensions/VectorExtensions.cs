@@ -46,12 +46,12 @@ namespace EasyToolKit.Core
             return v1 == Vector2Int.up || v1 == Vector2Int.down;
         }
 
-        public static Vector3 ToVec3(this Vector2 v, float z = 0f)
+        public static Vector3 ToVector3(this Vector2 v, float z = 0f)
         {
             return new Vector3(v.x, v.y, z);
         }
 
-        public static Vector2 ToVec2(this Vector3 v)
+        public static Vector2 ToVector2(this Vector3 v)
         {
             return new Vector2(v.x, v.y);
         }
@@ -81,22 +81,22 @@ namespace EasyToolKit.Core
             return new Vector3(Mathf.Round(v.x), Mathf.Round(v.y), Mathf.Round(v.z));
         }
 
-        public static Vector2 ToVec2(this Vector2Int v)
+        public static Vector2 ToVector2(this Vector2Int v)
         {
             return new Vector2(v.x, v.y);
         }
 
-        public static Vector3 ToVec3(this Vector2Int v, int z = 0)
+        public static Vector3 ToVector3(this Vector2Int v, int z = 0)
         {
             return new Vector3(v.x, v.y, z);
         }
 
-        public static Vector3 ToVec3(this Vector3Int v)
+        public static Vector3 ToVector3(this Vector3Int v)
         {
             return new Vector3(v.x, v.y, v.z);
         }
 
-        public static Vector2 ToVec2(this Vector3Int v)
+        public static Vector2 ToVector2(this Vector3Int v)
         {
             return new Vector2(v.x, v.y);
         }
@@ -111,42 +111,42 @@ namespace EasyToolKit.Core
             return new Vector2Int(v.x, v.y);
         }
 
-        public static Vector2Int RoundToVec2Int(this Vector2 v)
+        public static Vector2Int RoundToVector2Int(this Vector2 v)
         {
             return new Vector2Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
         }
 
-        public static Vector3Int RoundToVec3Int(this Vector2 v)
+        public static Vector3Int RoundToVector3Int(this Vector2 v)
         {
             return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
         }
 
-        public static Vector3Int RoundToVec3Int(this Vector3 v)
+        public static Vector3Int RoundToVector3Int(this Vector3 v)
         {
             return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
         }
 
-        public static Vector2Int RoundToVec2Int(this Vector3 v)
+        public static Vector2Int RoundToVector2Int(this Vector3 v)
         {
             return new Vector2Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y));
         }
 
-        public static Vector2Int FloorToVec2Int(this Vector2 v)
+        public static Vector2Int FloorToVector2Int(this Vector2 v)
         {
             return new Vector2Int(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
         }
 
-        public static Vector3Int FloorToVec3Int(this Vector2 v)
+        public static Vector3Int FloorToVector3Int(this Vector2 v)
         {
             return new Vector3Int(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
         }
 
-        public static Vector3Int FloorToVec3Int(this Vector3 v)
+        public static Vector3Int FloorToVector3Int(this Vector3 v)
         {
             return new Vector3Int(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y), Mathf.FloorToInt(v.z));
         }
 
-        public static Vector2Int FloorToVec2Int(this Vector3 v)
+        public static Vector2Int FloorToVector2Int(this Vector3 v)
         {
             return new Vector2Int(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
         }

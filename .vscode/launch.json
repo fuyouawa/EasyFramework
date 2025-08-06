@@ -7,8 +7,8 @@
             "userAssemblies": [
                 "${workspaceFolder}/Library/ScriptAssemblies/Assembly-CSharp.dll",
                 "${workspaceFolder}/Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll",
-                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.Tilemap.dll",
-                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.Tilemap.Editor.dll",
+                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.TileWorldPro.dll",
+                "${workspaceFolder}/Library/ScriptAssemblies/EasyToolKit.TileWorldPro.Editor.dll",
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.dll",
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Core.Editor.dll",
                 "${workspaceFolder}/Assets/Plugins/EasyToolKit/Assemblies/EasyToolKit.Inspector.dll",

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05294deddbc235b40896dd88b5874e78, type: 3}
+  m_Name: DemoTileWorld
+  m_EditorClassIdentifier: 
+  _tileSize: 1
+  _worldChunkSize: {x: 16, y: 256, z: 16}
+  _terrainDefinitionSet:
+    _definitions:
+    - _name: 
+      _ruleSetAsset: {fileID: 11400000, guid: 85438dcf49c676d468a7209647900f66, type: 2}
+      _debugCubeColor: {r: 0, g: 1, b: 0, a: 0.5}
+      _drawDebugCube: 1
+      _enableZTestForDebugCube: 1
+      _serializedGuid: 2ae84e264f7bc9dc449dc2d7103597aea2
+      _serializedMapData: 
+  _isInitialized: 1

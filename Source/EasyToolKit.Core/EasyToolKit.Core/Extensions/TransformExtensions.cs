@@ -112,12 +112,12 @@ namespace EasyToolKit.Core
 
         public static void SetPositionXY(this Transform transform, Vector3 position)
         {
-            SetPositionXY(transform, position.ToVec2());
+            SetPositionXY(transform, position.ToVector2());
         }
 
         public static void SetPositionXY(this Transform transform, Vector2 position)
         {
-            transform.position = position.ToVec3(transform.position.z);
+            transform.position = position.ToVector3(transform.position.z);
         }
 
 

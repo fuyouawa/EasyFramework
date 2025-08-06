@@ -1,0 +1,16 @@
+{
+    "name": "EasyToolKit.TileWorldPro.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:31ab3a34ad049a84f80790693637f393"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
