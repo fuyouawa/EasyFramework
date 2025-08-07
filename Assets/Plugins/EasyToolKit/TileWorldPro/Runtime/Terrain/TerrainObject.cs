@@ -1,103 +1,107 @@
-// using System;
-// using EasyToolKit.Inspector;
-// using EasyToolKit.ThirdParty.OdinSerializer;
-// using UnityEngine;
+using System;
+using EasyToolKit.Core;
+using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
+using UnityEngine;
 
-// namespace EasyToolKit.TileWorldPro
-// {
-//     public class TerrainObject : SerializedMonoBehaviour
-//     {
-//         [OdinSerialize] private Guid _targetTerrainDefinitionGuid;
+namespace EasyToolKit.TileWorldPro
+{
+    public class TerrainObject : SerializedMonoBehaviour
+    {
+        [OdinSerialize] private Guid _terrainGuid;
 
-//         [SerializeField, ReadOnly] private TilemapCreator _tilemapCreator;
+        [SerializeField, ReadOnly] private TerrainObjectManager _manager;
 
-//         public Guid TargetTerrainDefinitionGuid
-//         {
-//             get => _targetTerrainDefinitionGuid;
-//             set => _targetTerrainDefinitionGuid = value;
-//         }
+        private TerrainDefinition _terrainDefinition;
 
-//         public TilemapCreator TilemapCreator
-//         {
-//             get => _tilemapCreator;
-//             set => _tilemapCreator = value;
-//         }
+        public TerrainDefinition TerrainDefinition
+        {
+            get
+            {
+                if (_terrainDefinition == null)
+                {
+                    _terrainDefinition = Manager.Builder.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(_terrainGuid);
+                }
+                return _terrainDefinition;
+            }
+        }
 
-//         public void ClearTiles()
-//         {
-//             var childCount = transform.childCount;
-//             for (int i = 0; i < childCount; i++)
-//             {
-//                 var child = transform.GetChild(0);
-//                 if (Application.isPlaying)
-//                 {
-//                     Destroy(child.gameObject);
-//                 }
-//                 else
-//                 {
-//                     DestroyImmediate(child.gameObject);
-//                 }
-//             }
-//         }
+        public TerrainObjectManager Manager => _manager;
 
-//         public bool BuildTile(TerrainTilePosition terrainTilePosition)
-//         {
-//             var tilePosition = terrainTilePosition.TilePosition;
-//             var ruleType = TilemapCreator.Asset.TerrainMap.CalculateRuleTypeAt(TilemapCreator.TerrainConfigAsset, tilePosition);
-//             var tileInstance = terrainTilePosition.Definition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
-//             if (tileInstance == null)
-//             {
-//                 Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
-//                 return false;
-//             }
+        public void Initialize(TerrainObjectManager manager, Guid terrainGuid)
+        {
+            _manager = manager;
+            _terrainGuid = terrainGuid;
+        }
 
-//             RegisterTile(tileInstance, tilePosition, ruleType);
-//             return true;
-//         }
+        public void Clear()
+        {
+            var childCount = transform.childCount;
+            for (int i = 0; i < childCount; i++)
+            {
+                var child = transform.GetChild(0);
+                if (Application.isPlaying)
+                {
+                    Destroy(child.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(child.gameObject);
+                }
+            }
+        }
 
-//         public bool DestroyTileAt(Vector3Int tilePosition)
-//         {
-//             foreach (Transform child in transform)
-//             {
-//                 var tileObject = child.GetComponent<TerrainTileObject>();
-//                 if (tileObject == null)
-//                     continue;
+        public bool AddTile(TilePosition tilePosition, TerrainTileRuleType ruleType)
+        {
+            var tileInstance = TerrainDefinition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
+            if (tileInstance == null)
+            {
+                Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{tilePosition}'");
+                return false;
+            }
 
-//                 if (tileObject.TerrainObject != this)
-//                 {
-//                     Debug.LogError($"The tile object '{child.name}' is not belong to this terrain object.");
-//                     continue;
-//                 }
+            RegisterTile(tileInstance, tilePosition, ruleType);
+            return true;
+        }
 
-//                 if (tileObject.TilePosition == tilePosition)
-//                 {
-//                     if (Application.isPlaying)
-//                     {
-//                         Destroy(child.gameObject);
-//                     }
-//                     else
-//                     {
-//                         DestroyImmediate(child.gameObject);
-//                     }
-//                     return true;
-//                 }
-//             }
-//             return false;
-//         }
+        public bool DestroyTileAt(TilePosition tilePosition)
+        {
+            foreach (Transform child in transform)
+            {
+                if (!child.TryGetComponent<TerrainTileObject>(out var tileObject))
+                    continue;
 
+                if (tileObject.TerrainObject != this)
+                {
+                    Debug.LogError($"The tile object '{child.name}' is not belong to this terrain object.");
+                    continue;
+                }
 
-//         private void RegisterTile(GameObject tileInstance, Vector3Int tilePosition, TerrainTileRuleType ruleType)
-//         {
-//             tileInstance.transform.SetParent(transform);
-//             tileInstance.transform.position += TilemapUtility.TilePositionToWorldPosition(
-//                 TilemapCreator.transform.position,
-//                 tilePosition,
-//                 TilemapCreator.Asset.Settings.TileSize);
+                if (tileObject.TilePosition == tilePosition)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(child.gameObject);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
 
-//             var tileObject = tileInstance.AddComponent<TerrainTileObject>();
-//             tileObject.TerrainObject = this;
-//             tileObject.RuleType = ruleType;
-//             tileObject.TilePosition = tilePosition;
-//         }
-//     }
-// }
+        private void RegisterTile(GameObject tileInstance, TilePosition tilePosition, TerrainTileRuleType ruleType)
+        {
+            tileInstance.transform.SetParent(transform);
+            tileInstance.transform.position += Manager.Builder.StartPoint.TilePositionToWorldPosition(tilePosition, Manager.Builder.TileWorldAsset.TileSize);
+
+            var tileObject = tileInstance.AddComponent<TerrainTileObject>();
+            tileObject.TerrainObject = this;
+            tileObject.RuleType = ruleType;
+            tileObject.TilePosition = tilePosition;
+        }
+    }
+}
