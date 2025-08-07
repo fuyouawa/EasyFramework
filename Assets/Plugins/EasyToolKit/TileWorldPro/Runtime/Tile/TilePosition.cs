@@ -6,15 +6,42 @@ namespace EasyToolKit.TileWorldPro
     [Serializable]
     public struct TilePosition : IEquatable<TilePosition>
     {
+        /// <summary>
+        /// TilePosition(0, 0, 0)
+        /// </summary>
         public static readonly TilePosition Zero = new TilePosition(0, 0, 0);
+        /// <summary>
+        /// TilePosition(0, 0, 1)
+        /// </summary>
         public static readonly TilePosition Forward = new TilePosition(0, 0, 1);
+        /// <summary>
+        /// TilePosition(0, 0, -1)
+        /// </summary>
         public static readonly TilePosition Back = new TilePosition(0, 0, -1);
+        /// <summary>
+        /// TilePosition(-1, 0, 0)
+        /// </summary>
         public static readonly TilePosition Left = new TilePosition(-1, 0, 0);
+        /// <summary>
+        /// TilePosition(1, 0, 0)
+        /// </summary>
         public static readonly TilePosition Right = new TilePosition(1, 0, 0);
 
+        /// <summary>
+        /// TilePosition(0, 0, 1) + TilePosition(-1, 0, 0)
+        /// </summary>
         public static readonly TilePosition ForwardLeft = new TilePosition(0, 0, 1) + new TilePosition(-1, 0, 0);
+        /// <summary>
+        /// TilePosition(0, 0, 1) + TilePosition(1, 0, 0)
+        /// </summary>
         public static readonly TilePosition ForwardRight = new TilePosition(0, 0, 1) + new TilePosition(1, 0, 0);
+        /// <summary>
+        /// TilePosition(0, 0, -1) + TilePosition(-1, 0, 0)
+        /// </summary>
         public static readonly TilePosition BackLeft = new TilePosition(0, 0, -1) + new TilePosition(-1, 0, 0);
+        /// <summary>
+        /// TilePosition(0, 0, -1) + TilePosition(1, 0, 0)
+        /// </summary>
         public static readonly TilePosition BackRight = new TilePosition(0, 0, -1) + new TilePosition(1, 0, 0);
 
         [SerializeField] private Vector3Int _position;

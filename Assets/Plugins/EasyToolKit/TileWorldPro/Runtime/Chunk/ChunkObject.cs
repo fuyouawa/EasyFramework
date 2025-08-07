@@ -75,14 +75,16 @@ namespace EasyToolKit.TileWorldPro
 
         public ChunkTerrainObject GetTerrainObject(Guid terrainGuid)
         {
-            var terrainObject = TerrainObjects.GetValueOrDefault(terrainGuid);
-            if (terrainObject != null)
+            if (TerrainObjects.TryGetValue(terrainGuid, out var terrainObject) && terrainObject != null)
             {
                 return terrainObject;
             }
 
-            Refresh();
-            return GetTerrainObject(terrainGuid);
+            var terrainDefinition = Builder.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(terrainGuid);
+            terrainObject = CreateTerrainObject(terrainDefinition);
+            terrainObject.Initialize(this, terrainDefinition.Guid);
+            _terrainObjects[terrainGuid] = terrainObject;
+            return terrainObject;
         }
 
         public void AddTile(Guid terrainGuid, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
@@ -115,7 +117,7 @@ namespace EasyToolKit.TileWorldPro
 
         private ChunkTerrainObject CreateTerrainObject(TerrainDefinition terrainDefinition)
         {
-            var terrainObject = new GameObject(terrainDefinition.Name).AddComponent<ChunkTerrainObject>();
+            var terrainObject = new GameObject($"Terrain_{terrainDefinition.Name}").AddComponent<ChunkTerrainObject>();
             terrainObject.transform.SetParent(transform);
             terrainObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             terrainObject.transform.localScale = Vector3.one;

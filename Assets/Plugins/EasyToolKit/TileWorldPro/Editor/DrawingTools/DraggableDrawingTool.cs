@@ -100,22 +100,22 @@ namespace EasyToolKit.TileWorldPro.Editor
             TileWorldDesigner target,
             Vector3 tileWorldPosition,
             Vector3 hitPoint,
-            List<TilePosition> dragTilePositionPath)
+            IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             return tileWorldPosition;
         }
 
-        protected virtual IEnumerable<TilePosition> GetDrawingTilePositions(
+        protected virtual IReadOnlyList<TilePosition> GetDrawingTilePositions(
             TileWorldDesigner target,
             TilePosition hitTilePosition,
-            List<TilePosition> dragTilePositionPath)
+            IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             return dragTilePositionPath;
         }
 
         protected abstract Color GetHitColor(TileWorldDesigner target);
 
-        protected abstract void DoTiles(TileWorldDesigner target, IEnumerable<TilePosition> tilePositions);
+        protected abstract void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions);
 
         protected virtual bool FilterHitTile(TileWorldDesigner target, TilePosition tilePosition)
         {

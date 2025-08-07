@@ -19,14 +19,10 @@ namespace EasyToolKit.Core
         {
             if (!cond)
             {
-                // if (Debugger.IsAttached)
-                // {
-                //     Debugger.Break();
-                // }
-                // else
-                // {
-                //     Environment.FailFast("Assert failed", new AssertException(new StackTrace()));
-                // }
+                if (Debugger.IsAttached)
+                {
+                    Debugger.Break();
+                }
                 throw new AssertException(message);
             }
         }
@@ -36,7 +32,7 @@ namespace EasyToolKit.Core
         {
             Condition(EqualityComparer<T>.Default.Equals(y), message);
         }
-        
+
         [Conditional("UNITY_ASSERTIONS")]
         public static void IsEqual<T>(T x, T y)
         {

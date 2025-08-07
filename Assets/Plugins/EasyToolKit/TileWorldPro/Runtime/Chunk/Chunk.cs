@@ -37,7 +37,7 @@ namespace EasyToolKit.TileWorldPro
             return null;
         }
 
-        public void SetTilesAt(IEnumerable<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
+        public void SetTilesAt(IReadOnlyList<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
         {
             var terrainSection = _terrainSections.FirstOrDefault(section => section.TerrainGuid == terrainGuid);
             if (terrainSection == null)
@@ -53,11 +53,10 @@ namespace EasyToolKit.TileWorldPro
             foreach (var chunkTilePosition in chunkTilePositions)
             {
                 terrainSection.Tiles.Add(chunkTilePosition);
-                Debug.Log($"SetTilesAt: {chunkTilePosition}, {terrainGuid}");
             }
         }
 
-        public void RemoveTilesAt(IEnumerable<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
+        public void RemoveTilesAt(IReadOnlyList<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
         {
             var terrainSection = _terrainSections.FirstOrDefault(section => section.TerrainGuid == terrainGuid);
             if (terrainSection == null)

@@ -9,7 +9,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 {
     public class EraseTool : DraggableDrawingTool, IEasyEventTrigger
     {
-        protected override void DoTiles(TileWorldDesigner target, IEnumerable<TilePosition> tilePositions)
+        protected override void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions)
         {
             target.TileWorldAsset.RemoveTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
             this.TriggerEvent(new RemoveTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));

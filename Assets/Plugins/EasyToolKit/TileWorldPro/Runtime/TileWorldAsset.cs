@@ -19,8 +19,7 @@ namespace EasyToolKit.TileWorldPro
         [SerializeField] private Vector2Int _chunkSize;
 
         [HideLabel]
-        [SerializeField]
-        private TerrainDefinitionSet _terrainDefinitionSet;
+        [SerializeField] private TerrainDefinitionSet _terrainDefinitionSet;
 
         private readonly Dictionary<ChunkPosition, Chunk> _chunks = new Dictionary<ChunkPosition, Chunk>();
 
@@ -69,7 +68,7 @@ namespace EasyToolKit.TileWorldPro
             return GetChunkAt(tilePosition).TryGetTerrainGuidAt(tilePosition);
         }
 
-        public void SetTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
+        public void SetTilesAt(IReadOnlyList<TilePosition> tilePositions, Guid terrainGuid)
         {
             Chunk chunkCache = null;
             var tilesCache = new ChunkTilePosition[1];
@@ -85,7 +84,7 @@ namespace EasyToolKit.TileWorldPro
             }
         }
 
-        public void RemoveTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
+        public void RemoveTilesAt(IReadOnlyList<TilePosition> tilePositions, Guid terrainGuid)
         {
             Chunk chunkCache = null;
             var tilesCache = new ChunkTilePosition[1];

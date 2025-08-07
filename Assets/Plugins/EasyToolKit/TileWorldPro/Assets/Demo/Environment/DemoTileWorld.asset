@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: DemoTileWorld
   m_EditorClassIdentifier: 
   _tileSize: 1
-  _chunkSize: {x: 0, y: 0}
+  _chunkSize: {x: 16, y: 16}
   _terrainDefinitionSet:
-    _definitions: []
-  _isInitialized: 0
+    _definitions:
+    - _name: "\u6D4B\u8BD5"
+      _ruleSetAsset: {fileID: 11400000, guid: 85438dcf49c676d468a7209647900f66, type: 2}
+      _debugCubeColor: {r: 0, g: 1, b: 0, a: 0.5}
+      _drawDebugCube: 0
+      _enableZTestForDebugCube: 1
+      _serializedGuid: 2a213afc2f673ef446877014a9fdb8d1eb
+      _serializedMapData: 
+  _isInitialized: 1

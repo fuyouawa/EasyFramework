@@ -10,7 +10,6 @@ namespace EasyToolKit.TileWorldPro
     public class ChunkTerrainObject : SerializedMonoBehaviour
     {
         [OdinSerialize] private Guid _terrainGuid;
-
         [SerializeField, ReadOnly] private ChunkObject _chunkObject;
 
         private TerrainDefinition _terrainDefinition;
@@ -65,7 +64,12 @@ namespace EasyToolKit.TileWorldPro
                 return;
             }
 
-            RegisterTile(tileInstance, chunkTilePosition, ruleType);
+            tileInstance.name += $"_{chunkTilePosition}";
+            tileInstance.transform.SetParent(transform);
+            tileInstance.transform.position += ChunkObject.Builder.StartPoint.TilePositionToWorldPosition(chunkTilePosition.ToTilePosition(ChunkObject.Area), ChunkObject.Builder.TileWorldAsset.TileSize);
+
+            _tileInfos[chunkTilePosition] = new ChunkTerrainTileInfo(tileInstance, chunkTilePosition, ruleType);
+            _isDirty = true;
         }
 
         public ChunkTerrainTileInfo TryGetTileInfoOf(ChunkTilePosition chunkTilePosition)
@@ -91,16 +95,6 @@ namespace EasyToolKit.TileWorldPro
             }
             return false;
         }
-
-        private void RegisterTile(GameObject tileInstance, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
-        {
-            tileInstance.transform.SetParent(transform);
-            tileInstance.transform.position += ChunkObject.Builder.StartPoint.TilePositionToWorldPosition(chunkTilePosition.ToTilePosition(ChunkObject.Area), ChunkObject.Builder.TileWorldAsset.TileSize);
-
-            _tileInfos[chunkTilePosition] = new ChunkTerrainTileInfo(tileInstance, chunkTilePosition, ruleType);
-            _isDirty = true;
-        }
-
 
         protected override void OnAfterDeserialize()
         {

@@ -15,7 +15,7 @@ namespace EasyToolKit.TileWorldPro.Editor
             TileWorldDesigner target,
             Vector3 tileWorldPosition,
             Vector3 hitPoint,
-            List<TilePosition> dragTilePositionPath)
+            IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             var tileSize = target.TileWorldAsset.TileSize;
             var tilePosition = target.StartPoint.WorldPositionToTilePosition(tileWorldPosition, tileSize);
@@ -83,15 +83,15 @@ namespace EasyToolKit.TileWorldPro.Editor
             return tileWorldPosition;
         }
 
-        protected override IEnumerable<TilePosition> GetDrawingTilePositions(
+        protected override IReadOnlyList<TilePosition> GetDrawingTilePositions(
             TileWorldDesigner target,
             TilePosition hitTilePosition,
-            List<TilePosition> dragTilePositionPath)
+            IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             return dragTilePositionPath;
         }
 
-        protected override void DoTiles(TileWorldDesigner target, IEnumerable<TilePosition> tilePositions)
+        protected override void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions)
         {
             target.TileWorldAsset.SetTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
             this.TriggerEvent(new SetTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));

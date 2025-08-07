@@ -10,9 +10,12 @@ namespace EasyToolKit.TileWorldPro.Editor
     [CustomEditor(typeof(TileWorldBuilder))]
     public class TileWorldBuilderEditor : EasyEditor, IEasyEventListener<SetTilesEvent>, IEasyEventListener<RemoveTilesEvent>
     {
+        private TileWorldBuilder _target;
+
         protected override void OnEnable()
         {
             base.OnEnable();
+            _target = (TileWorldBuilder)target;
             this.RegisterListener<SetTilesEvent>();
             this.RegisterListener<RemoveTilesEvent>();
         }
@@ -38,12 +41,18 @@ namespace EasyToolKit.TileWorldPro.Editor
 
         void IEasyEventListener<SetTilesEvent>.OnEvent(object sender, SetTilesEvent eventArg)
         {
-            Debug.Log($"SetTilesEvent: {eventArg.TerrainGuid}, {eventArg.TilePositions.Length}");
+            if (_target.Settings.RealTimeIncrementalBuild)
+            {
+                _target.BuildTiles(eventArg.TerrainGuid, eventArg.TilePositions);
+            }
         }
 
         void IEasyEventListener<RemoveTilesEvent>.OnEvent(object sender, RemoveTilesEvent eventArg)
         {
-            Debug.Log($"RemoveTilesEvent: {eventArg.TerrainGuid}, {eventArg.TilePositions.Length}");
+            if (_target.Settings.RealTimeIncrementalBuild)
+            {
+                _target.DestroyTiles(eventArg.TerrainGuid, eventArg.TilePositions);
+            }
         }
     }
 }

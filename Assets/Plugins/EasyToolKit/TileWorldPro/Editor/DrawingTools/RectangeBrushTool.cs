@@ -7,7 +7,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 {
     public class RectangeBrushTool : BrushTool
     {
-        protected override Vector3 AdjustTileWorldPosition(TileWorldDesigner target, Vector3 tileWorldPosition, Vector3 hitPoint, List<TilePosition> dragTilePositionPath)
+        protected override Vector3 AdjustTileWorldPosition(TileWorldDesigner target, Vector3 tileWorldPosition, Vector3 hitPoint, IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             var newTileWorldPosition = base.AdjustTileWorldPosition(target, tileWorldPosition, hitPoint, dragTilePositionPath);
             if (dragTilePositionPath.Count < 2)
@@ -20,10 +20,10 @@ namespace EasyToolKit.TileWorldPro.Editor
             return newTileWorldPosition.SetY(startTileWorldPosition.y);
         }
 
-        protected override IEnumerable<TilePosition> GetDrawingTilePositions(
+        protected override IReadOnlyList<TilePosition> GetDrawingTilePositions(
             TileWorldDesigner target,
             TilePosition hitTilePosition,
-            List<TilePosition> dragTilePositionPath)
+            IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             if (dragTilePositionPath.Count < 2)
             {
