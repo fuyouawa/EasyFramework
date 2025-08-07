@@ -22,16 +22,6 @@ namespace EasyToolKit.Core
     /// <param name="triggerInvoker">事件处理器的触发调用对象</param>
     public delegate void EventTriggerWrapper(Action triggerInvoker);
 
-    /// <summary>
-    /// <para>标记为事件处理器</para>
-    /// <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
-    /// <para>当RegisterEasyEventSubscriber时会使用该特性</para>
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
-    public class EasyEventHandlerAttribute : Attribute
-    {
-    }
-
     internal class EasyEventHandlers
     {
         private readonly Dictionary<object, HashSet<Delegate>> _handlesByTarget =
@@ -118,40 +108,6 @@ namespace EasyToolKit.Core
         #region Register
 
         /// <summary>
-        /// 注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public IFromRegisterEvent RegisterSubscriber(object target)
-        {
-            var flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            var targetType = target.GetType();
-            var handlers = targetType.GetMethods(flags)
-                .Where(h => h.HasCustomAttribute<EasyEventHandlerAttribute>())
-                .ToArray();
-
-            Action inUnityThreadSetter = null;
-            foreach (var h in handlers)
-            {
-                var p = h.GetParameters();
-                if (p.Length != 2)
-                {
-                    throw new ArgumentException(
-                        $"The number of arguments to the event handler({h.GetSignature()}) must be 2!");
-                }
-
-                var eventType = p[1].ParameterType;
-                var func = h.CreateDelegate(target);
-
-                var ret = Register(target, eventType, func);
-                inUnityThreadSetter += () => ret.InUnityThread();
-            }
-
-            return new FromRegisterEventGeneric(() => UnregisterSubscriber(target), inUnityThreadSetter);
-        }
-
-        /// <summary>
         /// 注册事件处理器
         /// </summary>
         /// <typeparam name="TEvent"></typeparam>
@@ -189,23 +145,6 @@ namespace EasyToolKit.Core
                     }
                 });
         }
-
-        // private EventTriggerWrapper GetTriggerWrapper(Type eventType, Delegate handler)
-        // {
-        //     EasyEventHandlers handlers;
-        //     lock (_handlesDict)
-        //     {
-        //         handlers = _handlesDict[eventType];
-        //     }
-        //
-        //     if (handlers == null)
-        //         return null;
-        //
-        //     lock (handlers)
-        //     {
-        //         return handlers.GetTriggerWrapper(handler);
-        //     }
-        // }
 
         #endregion
 
@@ -277,12 +216,12 @@ namespace EasyToolKit.Core
         /// <param name="target"></param>
         /// <param name="eventArg">事件</param>
         /// <returns></returns>
-        public bool SendEvent<TEvent>(object target, TEvent eventArg)
+        public bool TriggerEvent<TEvent>(object target, TEvent eventArg)
         {
-            return SendEvent(target, eventArg, typeof(TEvent));
+            return TriggerEvent(target, eventArg, typeof(TEvent));
         }
 
-        public bool SendEvent(object target, object eventArg, Type eventType)
+        public bool TriggerEvent(object target, object eventArg, Type eventType)
         {
             EasyEventHandlers handlers;
             lock (_handlesDict)

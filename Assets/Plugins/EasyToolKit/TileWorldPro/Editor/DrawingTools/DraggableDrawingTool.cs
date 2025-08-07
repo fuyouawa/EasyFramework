@@ -11,8 +11,12 @@ namespace EasyToolKit.TileWorldPro.Editor
         private List<TilePosition> _dragTilePositionPath = new List<TilePosition>();
         private bool _isDragging = false;
 
+        protected TerrainDefinition SelectedTerrainDefinition { get; private set; }
+
         public void OnSceneGUI(TileWorldDesigner target, Vector3 hitPoint, Vector3? hitTileWorldPosition)
         {
+            SelectedTerrainDefinition = target.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(TerrainDefinitionDrawer.SelectedGuid.Value);
+
             var tileSize = target.TileWorldAsset.TileSize;
 
             var tileWorldPosition = hitTileWorldPosition ?? target.StartPoint.WorldPositionToTileWorldPosition(hitPoint, tileSize);

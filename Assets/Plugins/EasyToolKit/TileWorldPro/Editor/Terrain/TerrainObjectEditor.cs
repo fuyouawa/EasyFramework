@@ -5,13 +5,13 @@ using UnityEditor;
 
 namespace EasyToolKit.TileWorldPro.Editor
 {
-    [CustomEditor(typeof(TerrainObject))]
+    [CustomEditor(typeof(ChunkTerrainObject))]
     public class TerrainObjectEditor : EasyEditor
     {
         protected override void DrawTree()
         {
             Tree.BeginDraw();
-            EditorGUILayout.LabelField("地形GUID", ((TerrainObject)target).TerrainDefinition.Guid.ToString("D"));
+            EditorGUILayout.LabelField("地形GUID", ((ChunkTerrainObject)target).TerrainDefinition.Guid.ToString("D"));
             Tree.DrawProperties();
             Tree.EndDraw();
         }

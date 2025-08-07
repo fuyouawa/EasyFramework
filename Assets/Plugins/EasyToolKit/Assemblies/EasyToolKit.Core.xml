@@ -486,21 +486,6 @@
             </summary>
             <param name="triggerInvoker">事件处理器的触发调用对象</param>
         </member>
-        <member name="T:EasyToolKit.Core.EasyEventHandlerAttribute">
-            <summary>
-            <para>标记为事件处理器</para>
-            <para>事件处理器必须为2个参数，第一个参数是发送者（推荐直接object），第二个参数是事件类型</para>
-            <para>当RegisterEasyEventSubscriber时会使用该特性</para>
-            </summary>
-        </member>
-        <member name="M:EasyToolKit.Core.EasyEventManager.RegisterSubscriber(System.Object)">
-            <summary>
-            注册target中所有事件处理器（标记了EasyEventHandler特性的成员函数）
-            </summary>
-            <param name="target"></param>
-            <returns></returns>
-            <exception cref="T:System.ArgumentException"></exception>
-        </member>
         <member name="M:EasyToolKit.Core.EasyEventManager.Register``1(System.Object,EasyToolKit.Core.EasyEventHandler{``0})">
             <summary>
             注册事件处理器
@@ -526,7 +511,7 @@
             <param name="handler"></param>
             <returns></returns>
         </member>
-        <member name="M:EasyToolKit.Core.EasyEventManager.SendEvent``1(System.Object,``0)">
+        <member name="M:EasyToolKit.Core.EasyEventManager.TriggerEvent``1(System.Object,``0)">
             <summary>
             <para>触发事件</para>
             <para>注意：在事件处理器中触发事件要谨慎，处理不当可能会死锁</para>

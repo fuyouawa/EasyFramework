@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using UnityEditor;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro.Editor
 {
-    public class BrushTool : DraggableDrawingTool
+    public class BrushTool : DraggableDrawingTool, IEasyEventTrigger
     {
         private static readonly float Epsilon = TilemapUtility.Epsilon;
 
@@ -92,20 +93,13 @@ namespace EasyToolKit.TileWorldPro.Editor
 
         protected override void DoTiles(TileWorldDesigner target, IEnumerable<TilePosition> tilePositions)
         {
-            target.TileWorldAsset.SetTilesAt(tilePositions, TerrainDefinitionDrawer.SelectedGuid.Value);
-
-            // if (target.Settings.RealTimeIncrementalBuild)
-            // {
-            //     target.IncrementalBuildAt(TerrainDefinitionDrawer.SelectedGuid.Value, tilePosition);
-            // }
+            target.TileWorldAsset.SetTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
+            this.TriggerEvent(new SetTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));
         }
 
         protected override Color GetHitColor(TileWorldDesigner target)
         {
-            var selectedTerrainDefinition = target.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(
-                TerrainDefinitionDrawer.SelectedGuid.Value);
-
-            return selectedTerrainDefinition.DebugCubeColor;
+            return SelectedTerrainDefinition.DebugCubeColor;
         }
     }
 }

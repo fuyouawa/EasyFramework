@@ -56,45 +56,6 @@ namespace EasyToolKit.TileWorldPro.Editor
             }
         }
 
-        // protected override void DrawTree()
-        // {
-        // Tree.BeginDraw();
-        // Tree.DrawProperties();
-
-        // EasyEditorGUI.Title("调试", textAlignment: TextAlignment.Center);
-        // _context.Value.IsMarkingRuleType = GUILayout.Toggle(_context.Value.IsMarkingRuleType, "标注瓦片规则类型");
-
-        // if (GUILayout.Button("重新扫描规则类型", GUILayout.Height(30)))
-        // {
-        //     _context.Value.RuleTypeMapCache.Clear();
-
-        //     foreach (var block in _target.Asset.TerrainMap)
-        //     {
-        //         var ruleType = _target.Asset.TerrainMap.CalculateRuleTypeAt(_target.TerrainConfigAsset, block.TilePosition);
-        //         _context.Value.RuleTypeMapCache[block.TilePosition] = ruleType;
-        //     }
-        // }
-
-        // EasyEditorGUI.Title("地图构建", textAlignment: TextAlignment.Center);
-        // if (GUILayout.Button("初始化地图", GUILayout.Height(30)))
-        // {
-        //     _target.EnsureInitializeMap();
-        // }
-
-        // if (GUILayout.Button("重新构建所有地图", GUILayout.Height(30)))
-        // {
-        //     _target.ClearAllMap();
-        //     _target.BuildAllMap();
-        // }
-
-        // if (GUILayout.Button("清除所有地图", GUILayout.Height(30)))
-        // {
-        //     _target.ClearAllMap();
-        // }
-
-        // Tree.EndDraw();
-        // }
-
         void OnSceneGUI()
         {
             TileWorldSceneViewHandler.DrawSceneGUI(_context.Value);

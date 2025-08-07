@@ -9,53 +9,59 @@ namespace EasyToolKit.TileWorldPro
 {
     [EasyInspector]
     [CreateAssetMenu(menuName = "EasyToolKit/TileWorldPro/TileWorld", fileName = "TileWorld")]
-    public class TileWorldAsset : ScriptableObject, ISerializationCallbackReceiver
+    public class TileWorldAsset : ScriptableObject
     {
         [LabelText("瓦片大小")]
         [SerializeField] private float _tileSize = 1f;
 
         [LabelText("世界区块大小")]
         [ReadOnly]
-        [SerializeField] private Vector3Int _worldChunkSize;
+        [SerializeField] private Vector2Int _chunkSize;
 
         [HideLabel]
         [SerializeField]
         private TerrainDefinitionSet _terrainDefinitionSet;
 
-        private readonly Dictionary<WorldChunkPosition, WorldChunk> _chunks = new Dictionary<WorldChunkPosition, WorldChunk>();
+        private readonly Dictionary<ChunkPosition, Chunk> _chunks = new Dictionary<ChunkPosition, Chunk>();
 
         [SerializeField, HideInInspector] private bool _isInitialized = false;
 
         public float TileSize => _tileSize;
-        public Vector3Int WorldChunkSize => _worldChunkSize;
+        public Vector2Int ChunkSize
+        {
+            get
+            {
+                EnsureInitialized();
+                return _chunkSize;
+            }
+        }
         public TerrainDefinitionSet TerrainDefinitionSet => _terrainDefinitionSet;
 
-        public IEnumerable<WorldChunk> EnumerateChunks()
+        public IEnumerable<Chunk> EnumerateChunks()
         {
             return _chunks.Values;
         }
 
-        public WorldChunk GetChunkAt(TilePosition tilePosition)
+        public Chunk GetChunkAt(TilePosition tilePosition)
         {
-            var chunkX = Mathf.FloorToInt((float)tilePosition.X / _worldChunkSize.x);
-            var chunkY = Mathf.FloorToInt((float)tilePosition.Z / _worldChunkSize.z);
-            var chunkIndex = new WorldChunkPosition((ushort)chunkX, (ushort)chunkY);
+            EnsureInitialized();
+            var chunkIndex = tilePosition.ToChunkPosition(_chunkSize);
             if (_chunks.TryGetValue(chunkIndex, out var chunk))
             {
-                chunkIndex.Chunk = chunk;
                 return chunk;
             }
 
-            var area = new WorldChunkArea(chunkIndex, _worldChunkSize);
-            chunk = new WorldChunk(area);
-            chunkIndex.Chunk = chunk;
+            var area = new ChunkArea(chunkIndex, _chunkSize);
+            chunk = new Chunk(area);
             _chunks[chunkIndex] = chunk;
             return chunk;
         }
 
-        public WorldChunkTilePosition GetChunkTilePositionOf(TilePosition tilePosition)
+        public ChunkTilePosition TilePositionToChunkTilePosition(TilePosition tilePosition)
         {
-            return GetChunkAt(tilePosition).Area.GetChunkTilePositionOf(tilePosition);
+            EnsureInitialized();
+            return new ChunkArea(tilePosition.ToChunkPosition(_chunkSize), _chunkSize)
+                .TilePositionToChunkTilePosition(tilePosition);
         }
 
         public Guid? TryGetTerrainGuidAt(TilePosition tilePosition)
@@ -65,8 +71,8 @@ namespace EasyToolKit.TileWorldPro
 
         public void SetTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
         {
-            WorldChunk chunkCache = null;
-            var tilesCache = new TilePosition[1];
+            Chunk chunkCache = null;
+            var tilesCache = new ChunkTilePosition[1];
             foreach (var tilePosition in tilePositions)
             {
                 if (chunkCache == null || !chunkCache.Area.Contains(tilePosition))
@@ -74,15 +80,15 @@ namespace EasyToolKit.TileWorldPro
                     chunkCache = GetChunkAt(tilePosition);
                 }
 
-                tilesCache[0] = tilePosition;
+                tilesCache[0] = TilePositionToChunkTilePosition(tilePosition);
                 chunkCache.SetTilesAt(tilesCache, terrainGuid);
             }
         }
 
         public void RemoveTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
         {
-            WorldChunk chunkCache = null;
-            var tilesCache = new TilePosition[1];
+            Chunk chunkCache = null;
+            var tilesCache = new ChunkTilePosition[1];
             foreach (var tilePosition in tilePositions)
             {
                 if (chunkCache == null || !chunkCache.Area.Contains(tilePosition))
@@ -90,32 +96,30 @@ namespace EasyToolKit.TileWorldPro
                     chunkCache = GetChunkAt(tilePosition);
                 }
 
-                tilesCache[0] = tilePosition;
+                tilesCache[0] = TilePositionToChunkTilePosition(tilePosition);
                 chunkCache.RemoveTilesAt(tilesCache, terrainGuid);
             }
         }
 
         public void SetTileAt(TilePosition tilePosition, Guid terrainGuid)
         {
-            GetChunkAt(tilePosition).SetTilesAt(new[] { tilePosition }, terrainGuid);
+            GetChunkAt(tilePosition).SetTilesAt(new[] { TilePositionToChunkTilePosition(tilePosition) }, terrainGuid);
         }
 
         public void RemoveTileAt(TilePosition tilePosition, Guid terrainGuid)
         {
-            GetChunkAt(tilePosition).RemoveTilesAt(new[] { tilePosition }, terrainGuid);
+            GetChunkAt(tilePosition).RemoveTilesAt(new[] { TilePositionToChunkTilePosition(tilePosition) }, terrainGuid);
         }
 
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        private void EnsureInitialized()
         {
-            if (!_isInitialized)
+            if (_isInitialized)
             {
-                _worldChunkSize = TileWorldConfigAsset.Instance.WorldChunkSize;
-                _isInitialized = true;
+                return;
             }
-        }
 
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
-        {
+            _chunkSize = TileWorldConfigAsset.Instance.ChunkSize;
+            _isInitialized = true;
         }
     }
 }

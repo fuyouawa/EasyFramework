@@ -1,17 +1,18 @@
+using System;
 using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
-    public class WorldChunkArea
+    [Serializable]
+    public struct ChunkArea
     {
-        private readonly WorldChunkPosition _position;
-        private readonly Vector3Int _size;
+        [SerializeField] private ChunkPosition _position;
+        [SerializeField] private Vector2Int _size;
 
-        public WorldChunkPosition Position => _position;
-        public Vector3Int Size => _size;
-        public WorldChunk Chunk => _position.Chunk;
+        public ChunkPosition Position => _position;
+        public Vector2Int Size => _size;
 
-        public WorldChunkArea(WorldChunkPosition position, Vector3Int size)
+        public ChunkArea(ChunkPosition position, Vector2Int size)
         {
             _position = position;
             _size = size;
@@ -33,15 +34,11 @@ namespace EasyToolKit.TileWorldPro
                 (_position.Y + 1) * _size.y);
         }
 
-        public WorldChunkTilePosition GetChunkTilePositionOf(TilePosition tilePosition)
+        public ChunkTilePosition TilePositionToChunkTilePosition(TilePosition tilePosition)
         {
             var x = tilePosition.X % _size.x;
-            var y = tilePosition.Y % _size.y;
-            var z = tilePosition.Z % _size.z;
-            return new WorldChunkTilePosition((ushort)x, (ushort)y, (ushort)z)
-            {
-                Chunk = Chunk
-            };
+            var y = tilePosition.Z % _size.y;
+            return new ChunkTilePosition((ushort)x, (ushort)tilePosition.Y, (ushort)y);
         }
 
         public bool Contains(TilePosition tilePosition)

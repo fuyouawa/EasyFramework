@@ -33,6 +33,13 @@ namespace EasyToolKit.TileWorldPro
             _position = position;
         }
 
+        public ChunkPosition ToChunkPosition(Vector2Int chunkSize)
+        {
+            var chunkX = Mathf.FloorToInt((float)_position.x / chunkSize.x);
+            var chunkY = Mathf.FloorToInt((float)_position.z / chunkSize.y);
+            return new ChunkPosition((ushort)chunkX, (ushort)chunkY);
+        }
+
         public bool Equals(TilePosition other)
         {
             return _position == other._position;

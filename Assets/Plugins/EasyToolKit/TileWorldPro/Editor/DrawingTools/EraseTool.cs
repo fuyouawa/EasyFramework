@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
 using UnityEditor;
@@ -6,18 +7,12 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro.Editor
 {
-    public class EraseTool : DraggableDrawingTool
+    public class EraseTool : DraggableDrawingTool, IEasyEventTrigger
     {
         protected override void DoTiles(TileWorldDesigner target, IEnumerable<TilePosition> tilePositions)
         {
-            target.TileWorldAsset.RemoveTilesAt(tilePositions, TerrainDefinitionDrawer.SelectedGuid.Value);
-
-            // target.DestroyTileAt(TerrainDefinitionDrawer.SelectedGuid.Value, tilePosition);
-
-            // if (target.Asset.Settings.RealTimeIncrementalBuild)
-            // {
-            //     target.IncrementalBuildAt(TerrainDefinitionDrawer.SelectedGuid.Value, tilePosition);
-            // }
+            target.TileWorldAsset.RemoveTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
+            this.TriggerEvent(new RemoveTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));
         }
 
         protected override Color GetHitColor(TileWorldDesigner target)
@@ -27,7 +22,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 
         protected override bool FilterHitTile(TileWorldDesigner target, TilePosition tilePosition)
         {
-            return target.TileWorldAsset.TerrainDefinitionSet.Contains(TerrainDefinitionDrawer.SelectedGuid.Value);
+            return target.TileWorldAsset.TerrainDefinitionSet.Contains(SelectedTerrainDefinition.Guid);
         }
     }
 }

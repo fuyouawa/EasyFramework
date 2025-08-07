@@ -5,20 +5,20 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
-    public class WorldChunk
+    public class Chunk
     {
         private class TerrainSection
         {
             public Guid TerrainGuid;
-            public HashSet<WorldChunkTilePosition> Tiles;
+            public HashSet<ChunkTilePosition> Tiles;
         }
 
-        private readonly WorldChunkArea _area;
+        private readonly ChunkArea _area;
         private readonly List<TerrainSection> _terrainSections;
 
-        public WorldChunkArea Area => _area;
+        public ChunkArea Area => _area;
 
-        public WorldChunk(WorldChunkArea area)
+        public Chunk(ChunkArea area)
         {
             _area = area;
             _terrainSections = new List<TerrainSection>();
@@ -26,7 +26,7 @@ namespace EasyToolKit.TileWorldPro
 
         public Guid? TryGetTerrainGuidAt(TilePosition tilePosition)
         {
-            var chunkTilePosition = _area.GetChunkTilePositionOf(tilePosition);
+            var chunkTilePosition = _area.TilePositionToChunkTilePosition(tilePosition);
             foreach (var terrainSection in _terrainSections)
             {
                 if (terrainSection.Tiles.Contains(chunkTilePosition))
@@ -37,7 +37,7 @@ namespace EasyToolKit.TileWorldPro
             return null;
         }
 
-        public void SetTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
+        public void SetTilesAt(IEnumerable<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
         {
             var terrainSection = _terrainSections.FirstOrDefault(section => section.TerrainGuid == terrainGuid);
             if (terrainSection == null)
@@ -45,19 +45,19 @@ namespace EasyToolKit.TileWorldPro
                 terrainSection = new TerrainSection
                 {
                     TerrainGuid = terrainGuid,
-                    Tiles = new HashSet<WorldChunkTilePosition>(),
+                    Tiles = new HashSet<ChunkTilePosition>(),
                 };
                 _terrainSections.Add(terrainSection);
             }
 
-            foreach (var tilePosition in tilePositions)
+            foreach (var chunkTilePosition in chunkTilePositions)
             {
-                var chunkTilePosition = _area.GetChunkTilePositionOf(tilePosition);
                 terrainSection.Tiles.Add(chunkTilePosition);
+                Debug.Log($"SetTilesAt: {chunkTilePosition}, {terrainGuid}");
             }
         }
 
-        public void RemoveTilesAt(IEnumerable<TilePosition> tilePositions, Guid terrainGuid)
+        public void RemoveTilesAt(IEnumerable<ChunkTilePosition> chunkTilePositions, Guid terrainGuid)
         {
             var terrainSection = _terrainSections.FirstOrDefault(section => section.TerrainGuid == terrainGuid);
             if (terrainSection == null)
@@ -65,9 +65,8 @@ namespace EasyToolKit.TileWorldPro
                 return;
             }
 
-            foreach (var tilePosition in tilePositions)
+            foreach (var chunkTilePosition in chunkTilePositions)
             {
-                var chunkTilePosition = _area.GetChunkTilePositionOf(tilePosition);
                 terrainSection.Tiles.Remove(chunkTilePosition);
             }
         }
@@ -78,7 +77,7 @@ namespace EasyToolKit.TileWorldPro
             {
                 foreach (var tile in terrainSection.Tiles)
                 {
-                    yield return new TerrainTilePosition(tile.ConvertToTilePosition(), terrainSection.TerrainGuid);
+                    yield return new TerrainTilePosition(tile.ToTilePosition(_area), terrainSection.TerrainGuid);
                 }
             }
         }
@@ -93,7 +92,7 @@ namespace EasyToolKit.TileWorldPro
 
             foreach (var tile in terrainSection.Tiles)
             {
-                yield return new TerrainTilePosition(tile.ConvertToTilePosition(), terrainGuid);
+                yield return new TerrainTilePosition(tile.ToTilePosition(_area), terrainGuid);
             }
         }
     }

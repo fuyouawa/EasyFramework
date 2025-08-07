@@ -25,7 +25,7 @@ namespace EasyToolKit.TileWorldPro
         [InlineEditor(Style = InlineEditorStyle.Foldout)]
         [SerializeField] private TerrainConfigAsset _terrainConfigAsset;
 
-        private TerrainObjectManager _terrainObjectManager;
+        private Dictionary<ChunkPosition, ChunkObject> _chunkObjects;
 
         public TileWorldStartPoint StartPoint => _startPoint;
 
@@ -33,23 +33,15 @@ namespace EasyToolKit.TileWorldPro
 
         public TileWorldAsset TileWorldAsset => _tileWorldAsset;
 
-        public TerrainObjectManager TerrainObjectManager
+        public IReadOnlyDictionary<ChunkPosition, ChunkObject> ChunkObjects
         {
             get
             {
-                if (_terrainObjectManager == null)
+                if (_chunkObjects == null)
                 {
-                    _terrainObjectManager = transform.GetComponentInChildren<TerrainObjectManager>();
-                    if (_terrainObjectManager == null)
-                    {
-                        _terrainObjectManager = new GameObject("TerrainObjectManager").AddComponent<TerrainObjectManager>();
-                        _terrainObjectManager.transform.SetParent(transform);
-                    }
-
-                    _terrainObjectManager.Initialize(this);
+                    _chunkObjects = transform.GetComponentsInChildren<ChunkObject>(true).ToDictionary(chunkObject => chunkObject.Area.Position);
                 }
-
-                return _terrainObjectManager;
+                return _chunkObjects;
             }
         }
 
@@ -98,17 +90,33 @@ namespace EasyToolKit.TileWorldPro
             }
         }
 
-        public bool BuildTile(TerrainTilePosition terrainTilePosition)
+        public ChunkObject GetChunkObjectOf(ChunkPosition chunkPosition)
+        {
+            if (ChunkObjects.TryGetValue(chunkPosition, out var chunkObject))
+            {
+                return chunkObject;
+            }
+
+            chunkObject = new GameObject($"Chunk_{chunkPosition}").AddComponent<ChunkObject>();
+            chunkObject.Initialize(this, new ChunkArea(chunkPosition, _tileWorldAsset.ChunkSize));
+            _chunkObjects[chunkPosition] = chunkObject;
+            return chunkObject;
+        }
+
+        public void BuildTile(TerrainTilePosition terrainTilePosition)
         {
             var tilePosition = terrainTilePosition.TilePosition;
             var ruleType = CalculateRuleTypeOf(tilePosition);
-            var terrainObject = TerrainObjectManager.GetTerrainObject(terrainTilePosition.TerrainGuid);
-            return terrainObject.AddTile(tilePosition, ruleType);
+            var chunkObject = GetChunkObjectOf(tilePosition.ToChunkPosition(_tileWorldAsset.ChunkSize));
+            chunkObject.AddTile(terrainTilePosition.TerrainGuid, chunkObject.Area.TilePositionToChunkTilePosition(tilePosition), ruleType);
         }
 
         public void ClearTerrain(Guid terrainGuid)
         {
-            TerrainObjectManager.GetTerrainObject(terrainGuid).Clear();
+            foreach (var chunkObject in ChunkObjects.Values)
+            {
+                chunkObject.ClearTerrain(terrainGuid);
+            }
         }
     }
 }

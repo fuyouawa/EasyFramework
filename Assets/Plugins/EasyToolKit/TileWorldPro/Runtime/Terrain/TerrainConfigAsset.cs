@@ -15,7 +15,7 @@ namespace EasyToolKit.TileWorldPro
         Union
     }
 
-    [CreateAssetMenu(fileName = "TerrainConfig", menuName = "EasyToolKit/Tilemap/TerrainConfig")]
+    [CreateAssetMenu(fileName = "TerrainConfig", menuName = "EasyToolKit/TileWorldPro/TerrainConfig")]
     public class TerrainConfigAsset : ScriptableObject
     {
         [Serializable]
