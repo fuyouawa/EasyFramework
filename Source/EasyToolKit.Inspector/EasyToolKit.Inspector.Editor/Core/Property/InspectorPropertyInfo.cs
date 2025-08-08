@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
 {
     public sealed class InspectorPropertyInfo
     {
-        private Type _propertyResolverType;
+        [CanBeNull] private Type _propertyResolverType;
         private MemberInfo _memberInfo;
         private bool? _isArrayElement;
 
@@ -89,6 +89,55 @@ namespace EasyToolKit.Inspector.Editor
             return info;
         }
 
+        public static InspectorPropertyInfo CreateForField(FieldInfo fieldInfo)
+        {
+            var info = new InspectorPropertyInfo()
+            {
+                PropertyType = fieldInfo.FieldType,
+                PropertyPath = fieldInfo.Name,
+                PropertyName = fieldInfo.Name,
+                IsUnityProperty = false,
+            };
+
+            var accessorType = typeof(MemberValueAccessor<,>)
+                .MakeGenericType(fieldInfo.DeclaringType, fieldInfo.FieldType);
+            info.ValueAccessor = accessorType.CreateInstance<IValueAccessor>(fieldInfo);
+
+            if (fieldInfo.FieldType.IsImplementsOpenGenericType(typeof(ICollection<>)))
+            {
+                var elementType = fieldInfo.FieldType.GetArgumentsOfInheritedOpenGenericType(typeof(ICollection<>))[0];
+
+                if (fieldInfo.FieldType.IsImplementsOpenGenericType(typeof(IList<>)))
+                {
+                    info._propertyResolverType = typeof(ListResolver<>).MakeGenericType(elementType);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            else
+            {
+                info._propertyResolverType = typeof(GenericPropertyResolver);
+            }
+
+            return info;
+        }
+
+        public static InspectorPropertyInfo CreateForValue(Type valueType, string valueName, IValueAccessor valueAccessor)
+        {
+            var info = new InspectorPropertyInfo()
+            {
+                PropertyType = valueType,
+                PropertyPath = valueName,
+                PropertyName = valueName,
+                IsUnityProperty = false,
+                ValueAccessor = valueAccessor
+            };
+
+            return info;
+        }
+
         internal static InspectorPropertyInfo CreateForLogicRoot(SerializedObject serializedObject)
         {
             var iterator = serializedObject.GetIterator();
@@ -106,8 +155,8 @@ namespace EasyToolKit.Inspector.Editor
                 info.PropertyType,
                 (ref object index) => serializedObject.targetObjects[(int)index],
                 null);
-            
-            info._propertyResolverType = typeof(UnityPropertyResolver);
+
+            info._propertyResolverType = typeof(GenericPropertyResolver);
 
             return info;
         }
@@ -139,6 +188,11 @@ namespace EasyToolKit.Inspector.Editor
             if (!AllowChildren())
             {
                 return null;
+            }
+
+            if (_propertyResolverType == null)
+            {
+                return new GenericPropertyResolver();
             }
 
             return _propertyResolverType.CreateInstance<IPropertyResolver>();

@@ -21,7 +21,7 @@ namespace EasyToolKit.Inspector.Editor
             get => Property;
             set => Property = value;
         }
-        
+
         bool IInitializable.IsInitialized => IsInitialized;
 
         void IInitializable.Initialize()
@@ -38,8 +38,8 @@ namespace EasyToolKit.Inspector.Editor
             IsInitialized = false;
         }
 
-        protected virtual void Initialize() {}
-        protected virtual void Deinitialize() {}
+        protected virtual void Initialize() { }
+        protected virtual void Deinitialize() { }
 
         public abstract InspectorPropertyInfo GetChildInfo(int childIndex);
         public abstract int ChildNameToIndex(string name);

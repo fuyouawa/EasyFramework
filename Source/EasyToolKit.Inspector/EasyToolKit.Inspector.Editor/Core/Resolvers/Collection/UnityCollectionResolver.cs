@@ -54,7 +54,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public override int ChildNameToIndex(string name)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override int GetChildCount()
@@ -62,12 +62,12 @@ namespace EasyToolKit.Inspector.Editor
             return _serializedProperty.arraySize;
         }
 
-        protected override void InsertElement(TElement value)
+        protected override void InsertElement(int targetIndex, TElement value)
         {
-            InsertElementAt(_serializedProperty.arraySize, value);
+            InsertElementAt(targetIndex, _serializedProperty.arraySize, value);
         }
 
-        protected override void RemoveElement(TElement value)
+        protected override void RemoveElement(int targetIndex, TElement value)
         {
             for (int i = 0; i < _serializedProperty.arraySize; i++)
             {
@@ -75,25 +75,25 @@ namespace EasyToolKit.Inspector.Editor
                 var elementValue = ElementValueGetter(element);
                 if (value.Equals(elementValue))
                 {
-                    RemoveElementAt(i);
+                    RemoveElementAt(targetIndex, i);
                     return;
                 }
             }
         }
 
-        protected override void InsertElementAt(int index, TElement value)
+        protected override void InsertElementAt(int targetIndex, int index, TElement value)
         {
             _serializedProperty.InsertArrayElementAtIndex(index);
             var element = _serializedProperty.GetArrayElementAtIndex(index);
             ElementValueSetter(element, value);
         }
 
-        protected override void RemoveElementAt(int index)
+        protected override void RemoveElementAt(int targetIndex, int index)
         {
             _serializedProperty.DeleteArrayElementAtIndex(index);
         }
 
-        protected override void MoveElemenetAt(int sourceIndex, int destinationIndex)
+        protected override void MoveElemenetAt(int targetIndex, int sourceIndex, int destinationIndex)
         {
             _serializedProperty.MoveArrayElement(sourceIndex, destinationIndex);
         }

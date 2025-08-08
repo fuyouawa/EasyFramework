@@ -8,7 +8,6 @@ namespace EasyToolKit.Inspector.Editor
 {
     public class InspectorProperty
     {
-        private Attribute[] _attributes;
         private string _niceName;
         private PropertyState _state;
         private bool? _isSelfReadOnlyCache;
@@ -102,7 +101,8 @@ namespace EasyToolKit.Inspector.Editor
 
         public GUIContent Label { get; set; }
 
-        [CanBeNull] public IPropertyResolver ChildrenResolver
+        [CanBeNull]
+        public IPropertyResolver ChildrenResolver
         {
             get => _childrenResolver;
             set
@@ -112,8 +112,9 @@ namespace EasyToolKit.Inspector.Editor
                 Refresh();
             }
         }
-        
-        [CanBeNull] public IDrawerChainResolver DrawerChainResolver
+
+        [CanBeNull]
+        public IDrawerChainResolver DrawerChainResolver
         {
             get => _drawerChainResolver;
             set
@@ -123,8 +124,8 @@ namespace EasyToolKit.Inspector.Editor
                 Refresh();
             }
         }
-        
-        public IAttributeResolver AttributeResolver 
+
+        public IAttributeResolver AttributeResolver
         {
             get => _attributeResolver;
             set
@@ -138,8 +139,8 @@ namespace EasyToolKit.Inspector.Editor
                 Refresh();
             }
         }
-        
-        public IGroupResolver GroupResolver 
+
+        public IGroupResolver GroupResolver
         {
             get => _groupResolver;
             set
@@ -203,7 +204,7 @@ namespace EasyToolKit.Inspector.Editor
                 ValueEntry = (IPropertyValueEntry)entryType.CreateInstance(this);
             }
         }
-        
+
         internal void Update()
         {
             if (_lastUpdateID == Tree.UpdatedID)
@@ -226,7 +227,6 @@ namespace EasyToolKit.Inspector.Editor
 
         public void Refresh()
         {
-            _attributes = null;
             _isSelfReadOnlyCache = null;
             if (Children != null)
             {

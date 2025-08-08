@@ -57,7 +57,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             return SerializedObject.FindProperty(propertyPath);
         }
-        
+
         public void SetPropertyDirty(InspectorProperty property)
         {
             _dirtyProperties.Add(property);

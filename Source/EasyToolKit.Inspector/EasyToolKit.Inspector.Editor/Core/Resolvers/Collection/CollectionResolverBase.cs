@@ -8,29 +8,29 @@ namespace EasyToolKit.Inspector.Editor
     {
         Type ElementType { get; }
 
-        void QueueInsertElement(object value);
-        void QueueRemoveElement(object value);
+        void QueueInsertElement(int targetIndex, object value);
+        void QueueRemoveElement(int targetIndex, object value);
     }
-    
+
     public abstract class CollectionResolverBase<TElement> : PropertyResolver, ICollectionResolver
     {
         private Action _changeAction;
 
         public Type ElementType => typeof(TElement);
 
-        public void QueueInsertElement(object value)
+        public void QueueInsertElement(int targetIndex, object value)
         {
-            EnqueueChange(() => InsertElement((TElement)value));
+            EnqueueChange(() => InsertElement(targetIndex, (TElement)value));
         }
 
-        public void QueueRemoveElement(object value)
+        public void QueueRemoveElement(int targetIndex, object value)
         {
-            EnqueueChange(() => RemoveElement((TElement)value));
+            EnqueueChange(() => RemoveElement(targetIndex, (TElement)value));
         }
 
-        protected abstract void InsertElement(TElement value);
-        protected abstract void RemoveElement(TElement value);
-        
+        protected abstract void InsertElement(int targetIndex, TElement value);
+        protected abstract void RemoveElement(int targetIndex, TElement value);
+
         protected void EnqueueChange(Action action)
         {
             _changeAction += action;

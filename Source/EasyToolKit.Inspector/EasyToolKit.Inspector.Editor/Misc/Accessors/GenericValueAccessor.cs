@@ -29,4 +29,26 @@ namespace EasyToolKit.Inspector.Editor
             return _getter(ref owner);
         }
     }
+
+    public class GenericValueAccessor<TOwner, TValue> : ValueAccessor<TOwner, TValue>
+    {
+        private readonly Func<TOwner, TValue> _getter;
+        private readonly Action<TOwner, TValue> _setter;
+
+        public GenericValueAccessor(Func<TOwner, TValue> getter, Action<TOwner, TValue> setter)
+        {
+            _getter = getter;
+            _setter = setter;
+        }
+
+        public override TValue GetValue(ref TOwner owner)
+        {
+            return _getter(owner);
+        }
+
+        public override void SetValue(ref TOwner owner, TValue value)
+        {
+            _setter(owner, value);
+        }
+    }
 }

@@ -191,7 +191,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
             {
-                DoAddElement(GetValueToAdd());
+                DoAddElement();
             }
 
             EasyEditorGUI.EndHorizontalToolbar();
@@ -223,7 +223,7 @@ namespace EasyToolKit.Inspector.Editor
             if (GUI.Button(btnRect, GUIContent.none, "Button"))
             {
                 EasyGUIHelper.RemoveFocusControl();
-                DoAddElement(GetValueToAdd());
+                DoAddElement();
             }
 
             if (Event.current.type == EventType.Repaint)
@@ -275,11 +275,11 @@ namespace EasyToolKit.Inspector.Editor
             {
                 if (_orderedCollectionResolver != null)
                 {
-                    DoRemoveElementAt(index, property.ValueEntry.WeakSmartValue);
+                    DoRemoveElementAt(index, property);
                 }
                 else
                 {
-                    DoRemoveElement(property.ValueEntry.WeakSmartValue);
+                    DoRemoveElement(property);
                 }
             }
 
@@ -305,11 +305,11 @@ namespace EasyToolKit.Inspector.Editor
 
                 if (_orderedCollectionResolver != null)
                 {
-                    DoRemoveElementAt(index, property.ValueEntry.WeakSmartValue);
+                    DoRemoveElementAt(index, property);
                 }
                 else
                 {
-                    DoRemoveElement(property.ValueEntry.WeakSmartValue);
+                    DoRemoveElement(property);
                 }
             }
 
@@ -322,46 +322,75 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndListItem();
         }
 
-        private void DoAddElement(object valueToAdd)
+        private void DoAddElement()
         {
-            _collectionResolver.QueueInsertElement(valueToAdd);
-            _onAddedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, valueToAdd);
+            for (int i = 0; i < Property.Tree.Targets.Length; i++)
+            {
+                DoAddElement(i, GetValueToAdd(i));
+            }
         }
 
-        private void DoRemoveElementAt(int index, object elementToRemove)
+        private void DoAddElement(int targetIndex, object valueToAdd)
         {
+            _collectionResolver.QueueInsertElement(targetIndex, valueToAdd);
+            _onAddedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakValues[targetIndex], valueToAdd);
+        }
+
+        private void DoRemoveElementAt(int index, InspectorProperty propertyToRemove)
+        {
+            for (int i = 0; i < Property.Tree.Targets.Length; i++)
+            {
+                DoRemoveElementAt(i, index, propertyToRemove);
+            }
+        }
+
+        private void DoRemoveElementAt(int targetIndex, int index, InspectorProperty propertyToRemove)
+        {
+            var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
             if (_customRemoveIndexFunction != null)
             {
-                _customRemoveIndexFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue, index);
+                _customRemoveIndexFunction.Invoke(parent, index);
             }
             else
             {
                 Assert.IsNotNull(_orderedCollectionResolver);
-                _orderedCollectionResolver.QueueRemoveElementAt(index);
+                _orderedCollectionResolver.QueueRemoveElementAt(targetIndex, index);
             }
 
-            _onRemovedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+            var valueToRemove = propertyToRemove.ValueEntry.WeakValues[targetIndex];
+            _onRemovedElementCallback?.Invoke(parent, valueToRemove);
         }
 
-        private void DoRemoveElement(object elementToRemove)
+        private void DoRemoveElement(InspectorProperty propertyToRemove)
         {
+            for (int i = 0; i < Property.Tree.Targets.Length; i++)
+            {
+                DoRemoveElement(i, propertyToRemove);
+            }
+        }
+
+        private void DoRemoveElement(int targetIndex, InspectorProperty propertyToRemove)
+        {
+            var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
+            var valueToRemove = propertyToRemove.ValueEntry.WeakValues[targetIndex];
             if (_customRemoveElementFunction != null)
             {
-                _customRemoveElementFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+                _customRemoveElementFunction.Invoke(parent, valueToRemove);
             }
             else
             {
-                _collectionResolver.QueueRemoveElement(elementToRemove);
+                _collectionResolver.QueueRemoveElement(targetIndex, valueToRemove);
             }
 
-            _onRemovedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakSmartValue, elementToRemove);
+            _onRemovedElementCallback?.Invoke(parent, valueToRemove);
         }
 
-        private object GetValueToAdd()
+        private object GetValueToAdd(int targetIndex)
         {
+            var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
             if (_customCreateElementFunction != null)
             {
-                return _customCreateElementFunction.Invoke(Property.Parent.ValueEntry.WeakSmartValue);
+                return _customCreateElementFunction.Invoke(parent);
             }
 
             if (_collectionResolver.ElementType.IsInheritsFrom<UnityEngine.Object>())

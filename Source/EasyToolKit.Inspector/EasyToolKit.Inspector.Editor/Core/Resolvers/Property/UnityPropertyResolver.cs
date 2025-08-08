@@ -31,7 +31,7 @@ namespace EasyToolKit.Inspector.Editor
             {
                 return;
             }
-            
+
             do
             {
                 if (!Property.Info.IsLogicRoot)
