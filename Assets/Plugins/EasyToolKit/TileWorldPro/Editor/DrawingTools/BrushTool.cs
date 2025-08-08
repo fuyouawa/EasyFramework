@@ -12,94 +12,91 @@ namespace EasyToolKit.TileWorldPro.Editor
         private static readonly float Epsilon = TilemapUtility.Epsilon;
 
         protected override Vector3 AdjustTileWorldPosition(
-            TileWorldDesigner target,
-            Vector3 tileWorldPosition,
-            Vector3 hitPoint,
+            DrawingToolContext context,
             IReadOnlyList<TilePosition> dragTilePositionPath)
         {
-            var tileSize = target.TileWorldAsset.TileSize;
-            var tilePosition = target.StartPoint.WorldPositionToTilePosition(tileWorldPosition, tileSize);
+            var tileSize = context.Target.TileWorldAsset.TileSize;
+            var tilePosition = context.Target.StartPoint.WorldPositionToTilePosition(context.HitTileWorldPosition, tileSize);
 
-            var targetTerrainDefinition = target.TileWorldAsset.TryGetTerrainGuidAt(tilePosition);
+            var targetTerrainDefinition = context.Target.TileWorldAsset.TryGetTerrainGuidAt(tilePosition);
             if (targetTerrainDefinition == null)
             {
-                return tileWorldPosition;
+                return context.HitTileWorldPosition;
             }
 
             var front = new Rect(
-                tileWorldPosition.x, tileWorldPosition.y,
+                context.HitTileWorldPosition.x, context.HitTileWorldPosition.y,
                 tileSize, tileSize);
 
-            if (hitPoint.z.IsApproximatelyOf(tileWorldPosition.z, Epsilon) &&
-                front.Contains(new Vector2(hitPoint.x, hitPoint.y)))
+            if (context.HitPoint.z.IsApproximatelyOf(context.HitTileWorldPosition.z, Epsilon) &&
+                front.Contains(new Vector2(context.HitPoint.x, context.HitPoint.y)))
             {
-                tileWorldPosition.z -= tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.z -= tileSize;
+                return context.HitTileWorldPosition;
             }
 
-            if (hitPoint.z.IsApproximatelyOf(tileWorldPosition.z + 1, Epsilon) &&
-                front.Contains(new Vector2(hitPoint.x, hitPoint.y)))
+            if (context.HitPoint.z.IsApproximatelyOf(context.HitTileWorldPosition.z + 1, Epsilon) &&
+                front.Contains(new Vector2(context.HitPoint.x, context.HitPoint.y)))
             {
-                tileWorldPosition.z += tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.z += tileSize;
+                return context.HitTileWorldPosition;
             }
 
             var side = new Rect(
-                tileWorldPosition.z, tileWorldPosition.y,
+                context.HitTileWorldPosition.z, context.HitTileWorldPosition.y,
                 tileSize, tileSize);
 
-            if (hitPoint.x.IsApproximatelyOf(tileWorldPosition.x, Epsilon) &&
-                side.Contains(new Vector2(hitPoint.z, hitPoint.y)))
+            if (context.HitPoint.x.IsApproximatelyOf(context.HitTileWorldPosition.x, Epsilon) &&
+                side.Contains(new Vector2(context.HitPoint.z, context.HitPoint.y)))
             {
-                tileWorldPosition.x -= tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.x -= tileSize;
+                return context.HitTileWorldPosition;
             }
 
-            if (hitPoint.x.IsApproximatelyOf(tileWorldPosition.x + 1, Epsilon) &&
-                side.Contains(new Vector2(hitPoint.z, hitPoint.y)))
+            if (context.HitPoint.x.IsApproximatelyOf(context.HitTileWorldPosition.x + 1, Epsilon) &&
+                side.Contains(new Vector2(context.HitPoint.z, context.HitPoint.y)))
             {
-                tileWorldPosition.x += tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.x += tileSize;
+                return context.HitTileWorldPosition;
             }
 
             var top = new Rect(
-                tileWorldPosition.x, tileWorldPosition.z,
+                context.HitTileWorldPosition.x, context.HitTileWorldPosition.z,
                 tileSize, tileSize);
 
-            if (hitPoint.y.IsApproximatelyOf(tileWorldPosition.y, Epsilon) &&
-                top.Contains(new Vector2(hitPoint.x, hitPoint.z)))
+            if (context.HitPoint.y.IsApproximatelyOf(context.HitTileWorldPosition.y, Epsilon) &&
+                top.Contains(new Vector2(context.HitPoint.x, context.HitPoint.z)))
             {
-                tileWorldPosition.y -= tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.y -= tileSize;
+                return context.HitTileWorldPosition;
             }
 
-            if (hitPoint.y.IsApproximatelyOf(tileWorldPosition.y + 1, Epsilon) &&
-                top.Contains(new Vector2(hitPoint.x, hitPoint.z)))
+            if (context.HitPoint.y.IsApproximatelyOf(context.HitTileWorldPosition.y + 1, Epsilon) &&
+                top.Contains(new Vector2(context.HitPoint.x, context.HitPoint.z)))
             {
-                tileWorldPosition.y += tileSize;
-                return tileWorldPosition;
+                context.HitTileWorldPosition.y += tileSize;
+                return context.HitTileWorldPosition;
             }
 
-            return tileWorldPosition;
+            return context.HitTileWorldPosition;
         }
 
         protected override IReadOnlyList<TilePosition> GetDrawingTilePositions(
-            TileWorldDesigner target,
-            TilePosition hitTilePosition,
+            DrawingToolContext context,
             IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             return dragTilePositionPath;
         }
 
-        protected override void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions)
+        protected override void DoTiles(DrawingToolContext context, IReadOnlyList<TilePosition> tilePositions)
         {
-            target.TileWorldAsset.SetTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
-            this.TriggerEvent(new SetTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));
+            context.Target.TileWorldAsset.SetTilesAt(tilePositions, context.TerrainDefinition.Guid);
+            this.TriggerEvent(new SetTilesEvent(context.TerrainDefinition.Guid, tilePositions.ToArray()));
         }
 
-        protected override Color GetHitColor(TileWorldDesigner target)
+        protected override Color GetHitColor(DrawingToolContext context)
         {
-            return SelectedTerrainDefinition.DebugCubeColor;
+            return context.TerrainDefinition.DebugCubeColor;
         }
     }
 }

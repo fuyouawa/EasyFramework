@@ -99,19 +99,52 @@ namespace EasyToolKit.TileWorldPro
             terrainObject.DestroyTileAt(chunkTilePosition);
         }
 
-        public void Clear()
+        public void ClearAll(bool destroyTerrainObjects = true)
         {
             foreach (var terrainObject in TerrainObjects.Values)
             {
-                terrainObject.Clear();
+                if (destroyTerrainObjects)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(terrainObject.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(terrainObject.gameObject);
+                    }
+                }
+                else
+                {
+                    terrainObject.DestroyAll();
+                }
+            }
+
+            if (destroyTerrainObjects)
+            {
+                _terrainObjects.Clear();
             }
         }
 
-        public void ClearTerrain(Guid terrainGuid)
+        public void ClearTerrain(Guid terrainGuid, bool destroyTerrainObject = true)
         {
             if (TerrainObjects.TryGetValue(terrainGuid, out var terrainObject))
             {
-                terrainObject.Clear();
+                if (destroyTerrainObject)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(terrainObject.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(terrainObject.gameObject);
+                    }
+                }
+                else
+                {
+                    terrainObject.DestroyAll();
+                }
             }
         }
 

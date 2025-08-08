@@ -34,7 +34,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 
             if (GUILayout.Button("重新构建"))
             {
-                ((TileWorldBuilder)target).RebuildAll();
+                ((TileWorldBuilder)target).BuildAll();
             }
             Tree.EndDraw();
         }

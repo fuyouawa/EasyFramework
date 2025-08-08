@@ -90,17 +90,26 @@ namespace EasyToolKit.TileWorldPro
             return _terrainConfigAsset.GetRuleTypeBySudoku(sudoku);
         }
 
-        public void RebuildAll()
+        public void BuildAll(bool clearOld = true)
         {
+            if (clearOld)
+            {
+                ClearAll();
+            }
+
             foreach (var terrainDefinition in _tileWorldAsset.TerrainDefinitionSet)
             {
-                RebuildTerrain(terrainDefinition.Guid);
+                BuildTerrain(terrainDefinition.Guid, false);
             }
         }
 
-        public void RebuildTerrain(Guid terrainGuid)
+        public void BuildTerrain(Guid terrainGuid, bool clearOld = true)
         {
-            ClearTerrain(terrainGuid);
+            if (clearOld)
+            {
+                ClearTerrain(terrainGuid);
+            }
+
             var tilePositions = _tileWorldAsset
                     .EnumerateChunks()
                     .SelectMany(chunk => chunk.EnumerateTerrainTiles(terrainGuid))
@@ -128,6 +137,41 @@ namespace EasyToolKit.TileWorldPro
             var chunkObject = GetChunkObjectOf(tilePosition.ToChunkPosition(_tileWorldAsset.ChunkSize));
             var chunkTilePosition = chunkObject.Area.TilePositionToChunkTilePosition(tilePosition);
             return chunkObject.GetTerrainObject(terrainGuid).TryGetTileInfoOf(chunkTilePosition);
+        }
+
+        public void ClearAll(bool destroyChunkObject = true)
+        {
+            foreach (var chunkObject in ChunkObjects.Values)
+            {
+                if (destroyChunkObject)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(chunkObject.gameObject);
+                    }
+                    else
+                    {
+                        DestroyImmediate(chunkObject.gameObject);
+                    }
+                }
+                else
+                {
+                    chunkObject.ClearAll(false);
+                }
+            }
+
+            if (destroyChunkObject)
+            {
+                _chunkObjects.Clear();
+            }
+        }
+
+        public void ClearTerrain(Guid terrainGuid, bool destroyTerrainObject = true)
+        {
+            foreach (var chunkObject in ChunkObjects.Values)
+            {
+                chunkObject.ClearTerrain(terrainGuid, destroyTerrainObject);
+            }
         }
 
         public void BuildTile(Guid terrainGuid, TilePosition tilePosition, bool rebuildAffectedTilesIfNeeded = true)
@@ -265,14 +309,6 @@ namespace EasyToolKit.TileWorldPro
                 return false;
             }
             return true;
-        }
-
-        public void ClearTerrain(Guid terrainGuid)
-        {
-            foreach (var chunkObject in ChunkObjects.Values)
-            {
-                chunkObject.ClearTerrain(terrainGuid);
-            }
         }
     }
 }

@@ -39,7 +39,7 @@ namespace EasyToolKit.TileWorldPro
             _terrainGuid = terrainGuid;
         }
 
-        public void Clear()
+        public void DestroyAll()
         {
             foreach (var tileInfo in _tileInfos.Values)
             {

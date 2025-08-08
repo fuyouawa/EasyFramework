@@ -12,10 +12,16 @@ namespace EasyToolKit.TileWorldPro.Editor
     [CustomEditor(typeof(TileWorldDesigner))]
     public class TileWorldDesignerEditor : EasyEditor
     {
-        private TileWorldDesigner _target;
-        private LocalPersistentContext<TileWorldDesignerContext> _context;
         private static readonly float UpdateInterval = 0.1f;
         private static double LastUpdateTime = 0;
+
+        private TileWorldDesigner _target;
+        private LocalPersistentContext<TileWorldDesignerContext> _context;
+
+
+        private bool _lastIsHit;
+        private Vector3 _lastHitPoint;
+        private Vector3 _lastHitTileWorldPosition;
 
         private static readonly Dictionary<DrawMode, IDrawingTool> DrawToolsByMode = new Dictionary<DrawMode, IDrawingTool>
         {
@@ -60,22 +66,33 @@ namespace EasyToolKit.TileWorldPro.Editor
         {
             TileWorldSceneViewHandler.DrawSceneGUI(_context.Value);
 
-            if (TryGetHit(out var hitPoint, out var hittedBlockPosition))
+            if (Event.current.type == EventType.MouseMove || Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseUp)
+            {
+                _lastIsHit = TryGetHit(out _lastHitPoint, out _lastHitTileWorldPosition);
+            }
+
+            if (_lastIsHit && TerrainDefinitionDrawer.SelectedGuid != null)
             {
                 if (_target.Settings.DrawDebugData)
                 {
-                    TileWorldHandles.DrawDebugHitPointGUI(hitPoint);
+                    TileWorldHandles.DrawDebugHitPointGUI(_lastHitPoint);
                 }
 
-                DrawToolsByMode[TerrainDefinitionDrawer.SelectedDrawMode].OnSceneGUI(_target, hitPoint, hittedBlockPosition);
+                DrawToolsByMode[TerrainDefinitionDrawer.SelectedDrawMode].OnSceneGUI(new DrawingToolContext
+                {
+                    Target = _target,
+                    HitPoint = _lastHitPoint,
+                    HitTileWorldPosition = _lastHitTileWorldPosition,
+                    TerrainDefinition = _target.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(TerrainDefinitionDrawer.SelectedGuid.Value)
+                });
             }
         }
 
 
-        private bool TryGetHit(out Vector3 hitPoint, out Vector3? hittedBlockPosition)
+        private bool TryGetHit(out Vector3 hitPoint, out Vector3 hitTileWorldPosition)
         {
             hitPoint = Vector3.zero;
-            hittedBlockPosition = null;
+            hitTileWorldPosition = Vector3.zero;
             if (TerrainDefinitionDrawer.SelectedGuid == null)
             {
                 return false;
@@ -84,20 +101,46 @@ namespace EasyToolKit.TileWorldPro.Editor
             var tileSize = _target.TileWorldAsset.TileSize;
             bool handledHit = false;
 
-            Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+            // Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 
-            float previousRaycastDistance = float.MaxValue;
+            // float previousRaycastDistance = float.MaxValue;
 
-            foreach (var tile in _target.TileWorldAsset
-                    .EnumerateChunks()
-                    .SelectMany(chunk => chunk
-                        .EnumerateTerrainTiles(TerrainDefinitionDrawer.SelectedGuid.Value)))
+            // foreach (var tile in _target.TileWorldAsset
+            //         .EnumerateChunks()
+            //         .SelectMany(chunk => chunk
+            //             .EnumerateTerrainTiles(TerrainDefinitionDrawer.SelectedGuid.Value)))
+            // {
+            //     var tileWorldPosition = _target.StartPoint.TilePositionToWorldPosition(tile.TilePosition, tileSize);
+
+            //     var center = tileWorldPosition + Vector3.one * (tileSize * 0.5f);
+            //     var bounds = new Bounds(center, tileSize * Vector3.one);
+
+            //     if (bounds.IntersectRay(ray, out var distance))
+            //     {
+            //         if (_target.Settings.DrawDebugData)
+            //         {
+            //             TileWorldHandles.DrawDebugBlockGUI(tileWorldPosition, distance);
+            //         }
+
+            //         if (distance < previousRaycastDistance)
+            //         {
+            //             hitPoint = ray.GetPoint(distance);
+            //             hittedBlockPosition = tileWorldPosition;
+            //             handledHit = true;
+            //             previousRaycastDistance = distance;
+            //         }
+            //     }
+            // }
+
+            var picked = HandleUtility.PickGameObject(Event.current.mousePosition, false);
+
+            if (picked != null)
             {
-                var tileWorldPosition = _target.StartPoint.TilePositionToWorldPosition(tile.TilePosition, tileSize);
-
+                var tileWorldPosition = _target.StartPoint.WorldPositionToTileWorldPosition(picked.transform.position, tileSize);
                 var center = tileWorldPosition + Vector3.one * (tileSize * 0.5f);
                 var bounds = new Bounds(center, tileSize * Vector3.one);
 
+                Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                 if (bounds.IntersectRay(ray, out var distance))
                 {
                     if (_target.Settings.DrawDebugData)
@@ -105,18 +148,15 @@ namespace EasyToolKit.TileWorldPro.Editor
                         TileWorldHandles.DrawDebugBlockGUI(tileWorldPosition, distance);
                     }
 
-                    if (distance < previousRaycastDistance)
-                    {
-                        hitPoint = ray.GetPoint(distance);
-                        hittedBlockPosition = tileWorldPosition;
-                        handledHit = true;
-                        previousRaycastDistance = distance;
-                    }
+                    hitPoint = ray.GetPoint(distance);
+                    hitTileWorldPosition = tileWorldPosition;
+                    handledHit = true;
                 }
             }
 
             if (!handledHit)
             {
+                Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
                 var plane = new Plane(Vector3.up, _target.StartPoint.transform.position);
                 if (plane.Raycast(ray, out float enter))
                 {
@@ -129,6 +169,7 @@ namespace EasyToolKit.TileWorldPro.Editor
                     TileWorldHandles.DrawDebugBlockGUI(
                         _target.StartPoint.WorldPositionToTileWorldPosition(hitPoint, tileSize),
                         enter);
+                    hitTileWorldPosition = _target.StartPoint.WorldPositionToTileWorldPosition(hitPoint, tileSize);
                     handledHit = true;
                 }
             }

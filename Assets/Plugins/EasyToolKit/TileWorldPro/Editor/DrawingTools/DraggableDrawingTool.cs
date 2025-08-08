@@ -11,40 +11,35 @@ namespace EasyToolKit.TileWorldPro.Editor
         private List<TilePosition> _dragTilePositionPath = new List<TilePosition>();
         private bool _isDragging = false;
 
-        protected TerrainDefinition SelectedTerrainDefinition { get; private set; }
-
-        public void OnSceneGUI(TileWorldDesigner target, Vector3 hitPoint, Vector3? hitTileWorldPosition)
+        public void OnSceneGUI(DrawingToolContext context)
         {
-            SelectedTerrainDefinition = target.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(TerrainDefinitionDrawer.SelectedGuid.Value);
+            var tileSize = context.Target.TileWorldAsset.TileSize;
 
-            var tileSize = target.TileWorldAsset.TileSize;
-
-            var tileWorldPosition = hitTileWorldPosition ?? target.StartPoint.WorldPositionToTileWorldPosition(hitPoint, tileSize);
-            if (!IsInRange(target, tileWorldPosition))
+            if (!IsInRange(context.Target, context.HitTileWorldPosition))
             {
                 return;
             }
 
-            var tilePosition = target.StartPoint.WorldPositionToTilePosition(tileWorldPosition, tileSize);
+            var tilePosition = context.Target.StartPoint.WorldPositionToTilePosition(context.HitTileWorldPosition, tileSize);
 
-            var newTileWorldPosition = AdjustTileWorldPosition(target, tileWorldPosition, hitPoint, _dragTilePositionPath);
-            if (newTileWorldPosition != tileWorldPosition)
+            var newTileWorldPosition = AdjustTileWorldPosition(context, _dragTilePositionPath);
+            if (newTileWorldPosition != context.HitTileWorldPosition)
             {
-                tileWorldPosition = newTileWorldPosition;
-                if (!IsInRange(target, tileWorldPosition))
+                context.HitTileWorldPosition = newTileWorldPosition;
+                if (!IsInRange(context.Target, context.HitTileWorldPosition))
                 {
                     return;
                 }
 
-                tilePosition = target.StartPoint.WorldPositionToTilePosition(tileWorldPosition, tileSize);
+                tilePosition = context.Target.StartPoint.WorldPositionToTilePosition(context.HitTileWorldPosition, tileSize);
             }
 
-            if (!FilterHitTile(target, tilePosition))
+            if (!FilterHitTile(context, tilePosition))
             {
                 return;
             }
 
-            var drawingTilePositions = GetDrawingTilePositions(target, tilePosition, _dragTilePositionPath);
+            var drawingTilePositions = GetDrawingTilePositions(context, _dragTilePositionPath);
 
             // Handle mouse interactions
             if (IsMouseDown())
@@ -70,12 +65,12 @@ namespace EasyToolKit.TileWorldPro.Editor
                 if (_dragTilePositionPath.Count > 0)
                 {
                     // Record a single undo operation for all changes
-                    Undo.RecordObject(target.TileWorldAsset, $"Draw tiles in {target.TileWorldAsset.name}");
+                    Undo.RecordObject(context.Target.TileWorldAsset, $"Draw tiles in {context.Target.TileWorldAsset.name}");
 
-                    DoTiles(target, drawingTilePositions);
+                    DoTiles(context, drawingTilePositions);
 
                     // Mark the asset as dirty once for all changes
-                    EasyEditorUtility.SetUnityObjectDirty(target.TileWorldAsset);
+                    EasyEditorUtility.SetUnityObjectDirty(context.Target.TileWorldAsset);
                 }
 
                 _isDragging = false;
@@ -83,41 +78,38 @@ namespace EasyToolKit.TileWorldPro.Editor
                 FinishMouse();
             }
 
-            var hitColor = GetHitColor(target);
+            var hitColor = GetHitColor(context);
 
             var surroundingColor = Color.white.SetA(0.2f);
-            TileWorldHandles.DrawHitCube(tileWorldPosition, tileSize, hitColor, surroundingColor);
+            TileWorldHandles.DrawHitCube(context.HitTileWorldPosition, tileSize, hitColor, surroundingColor);
 
             // Draw all tiles in the drag operation
             foreach (var dragTilePosition in drawingTilePositions)
             {
-                var dragWorldPosition = target.StartPoint.TilePositionToWorldPosition(dragTilePosition, tileSize);
+                var dragWorldPosition = context.Target.StartPoint.TilePositionToWorldPosition(dragTilePosition, tileSize);
                 TileWorldHandles.DrawHitCube(dragWorldPosition, tileSize, hitColor.MulA(0.7f));
             }
         }
 
         protected virtual Vector3 AdjustTileWorldPosition(
-            TileWorldDesigner target,
-            Vector3 tileWorldPosition,
-            Vector3 hitPoint,
+            DrawingToolContext context,
             IReadOnlyList<TilePosition> dragTilePositionPath)
         {
-            return tileWorldPosition;
+            return context.HitTileWorldPosition;
         }
 
         protected virtual IReadOnlyList<TilePosition> GetDrawingTilePositions(
-            TileWorldDesigner target,
-            TilePosition hitTilePosition,
+            DrawingToolContext context,
             IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             return dragTilePositionPath;
         }
 
-        protected abstract Color GetHitColor(TileWorldDesigner target);
+        protected abstract Color GetHitColor(DrawingToolContext context);
 
-        protected abstract void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions);
+        protected abstract void DoTiles(DrawingToolContext context, IReadOnlyList<TilePosition> tilePositions);
 
-        protected virtual bool FilterHitTile(TileWorldDesigner target, TilePosition tilePosition)
+        protected virtual bool FilterHitTile(DrawingToolContext context, TilePosition tilePosition)
         {
             return true;
         }

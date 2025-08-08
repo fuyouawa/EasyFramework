@@ -7,22 +7,21 @@ namespace EasyToolKit.TileWorldPro.Editor
 {
     public class RectangeBrushTool : BrushTool
     {
-        protected override Vector3 AdjustTileWorldPosition(TileWorldDesigner target, Vector3 tileWorldPosition, Vector3 hitPoint, IReadOnlyList<TilePosition> dragTilePositionPath)
+        protected override Vector3 AdjustTileWorldPosition(DrawingToolContext context, IReadOnlyList<TilePosition> dragTilePositionPath)
         {
-            var newTileWorldPosition = base.AdjustTileWorldPosition(target, tileWorldPosition, hitPoint, dragTilePositionPath);
+            var newTileWorldPosition = base.AdjustTileWorldPosition(context, dragTilePositionPath);
             if (dragTilePositionPath.Count < 2)
             {
                 return newTileWorldPosition;
             }
 
             var startTilePosition = dragTilePositionPath.First();
-            var startTileWorldPosition = target.StartPoint.TilePositionToWorldPosition(startTilePosition, target.TileWorldAsset.TileSize);
+            var startTileWorldPosition = context.Target.StartPoint.TilePositionToWorldPosition(startTilePosition, context.Target.TileWorldAsset.TileSize);
             return newTileWorldPosition.SetY(startTileWorldPosition.y);
         }
 
         protected override IReadOnlyList<TilePosition> GetDrawingTilePositions(
-            TileWorldDesigner target,
-            TilePosition hitTilePosition,
+            DrawingToolContext context,
             IReadOnlyList<TilePosition> dragTilePositionPath)
         {
             if (dragTilePositionPath.Count < 2)
@@ -31,7 +30,7 @@ namespace EasyToolKit.TileWorldPro.Editor
             }
 
             var startTilePosition = dragTilePositionPath.First();
-            var endTilePosition = hitTilePosition;
+            var endTilePosition = context.Target.StartPoint.WorldPositionToTilePosition(context.HitTileWorldPosition, context.Target.TileWorldAsset.TileSize);
 
             var tilePositions = new List<TilePosition>();
 

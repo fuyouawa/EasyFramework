@@ -3,8 +3,16 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro.Editor
 {
+    public struct DrawingToolContext
+    {
+        public TileWorldDesigner Target;
+        public Vector3 HitPoint;
+        public Vector3 HitTileWorldPosition;
+        public TerrainDefinition TerrainDefinition;
+    }
+
     public interface IDrawingTool
     {
-        void OnSceneGUI(TileWorldDesigner target, Vector3 hitPoint, Vector3? hitTileWorldPosition);
+        void OnSceneGUI(DrawingToolContext context);
     }
 }

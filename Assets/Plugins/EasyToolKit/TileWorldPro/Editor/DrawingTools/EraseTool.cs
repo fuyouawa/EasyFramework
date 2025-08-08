@@ -9,20 +9,20 @@ namespace EasyToolKit.TileWorldPro.Editor
 {
     public class EraseTool : DraggableDrawingTool, IEasyEventTrigger
     {
-        protected override void DoTiles(TileWorldDesigner target, IReadOnlyList<TilePosition> tilePositions)
+        protected override void DoTiles(DrawingToolContext context, IReadOnlyList<TilePosition> tilePositions)
         {
-            target.TileWorldAsset.RemoveTilesAt(tilePositions, SelectedTerrainDefinition.Guid);
-            this.TriggerEvent(new RemoveTilesEvent(SelectedTerrainDefinition.Guid, tilePositions.ToArray()));
+            context.Target.TileWorldAsset.RemoveTilesAt(tilePositions, context.TerrainDefinition.Guid);
+            this.TriggerEvent(new RemoveTilesEvent(context.TerrainDefinition.Guid, tilePositions.ToArray()));
         }
 
-        protected override Color GetHitColor(TileWorldDesigner target)
+        protected override Color GetHitColor(DrawingToolContext context)
         {
             return Color.red;
         }
 
-        protected override bool FilterHitTile(TileWorldDesigner target, TilePosition tilePosition)
+        protected override bool FilterHitTile(DrawingToolContext context, TilePosition tilePosition)
         {
-            return target.TileWorldAsset.TerrainDefinitionSet.Contains(SelectedTerrainDefinition.Guid);
+            return context.Target.TileWorldAsset.TerrainDefinitionSet.Contains(context.TerrainDefinition.Guid);
         }
     }
 }
