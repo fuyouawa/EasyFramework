@@ -9,7 +9,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 {
     public class BrushTool : DraggableDrawingTool, IEasyEventTrigger
     {
-        private static readonly float Epsilon = TilemapUtility.Epsilon;
+        private static readonly float Epsilon = 0.0001f;
 
         protected override Vector3 AdjustTileWorldPosition(
             DrawingToolContext context,

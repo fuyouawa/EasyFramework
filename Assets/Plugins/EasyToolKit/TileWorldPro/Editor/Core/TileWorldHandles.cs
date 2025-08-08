@@ -42,7 +42,7 @@ namespace EasyToolKit.TileWorldPro.Editor
 
             foreach (var position in designer.TileWorldAsset.EnumerateChunks().SelectMany(chunk => chunk.EnumerateTiles()))
             {
-                var blockPosition = TilemapUtility.TilePositionToWorldPosition(startPosition, position.TilePosition, tileSize);
+                var blockPosition = designer.StartPoint.TilePositionToWorldPosition(position.TilePosition, tileSize);
 
                 if (designer.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(position.TerrainGuid).DrawDebugCube)
                 {

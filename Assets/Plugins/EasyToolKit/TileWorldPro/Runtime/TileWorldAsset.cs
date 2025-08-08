@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EasyToolKit.Core;
 using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using EasyToolKit.TileWorldPro;
 using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
-    [EasyInspector]
     [CreateAssetMenu(menuName = "EasyToolKit/TileWorldPro/TileWorld", fileName = "TileWorld")]
-    public class TileWorldAsset : ScriptableObject
+    public class TileWorldAsset : SerializedScriptableObject
     {
         [LabelText("瓦片大小")]
         [SerializeField] private float _tileSize = 1f;
@@ -21,7 +22,7 @@ namespace EasyToolKit.TileWorldPro
         [HideLabel]
         [SerializeField] private TerrainDefinitionSet _terrainDefinitionSet;
 
-        private readonly Dictionary<ChunkPosition, Chunk> _chunks = new Dictionary<ChunkPosition, Chunk>();
+        [OdinSerialize] private ITileWorldDataStore _dataStore;
 
         [SerializeField, HideInInspector] private bool _isInitialized = false;
 
@@ -35,24 +36,40 @@ namespace EasyToolKit.TileWorldPro
             }
         }
         public TerrainDefinitionSet TerrainDefinitionSet => _terrainDefinitionSet;
+        public ITileWorldDataStore DataStore
+        {
+            get => _dataStore;
+            set => _dataStore = value;
+        }
 
         public IEnumerable<Chunk> EnumerateChunks()
         {
-            return _chunks.Values;
+            if (_dataStore == null || !_dataStore.IsValid)
+            {
+                return Enumerable.Empty<Chunk>();
+            }
+
+            return _dataStore.EnumerateChunks();
         }
 
         public Chunk GetChunkAt(TilePosition tilePosition)
         {
+            if (_dataStore == null || !_dataStore.IsValid)
+            {
+                throw new InvalidOperationException("The data store is not valid");
+            }
+
             EnsureInitialized();
             var chunkIndex = tilePosition.ToChunkPosition(_chunkSize);
-            if (_chunks.TryGetValue(chunkIndex, out var chunk))
+            var chunk = _dataStore.TryGetChunk(chunkIndex);
+            if (chunk != null)
             {
                 return chunk;
             }
 
             var area = new ChunkArea(chunkIndex, _chunkSize);
             chunk = new Chunk(area);
-            _chunks[chunkIndex] = chunk;
+            _dataStore.UpdateChunk(chunk);
             return chunk;
         }
 
@@ -70,6 +87,12 @@ namespace EasyToolKit.TileWorldPro
 
         public void SetTilesAt(IReadOnlyList<TilePosition> tilePositions, Guid terrainGuid)
         {
+            if (_dataStore == null || !_dataStore.IsValid)
+            {
+                throw new InvalidOperationException("The data store is not valid");
+            }
+
+            var affectedChunks = new List<Chunk>();
             Chunk chunkCache = null;
             var tilesCache = new ChunkTilePosition[1];
             foreach (var tilePosition in tilePositions)
@@ -77,15 +100,24 @@ namespace EasyToolKit.TileWorldPro
                 if (chunkCache == null || !chunkCache.Area.Contains(tilePosition))
                 {
                     chunkCache = GetChunkAt(tilePosition);
+                    affectedChunks.Add(chunkCache);
                 }
 
                 tilesCache[0] = TilePositionToChunkTilePosition(tilePosition);
                 chunkCache.SetTilesAt(tilesCache, terrainGuid);
             }
+
+            _dataStore.UpdateChunkRange(affectedChunks);
         }
 
         public void RemoveTilesAt(IReadOnlyList<TilePosition> tilePositions, Guid terrainGuid)
         {
+            if (_dataStore == null || !_dataStore.IsValid)
+            {
+                throw new InvalidOperationException("The data store is not valid");
+            }
+
+            var affectedChunks = new List<Chunk>();
             Chunk chunkCache = null;
             var tilesCache = new ChunkTilePosition[1];
             foreach (var tilePosition in tilePositions)
@@ -93,11 +125,14 @@ namespace EasyToolKit.TileWorldPro
                 if (chunkCache == null || !chunkCache.Area.Contains(tilePosition))
                 {
                     chunkCache = GetChunkAt(tilePosition);
+                    affectedChunks.Add(chunkCache);
                 }
 
                 tilesCache[0] = TilePositionToChunkTilePosition(tilePosition);
                 chunkCache.RemoveTilesAt(tilesCache, terrainGuid);
             }
+
+            _dataStore.UpdateChunkRange(affectedChunks);
         }
 
         public void SetTileAt(TilePosition tilePosition, Guid terrainGuid)
@@ -118,6 +153,7 @@ namespace EasyToolKit.TileWorldPro
             }
 
             _chunkSize = TileWorldConfigAsset.Instance.ChunkSize;
+            _dataStore = new ScriptableObjectTileWorldDataStore();
             _isInitialized = true;
         }
     }
