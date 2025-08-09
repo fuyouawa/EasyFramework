@@ -12,34 +12,32 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var memberInfos = Property.Info.PropertyType.GetMembers(BindingFlagsHelper.AllInstance());
+            var memberInfos = Property.ValueEntry.BaseValueType.GetMembers(BindingFlagsHelper.AllInstance());
 
             foreach (var memberInfo in memberInfos)
             {
                 if (memberInfo is FieldInfo fieldInfo)
                 {
-                    if (!fieldInfo.IsPublic)
-                    {
-                        if (fieldInfo.HasCustomAttribute<HideInInspector>())
-                        {
-                            continue;
-                        }
-
-                        var isNonSerialized = !fieldInfo.HasCustomAttribute<SerializeField>() || fieldInfo.HasCustomAttribute<NonSerializedAttribute>();
-
-                        if (isNonSerialized && !fieldInfo.HasCustomAttribute<ShowInInspectorAttribute>())
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (!fieldInfo.FieldType.IsSubclassOf(typeof(UnityEngine.Object)) &&
-                        !fieldInfo.FieldType.IsValueType &&
-                        !fieldInfo.FieldType.HasCustomAttribute<SerializableAttribute>())
+                    if (fieldInfo.HasCustomAttribute<HideInInspector>())
                     {
                         continue;
                     }
 
+                    var definedShowInInspector = fieldInfo.HasCustomAttribute<ShowInInspectorAttribute>();
+                    if (!InspectorPropertyInfoUtility.IsSerializableField(fieldInfo) && !definedShowInInspector)
+                    {
+                        continue;
+                    }
+
+                    if (!definedShowInInspector)
+                    {
+                        if (!fieldInfo.FieldType.IsSubclassOf(typeof(UnityEngine.Object)) &&
+                            !fieldInfo.FieldType.IsValueType &&
+                            !fieldInfo.FieldType.HasCustomAttribute<SerializableAttribute>())
+                        {
+                            continue;
+                        }
+                    }
 
                     _propertyInfos.Add(InspectorPropertyInfo.CreateForField(fieldInfo));
                 }
@@ -52,6 +50,11 @@ namespace EasyToolKit.Inspector.Editor
                     //TODO method
                 }
             }
+        }
+
+        protected override void Deinitialize()
+        {
+            _propertyInfos.Clear();
         }
 
         public override int ChildNameToIndex(string name)

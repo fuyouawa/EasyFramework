@@ -11,7 +11,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var targetType = Property.Parent.ValueEntry.ValueType;
+            var targetType = Property.Parent.ValueEntry.BaseValueType;
             _conditionResolver = CodeValueResolver.CreateWeak(Attribute.Condition, null, targetType);
         }
 

@@ -33,7 +33,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var targetType = Property.Parent.ValueEntry.ValueType;
+            var targetType = Property.Parent.ValueEntry.BaseValueType;
             _labelResolver = CodeValueResolver.Create<string>(Attribute.Label, targetType, true);
             _iconTextureGetterResolver = CodeValueResolver.Create<Texture>(Attribute.IconTextureGetter, targetType);
         }

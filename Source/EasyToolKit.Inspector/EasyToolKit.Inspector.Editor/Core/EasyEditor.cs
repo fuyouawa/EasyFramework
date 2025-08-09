@@ -32,8 +32,9 @@ namespace EasyToolKit.Inspector.Editor
                     {
                         _tree = PropertyTree.Create(serializedObject);
                     }
-                    catch (ArgumentException)
+                    catch (ArgumentException e)
                     {
+                        Debug.LogException(e);
                     }
                 }
 

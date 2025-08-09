@@ -16,12 +16,12 @@ namespace EasyToolKit.Inspector.Editor
         private IGroupResolver _groupResolver;
         private IDrawerChainResolver _drawerChainResolver;
         private IAttributeResolver _attributeResolver;
-        private long _lastUpdateID;
+        private long? _lastUpdateID;
 
         public InspectorProperty Parent { get; private set; }
         public PropertyTree Tree { get; }
 
-        [CanBeNull] public PropertyChildren Children { get; }
+        [CanBeNull] public PropertyChildren Children { get; private set; }
         public InspectorPropertyInfo Info { get; }
 
         public PropertyState State
@@ -36,7 +36,8 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        [CanBeNull] public IPropertyValueEntry ValueEntry { get; }
+        [CanBeNull] public IPropertyValueEntry BaseValueEntry { get; private set; }
+        [CanBeNull] public IPropertyValueEntry ValueEntry { get; private set; }
 
         public int Index { get; private set; }
         public int SkipDrawCount { get; set; }
@@ -107,7 +108,6 @@ namespace EasyToolKit.Inspector.Editor
             get => _childrenResolver;
             set
             {
-                InitializeResolver(value);
                 _childrenResolver = value;
                 Refresh();
             }
@@ -119,7 +119,6 @@ namespace EasyToolKit.Inspector.Editor
             get => _drawerChainResolver;
             set
             {
-                InitializeResolver(value);
                 _drawerChainResolver = value;
                 Refresh();
             }
@@ -134,7 +133,6 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                InitializeResolver(value);
                 _attributeResolver = value;
                 Refresh();
             }
@@ -149,7 +147,6 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                InitializeResolver(value);
                 _groupResolver = value;
                 Refresh();
             }
@@ -188,35 +185,33 @@ namespace EasyToolKit.Inspector.Editor
 
             Label = new GUIContent(NiceName);
 
-            DrawerChainResolver = new DefaultDrawerChainResolver();
-            AttributeResolver = new DefaultAttributeResolver();
-            GroupResolver = new DefaultGroupResolver();
-
-            if (Info.AllowChildren())
-            {
-                ChildrenResolver = Info.GetPreferencedChildrenResolver();
-                Children = new PropertyChildren(this);
-            }
+            _drawerChainResolver = new DefaultDrawerChainResolver();
+            _attributeResolver = new DefaultAttributeResolver();
+            _groupResolver = new DefaultGroupResolver();
+            Refresh();
 
             if (info.ValueAccessor != null)
             {
                 var entryType = typeof(PropertyValueEntry<>).MakeGenericType(info.ValueAccessor.ValueType);
-                ValueEntry = (IPropertyValueEntry)entryType.CreateInstance(this);
+                BaseValueEntry = (IPropertyValueEntry)entryType.CreateInstance(this);
             }
         }
 
-        internal void Update()
+        internal void Update(bool force = false)
         {
-            if (_lastUpdateID == Tree.UpdatedID)
+            if (_lastUpdateID == Tree.UpdatedID && !force)
             {
                 return;
             }
             _lastUpdateID = Tree.UpdatedID;
 
             _isSelfReadOnlyCache = null;
-            if (ValueEntry != null)
+            UpdateValueEntry();
+
+            if (Children == null && Info.IsAllowChildren)
             {
-                ValueEntry.Update();
+                ChildrenResolver = Info.GetPreferencedChildrenResolver();
+                Children = new PropertyChildren(this);
             }
 
             if (Children != null)
@@ -225,9 +220,48 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
+        private void UpdateValueEntry()
+        {
+            if (BaseValueEntry == null)
+                return;
+            BaseValueEntry.Update();
+
+            if (!Info.PropertyType.IsValueType)
+            {
+                var preferencedValueType = BaseValueEntry.GetPreferencedValueType();
+                if (preferencedValueType != BaseValueEntry.BaseValueType)
+                {
+                    if (ValueEntry == null ||
+                        (ValueEntry.IsWrapper && ValueEntry.RuntimeValueType != preferencedValueType) ||
+                        (!ValueEntry.IsWrapper && ValueEntry.RuntimeValueType != ValueEntry.BaseValueType))
+                    {
+                        var wrapperType = typeof(PropertyValueEntryWrapper<,>).MakeGenericType(preferencedValueType, BaseValueEntry.BaseValueType);
+                        ValueEntry = wrapperType.CreateInstance<IPropertyValueEntry>(BaseValueEntry);
+                    }
+                }
+                else if (ValueEntry != BaseValueEntry)
+                {
+                    ValueEntry = BaseValueEntry;
+                    Refresh();
+                }
+            }
+            else if (ValueEntry == null)
+            {
+                ValueEntry = BaseValueEntry;
+                Refresh();
+            }
+
+            ValueEntry.Update();
+        }
+
         public void Refresh()
         {
             _isSelfReadOnlyCache = null;
+            ReinitializeResolver(_childrenResolver);
+            ReinitializeResolver(_drawerChainResolver);
+            ReinitializeResolver(_attributeResolver);
+            ReinitializeResolver(_groupResolver);
+
             if (Children != null)
             {
                 Children.Refresh();
@@ -274,6 +308,8 @@ namespace EasyToolKit.Inspector.Editor
 
         public void Draw(GUIContent label)
         {
+            Update();
+
             if (SkipDrawCount > 0)
             {
                 SkipDrawCount--;
@@ -291,7 +327,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void InitializeResolver(IInitializableResolver resolver)
+        private void ReinitializeResolver(IInitializableResolver resolver)
         {
             if (resolver != null)
             {

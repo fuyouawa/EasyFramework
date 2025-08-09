@@ -28,5 +28,10 @@ namespace EasyToolKit.Inspector.Editor
             _chain = new DrawerChain(Property, drawers);
             return _chain;
         }
+
+        protected override void Deinitialize()
+        {
+            _chain = null;
+        }
     }
 }

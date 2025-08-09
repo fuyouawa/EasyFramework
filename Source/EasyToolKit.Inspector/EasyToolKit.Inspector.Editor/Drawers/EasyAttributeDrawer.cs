@@ -22,7 +22,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected sealed override bool CanDrawProperty(InspectorProperty property)
         {
-            if (property.ValueEntry != null && !CanDrawValueType(property.ValueEntry.ValueType))
+            if (property.ValueEntry != null && !CanDrawValueType(property.ValueEntry.BaseValueType))
             {
                 return false;
             }
@@ -63,7 +63,7 @@ namespace EasyToolKit.Inspector.Editor
         protected override bool CanDrawAttributeProperty(InspectorProperty property)
         {
             return property.ValueEntry != null &&
-                   property.ValueEntry.ValueType == typeof(TValue) &&
+                   property.ValueEntry.BaseValueType == typeof(TValue) &&
                    CanDrawAttributeValueProperty(property);
         }
 

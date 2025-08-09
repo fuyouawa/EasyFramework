@@ -134,7 +134,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (property.ValueEntry != null)
             {
-                resultsList.Add(TypeMatcher.GetCachedMatches(property.ValueEntry.ValueType));
+                resultsList.Add(TypeMatcher.GetCachedMatches(property.ValueEntry.GetPreferencedValueType()));
             }
 
             foreach (var attribute in property.GetAttributes())
@@ -143,7 +143,7 @@ namespace EasyToolKit.Inspector.Editor
 
                 if (property.ValueEntry != null)
                 {
-                    resultsList.Add(TypeMatcher.GetCachedMatches(attribute.GetType(), property.ValueEntry.ValueType));
+                    resultsList.Add(TypeMatcher.GetCachedMatches(attribute.GetType(), property.ValueEntry.GetPreferencedValueType()));
                 }
             }
 

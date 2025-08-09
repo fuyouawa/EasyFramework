@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace EasyToolKit.Core
 {
@@ -94,6 +95,13 @@ namespace EasyToolKit.Core
         public static bool HasCustomAttribute<T>(this Type type, bool inherit) where T : Attribute
         {
             return type.GetCustomAttributes<T>(inherit).Any();
+        }
+
+        public static bool IsUnityBuiltInType(this Type type)
+        {
+            return type == typeof(Vector2) || type == typeof(Vector2Int) || type == typeof(Vector3) || type == typeof(Vector3Int) ||
+                type == typeof(Vector4) || type == typeof(Quaternion) || type == typeof(Color) || type == typeof(Color32) ||
+                type == typeof(Rect) || type == typeof(RectInt) || type == typeof(Bounds) || type == typeof(BoundsInt);
         }
 
         public static bool IsInteger(this Type type)

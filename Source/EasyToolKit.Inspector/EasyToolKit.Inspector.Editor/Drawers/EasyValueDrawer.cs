@@ -1,4 +1,5 @@
 using System;
+using EasyToolKit.Core;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
@@ -14,6 +15,12 @@ namespace EasyToolKit.Inspector.Editor
                 if (_valueEntry == null)
                 {
                     _valueEntry = Property.ValueEntry as IPropertyValueEntry<T>;
+
+                    if (_valueEntry == null)
+                    {
+                        Property.Update(true);
+                        _valueEntry = Property.ValueEntry as IPropertyValueEntry<T>;
+                    }
                 }
 
                 return _valueEntry;
@@ -22,9 +29,14 @@ namespace EasyToolKit.Inspector.Editor
 
         protected sealed override bool CanDrawProperty(InspectorProperty property)
         {
-            return property.ValueEntry != null &&
-                   property.ValueEntry.ValueType == typeof(T) &&
-                   CanDrawValueType(property.ValueEntry.ValueType) &&
+            if (property.ValueEntry == null)
+            {
+                return false;
+            }
+
+            var valueType = property.ValueEntry.BaseValueType;
+            return (valueType == typeof(T) || valueType.IsInheritsFrom<T>()) &&
+                   CanDrawValueType(valueType) &&
                    CanDrawValueProperty(property);
         }
 

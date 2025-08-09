@@ -1,34 +1,16 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public interface IPropertyValueEntry
-    {
-        object WeakSmartValue { get; set; }
-        Type ValueType { get; }
-        IPropertyValueCollection WeakValues { get; }
-        InspectorProperty Property { get; }
-
-        event Action<int> OnValueChanged;
-
-        bool IsConflicted();
-
-        internal void Update();
-        internal bool ApplyChanges();
-    }
-
-    public interface IPropertyValueEntry<TValue> : IPropertyValueEntry
-    {
-        TValue SmartValue { get; set; }
-        IPropertyValueCollection<TValue> Values { get; }
-    }
-
     public class PropertyValueEntry<TValue> : IPropertyValueEntry<TValue>
     {
         private bool? _isConflictedCache;
+        private int? _lastUpdateID;
+        private Type _runtimeValueType;
         public InspectorProperty Property { get; }
         public IPropertyValueCollection<TValue> Values { get; }
 
@@ -58,16 +40,28 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        public Type ValueType => typeof(TValue);
+        public Type BaseValueType => typeof(TValue);
         public IPropertyValueCollection WeakValues => Values;
 
-        void IPropertyValueEntry.Update()
+        [CanBeNull] public Type RuntimeValueType => _runtimeValueType;
+
+        public bool IsWrapper => false;
+
+        public void Update()
         {
+            if (_lastUpdateID == Property.Tree.UpdatedID)
+            {
+                return;
+            }
+            _lastUpdateID = Property.Tree.UpdatedID;
+
+            _runtimeValueType = TryGetRuntimeValueType();
+
             _isConflictedCache = null;
             Values.Update();
         }
 
-        bool IPropertyValueEntry.ApplyChanges()
+        public bool ApplyChanges()
         {
             bool changed = false;
             if (Values.Dirty)
@@ -125,6 +119,37 @@ namespace EasyToolKit.Inspector.Editor
             return false;
         }
 
+
+        public Type TryGetRuntimeValueType()
+        {
+            if (BaseValueType.IsValueType || BaseValueType.IsSealed)
+            {
+                return BaseValueType;
+            }
+
+            Type runtimeValueType = null;
+            for (int i = 0; i < Values.Count; i++)
+            {
+                object value = Values[i];
+                if (value == null)
+                {
+                    return null;
+                }
+
+                var valueType = value.GetType();
+
+                if (runtimeValueType == null)
+                {
+                    runtimeValueType = valueType;
+                }
+                else if (runtimeValueType != valueType)
+                {
+                    return null;
+                }
+            }
+
+            return runtimeValueType;
+        }
 
         internal void TriggerValueChanged(int index)
         {
