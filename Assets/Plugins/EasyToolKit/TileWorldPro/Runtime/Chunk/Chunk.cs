@@ -70,6 +70,11 @@ namespace EasyToolKit.TileWorldPro
             }
         }
 
+        public int CalculateTilesCount()
+        {
+            return _terrainSections.Sum(section => section.Tiles.Count);
+        }
+
         public IEnumerable<TerrainTilePosition> EnumerateTiles()
         {
             foreach (var terrainSection in _terrainSections)

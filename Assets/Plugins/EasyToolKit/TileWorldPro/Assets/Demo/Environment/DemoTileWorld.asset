@@ -12,6 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05294deddbc235b40896dd88b5874e78, type: 3}
   m_Name: DemoTileWorld
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _dataStore
+      Entry: 7
+      Data: 0|EasyToolKit.TileWorldPro.ScriptableObjectTileWorldDataStore, EasyToolKit.TileWorldPro
+    - Name: _tileWorldDataAsset
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   _tileSize: 1
   _chunkSize: {x: 16, y: 16}
   _terrainDefinitionSet:

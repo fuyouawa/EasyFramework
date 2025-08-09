@@ -20,7 +20,7 @@ namespace EasyToolKit.TileWorldPro
 
         public static ITileWorldDataStore GetDefaultDataStore()
         {
-            return new ScriptableObjectTileWorldDataStore();
+            return new BuiltInTileWorldDataStore();
         }
 
         public static string[] GetDataStoreNamesCache()

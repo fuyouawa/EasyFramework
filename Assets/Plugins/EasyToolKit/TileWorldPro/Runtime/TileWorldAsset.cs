@@ -22,7 +22,7 @@ namespace EasyToolKit.TileWorldPro
         [HideLabel]
         [SerializeField] private TerrainDefinitionSet _terrainDefinitionSet;
 
-        [OdinSerialize] private ITileWorldDataStore _dataStore;
+        [OdinSerialize, ShowInInspector] private ITileWorldDataStore _dataStore;
 
         [SerializeField, HideInInspector] private bool _isInitialized = false;
 
@@ -153,7 +153,7 @@ namespace EasyToolKit.TileWorldPro
             }
 
             _chunkSize = TileWorldConfigAsset.Instance.ChunkSize;
-            _dataStore = new ScriptableObjectTileWorldDataStore();
+            _dataStore = TileWorldDataStoreUtility.GetDefaultDataStore();
             _isInitialized = true;
         }
     }
