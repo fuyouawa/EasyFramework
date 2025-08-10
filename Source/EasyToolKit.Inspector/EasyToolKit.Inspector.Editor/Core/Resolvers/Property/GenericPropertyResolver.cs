@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var memberInfos = Property.ValueEntry.BaseValueType.GetMembers(BindingFlagsHelper.AllInstance());
+            var memberInfos = Property.ValueEntry.ValueType.GetMembers(BindingFlagsHelper.AllInstance());
 
             foreach (var memberInfo in memberInfos)
             {

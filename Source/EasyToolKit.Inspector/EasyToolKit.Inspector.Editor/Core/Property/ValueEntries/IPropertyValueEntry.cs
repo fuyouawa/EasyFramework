@@ -3,15 +3,14 @@ using JetBrains.Annotations;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public interface IPropertyValueEntry
+    public interface IPropertyValueEntry : IDisposable
     {
         object WeakSmartValue { get; set; }
+        Type ValueType { get; }
         Type BaseValueType { get; }
         [CanBeNull] Type RuntimeValueType { get; }
         IPropertyValueCollection WeakValues { get; }
         InspectorProperty Property { get; }
-
-        bool IsWrapper { get; }
 
         event Action<int> OnValueChanged;
 

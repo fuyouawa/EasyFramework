@@ -228,19 +228,27 @@ namespace EasyToolKit.Inspector.Editor
 
             if (!Info.PropertyType.IsValueType)
             {
-                var preferencedValueType = BaseValueEntry.GetPreferencedValueType();
-                if (preferencedValueType != BaseValueEntry.BaseValueType)
+                var valueType = BaseValueEntry.ValueType;
+                if (valueType != BaseValueEntry.BaseValueType)
                 {
                     if (ValueEntry == null ||
-                        (ValueEntry.IsWrapper && ValueEntry.RuntimeValueType != preferencedValueType) ||
-                        (!ValueEntry.IsWrapper && ValueEntry.RuntimeValueType != ValueEntry.BaseValueType))
+                        (ValueEntry is IPropertyValueEntryWrapper && ValueEntry.RuntimeValueType != valueType) ||
+                        (!(ValueEntry is IPropertyValueEntryWrapper) && ValueEntry.RuntimeValueType != ValueEntry.BaseValueType))
                     {
-                        var wrapperType = typeof(PropertyValueEntryWrapper<,>).MakeGenericType(preferencedValueType, BaseValueEntry.BaseValueType);
+                        if (ValueEntry != null)
+                        {
+                            ValueEntry.Dispose();
+                        }
+                        var wrapperType = typeof(PropertyValueEntryWrapper<,>).MakeGenericType(valueType, BaseValueEntry.BaseValueType);
                         ValueEntry = wrapperType.CreateInstance<IPropertyValueEntry>(BaseValueEntry);
                     }
                 }
                 else if (ValueEntry != BaseValueEntry)
                 {
+                    if (ValueEntry != null)
+                    {
+                        ValueEntry.Dispose();
+                    }
                     ValueEntry = BaseValueEntry;
                     Refresh();
                 }

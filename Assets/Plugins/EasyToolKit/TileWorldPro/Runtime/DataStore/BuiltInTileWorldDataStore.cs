@@ -9,7 +9,7 @@ using UnityEngine;
 namespace EasyToolKit.TileWorldPro
 {
     [Serializable]
-    public class BuiltInTileWorldDataStore : ITileWorldDataStore
+    public class BuiltInTileWorldDataStore : ITileWorldDataStore, ISerializationCallbackReceiver
     {
         private Dictionary<ChunkPosition, Chunk> _chunks = new Dictionary<ChunkPosition, Chunk>();
 
@@ -53,6 +53,18 @@ namespace EasyToolKit.TileWorldPro
         public void Dispose()
         {
             _chunks.Clear();
+        }
+
+        void ISerializationCallbackReceiver.OnBeforeSerialize()
+        {
+        }
+
+        void ISerializationCallbackReceiver.OnAfterDeserialize()
+        {
+            if (_chunks == null)
+            {
+                _chunks = new Dictionary<ChunkPosition, Chunk>();
+            }
         }
     }
 }

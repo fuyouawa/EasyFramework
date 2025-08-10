@@ -45,7 +45,18 @@ namespace EasyToolKit.Inspector.Editor
 
         [CanBeNull] public Type RuntimeValueType => _runtimeValueType;
 
-        public bool IsWrapper => false;
+        public Type ValueType
+        {
+            get
+            {
+                if (RuntimeValueType != null)
+                {
+                    return RuntimeValueType;
+                }
+
+                return BaseValueType;
+            }
+        }
 
         public void Update()
         {
@@ -55,10 +66,10 @@ namespace EasyToolKit.Inspector.Editor
             }
             _lastUpdateID = Property.Tree.UpdatedID;
 
-            _runtimeValueType = TryGetRuntimeValueType();
-
             _isConflictedCache = null;
             Values.Update();
+
+            _runtimeValueType = TryGetRuntimeValueType();
         }
 
         public bool ApplyChanges()
@@ -120,7 +131,7 @@ namespace EasyToolKit.Inspector.Editor
         }
 
 
-        public Type TryGetRuntimeValueType()
+        private Type TryGetRuntimeValueType()
         {
             if (BaseValueType.IsValueType || BaseValueType.IsSealed)
             {
@@ -183,6 +194,11 @@ namespace EasyToolKit.Inspector.Editor
             {
                 Property.Tree.QueueCallbackUntilRepaint(Action);
             }
+        }
+
+        public void Dispose()
+        {
+            Values.Dispose();
         }
     }
 }

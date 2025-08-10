@@ -7,22 +7,6 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public interface IPropertyValueCollection : IReadOnlyList
-    {
-        InspectorProperty Property { get; }
-        bool Dirty { get; }
-        void ForceMakeDirty();
-
-        internal void Update();
-        internal bool ApplyChanges();
-    }
-
-    public interface IPropertyValueCollection<T> : IPropertyValueCollection, IReadOnlyList<T>
-    {
-        new T this[int index] { get; set; }
-        new int Count { get; }
-    }
-
     public sealed class PropertyValueCollection<TValue> : IPropertyValueCollection<TValue>
     {
         public InspectorProperty Property { get; private set; }
@@ -49,7 +33,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public int Count => _values.Length;
 
-        object IReadOnlyList.this[int index]
+        object IPropertyValueCollection.this[int index]
         {
             get => this[index];
             set => this[index] = (TValue)value;
@@ -93,7 +77,7 @@ namespace EasyToolKit.Inspector.Editor
             MakeDirty();
         }
 
-        void IPropertyValueCollection.Update()
+        public void Update()
         {
             if (Property.Info.IsLogicRoot)
             {
@@ -123,10 +107,10 @@ namespace EasyToolKit.Inspector.Editor
             _firstUpdated = true;
         }
 
-        bool IPropertyValueCollection.ApplyChanges()
+        public bool ApplyChanges()
         {
             if (!Dirty) return false;
-            
+
             Assert.IsNotNull(Property.Parent.ValueEntry);
             Assert.IsNotNull(Property.Info.ValueAccessor);
 
@@ -139,6 +123,10 @@ namespace EasyToolKit.Inspector.Editor
 
             ClearDirty();
             return true;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

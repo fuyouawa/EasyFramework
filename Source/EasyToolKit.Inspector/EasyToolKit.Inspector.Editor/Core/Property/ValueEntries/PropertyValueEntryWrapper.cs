@@ -2,46 +2,62 @@ using System;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public class PropertyValueEntryWrapper<TValue, TBaseValue> : IPropertyValueEntry<TValue>
+    public class PropertyValueEntryWrapper<TValue, TBaseValue> : IPropertyValueEntryWrapper<TValue, TBaseValue>
+        where TValue : TBaseValue
     {
         private IPropertyValueEntry<TBaseValue> _valueEntry;
+        private IPropertyValueCollectionWrapper<TValue, TBaseValue> _valuesWrapper;
 
         public PropertyValueEntryWrapper(IPropertyValueEntry<TBaseValue> valueEntry)
         {
             _valueEntry = valueEntry;
+            _valuesWrapper = new PropertyValueCollectionWrapper<TValue, TBaseValue>(valueEntry.Values);
         }
 
-        public TValue SmartValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public TValue SmartValue
+        {
+            get => (TValue)_valueEntry.WeakSmartValue;
+            set => _valueEntry.WeakSmartValue = value;
+        }
 
-        public IPropertyValueCollection<TValue> Values => throw new NotImplementedException();
+        public IPropertyValueCollection<TValue> Values => _valuesWrapper;
 
-        public object WeakSmartValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public object WeakSmartValue { get => _valueEntry.WeakSmartValue; set => _valueEntry.WeakSmartValue = value; }
 
-        public Type BaseValueType => throw new NotImplementedException();
+        public Type BaseValueType => _valueEntry.BaseValueType;
 
-        public Type RuntimeValueType => throw new NotImplementedException();
+        public Type RuntimeValueType => _valueEntry.RuntimeValueType;
 
-        public IPropertyValueCollection WeakValues => throw new NotImplementedException();
+        public IPropertyValueCollection WeakValues => _valueEntry.WeakValues;
 
-        public InspectorProperty Property => throw new NotImplementedException();
+        public InspectorProperty Property => _valueEntry.Property;
 
-        public bool IsWrapper => true;
+        public Type ValueType => typeof(TValue);
 
-        public event Action<int> OnValueChanged;
+        public event Action<int> OnValueChanged
+        {
+            add => _valueEntry.OnValueChanged += value;
+            remove => _valueEntry.OnValueChanged -= value;
+        }
 
         public bool ApplyChanges()
         {
-            throw new NotImplementedException();
+            return _valueEntry.ApplyChanges();
         }
 
         public bool IsConflicted()
         {
-            throw new NotImplementedException();
+            return _valueEntry.IsConflicted();
         }
 
         public void Update()
         {
-            throw new NotImplementedException();
+            _valueEntry.Update();
+        }
+
+        public void Dispose()
+        {
+            _valuesWrapper.Dispose();
         }
     }
 }

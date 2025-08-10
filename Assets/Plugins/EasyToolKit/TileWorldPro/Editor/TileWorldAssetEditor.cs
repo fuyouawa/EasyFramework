@@ -78,7 +78,11 @@ namespace EasyToolKit.TileWorldPro.Editor
                 EasyEditorGUI.BeginBoxHeader();
                 _dataStoreExpanded.Value = EasyEditorGUI.Foldout(_dataStoreExpanded.Value, TempContent.SetText($"数据存储 - {dataStoreNames[selectedDataStoreIndex]}"));
                 EasyEditorGUI.EndBoxHeader();
-                _dataStoreProperty.Draw();
+
+                if (_dataStoreExpanded.Value)
+                {
+                    _dataStoreProperty.Draw();
+                }
 
                 if (_temporaryDataStore != null)
                 {

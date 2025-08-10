@@ -77,7 +77,7 @@ namespace EasyToolKit.Inspector.Editor
                 _listDrawerSettings = Property.GetAttribute<ListDrawerSettingsAttribute>();
             }
 
-            var targetType = Property.Parent.ValueEntry.BaseValueType;
+            var targetType = Property.Parent.ValueEntry.ValueType;
 
             if (_listDrawerSettings != null)
             {

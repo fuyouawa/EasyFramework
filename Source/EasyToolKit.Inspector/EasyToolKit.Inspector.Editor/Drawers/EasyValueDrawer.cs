@@ -34,8 +34,8 @@ namespace EasyToolKit.Inspector.Editor
                 return false;
             }
 
-            var valueType = property.ValueEntry.BaseValueType;
-            return (valueType == typeof(T) || valueType.IsInheritsFrom<T>()) &&
+            var valueType = property.ValueEntry.ValueType;
+            return valueType == typeof(T) &&
                    CanDrawValueType(valueType) &&
                    CanDrawValueProperty(property);
         }

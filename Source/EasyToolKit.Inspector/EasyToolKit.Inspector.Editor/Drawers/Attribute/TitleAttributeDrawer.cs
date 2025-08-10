@@ -12,7 +12,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var targetType = Property.Parent.ValueEntry.BaseValueType;
+            var targetType = Property.Parent.ValueEntry.ValueType;
             _titleResolver = CodeValueResolver.Create<string>(Attribute.Title, targetType, true);
             _subtitleResolver = CodeValueResolver.Create<string>(Attribute.Subtitle, targetType, true);
         }
