@@ -4,19 +4,15 @@ using UnityEngine;
 namespace EasyToolKit.TileWorldPro
 {
     [Serializable]
-    public struct ChunkTilePosition : IEquatable<ChunkTilePosition>, ISerializationCallbackReceiver
+    public struct ChunkTilePosition : IEquatable<ChunkTilePosition>
     {
-        private ushort _x;
-        private ushort _y;
-        private ushort _z;
-
-        [SerializeField] private int _serializedCode;
+        [SerializeField] private ushort _x;
+        [SerializeField] private ushort _y;
+        [SerializeField] private ushort _z;
 
         public ushort X => _x;
         public ushort Y => _y;
         public ushort Z => _z;
-
-        public int Code => _serializedCode;
 
         public ChunkTilePosition(ushort x, ushort y, ushort z)
         {
@@ -30,17 +26,19 @@ namespace EasyToolKit.TileWorldPro
             _x = x;
             _y = y;
             _z = z;
-            _serializedCode = ((_x & 0x0FFF) << 20) | ((_z & 0x0FFF) << 8) | (_y & 0x00FF);
+        }
+
+        public static ChunkTilePosition FromPackedCode(uint packedCode)
+        {
+            return new ChunkTilePosition(
+                (ushort)(packedCode >> 20 & 0x0FFF),
+                (ushort)(packedCode >> 8 & 0x0FFF),
+                (ushort)(packedCode & 0x00FF));
         }
 
         public TilePosition ToTilePosition(ChunkArea area)
         {
             return area.GetStartTilePosition() + new TilePosition(_x, _y, _z);
-        }
-
-        public override readonly int GetHashCode()
-        {
-            return _serializedCode;
         }
 
         public bool Equals(ChunkTilePosition other)
@@ -66,18 +64,6 @@ namespace EasyToolKit.TileWorldPro
         public override readonly string ToString()
         {
             return $"({_x}, {_y}, {_z})";
-        }
-
-        void ISerializationCallbackReceiver.OnBeforeSerialize()
-        {
-            _serializedCode = ((_x & 0x0FFF) << 20) | ((_z & 0x0FFF) << 8) | (_y & 0x00FF);
-        }
-
-        void ISerializationCallbackReceiver.OnAfterDeserialize()
-        {
-            _x = (ushort)(_serializedCode >> 20 & 0x0FFF);
-            _y = (ushort)(_serializedCode >> 8 & 0x0FFF);
-            _z = (ushort)(_serializedCode & 0x00FF);
         }
     }
 }

@@ -7,21 +7,43 @@ namespace EasyToolKit.TileWorldPro
 {
     public class Chunk
     {
-        private class TerrainSection
+        public class TerrainSection
         {
-            public Guid TerrainGuid;
-            public HashSet<ChunkTilePosition> Tiles;
+            private Guid _terrainGuid;
+            private HashSet<ChunkTilePosition> _tiles;
+
+            public Guid TerrainGuid => _terrainGuid;
+            public HashSet<ChunkTilePosition> Tiles => _tiles;
+
+            public TerrainSection(Guid terrainGuid)
+            {
+                _terrainGuid = terrainGuid;
+                _tiles = new HashSet<ChunkTilePosition>();
+            }
+
+            public TerrainSection(Guid terrainGuid, IEnumerable<ChunkTilePosition> initialTiles)
+            {
+                _terrainGuid = terrainGuid;
+                _tiles = new HashSet<ChunkTilePosition>(initialTiles);
+            }
         }
 
         private readonly ChunkArea _area;
         private readonly List<TerrainSection> _terrainSections;
 
         public ChunkArea Area => _area;
+        public IReadOnlyList<TerrainSection> TerrainSections => _terrainSections;
 
         public Chunk(ChunkArea area)
         {
             _area = area;
             _terrainSections = new List<TerrainSection>();
+        }
+
+        public Chunk(ChunkArea area, IEnumerable<TerrainSection> initialTerrainSections)
+        {
+            _area = area;
+            _terrainSections = new List<TerrainSection>(initialTerrainSections);
         }
 
         public Guid? TryGetTerrainGuidAt(TilePosition tilePosition)
@@ -42,11 +64,7 @@ namespace EasyToolKit.TileWorldPro
             var terrainSection = _terrainSections.FirstOrDefault(section => section.TerrainGuid == terrainGuid);
             if (terrainSection == null)
             {
-                terrainSection = new TerrainSection
-                {
-                    TerrainGuid = terrainGuid,
-                    Tiles = new HashSet<ChunkTilePosition>(),
-                };
+                terrainSection = new TerrainSection(terrainGuid);
                 _terrainSections.Add(terrainSection);
             }
 

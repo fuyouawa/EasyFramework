@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
     [EasyInspector]
-    public class ChunkObject : MonoBehaviour
+    public class ChunkObject : SerializedMonoBehaviour
     {
         [SerializeField, ReadOnly] private TileWorldBuilder _builder;
-        [SerializeField, ReadOnly] private ChunkArea _area;
+        [OdinSerialize, ShowInInspector, ReadOnly] private ChunkArea _area;
 
         private Dictionary<Guid, ChunkTerrainObject> _terrainObjects;
 

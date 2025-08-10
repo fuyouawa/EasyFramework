@@ -4,11 +4,10 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
-    [Serializable]
     public struct ChunkArea
     {
-        [SerializeField] private ChunkPosition _position;
-        [SerializeField] private Vector2Int _size;
+        private readonly ChunkPosition _position;
+        private readonly Vector2Int _size;
 
         public ChunkPosition Position => _position;
         public Vector2Int Size => _size;

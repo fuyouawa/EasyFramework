@@ -17,5 +17,7 @@ namespace EasyToolKit.TileWorldPro
         void TransferData(ITileWorldDataStore targetDataStore);
         void UpdateChunk(Chunk chunk);
         void UpdateChunkRange(IEnumerable<Chunk> chunks);
+
+        void ClearAllChunks();
     }
 }

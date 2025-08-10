@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace EasyToolKit.TileWorldPro
 {
-    [Serializable]
     public struct ChunkPosition : IEquatable<ChunkPosition>
     {
-        [SerializeField] private ushort _x;
-        [SerializeField] private ushort _y;
+        private readonly ushort _x;
+        private readonly ushort _y;
 
         public ushort X => _x;
         public ushort Y => _y;
@@ -41,6 +40,16 @@ namespace EasyToolKit.TileWorldPro
         public static bool operator !=(ChunkPosition left, ChunkPosition right)
         {
             return !left.Equals(right);
+        }
+
+        public static implicit operator Vector2Int(ChunkPosition position)
+        {
+            return new Vector2Int(position.X, position.Y);
+        }
+
+        public static implicit operator ChunkPosition(Vector2Int position)
+        {
+            return new ChunkPosition((ushort)position.x, (ushort)position.y);
         }
 
         public override string ToString()
