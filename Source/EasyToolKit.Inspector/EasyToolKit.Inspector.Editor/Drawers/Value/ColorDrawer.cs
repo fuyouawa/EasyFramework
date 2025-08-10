@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
+    [DrawerPriority(DrawerPriorityLevel.Value + 100)]
     public class ColorDrawer : EasyValueDrawer<Color>
     {
         protected override void DrawProperty(GUIContent label)

@@ -11,6 +11,7 @@ namespace EasyToolKit.TileWorldPro
         {
             private Guid _terrainGuid;
             private HashSet<ChunkTilePosition> _tiles;
+            private TerrainDefinition _terrainDefinitionCache;
 
             public Guid TerrainGuid => _terrainGuid;
             public HashSet<ChunkTilePosition> Tiles => _tiles;
@@ -25,6 +26,15 @@ namespace EasyToolKit.TileWorldPro
             {
                 _terrainGuid = terrainGuid;
                 _tiles = new HashSet<ChunkTilePosition>(initialTiles);
+            }
+
+            public TerrainDefinition GetTerrainDefinitionCached(TerrainDefinitionSet terrainDefinitionSet)
+            {
+                if (_terrainDefinitionCache == null)
+                {
+                    _terrainDefinitionCache = terrainDefinitionSet.TryGetByGuid(_terrainGuid);
+                }
+                return _terrainDefinitionCache;
             }
         }
 

@@ -17,6 +17,8 @@ namespace EasyToolKit.TileWorldPro
 
         public IReadOnlyDictionary<ChunkPosition, Chunk> Chunks => _chunks;
 
+        public int MemorySize => _serializedChunks?.Length ?? 0;
+
         private bool _dirty = false;
         [SerializeField, HideInInspector] private byte[] _serializedChunks;
 

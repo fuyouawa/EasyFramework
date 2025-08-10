@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
+    [DrawerPriority(DrawerPriorityLevel.Value + 100)]
     public class Vector2IntDrawer : EasyValueDrawer<Vector2Int>
     {
         protected override void DrawProperty(GUIContent label)

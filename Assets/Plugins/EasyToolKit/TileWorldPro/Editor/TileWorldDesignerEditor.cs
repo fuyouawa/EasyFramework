@@ -66,12 +66,17 @@ namespace EasyToolKit.TileWorldPro.Editor
         {
             TileWorldSceneViewHandler.DrawSceneGUI(_context.Value);
 
+            if (TerrainDefinitionDrawer.SelectedGuid == null)
+            {
+                return;
+            }
+
             if (Event.current.type == EventType.MouseMove || Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseUp)
             {
                 _lastIsHit = TryGetHit(out _lastHitPoint, out _lastHitTileWorldPosition);
             }
 
-            if (_lastIsHit && TerrainDefinitionDrawer.SelectedGuid != null)
+            if (_lastIsHit)
             {
                 if (_target.Settings.DrawDebugData)
                 {

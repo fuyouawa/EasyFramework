@@ -56,7 +56,7 @@ namespace EasyToolKit.TileWorldPro.Editor
                 selectedDataStoreIndex = Array.IndexOf(dataStoreNames, dataStoreName);
             }
             EditorGUI.BeginChangeCheck();
-            selectedDataStoreIndex = EditorGUILayout.Popup("数据存储", selectedDataStoreIndex, dataStoreNames);
+            selectedDataStoreIndex = EditorGUILayout.Popup("数据存储方案", selectedDataStoreIndex, dataStoreNames);
             if (EditorGUI.EndChangeCheck())
             {
                 if (selectedDataStoreIndex != -1)
@@ -83,6 +83,7 @@ namespace EasyToolKit.TileWorldPro.Editor
                 {
                     _dataStoreProperty.Draw();
                 }
+                EasyEditorGUI.EndBox();
 
                 if (_temporaryDataStore != null)
                 {
@@ -93,7 +94,6 @@ namespace EasyToolKit.TileWorldPro.Editor
                         _temporaryDataStore = null;
                     }
                 }
-                EasyEditorGUI.EndBox();
             }
             Tree.EndDraw();
         }

@@ -16,26 +16,11 @@ namespace EasyToolKit.TileWorldPro
 
         public ChunkTilePosition(ushort x, ushort y, ushort z)
         {
-            if (x > 1 << 12)
-                throw new ArgumentException($"X '{x}' must be less than 4096", nameof(x));
-            if (y > 1 << 8)
-                throw new ArgumentException($"Y '{y}' must be less than 256", nameof(y));
-            if (z > 1 << 12)
-                throw new ArgumentException($"Z '{z}' must be less than 4096", nameof(z));
-
             _x = x;
             _y = y;
             _z = z;
         }
-
-        public static ChunkTilePosition FromPackedCode(uint packedCode)
-        {
-            return new ChunkTilePosition(
-                (ushort)(packedCode >> 20 & 0x0FFF),
-                (ushort)(packedCode >> 8 & 0x0FFF),
-                (ushort)(packedCode & 0x00FF));
-        }
-
+        
         public TilePosition ToTilePosition(ChunkArea area)
         {
             return area.GetStartTilePosition() + new TilePosition(_x, _y, _z);

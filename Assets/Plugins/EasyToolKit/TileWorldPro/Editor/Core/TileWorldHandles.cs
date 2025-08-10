@@ -38,24 +38,29 @@ namespace EasyToolKit.TileWorldPro.Editor
         public static void DrawTileCubes(TileWorldDesigner designer)
         {
             var tileSize = designer.TileWorldAsset.TileSize;
-            var startPosition = designer.StartPoint.transform.position;
-
-            foreach (var position in designer.TileWorldAsset.EnumerateChunks().SelectMany(chunk => chunk.EnumerateTiles()))
+            
+            foreach (var chunk in designer.TileWorldAsset.EnumerateChunks())
             {
-                var blockPosition = designer.StartPoint.TilePositionToWorldPosition(position.TilePosition, tileSize);
-
-                if (designer.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(position.TerrainGuid).DrawDebugCube)
+                foreach (var terrainSection in chunk.TerrainSections)
                 {
-                    if (designer.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(position.TerrainGuid).EnableZTestForDebugCube)
+                    var terrainDefinition = terrainSection.GetTerrainDefinitionCached(designer.TileWorldAsset.TerrainDefinitionSet);
+                    if (terrainDefinition.DrawDebugCube)
                     {
-                        EasyHandleHelper.PushZTest(CompareFunction.LessEqual);
-                    }
+                        foreach (var tile in terrainSection.Tiles)
+                        {
+                            var blockPosition = designer.StartPoint.TilePositionToWorldPosition(tile.ToTilePosition(chunk.Area), tileSize);
 
-                    DrawCube(blockPosition, tileSize, designer.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(position.TerrainGuid).DebugCubeColor);
+                            if (terrainDefinition.EnableZTestForDebugCube)
+                            {
+                                EasyHandleHelper.PushZTest(CompareFunction.LessEqual);
+                            }
+                            DrawCube(blockPosition, tileSize, terrainDefinition.DebugCubeColor);
 
-                    if (designer.TileWorldAsset.TerrainDefinitionSet.TryGetByGuid(position.TerrainGuid).EnableZTestForDebugCube)
-                    {
-                        EasyHandleHelper.PopZTest();
+                            if (terrainDefinition.EnableZTestForDebugCube)
+                            {
+                                EasyHandleHelper.PopZTest();
+                            }
+                        }
                     }
                 }
             }

@@ -16,6 +16,7 @@ namespace EasyToolKit.TileWorldPro.Editor
             var value = ValueEntry.SmartValue;
             EditorGUILayout.LabelField("区块数量", value.Chunks.Count.ToString());
             EditorGUILayout.LabelField("瓦片数量", _tilesCount == null ? "待计算..." : _tilesCount.Value.ToString());
+            EditorGUILayout.LabelField("占用内存大小", $"{value.MemorySize / 1024f:F2} KB");
 
             if (GUILayout.Button("计算瓦片数量"))
             {
