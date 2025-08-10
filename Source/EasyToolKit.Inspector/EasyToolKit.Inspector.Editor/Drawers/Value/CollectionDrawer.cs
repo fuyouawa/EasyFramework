@@ -156,13 +156,13 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_error.IsNotNullOrEmpty())
             {
-                EditorGUILayout.HelpBox(_error, MessageType.Error);
+                EasyEditorGUI.MessageBox(_error, MessageType.Error);
                 return;
             }
 
             if (_iconTextureGetterResolver != null && _iconTextureGetterResolver.HasError(out var error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 

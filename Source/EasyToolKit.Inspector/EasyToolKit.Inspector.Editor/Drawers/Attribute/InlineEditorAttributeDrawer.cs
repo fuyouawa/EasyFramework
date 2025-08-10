@@ -111,7 +111,7 @@ namespace EasyToolKit.Inspector.Editor
 
             if (ValueEntry.IsConflicted())
             {
-                EditorGUILayout.HelpBox("This object is in conflict state and cannot be edited.", MessageType.Warning);
+                EasyEditorGUI.MessageBox("This object is in conflict state and cannot be edited.", MessageType.Warning);
                 return;
             }
 

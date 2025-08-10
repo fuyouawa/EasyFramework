@@ -47,13 +47,13 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_labelResolver.HasError(out var error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 
             if (Attribute.IconTextureGetter.IsNotNullOrEmpty() && _iconTextureGetterResolver.HasError(out error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 

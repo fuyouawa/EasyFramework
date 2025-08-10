@@ -1,4 +1,5 @@
 using EasyToolKit.Core;
+using EasyToolKit.Core.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_conditionResolver.HasError(out var error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 

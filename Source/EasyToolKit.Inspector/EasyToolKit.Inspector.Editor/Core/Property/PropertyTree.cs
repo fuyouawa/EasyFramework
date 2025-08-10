@@ -94,7 +94,7 @@ namespace EasyToolKit.Inspector.Editor
                     var monoScript = scriptProperty.objectReferenceValue as MonoScript;
                     if (monoScript == null)
                     {
-                        EditorGUILayout.HelpBox(
+                        EasyEditorGUI.MessageBox(
                             "The associated script can not be loaded.\nPlease fix any compile errors\nand assign a valid script.",
                             MessageType.Warning);
                     }

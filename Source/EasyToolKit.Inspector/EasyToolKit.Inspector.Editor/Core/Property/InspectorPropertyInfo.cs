@@ -128,6 +128,41 @@ namespace EasyToolKit.Inspector.Editor
             return info;
         }
 
+        public static InspectorPropertyInfo CreateForMember(MemberInfo memberInfo)
+        {
+            if (memberInfo is FieldInfo fieldInfo)
+            {
+                return CreateForField(fieldInfo);
+            }
+            else if (memberInfo is PropertyInfo propertyInfo)
+            {
+                return CreateForProperty(propertyInfo);
+            }
+            else if (memberInfo is MethodInfo methodInfo)
+            {
+                return CreateForMethod(methodInfo);
+            }
+            throw new NotSupportedException($"Unsupported member type: {memberInfo.GetType()}");
+        }
+
+        public static InspectorPropertyInfo CreateForProperty(PropertyInfo propertyInfo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static InspectorPropertyInfo CreateForMethod(MethodInfo methodInfo)
+        {
+            var info = new InspectorPropertyInfo()
+            {
+                PropertyPath = methodInfo.Name + "()",
+                PropertyName = methodInfo.Name,
+                IsUnityProperty = false,
+                _memberInfo = methodInfo
+            };
+
+            return info;
+        }
+
         public static InspectorPropertyInfo CreateForField(FieldInfo fieldInfo)
         {
             var info = new InspectorPropertyInfo()
@@ -136,6 +171,7 @@ namespace EasyToolKit.Inspector.Editor
                 PropertyPath = fieldInfo.Name,
                 PropertyName = fieldInfo.Name,
                 IsUnityProperty = false,
+                _memberInfo = fieldInfo
             };
 
             var accessorType = typeof(MemberValueAccessor<,>)

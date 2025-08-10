@@ -21,12 +21,12 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_titleResolver.HasError(out var error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
             if (_subtitleResolver.HasError(out error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 

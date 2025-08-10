@@ -21,7 +21,7 @@ namespace EasyToolKit.Inspector.Editor
         {
             if (_labelResolver.HasError(out var error))
             {
-                EditorGUILayout.HelpBox(error, MessageType.Error);
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
             }
 
