@@ -145,6 +145,60 @@ namespace EasyToolKit.TileWorldPro
             GetChunkAt(tilePosition).RemoveTilesAt(new[] { TilePositionToChunkTilePosition(tilePosition) }, terrainGuid);
         }
 
+        private bool[,] GetSudokuAt(TilePosition tilePosition)
+        {
+            var sudoku = new bool[3, 3];
+            var terrainGuid = TryGetTerrainGuidAt(tilePosition);
+            Assert.IsNotNull(terrainGuid);
+
+            var position = tilePosition + TilePosition.ForwardLeft;
+            if (IsValidTilePosition(position))
+                sudoku[0, 2] = TryGetTerrainGuidAt(tilePosition + TilePosition.ForwardLeft) == terrainGuid;
+            position = tilePosition + TilePosition.Forward;
+            if (IsValidTilePosition(position))
+                sudoku[1, 2] = TryGetTerrainGuidAt(position) == terrainGuid;
+            position = tilePosition + TilePosition.ForwardRight;
+            if (IsValidTilePosition(position))
+                sudoku[2, 2] = TryGetTerrainGuidAt(position) == terrainGuid;
+
+            position = tilePosition + TilePosition.Left;
+            if (IsValidTilePosition(position))
+                sudoku[0, 1] = TryGetTerrainGuidAt(position) == terrainGuid;
+            sudoku[1, 1] = true;
+            position = tilePosition + TilePosition.Right;
+            if (IsValidTilePosition(position))
+                sudoku[2, 1] = TryGetTerrainGuidAt(position) == terrainGuid;
+
+            position = tilePosition + TilePosition.BackLeft;
+            if (IsValidTilePosition(position))
+                sudoku[0, 0] = TryGetTerrainGuidAt(position) == terrainGuid;
+            position = tilePosition + TilePosition.Back;
+            if (IsValidTilePosition(position))
+                sudoku[1, 0] = TryGetTerrainGuidAt(position) == terrainGuid;
+            position = tilePosition + TilePosition.BackRight;
+            if (IsValidTilePosition(position))
+                sudoku[2, 0] = TryGetTerrainGuidAt(position) == terrainGuid;
+
+            return sudoku;
+        }
+
+        public TerrainTileRuleType CalculateRuleTypeOf(TerrainConfigAsset terrainConfigAsset, TilePosition tilePosition)
+        {
+            var sudoku = GetSudokuAt(tilePosition);
+            return terrainConfigAsset.GetRuleTypeBySudoku(sudoku);
+        }
+
+        private bool IsValidTilePosition(TilePosition tilePosition)
+        {
+            if (tilePosition.X < 0 ||
+                tilePosition.Y < 0 ||
+                tilePosition.Z < 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         private void EnsureInitialized()
         {
             if (_isInitialized)

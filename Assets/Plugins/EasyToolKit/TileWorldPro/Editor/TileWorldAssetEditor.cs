@@ -10,6 +10,8 @@ namespace EasyToolKit.TileWorldPro.Editor
     [CustomEditor(typeof(TileWorldAsset))]
     public class TileWorldAssetEditor : EasyEditor
     {
+        public static bool IsInDesigner = false;
+
         private static ITileWorldDataStore _temporaryDataStore;
         private readonly static GUIContent TempContent = new GUIContent();
 
@@ -46,7 +48,11 @@ namespace EasyToolKit.TileWorldPro.Editor
 
             _tileSizeProperty.Draw();
             _chunkSizeProperty.Draw();
-            _terrainDefinitionSetProperty.Draw();
+
+            if (IsInDesigner)
+            {
+                _terrainDefinitionSetProperty.Draw();
+            }
 
             var dataStoreNames = TileWorldDataStoreUtility.GetDataStoreNamesCache();
             int selectedDataStoreIndex = -1;

@@ -17,7 +17,7 @@ namespace EasyToolKit.TileWorldPro.Editor
             var type = Property.GetAttribute<TerrainTileRuleTypeAttribute>();
             if (type == null)
             {
-                EditorGUILayout.HelpBox("TerrainTileRuleTypeAttribute is missing.", MessageType.Error);
+                EasyEditorGUI.MessageBox("TerrainTileRuleTypeAttribute is missing.", MessageType.Error);
                 return;
             }
 

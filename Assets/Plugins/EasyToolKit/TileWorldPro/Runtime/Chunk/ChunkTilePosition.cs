@@ -20,7 +20,7 @@ namespace EasyToolKit.TileWorldPro
             _y = y;
             _z = z;
         }
-        
+
         public TilePosition ToTilePosition(ChunkArea area)
         {
             return area.GetStartTilePosition() + new TilePosition(_x, _y, _z);

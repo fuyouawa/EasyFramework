@@ -18,7 +18,8 @@ namespace EasyToolKit.TileWorldPro
         [SerializeField] private TileWorldBuilderSettings _settings;
 
         [EndFoldoutBoxGroup]
-        [LabelText("瓦片世界")]
+        [LabelText("资产")]
+        [InlineEditor]
         [SerializeField] private TileWorldAsset _tileWorldAsset;
 
         [LabelText("地形配置")]
@@ -45,49 +46,6 @@ namespace EasyToolKit.TileWorldPro
                 }
                 return _chunkObjects;
             }
-        }
-
-        private bool[,] GetSudokuAt(TilePosition tilePosition)
-        {
-            var sudoku = new bool[3, 3];
-            var terrainGuid = _tileWorldAsset.TryGetTerrainGuidAt(tilePosition);
-            Assert.IsNotNull(terrainGuid);
-
-            var position = tilePosition + TilePosition.ForwardLeft;
-            if (IsValidTilePosition(position))
-                sudoku[0, 2] = _tileWorldAsset.TryGetTerrainGuidAt(tilePosition + TilePosition.ForwardLeft) == terrainGuid;
-            position = tilePosition + TilePosition.Forward;
-            if (IsValidTilePosition(position))
-                sudoku[1, 2] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-            position = tilePosition + TilePosition.ForwardRight;
-            if (IsValidTilePosition(position))
-                sudoku[2, 2] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-
-            position = tilePosition + TilePosition.Left;
-            if (IsValidTilePosition(position))
-                sudoku[0, 1] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-            sudoku[1, 1] = true;
-            position = tilePosition + TilePosition.Right;
-            if (IsValidTilePosition(position))
-                sudoku[2, 1] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-
-            position = tilePosition + TilePosition.BackLeft;
-            if (IsValidTilePosition(position))
-                sudoku[0, 0] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-            position = tilePosition + TilePosition.Back;
-            if (IsValidTilePosition(position))
-                sudoku[1, 0] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-            position = tilePosition + TilePosition.BackRight;
-            if (IsValidTilePosition(position))
-                sudoku[2, 0] = _tileWorldAsset.TryGetTerrainGuidAt(position) == terrainGuid;
-
-            return sudoku;
-        }
-
-        public TerrainTileRuleType CalculateRuleTypeOf(TilePosition tilePosition)
-        {
-            var sudoku = GetSudokuAt(tilePosition);
-            return _terrainConfigAsset.GetRuleTypeBySudoku(sudoku);
         }
 
         public void BuildAll(bool clearOld = true)
@@ -190,7 +148,7 @@ namespace EasyToolKit.TileWorldPro
                     currentChunkObject = GetChunkObjectOf(tilePosition.ToChunkPosition(_tileWorldAsset.ChunkSize));
                 }
 
-                var ruleType = CalculateRuleTypeOf(tilePosition);
+                var ruleType = _tileWorldAsset.CalculateRuleTypeOf(_terrainConfigAsset, tilePosition);
                 var chunkTilePosition = currentChunkObject.Area.TilePositionToChunkTilePosition(tilePosition);
                 currentChunkObject.AddTile(terrainGuid, chunkTilePosition, ruleType);
             }
@@ -278,7 +236,7 @@ namespace EasyToolKit.TileWorldPro
                     continue;
                 }
 
-                var ruleType = CalculateRuleTypeOf(tilePosition);
+                var ruleType = _tileWorldAsset.CalculateRuleTypeOf(_terrainConfigAsset, tilePosition);
                 if (tileInfo.RuleType == ruleType)
                 {
                     continue;

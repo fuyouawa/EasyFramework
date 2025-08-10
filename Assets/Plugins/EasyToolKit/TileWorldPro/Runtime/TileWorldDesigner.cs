@@ -14,7 +14,7 @@ namespace EasyToolKit.TileWorldPro
         [SerializeField] private TileWorldDesignerSettings _settings;
 
         [EndFoldoutBoxGroup]
-        [LabelText("瓦片世界")]
+        [LabelText("资产")]
         [SerializeField, InlineEditor] private TileWorldAsset _tileWorldAsset;
 
         public TileWorldStartPoint StartPoint => _startPoint;

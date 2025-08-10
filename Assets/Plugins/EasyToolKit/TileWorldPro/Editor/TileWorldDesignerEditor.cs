@@ -53,6 +53,13 @@ namespace EasyToolKit.TileWorldPro.Editor
             EditorApplication.update -= OnUpdate;
         }
 
+        protected override void DrawTree()
+        {
+            TileWorldAssetEditor.IsInDesigner = true;
+            base.DrawTree();
+            TileWorldAssetEditor.IsInDesigner = false;
+        }
+
         private void OnUpdate()
         {
             if (EditorApplication.timeSinceStartup - LastUpdateTime > UpdateInterval)
