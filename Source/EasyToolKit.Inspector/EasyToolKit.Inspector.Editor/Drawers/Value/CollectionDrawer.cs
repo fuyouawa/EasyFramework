@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    [DrawerPriority(DrawerPriorityLevel.Value + 10)]
+    [DrawerPriority(DrawerPriorityLevel.Value + 9)]
     public class CollectionDrawer<T> : EasyValueDrawer<T>
     {
         private static readonly GUIContent TempContent = new GUIContent();
@@ -93,7 +93,7 @@ namespace EasyToolKit.Inspector.Editor
                 {
                     if (_listDrawerSettings.OnAddedElementCallback.IsNotNullOrEmpty())
                     {
-                        var onAddedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnAddedElementCallback, BindingFlagsHelper.All(), typeof(object))
+                        var onAddedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnAddedElementCallback, BindingFlagsHelper.All, typeof(object))
                             ?? throw new Exception($"Cannot find method '{_listDrawerSettings.OnAddedElementCallback}' in '{targetType}'");
 
                         _onAddedElementCallback = (instance, value) =>
@@ -104,7 +104,7 @@ namespace EasyToolKit.Inspector.Editor
 
                     if (_listDrawerSettings.OnRemovedElementCallback.IsNotNullOrEmpty())
                     {
-                        var onRemovedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnRemovedElementCallback, BindingFlagsHelper.All(), typeof(object))
+                        var onRemovedElementMethod = targetType.GetMethodEx(_listDrawerSettings.OnRemovedElementCallback, BindingFlagsHelper.All, typeof(object))
                             ?? throw new Exception($"Cannot find method '{_listDrawerSettings.OnRemovedElementCallback}' in '{targetType}'");
 
                         _onRemovedElementCallback = (instance, value) =>
@@ -115,7 +115,7 @@ namespace EasyToolKit.Inspector.Editor
 
                     if (_listDrawerSettings.CustomCreateElementFunction.IsNotNullOrEmpty())
                     {
-                        var customCreateElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomCreateElementFunction, BindingFlagsHelper.All())
+                        var customCreateElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomCreateElementFunction, BindingFlagsHelper.All)
                             ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomCreateElementFunction}' in '{targetType}'");
 
                         _customCreateElementFunction = instance =>
@@ -126,7 +126,7 @@ namespace EasyToolKit.Inspector.Editor
 
                     if (_listDrawerSettings.CustomRemoveElementFunction.IsNotNullOrEmpty())
                     {
-                        var customRemoveElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveElementFunction, BindingFlagsHelper.All())
+                        var customRemoveElementFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveElementFunction, BindingFlagsHelper.All)
                             ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomRemoveElementFunction}' in '{targetType}'");
 
                         _customRemoveElementFunction = (instance, value) =>
@@ -137,7 +137,7 @@ namespace EasyToolKit.Inspector.Editor
 
                     if (_listDrawerSettings.CustomRemoveIndexFunction.IsNotNullOrEmpty())
                     {
-                        var customRemoveIndexFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveIndexFunction, BindingFlagsHelper.All(), typeof(int)) 
+                        var customRemoveIndexFunction = targetType.GetMethodEx(_listDrawerSettings.CustomRemoveIndexFunction, BindingFlagsHelper.All, typeof(int))
                             ?? throw new Exception($"Cannot find method '{_listDrawerSettings.CustomRemoveIndexFunction}' in '{targetType}'");
                         _customRemoveIndexFunction = (instance, index) =>
                         {
@@ -185,14 +185,21 @@ namespace EasyToolKit.Inspector.Editor
         {
             EasyEditorGUI.BeginHorizontalToolbar();
 
-            GUILayout.Label(label);
+            if (label != null)
+            {
+                GUILayout.Label(label);
+            }
 
             GUILayout.FlexibleSpace();
 
-            if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
+            if (!_listDrawerSettings.HideAddButton)
             {
-                DoAddElement();
+                if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
+                {
+                    DoAddElement();
+                }
             }
+
 
             EasyEditorGUI.EndHorizontalToolbar();
         }
@@ -209,26 +216,32 @@ namespace EasyToolKit.Inspector.Editor
                 GUILayout.Label(iconTexture, GUILayout.Width(30), GUILayout.Height(30));
             }
 
-            GUILayout.Label(label, MetroHeaderLabelStyle, GUILayout.Height(30));
+            if (label != null)
+            {
+                GUILayout.Label(label, MetroHeaderLabelStyle, GUILayout.Height(30));
+            }
 
             GUILayout.FlexibleSpace();
 
-            var btnRect = GUILayoutUtility.GetRect(
+            if (!_listDrawerSettings.HideAddButton)
+            {
+                var btnRect = GUILayoutUtility.GetRect(
                 EasyEditorIcons.Plus.HighlightedContent,
                 "Button",
                 GUILayout.ExpandWidth(false),
                 GUILayout.Width(30),
                 GUILayout.Height(30));
 
-            if (GUI.Button(btnRect, GUIContent.none, "Button"))
-            {
-                EasyGUIHelper.RemoveFocusControl();
-                DoAddElement();
-            }
+                if (GUI.Button(btnRect, GUIContent.none, "Button"))
+                {
+                    EasyGUIHelper.RemoveFocusControl();
+                    DoAddElement();
+                }
 
-            if (Event.current.type == EventType.Repaint)
-            {
-                EasyEditorIcons.Plus.Draw(btnRect.AlignCenter(25, 25));
+                if (Event.current.type == EventType.Repaint)
+                {
+                    EasyEditorIcons.Plus.Draw(btnRect.AlignCenter(25, 25));
+                }
             }
 
             EasyEditorGUI.EndHorizontalToolbar();
@@ -265,21 +278,24 @@ namespace EasyToolKit.Inspector.Editor
             var rect = EasyEditorGUI.BeginListItem(false, ListItemStyle, GUILayout.MinHeight(25), GUILayout.ExpandWidth(true));
 
             var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 20, 20);
-            var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 22, dragHandleRect.y + 1, 14, 14);
 
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
             property.Draw(null);
 
-            if (EasyEditorGUI.IconButton(removeBtnRect, EasyEditorIcons.X))
+            if (!_listDrawerSettings.HideRemoveButton)
             {
-                if (_orderedCollectionResolver != null)
+                var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 22, dragHandleRect.y + 1, 14, 14);
+                if (EasyEditorGUI.IconButton(removeBtnRect, EasyEditorIcons.X))
                 {
-                    DoRemoveElementAt(index, property);
-                }
-                else
-                {
-                    DoRemoveElement(property);
+                    if (_orderedCollectionResolver != null)
+                    {
+                        DoRemoveElementAt(index, property);
+                    }
+                    else
+                    {
+                        DoRemoveElement(property);
+                    }
                 }
             }
 
@@ -293,29 +309,32 @@ namespace EasyToolKit.Inspector.Editor
             EasyGUIHelper.PopColor();
 
             var dragHandleRect = new Rect(rect.x + 4, rect.y + 2 + ((int)rect.height - 23) / 2, 23, 23);
-            var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 37, dragHandleRect.y - 5, 30, 30);
 
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
             property.Draw(null);
 
-            if (GUI.Button(removeBtnRect, GUIContent.none, "Button"))
+            if (!_listDrawerSettings.HideRemoveButton)
             {
-                EasyGUIHelper.RemoveFocusControl();
-
-                if (_orderedCollectionResolver != null)
+                var removeBtnRect = new Rect(dragHandleRect.x + rect.width - 37, dragHandleRect.y - 5, 30, 30);
+                if (GUI.Button(removeBtnRect, GUIContent.none, "Button"))
                 {
-                    DoRemoveElementAt(index, property);
-                }
-                else
-                {
-                    DoRemoveElement(property);
-                }
-            }
+                    EasyGUIHelper.RemoveFocusControl();
 
-            if (Event.current.type == EventType.Repaint)
-            {
-                EasyEditorIcons.X.Draw(removeBtnRect.AlignCenter(25, 25));
+                    if (_orderedCollectionResolver != null)
+                    {
+                        DoRemoveElementAt(index, property);
+                    }
+                    else
+                    {
+                        DoRemoveElement(property);
+                    }
+                }
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    EasyEditorIcons.X.Draw(removeBtnRect.AlignCenter(25, 25));
+                }
             }
 
 

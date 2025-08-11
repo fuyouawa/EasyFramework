@@ -53,7 +53,7 @@ namespace EasyToolKit.Core.Editor
             ActualLabelWidthGetter =
                 ReflectionUtility.CreateStaticValueGetter<float>(typeof(EditorGUIUtility), "s_LabelWidth");
 
-            var method = typeof(EditorGUIUtility).GetMethod("GetHelpIcon", BindingFlagsHelper.AllStatic());
+            var method = typeof(EditorGUIUtility).GetMethod("GetHelpIcon", BindingFlagsHelper.AllStatic);
             HelpIconGetter = (messageType) =>
             {
                 return method.Invoke(null, new object[] { messageType }) as Texture;

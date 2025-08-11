@@ -9,6 +9,8 @@ namespace EasyToolKit.Inspector.Editor
 {
     public sealed class PropertyValueCollection<TValue> : IPropertyValueCollection<TValue>
     {
+        public static readonly bool IsInstiatableType = typeof(TValue).IsInstantiable();
+
         public InspectorProperty Property { get; private set; }
         private readonly TValue[] _values;
         private bool _firstUpdated = false;
@@ -79,6 +81,7 @@ namespace EasyToolKit.Inspector.Editor
 
         public void Update()
         {
+            bool clearDirty = true;
             if (Property.Info.IsLogicRoot)
             {
                 if (!_firstUpdated)
@@ -97,12 +100,27 @@ namespace EasyToolKit.Inspector.Editor
                 for (int i = 0; i < Property.Tree.Targets.Length; i++)
                 {
                     var owner = Property.Parent.ValueEntry.WeakValues[i];
+                    if (owner == null)
+                    {
+                        _values[i] = default;
+                        continue;
+                    }
                     var value = (TValue)Property.Info.ValueAccessor.GetWeakValue(owner);
+                    if (value == null && IsInstiatableType)
+                    {
+                        _values[i] = typeof(TValue).TryCreateInstance<TValue>();
+                        MakeDirty();
+                        clearDirty = false;
+                        continue;
+                    }
                     _values[i] = value;
                 }
             }
 
-            ClearDirty();
+            if (clearDirty)
+            {
+                ClearDirty();
+            }
 
             _firstUpdated = true;
         }

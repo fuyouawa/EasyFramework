@@ -6,9 +6,9 @@ namespace EasyToolKit.Inspector.Editor
     public enum DrawerPriorityLevel
     {
         Default = 0,
-        Value = 1000,
-        Attribute = 2000,
-        Super = 3000
+        Value = 100000,
+        Attribute = 200000,
+        Super = 300000
     }
 
     public class DrawerPriority : IEquatable<DrawerPriority>, IComparable<DrawerPriority>

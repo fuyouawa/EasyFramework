@@ -4,69 +4,30 @@ namespace EasyToolKit.Core
 {
     public static class BindingFlagsHelper
     {
-        public static BindingFlags Public()
-        {
-            return BindingFlags.Public;
-        }
+        public static readonly BindingFlags Public = BindingFlags.Public;
 
-        public static BindingFlags NonPublic()
-        {
-            return BindingFlags.NonPublic;
-        }
+        public static readonly BindingFlags NonPublic = BindingFlags.NonPublic;
 
-        public static BindingFlags Instance()
-        {
-            return BindingFlags.Instance;
-        }
+        public static readonly BindingFlags Instance = BindingFlags.Instance;
 
-        public static BindingFlags Static()
-        {
-            return BindingFlags.Static;
-        }
+        public static readonly BindingFlags Static = BindingFlags.Static;
 
-        public static BindingFlags PublicInstance()
-        {
-            return Public() | Instance();
-        }
+        public static readonly BindingFlags PublicInstance = Public | Instance;
 
-        public static BindingFlags PublicStatic()
-        {
-            return Public() | Static();
-        }
+        public static readonly BindingFlags PublicStatic = Public | Static;
 
-        public static BindingFlags NonPublicInstance()
-        {
-            return NonPublic() | Instance();
-        }
+        public static readonly BindingFlags NonPublicInstance = NonPublic | Instance;
 
-        public static BindingFlags NonPublicStatic()
-        {
-            return NonPublic() | Static();
-        }
+        public static readonly BindingFlags NonPublicStatic = NonPublic | Static;
 
-        public static BindingFlags AllInstance()
-        {
-            return Public() | NonPublicInstance();
-        }
+        public static readonly BindingFlags AllInstance = Public | NonPublicInstance;
 
-        public static BindingFlags AllStatic()
-        {
-            return Public() | NonPublicStatic();
-        }
+        public static readonly BindingFlags AllStatic = Public | NonPublicStatic;
 
-        public static BindingFlags All()
-        {
-            return AllInstance() | AllStatic();
-        }
+        public static readonly BindingFlags All = AllInstance | AllStatic;
 
-        public static BindingFlags AllPublic()
-        {
-            return PublicInstance() | PublicStatic();
-        }
+        public static readonly BindingFlags AllPublic = PublicInstance | PublicStatic;
 
-        public static BindingFlags AllNonPublic()
-        {
-            return NonPublicInstance() | NonPublicStatic();
-        }
+        public static readonly BindingFlags AllNonPublic = NonPublicInstance | NonPublicStatic;
     }
 }

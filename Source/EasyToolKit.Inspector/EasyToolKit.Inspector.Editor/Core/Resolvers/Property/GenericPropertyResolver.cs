@@ -13,7 +13,7 @@ namespace EasyToolKit.Inspector.Editor
 
         protected override void Initialize()
         {
-            var fieldInfos = Property.ValueEntry.ValueType.GetFields(BindingFlagsHelper.AllInstance());
+            var fieldInfos = Property.ValueEntry.ValueType.GetFields(BindingFlagsHelper.AllInstance);
 
             foreach (var fieldInfo in fieldInfos)
             {
@@ -41,7 +41,7 @@ namespace EasyToolKit.Inspector.Editor
                 _propertyInfos.Add(InspectorPropertyInfo.CreateForField(fieldInfo));
             }
 
-            var methodInfos = Property.ValueEntry.ValueType.GetMethods(BindingFlagsHelper.AllInstance());
+            var methodInfos = Property.ValueEntry.ValueType.GetMethods(BindingFlagsHelper.AllInstance);
             foreach (var methodInfo in methodInfos)
             {
                 if (!methodInfo.GetCustomAttributes().Any())

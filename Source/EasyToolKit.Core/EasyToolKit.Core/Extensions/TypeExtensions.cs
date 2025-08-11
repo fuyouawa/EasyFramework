@@ -55,6 +55,54 @@ namespace EasyToolKit.Core
             return $"{typeName}<{genericArgs}>";
         }
 
+        public static bool IsInstantiable(this Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            if (type.IsUnityObject()) return false;
+            if (type.IsInterface) return false;
+            if (type.IsAbstract) return false;
+            if (type.IsArray) return false;
+            if (type.ContainsGenericParameters) return false;
+
+            if (type.IsPointer || type.IsByRef || type.IsGenericParameter) return false;
+            if (typeof(Delegate).IsAssignableFrom(type)) return false;
+
+            if (type.IsValueType) return true;
+
+            var ctor = type.GetConstructor(
+                BindingFlagsHelper.AllInstance,
+                binder: null,
+                types: Type.EmptyTypes,
+                modifiers: null);
+            return ctor != null;
+        }
+
+
+        public static object TryCreateInstance(this Type type, params object[] args)
+        {
+            try
+            {
+                return type.CreateInstance(args);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static T TryCreateInstance<T>(this Type type, params object[] args)
+        {
+            try
+            {
+                return type.CreateInstance<T>(args);
+            }
+            catch
+            {
+                return default;
+            }
+        }
 
         public static object CreateInstance(this Type type, params object[] args)
         {
@@ -63,7 +111,7 @@ namespace EasyToolKit.Core
 
             if (type == typeof(string))
                 return string.Empty;
-            
+
             return Activator.CreateInstance(type, args);
         }
 
@@ -181,7 +229,7 @@ namespace EasyToolKit.Core
 
         public static T GetPropertyValue<T>(this Type type, string propertyName, object target)
         {
-            return type.GetPropertyValue<T>(propertyName, BindingFlagsHelper.All(), target);
+            return type.GetPropertyValue<T>(propertyName, BindingFlagsHelper.All, target);
         }
 
         public static MethodInfo GetMethodEx(this Type type, string methodName, BindingFlags flags, params Type[] argTypes)
@@ -233,7 +281,7 @@ namespace EasyToolKit.Core
         public static object InvokeMethod(this Type type, string methodName, object target,
             params object[] args)
         {
-            return type.InvokeMethod(methodName, BindingFlagsHelper.All(), target, args);
+            return type.InvokeMethod(methodName, BindingFlagsHelper.All, target, args);
         }
 
         public static void AddEvent(this Type type, string eventName, BindingFlags flags, object target, Delegate func)
@@ -250,7 +298,7 @@ namespace EasyToolKit.Core
 
         public static void AddEvent(this Type type, string eventName, object target, Delegate func)
         {
-            type.AddEvent(eventName, BindingFlagsHelper.All(), target, func);
+            type.AddEvent(eventName, BindingFlagsHelper.All, target, func);
         }
 
         public static Type[] GetAllBaseTypes(this Type type, bool includeInterface = true,

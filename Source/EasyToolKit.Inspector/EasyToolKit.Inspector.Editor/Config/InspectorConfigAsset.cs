@@ -12,7 +12,10 @@ namespace EasyToolKit.Inspector.Editor
     public class InspectorConfigAsset : ScriptableObjectSingleton<InspectorConfigAsset>, ISerializationCallbackReceiver
     {
         [SerializeField] private bool _drawMonoScriptInEditor = true;
+        [SerializeField] private bool _instantiateReferenceObjectIfNull = true;
+
         public bool DrawMonoScriptInEditor => _drawMonoScriptInEditor;
+        public bool TryInstantiateReferenceObjectIfNull => _instantiateReferenceObjectIfNull;
 
         void ISerializationCallbackReceiver.OnBeforeSerialize()
         {
@@ -41,10 +44,10 @@ namespace EasyToolKit.Inspector.Editor
                 if (inspectorWindowType != null && activeEditorTrackerType != null)
                 {
                     var createTrackerMethod =
-                        inspectorWindowType.GetMethod("CreateTracker", BindingFlagsHelper.AllInstance());
-                    var trackerField = inspectorWindowType.GetField("m_Tracker", BindingFlagsHelper.AllInstance());
+                        inspectorWindowType.GetMethod("CreateTracker", BindingFlagsHelper.AllInstance);
+                    var trackerField = inspectorWindowType.GetField("m_Tracker", BindingFlagsHelper.AllInstance);
                     var forceRebuild =
-                        activeEditorTrackerType.GetMethod("ForceRebuild", BindingFlagsHelper.AllInstance());
+                        activeEditorTrackerType.GetMethod("ForceRebuild", BindingFlagsHelper.AllInstance);
 
                     if (createTrackerMethod != null && trackerField != null && forceRebuild != null)
                     {

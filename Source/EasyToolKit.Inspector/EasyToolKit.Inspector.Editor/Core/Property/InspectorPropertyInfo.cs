@@ -267,13 +267,13 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             var parentType = ValueAccessor.OwnerType;
-            var fieldInfo = parentType.GetField(PropertyName, BindingFlagsHelper.AllInstance());
+            var fieldInfo = parentType.GetField(PropertyName, BindingFlagsHelper.AllInstance);
             if (fieldInfo != null)
             {
                 return fieldInfo;
             }
 
-            var propertyInfo = parentType.GetProperty(PropertyName, BindingFlagsHelper.AllInstance());
+            var propertyInfo = parentType.GetProperty(PropertyName, BindingFlagsHelper.AllInstance);
             if (propertyInfo != null)
             {
                 return propertyInfo;

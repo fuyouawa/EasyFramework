@@ -42,7 +42,7 @@ namespace EasyToolKit.Inspector.Editor
                     }
                 }
 
-                var field = Property.Info.PropertyType.GetField(iterator.name, BindingFlagsHelper.AllInstance());
+                var field = Property.Info.PropertyType.GetField(iterator.name, BindingFlagsHelper.AllInstance);
                 if (field == null)
                 {
                     continue;

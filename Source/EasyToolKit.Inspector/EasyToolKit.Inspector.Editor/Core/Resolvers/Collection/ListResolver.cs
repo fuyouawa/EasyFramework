@@ -15,6 +15,11 @@ namespace EasyToolKit.Inspector.Editor
             _minLength = int.MaxValue;
             foreach (var value in Property.ValueEntry.WeakValues)
             {
+                if (value == null)
+                {
+                    _minLength = 0;
+                    break;
+                }
                 _minLength = Mathf.Min(_minLength, ((IList<TElement>)value).Count);
             }
         }

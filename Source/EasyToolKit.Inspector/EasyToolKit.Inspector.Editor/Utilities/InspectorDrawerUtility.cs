@@ -18,7 +18,7 @@ namespace EasyToolKit.Inspector.Editor
             new Dictionary<Type, Type>();
 
         private static readonly FieldInfo CustomPropertyDrawerTypeFieldInfo =
-            typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance());
+            typeof(UnityEditor.CustomPropertyDrawer).GetField("m_Type", BindingFlagsHelper.AllInstance);
 
         static InspectorDrawerUtility()
         {

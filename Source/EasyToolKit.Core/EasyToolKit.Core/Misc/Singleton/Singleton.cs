@@ -22,7 +22,7 @@ namespace EasyToolKit.Core
             if (type.BaseType?.IsAbstract == true)
             {
                 // 允许有公开的无参构造函数
-                var ctorInfos = type.GetConstructors(BindingFlagsHelper.AllInstance());
+                var ctorInfos = type.GetConstructors(BindingFlagsHelper.AllInstance);
 
                 ctor = Array.Find(ctorInfos, c => c.GetParameters().Length == 0);
                 if (ctor == null)
@@ -36,7 +36,7 @@ namespace EasyToolKit.Core
                 if (type.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length != 0)
                     throw new Exception($"Singleton '{type}' cannot have a public constructor!");
 
-                var ctorInfos = type.GetConstructors(BindingFlagsHelper.NonPublicInstance());
+                var ctorInfos = type.GetConstructors(BindingFlagsHelper.NonPublicInstance);
 
                 // 限制必须有一个非公开的无参构造函数
                 ctor = Array.Find(ctorInfos, c => c.GetParameters().Length == 0);

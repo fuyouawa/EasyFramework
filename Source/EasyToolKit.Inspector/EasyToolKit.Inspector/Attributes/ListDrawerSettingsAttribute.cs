@@ -14,6 +14,9 @@ namespace EasyToolKit.Inspector
             set => _expanded = value;
         }
 
+        public bool HideAddButton;
+        public bool HideRemoveButton;
+
         public string OnAddedElementCallback;
         public string OnRemovedElementCallback;
 

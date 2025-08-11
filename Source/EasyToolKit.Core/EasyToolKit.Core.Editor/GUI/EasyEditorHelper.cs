@@ -14,7 +14,7 @@ namespace EasyToolKit.Core.Editor
             if (s_methodOfForceRebuildInspectors == null)
             {
                 s_methodOfForceRebuildInspectors = typeof(EditorUtility).GetMethod("ForceRebuildInspectors",
-                    BindingFlagsHelper.NonPublicStatic());
+                    BindingFlagsHelper.NonPublicStatic);
             }
 
             s_methodOfForceRebuildInspectors!.Invoke(null, null);
@@ -27,7 +27,7 @@ namespace EasyToolKit.Core.Editor
             if (s_methodOfFindTexture == null)
             {
                 s_methodOfFindTexture = typeof(EditorGUIUtility).GetMethodEx("FindTexture",
-                    BindingFlagsHelper.NonPublicStatic(), new[] { typeof(Type) });
+                    BindingFlagsHelper.NonPublicStatic, new[] { typeof(Type) });
             }
 
             return (Texture2D)s_methodOfFindTexture.Invoke(null, null);
@@ -56,7 +56,7 @@ namespace EasyToolKit.Core.Editor
             if (s_methodOfShowAddComponentWindow == null)
             {
                 s_methodOfShowAddComponentWindow = typeof(EditorGUI).GetMethod("Show",
-                    BindingFlagsHelper.NonPublicStatic())!;
+                    BindingFlagsHelper.NonPublicStatic)!;
             }
 
             s_methodOfShowAddComponentWindow.Invoke(null, new object[] { rect, gos });
@@ -69,7 +69,7 @@ namespace EasyToolKit.Core.Editor
             if (s_methodOfHasKeyboardFocus == null)
             {
                 s_methodOfHasKeyboardFocus = typeof(EditorGUI).GetMethod("HasKeyboardFocus",
-                    BindingFlagsHelper.NonPublicStatic())!;
+                    BindingFlagsHelper.NonPublicStatic)!;
             }
 
             return (bool)s_methodOfHasKeyboardFocus.Invoke(null, new object[] { controlId });
@@ -82,7 +82,7 @@ namespace EasyToolKit.Core.Editor
             if (s_methodOfEndEditingActiveTextField == null)
             {
                 s_methodOfEndEditingActiveTextField = typeof(EditorGUI).GetMethod("EndEditingActiveTextField",
-                    BindingFlagsHelper.NonPublicStatic())!;
+                    BindingFlagsHelper.NonPublicStatic)!;
             }
 
             s_methodOfEndEditingActiveTextField.Invoke(null, null);
