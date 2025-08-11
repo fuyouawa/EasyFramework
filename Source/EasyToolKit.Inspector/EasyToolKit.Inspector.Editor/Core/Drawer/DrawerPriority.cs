@@ -1,16 +1,9 @@
 using System;
+using EasyToolKit.Core;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    public enum DrawerPriorityLevel
-    {
-        Default = 0,
-        Value = 100000,
-        Attribute = 200000,
-        Super = 300000
-    }
-
     public class DrawerPriority : IEquatable<DrawerPriority>, IComparable<DrawerPriority>
     {
         public static readonly DrawerPriority DefaultPriority = new DrawerPriority(DrawerPriorityLevel.Default);
@@ -18,14 +11,9 @@ namespace EasyToolKit.Inspector.Editor
         public static readonly DrawerPriority AttributePriority = new DrawerPriority(DrawerPriorityLevel.Attribute);
         public static readonly DrawerPriority SuperPriority = new DrawerPriority(DrawerPriorityLevel.Super);
 
-        public readonly int Value;
+        public readonly double Value;
 
-        public DrawerPriority(DrawerPriorityLevel level)
-        {
-            Value = (int)level;
-        }
-
-        public DrawerPriority(int value)
+        public DrawerPriority(double value)
         {
             Value = value;
         }
@@ -35,7 +23,7 @@ namespace EasyToolKit.Inspector.Editor
             if (ReferenceEquals(left, right)) return true;
             if (left is null || right is null) return false;
 
-            return left.Value == right.Value;
+            return left.Value.IsApproximatelyOf(right.Value);
         }
 
         public static bool operator !=(DrawerPriority left, DrawerPriority right)
@@ -60,13 +48,13 @@ namespace EasyToolKit.Inspector.Editor
 
         public static bool operator >=(DrawerPriority left, DrawerPriority right)
         {
-            if (left.Value >= right.Value) return true;
+            if (left.Value.IsApproximatelyOf(right.Value) || left.Value > right.Value) return true;
             return false;
         }
 
         public static bool operator <=(DrawerPriority left, DrawerPriority right)
         {
-            if (left.Value <= right.Value) return true;
+            if (left.Value.IsApproximatelyOf(right.Value) || left.Value < right.Value) return true;
             return false;
         }
 

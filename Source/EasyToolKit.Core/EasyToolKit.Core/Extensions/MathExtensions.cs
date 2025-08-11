@@ -60,6 +60,23 @@ namespace EasyToolKit.Core
             return (int)value.SafeCeil(epsilon);
         }
 
+        public static bool IsApproximatelyOf(this double a, double b, double? epsilon = null)
+        {
+            if (epsilon == null)
+            {
+                if (a > float.MaxValue || a < float.MinValue || b > float.MaxValue || b < float.MinValue)
+                {
+                    //TODO better double approximately
+                    throw new NotImplementedException("a or b is out of float range");
+                }
+                return Mathf.Approximately((float)a, (float)b);
+            }
+            else
+            {
+                return Math.Abs(a - b) < epsilon.Value;
+            }
+        }
+
         public static bool IsApproximatelyOf(this float a, float b, float? epsilon = null)
         {
             if (epsilon == null)

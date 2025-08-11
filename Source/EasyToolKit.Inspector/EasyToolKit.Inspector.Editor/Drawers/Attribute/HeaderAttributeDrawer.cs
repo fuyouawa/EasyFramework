@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace EasyToolKit.Inspector.Editor
 {
-    [DrawerPriority(DrawerPriorityLevel.Attribute + 100)]
+    [DrawerPriority(DrawerPriorityLevel.Attribute + 100.0)]
     public class HeaderAttributeDrawer : EasyAttributeDrawer<HeaderAttribute>
     {
         private ICodeValueResolver<string> _headerResolver;

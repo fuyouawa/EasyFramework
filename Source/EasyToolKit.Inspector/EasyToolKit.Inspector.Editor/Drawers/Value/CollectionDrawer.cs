@@ -312,7 +312,9 @@ namespace EasyToolKit.Inspector.Editor
 
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
+            OnBeforeDrawElementProperty(property, index);
             property.Draw(null);
+            OnAfterDrawElementProperty(property, index);
 
             if (!_listDrawerSettings.HideRemoveButton)
             {
@@ -341,7 +343,15 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndListItem();
         }
 
-        private void DoAddElement()
+        protected virtual void OnBeforeDrawElementProperty(InspectorProperty property, int index)
+        {
+        }
+
+        protected virtual void OnAfterDrawElementProperty(InspectorProperty property, int index)
+        {
+        }
+
+        protected virtual void DoAddElement()
         {
             for (int i = 0; i < Property.Tree.Targets.Length; i++)
             {
@@ -349,13 +359,13 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void DoAddElement(int targetIndex, object valueToAdd)
+        protected virtual void DoAddElement(int targetIndex, object valueToAdd)
         {
             _collectionResolver.QueueInsertElement(targetIndex, valueToAdd);
             _onAddedElementCallback?.Invoke(Property.Parent.ValueEntry.WeakValues[targetIndex], valueToAdd);
         }
 
-        private void DoRemoveElementAt(int index, InspectorProperty propertyToRemove)
+        protected virtual void DoRemoveElementAt(int index, InspectorProperty propertyToRemove)
         {
             for (int i = 0; i < Property.Tree.Targets.Length; i++)
             {
@@ -363,7 +373,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void DoRemoveElementAt(int targetIndex, int index, InspectorProperty propertyToRemove)
+        protected virtual void DoRemoveElementAt(int targetIndex, int index, InspectorProperty propertyToRemove)
         {
             var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
             if (_customRemoveIndexFunction != null)
@@ -380,7 +390,7 @@ namespace EasyToolKit.Inspector.Editor
             _onRemovedElementCallback?.Invoke(parent, valueToRemove);
         }
 
-        private void DoRemoveElement(InspectorProperty propertyToRemove)
+        protected virtual void DoRemoveElement(InspectorProperty propertyToRemove)
         {
             for (int i = 0; i < Property.Tree.Targets.Length; i++)
             {
@@ -388,7 +398,7 @@ namespace EasyToolKit.Inspector.Editor
             }
         }
 
-        private void DoRemoveElement(int targetIndex, InspectorProperty propertyToRemove)
+        protected virtual void DoRemoveElement(int targetIndex, InspectorProperty propertyToRemove)
         {
             var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
             var valueToRemove = propertyToRemove.ValueEntry.WeakValues[targetIndex];
@@ -404,7 +414,7 @@ namespace EasyToolKit.Inspector.Editor
             _onRemovedElementCallback?.Invoke(parent, valueToRemove);
         }
 
-        private object GetValueToAdd(int targetIndex)
+        protected virtual object GetValueToAdd(int targetIndex)
         {
             var parent = Property.Parent.ValueEntry.WeakValues[targetIndex];
             if (_customCreateElementFunction != null)

@@ -1,8 +1,11 @@
+using System;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace EasyToolKit.Inspector
 {
-    public class TitleAttribute : PropertyAttribute
+    [Conditional("UNITY_EDITOR")]
+    public class TitleAttribute : Attribute
     {
         public string Title;
         public bool BoldTitle = true;

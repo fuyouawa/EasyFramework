@@ -21,7 +21,7 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             var beginGroupAttribute = (BeginGroupAttribute)Property.GetAttributes().FirstOrDefault(attr => attr.GetType() == beginGroupAttributeType);
-            if (beginGroupAttribute == null)
+            if (beginGroupAttribute == null || beginGroupAttribute.EndAfterThisProperty)
             {
                 properties = new InspectorProperty[] { };
                 _groupPropertiesCache[beginGroupAttributeType] = properties;
