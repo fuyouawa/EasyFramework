@@ -55,15 +55,8 @@ namespace EasyToolKit.TileWorldPro
             _tileInfos.Clear();
         }
 
-        public void AddTile(ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
+        public void AddTile(GameObject tileInstance, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
         {
-            var tileInstance = TerrainDefinition.RuleSetAsset.GetTileInstanceByRuleType(ruleType);
-            if (tileInstance == null)
-            {
-                Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{chunkTilePosition}'");
-                return;
-            }
-
             tileInstance.name += $"_{chunkTilePosition}";
             tileInstance.transform.SetParent(transform);
             tileInstance.transform.position += ChunkObject.Builder.StartPoint.TilePositionToWorldPosition(chunkTilePosition.ToTilePosition(ChunkObject.Area), ChunkObject.Builder.TileWorldAsset.TileSize);

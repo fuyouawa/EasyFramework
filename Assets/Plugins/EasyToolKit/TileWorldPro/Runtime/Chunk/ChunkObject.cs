@@ -88,10 +88,10 @@ namespace EasyToolKit.TileWorldPro
             return terrainObject;
         }
 
-        public void AddTile(Guid terrainGuid, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
+        public void AddTile(GameObject tileInstance, Guid terrainGuid, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
         {
             var terrainObject = GetTerrainObject(terrainGuid);
-            terrainObject.AddTile(chunkTilePosition, ruleType);
+            terrainObject.AddTile(tileInstance, chunkTilePosition, ruleType);
         }
 
         public void DestroyTile(Guid terrainGuid, ChunkTilePosition chunkTilePosition)

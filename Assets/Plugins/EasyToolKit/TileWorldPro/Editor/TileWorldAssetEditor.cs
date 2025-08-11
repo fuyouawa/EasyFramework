@@ -67,7 +67,7 @@ namespace EasyToolKit.TileWorldPro.Editor
             {
                 if (selectedDataStoreIndex != -1)
                 {
-                    var dataStoreType = TileWorldDataStoreUtility.GetDataStoreType(dataStoreNames[selectedDataStoreIndex]);
+                    var dataStoreType = TileWorldDataStoreUtility.GetDataStoreTypeByName(dataStoreNames[selectedDataStoreIndex]);
                     _temporaryDataStore = _target.DataStore;
                     _target.DataStore = Activator.CreateInstance(dataStoreType) as ITileWorldDataStore;
                 }

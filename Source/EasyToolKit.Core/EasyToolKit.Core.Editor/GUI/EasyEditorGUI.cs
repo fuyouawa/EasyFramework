@@ -92,10 +92,8 @@ namespace EasyToolKit.Core.Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        public static bool ToolbarButton(EditorIcon icon, bool ignoreGUIEnabled = false)
+        public static bool ToolbarButton(Rect rect, EditorIcon icon, bool ignoreGUIEnabled = false)
         {
-            var rect = GUILayoutUtility.GetRect(currentDrawingToolbarHeight, currentDrawingToolbarHeight,
-                GUILayout.ExpandWidth(false));
             if (GUI.Button(rect, GUIContent.none, EasyGUIStyles.ToolbarButton))
             {
                 EasyGUIHelper.RemoveFocusControl();
@@ -126,6 +124,13 @@ namespace EasyToolKit.Core.Editor
             }
 
             return false;
+        }
+
+        public static bool ToolbarButton(EditorIcon icon, bool ignoreGUIEnabled = false)
+        {
+            var rect = GUILayoutUtility.GetRect(currentDrawingToolbarHeight, currentDrawingToolbarHeight,
+                GUILayout.ExpandWidth(false));
+            return ToolbarButton(rect, icon, ignoreGUIEnabled);
         }
 
         public static bool ToolbarButton(GUIContent content, bool selected = false)

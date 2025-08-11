@@ -64,6 +64,9 @@ namespace EasyToolKit.Inspector.Editor
         [CanBeNull] private Action<object, object> _customRemoveElementFunction;
         [CanBeNull] private Action<object, int> _customRemoveIndexFunction;
 
+        [CanBeNull] private ValueDropdownAttribute _valueDropdownAttribute;
+        [CanBeNull] private ICodeValueResolver<object> _valueDropdownOptionsGetterResolver;
+
         private string _error;
 
         protected override void Initialize()
@@ -72,6 +75,7 @@ namespace EasyToolKit.Inspector.Editor
             _orderedCollectionResolver = Property.ChildrenResolver as IOrderedCollectionResolver;
 
             _listDrawerSettings = Property.GetAttribute<MetroListDrawerSettingsAttribute>();
+            _valueDropdownAttribute = Property.GetAttribute<ValueDropdownAttribute>();
             if (_listDrawerSettings == null)
             {
                 _listDrawerSettings = Property.GetAttribute<ListDrawerSettingsAttribute>();
@@ -150,6 +154,11 @@ namespace EasyToolKit.Inspector.Editor
                     _error = e.Message;
                 }
             }
+
+            if (_valueDropdownAttribute != null)
+            {
+                _valueDropdownOptionsGetterResolver = CodeValueResolver.Create<object>(_valueDropdownAttribute.OptionsGetter, targetType);
+            }
         }
 
         protected override void DrawProperty(GUIContent label)
@@ -161,6 +170,12 @@ namespace EasyToolKit.Inspector.Editor
             }
 
             if (_iconTextureGetterResolver != null && _iconTextureGetterResolver.HasError(out var error))
+            {
+                EasyEditorGUI.MessageBox(error, MessageType.Error);
+                return;
+            }
+
+            if (_valueDropdownOptionsGetterResolver != null && _valueDropdownOptionsGetterResolver.HasError(out error))
             {
                 EasyEditorGUI.MessageBox(error, MessageType.Error);
                 return;
@@ -194,12 +209,12 @@ namespace EasyToolKit.Inspector.Editor
 
             if (!_listDrawerSettings.HideAddButton)
             {
-                if (EasyEditorGUI.ToolbarButton(EasyEditorIcons.Plus))
+                var buttonRect = GUILayoutUtility.GetRect(22, 22, GUILayout.ExpandWidth(false));
+                if (EasyEditorGUI.ToolbarButton(buttonRect, EasyEditorIcons.Plus))
                 {
-                    DoAddElement();
+                    DoAddElement(buttonRect);
                 }
             }
-
 
             EasyEditorGUI.EndHorizontalToolbar();
         }
@@ -235,7 +250,7 @@ namespace EasyToolKit.Inspector.Editor
                 if (GUI.Button(btnRect, GUIContent.none, "Button"))
                 {
                     EasyGUIHelper.RemoveFocusControl();
-                    DoAddElement();
+                    DoAddElement(btnRect);
                 }
 
                 if (Event.current.type == EventType.Repaint)
@@ -312,9 +327,7 @@ namespace EasyToolKit.Inspector.Editor
 
             GUI.Label(dragHandleRect, EasyEditorIcons.List.InactiveTexture, GUIStyle.none);
 
-            OnBeforeDrawElementProperty(property, index);
-            property.Draw(null);
-            OnAfterDrawElementProperty(property, index);
+            DrawElementProperty(property, index);
 
             if (!_listDrawerSettings.HideRemoveButton)
             {
@@ -343,16 +356,23 @@ namespace EasyToolKit.Inspector.Editor
             EasyEditorGUI.EndListItem();
         }
 
-        protected virtual void OnBeforeDrawElementProperty(InspectorProperty property, int index)
+        protected virtual void DrawElementProperty(InspectorProperty property, int index)
         {
+            property.Draw(null);
         }
 
-        protected virtual void OnAfterDrawElementProperty(InspectorProperty property, int index)
+        protected virtual void DoAddElement(Rect addButtonRect)
         {
-        }
+            if (_valueDropdownOptionsGetterResolver != null)
+            {
+                var options = _valueDropdownOptionsGetterResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
+                if (options is IEnumerable<string> stringOptions)
+                {
+                    //TODO:
+                }
+                throw new NotImplementedException();
+            }
 
-        protected virtual void DoAddElement()
-        {
             for (int i = 0; i < Property.Tree.Targets.Length; i++)
             {
                 DoAddElement(i, GetValueToAdd(i));

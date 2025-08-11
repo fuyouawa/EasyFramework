@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using EasyToolKit.Core;
 using EasyToolKit.Inspector;
+using EasyToolKit.ThirdParty.OdinSerializer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace EasyToolKit.TileWorldPro
 {
-    public class TileWorldBuilder : MonoBehaviour
+    public class TileWorldBuilder : SerializedMonoBehaviour
     {
         [LabelText("起始点")]
         [SerializeField] private TileWorldStartPoint _startPoint;
@@ -19,16 +20,17 @@ namespace EasyToolKit.TileWorldPro
 
         [EndFoldoutBoxGroup]
         [LabelText("资产")]
-        [InlineEditor]
+        [InlineEditor(Style = InlineEditorStyle.FoldoutBox)]
         [SerializeField] private TileWorldAsset _tileWorldAsset;
 
         [LabelText("地形配置")]
-        [InlineEditor(Style = InlineEditorStyle.Foldout)]
+        [InlineEditor(Style = InlineEditorStyle.FoldoutBox)]
         [SerializeField] private TerrainConfigAsset _terrainConfigAsset;
 
-        private Dictionary<ChunkPosition, ChunkObject> _chunkObjects;
+        [HideLabel]
+        [OdinSerialize, ShowInInspector] private TileBuildPipline _tileBuildPipline;
 
-        private TilePosition[] _tempTilePositions = new TilePosition[1];
+        private Dictionary<ChunkPosition, ChunkObject> _chunkObjects;
 
         public TileWorldStartPoint StartPoint => _startPoint;
 
@@ -48,26 +50,30 @@ namespace EasyToolKit.TileWorldPro
             }
         }
 
-        public void BuildAll(bool clearOld = true)
+        [Title("构建操作", TextAlignment = TextAlignment.Center)]
+        [Button("重新构建")]
+        public void RebuildAll()
         {
-            if (clearOld)
-            {
-                ClearAll();
-            }
+            ClearAll();
+            BuildAll();
+        }
 
+        private void BuildAll()
+        {
             foreach (var terrainDefinition in _tileWorldAsset.TerrainDefinitionSet)
             {
-                BuildTerrain(terrainDefinition.Guid, false);
+                BuildTerrain(terrainDefinition.Guid);
             }
         }
 
-        public void BuildTerrain(Guid terrainGuid, bool clearOld = true)
+        public void RebuildTerrain(Guid terrainGuid)
         {
-            if (clearOld)
-            {
-                ClearTerrain(terrainGuid);
-            }
+            ClearTerrain(terrainGuid);
+            BuildTerrain(terrainGuid);
+        }
 
+        private void BuildTerrain(Guid terrainGuid)
+        {
             var tilePositions = _tileWorldAsset
                     .EnumerateChunks()
                     .SelectMany(chunk => chunk.EnumerateTerrainTiles(terrainGuid))
@@ -97,6 +103,7 @@ namespace EasyToolKit.TileWorldPro
             return chunkObject.GetTerrainObject(terrainGuid).TryGetTileInfoOf(chunkTilePosition);
         }
 
+        [Button("清空构建瓦片")]
         public void ClearAll(bool destroyChunkObject = true)
         {
             foreach (var chunkObject in ChunkObjects.Values)
@@ -132,13 +139,13 @@ namespace EasyToolKit.TileWorldPro
             }
         }
 
-        public void BuildTile(Guid terrainGuid, TilePosition tilePosition, bool rebuildAffectedTilesIfNeeded = true)
+        public void RebuildTiles(Guid terrainGuid, IReadOnlyList<TilePosition> tilePositions, bool rebuildAffectedTilesIfNeeded = true)
         {
-            _tempTilePositions[0] = tilePosition;
-            BuildTiles(terrainGuid, _tempTilePositions, rebuildAffectedTilesIfNeeded);
+            DestroyTiles(terrainGuid, tilePositions);
+            BuildTiles(terrainGuid, tilePositions, rebuildAffectedTilesIfNeeded);
         }
 
-        public void BuildTiles(Guid terrainGuid, IReadOnlyList<TilePosition> tilePositions, bool rebuildAffectedTilesIfNeeded = true)
+        private void BuildTiles(Guid terrainGuid, IReadOnlyList<TilePosition> tilePositions, bool rebuildAffectedTilesIfNeeded = true)
         {
             ChunkObject currentChunkObject = null;
             foreach (var tilePosition in tilePositions)
@@ -148,9 +155,7 @@ namespace EasyToolKit.TileWorldPro
                     currentChunkObject = GetChunkObjectOf(tilePosition.ToChunkPosition(_tileWorldAsset.ChunkSize));
                 }
 
-                var ruleType = _tileWorldAsset.CalculateRuleTypeOf(_terrainConfigAsset, tilePosition);
-                var chunkTilePosition = currentChunkObject.Area.TilePositionToChunkTilePosition(tilePosition);
-                currentChunkObject.AddTile(terrainGuid, chunkTilePosition, ruleType);
+                InstantiateTileAndAddToChunk(currentChunkObject, terrainGuid, tilePosition);
             }
 
             if (rebuildAffectedTilesIfNeeded)
@@ -243,7 +248,7 @@ namespace EasyToolKit.TileWorldPro
                 }
 
                 currentTerrainObject.DestroyTileAt(chunkTilePosition);
-                currentTerrainObject.AddTile(chunkTilePosition, ruleType);
+                InstantiateTileAndAddToChunk(currentChunkObject, terrainGuid, chunkTilePosition, ruleType);
                 changedTilePositions.Add(tilePosition);
             }
 
@@ -257,6 +262,65 @@ namespace EasyToolKit.TileWorldPro
                 RebuildAffectedTilesIfNeeded(terrainGuid, changedTilePositions, ignoredAffectedTilePositions);
             }
         }
+
+        private void InstantiateTileAndAddToChunk(ChunkObject chunkObject, Guid terrainGuid, TilePosition tilePosition)
+        {
+            var ruleType = _tileWorldAsset.CalculateRuleTypeOf(_terrainConfigAsset, tilePosition);
+            var chunkTilePosition = chunkObject.Area.TilePositionToChunkTilePosition(tilePosition);
+            InstantiateTileAndAddToChunk(chunkObject, terrainGuid, chunkTilePosition, ruleType);
+        }
+
+        private void InstantiateTileAndAddToChunk(ChunkObject chunkObject, Guid terrainGuid, ChunkTilePosition chunkTilePosition, TerrainTileRuleType ruleType)
+        {
+            var beforeTileInstantiateParameters = new BeforeTileInstantiateParameters(this, chunkObject, terrainGuid, chunkTilePosition, ruleType);
+            _tileBuildPipline.BeforeInstantiateTile(beforeTileInstantiateParameters);
+            terrainGuid = beforeTileInstantiateParameters.TerrainGuid;
+            chunkTilePosition = beforeTileInstantiateParameters.ChunkTilePosition;
+            ruleType = beforeTileInstantiateParameters.RuleType;
+
+            var tileInstance = _tileWorldAsset.TerrainDefinitionSet.TryGetByGuid(terrainGuid).RuleSetAsset.GetTileInstanceByRuleType(ruleType);
+            if (tileInstance == null)
+            {
+                Debug.LogError($"The Rule Type '{ruleType}' of tile instance is null for tile position '{chunkTilePosition}'");
+                return;
+            }
+
+            var afterTileInstantiateParameters = new AfterTileInstantiateParameters(this, chunkObject, tileInstance);
+            _tileBuildPipline.AfterInstantiateTile(afterTileInstantiateParameters);
+            tileInstance = afterTileInstantiateParameters.TileInstance;
+
+            chunkObject.AddTile(tileInstance, terrainGuid, chunkTilePosition, ruleType);
+        }
+
+
+        [Title("烘培操作", TextAlignment = TextAlignment.Center)]
+        [Button("烘焙瓦片数据")]
+        public void Bake()
+        {
+            _tileWorldAsset.DataStore.ClearAllBakedChunks();
+            foreach (var chunk in _tileWorldAsset.EnumerateChunks())
+            {
+                var bakedTerrainSections = new List<BakedChunk.TerrainSection>();
+                foreach (var terrainSection in chunk.TerrainSections)
+                {
+                    // var terrainDefinition = _tileWorldAsset.TerrainDefinitionSet.TryGetByGuid(terrainSection.TerrainGuid);
+                    var bakedTiles = new List<BakedChunk.TerrainSection.Tile>();
+                    foreach (var chunkTilePosition in terrainSection.Tiles)
+                    {
+                        var tilePosition = chunkTilePosition.ToTilePosition(chunk.Area);
+                        var ruleType = _tileWorldAsset.CalculateRuleTypeOf(_terrainConfigAsset, tilePosition);
+                        //TODO hide detection
+                        var bakedTile = new BakedChunk.TerrainSection.Tile(chunkTilePosition, ruleType, false);
+                        bakedTiles.Add(bakedTile);
+                    }
+                    var bakedTerrainSection = new BakedChunk.TerrainSection(terrainSection.TerrainGuid, bakedTiles);
+                    bakedTerrainSections.Add(bakedTerrainSection);
+                }
+                var bakedChunk = new BakedChunk(chunk.Area, bakedTerrainSections);
+                _tileWorldAsset.DataStore.UpdateBakedChunk(bakedChunk);
+            }
+        }
+
 
         private bool IsValidTilePosition(TilePosition tilePosition)
         {

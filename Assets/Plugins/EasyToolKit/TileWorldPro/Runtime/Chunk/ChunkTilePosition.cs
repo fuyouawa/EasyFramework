@@ -26,6 +26,11 @@ namespace EasyToolKit.TileWorldPro
             return area.GetStartTilePosition() + new TilePosition(_x, _y, _z);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_x, _y, _z);
+        }
+
         public bool Equals(ChunkTilePosition other)
         {
             return _x == other._x && _y == other._y && _z == other._z;

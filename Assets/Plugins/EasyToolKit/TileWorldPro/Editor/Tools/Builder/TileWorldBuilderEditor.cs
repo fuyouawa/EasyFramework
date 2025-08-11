@@ -27,23 +27,11 @@ namespace EasyToolKit.TileWorldPro.Editor
             this.UnregisterListener<RemoveTilesEvent>();
         }
 
-        protected override void DrawTree()
-        {
-            Tree.BeginDraw();
-            Tree.DrawProperties();
-
-            if (GUILayout.Button("重新构建"))
-            {
-                ((TileWorldBuilder)target).BuildAll();
-            }
-            Tree.EndDraw();
-        }
-
         void IEasyEventListener<SetTilesEvent>.OnEvent(object sender, SetTilesEvent eventArg)
         {
             if (_target.Settings.RealTimeIncrementalBuild)
             {
-                _target.BuildTiles(eventArg.TerrainGuid, eventArg.TilePositions);
+                _target.RebuildTiles(eventArg.TerrainGuid, eventArg.TilePositions);
             }
         }
 
