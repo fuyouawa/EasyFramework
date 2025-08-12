@@ -4,8 +4,8 @@ namespace EasyToolKit.Inspector
 {
     public class HideIfAttribute : Attribute
     {
-        public string Condition;
-        public object Value;
+        public string Condition { get; set; }
+        public object Value { get; set; }
 
         public HideIfAttribute(string condition)
         {

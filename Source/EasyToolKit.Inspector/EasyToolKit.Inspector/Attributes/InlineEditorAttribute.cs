@@ -15,6 +15,6 @@ namespace EasyToolKit.Inspector
     [Conditional("UNITY_EDITOR")]
     public class InlineEditorAttribute : Attribute
     {
-        public InlineEditorStyle Style;
+        public InlineEditorStyle Style { get; set; }
     }
 }

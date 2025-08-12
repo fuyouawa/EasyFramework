@@ -4,8 +4,8 @@ namespace EasyToolKit.Inspector
 {
     public abstract class BeginGroupAttribute : Attribute
     {
-        public string GroupName;
-        public bool EndAfterThisProperty;
+        public string GroupName { get; set; }
+        public bool EndAfterThisProperty { get; set; }
 
         protected BeginGroupAttribute()
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using EasyToolKit.Core;
 using EasyToolKit.Core.Editor;
@@ -366,11 +367,32 @@ namespace EasyToolKit.Inspector.Editor
             if (_valueDropdownOptionsGetterResolver != null)
             {
                 var options = _valueDropdownOptionsGetterResolver.Resolve(Property.Parent.ValueEntry.WeakSmartValue);
-                if (options is IEnumerable<string> stringOptions)
+                var dropdownItems = new ValueDropdownList();
+                if (options is IEnumerable<IValueDropdownItem> valueDropdownItems)
                 {
-                    //TODO:
+                    dropdownItems.AddRange(valueDropdownItems);
                 }
-                throw new NotImplementedException();
+                else if (options is IEnumerable<object> objectOptions)
+                {
+                    foreach (var item in objectOptions)
+                    {
+                        dropdownItems.Add(item);
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The return type of '{_valueDropdownAttribute.OptionsGetter}' must be IEnumerable<IValueDropdownItem> or IEnumerable<object>");
+                }
+
+                EasyEditorGUI.ShowValueDropdownMenu(addButtonRect, dropdownItems, (item) =>
+                {
+                    var value = item.GetValue();
+                    for (int i = 0; i < Property.Tree.Targets.Length; i++)
+                    {
+                        DoAddElement(i, value);
+                    }
+                }, (item) => new GUIContent(item.GetText()));
+                return;
             }
 
             for (int i = 0; i < Property.Tree.Targets.Length; i++)

@@ -8,11 +8,11 @@ using UnityEngine;
 namespace EasyToolKit.Inspector
 {
     [Conditional("UNITY_EDITOR")]
-    public class MetroFoldoutGroupAttribute: BeginGroupAttribute
+    public class MetroFoldoutGroupAttribute : BeginGroupAttribute
     {
-        public string Label;
-        public Color SideLineColor = Color.green;
-        public string IconTextureGetter;
+        public string Label { get; set; }
+        public Color SideLineColor { get; set; } = Color.green;
+        public string IconTextureGetter { get; set; }
 
         private bool? _expanded;
 
@@ -29,7 +29,7 @@ namespace EasyToolKit.Inspector
             Label = label;
         }
     }
-    
+
     [Conditional("UNITY_EDITOR")]
     public class EndMetroFoldoutGroupAttribute : EndGroupAttribute
     {

@@ -7,12 +7,12 @@ namespace EasyToolKit.Inspector
     [Conditional("UNITY_EDITOR")]
     public class TitleAttribute : Attribute
     {
-        public string Title;
-        public bool BoldTitle = true;
-        public string Subtitle;
+        public string Title { get; set; }
+        public bool BoldTitle { get; set; } = true;
+        public string Subtitle { get; set; }
 
-        public bool HorizontalLine = true;
-        public TextAlignment TextAlignment = TextAlignment.Left;
+        public bool HorizontalLine { get; set; } = true;
+        public TextAlignment TextAlignment { get; set; } = TextAlignment.Left;
 
         public TitleAttribute(string title)
         {

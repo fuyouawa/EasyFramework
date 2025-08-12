@@ -14,15 +14,15 @@ namespace EasyToolKit.Inspector
             set => _expanded = value;
         }
 
-        public bool HideAddButton;
-        public bool HideRemoveButton;
+        public bool HideAddButton { get; set; }
+        public bool HideRemoveButton { get; set; }
 
-        public string OnAddedElementCallback;
-        public string OnRemovedElementCallback;
+        public string OnAddedElementCallback { get; set; }
+        public string OnRemovedElementCallback { get; set; }
 
-        public string CustomCreateElementFunction;
-        public string CustomRemoveIndexFunction;
-        public string CustomRemoveElementFunction;
+        public string CustomCreateElementFunction { get; set; }
+        public string CustomRemoveIndexFunction { get; set; }
+        public string CustomRemoveElementFunction { get; set; }
 
         public bool IsDefinedExpanded => _expanded.HasValue;
 

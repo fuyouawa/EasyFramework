@@ -5,8 +5,8 @@ namespace EasyToolKit.Inspector
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
     public class RegisterGroupAttributeScopeAttribute : Attribute
     {
-        public Type BeginGroupAttributeType;
-        public Type EndGroupAttributeType;
+        public Type BeginGroupAttributeType { get; set; }
+        public Type EndGroupAttributeType { get; set; }
 
         public RegisterGroupAttributeScopeAttribute(Type beginGroupAttributeType, Type endGroupAttributeType)
         {

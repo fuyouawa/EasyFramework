@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -467,6 +470,25 @@ namespace EasyToolKit.Core.Editor
                 DrawSolidRect(rect.AlignBottom(1), EasyGUIStyles.LightBorderColor);
                 GUILayout.Space(3f);
             }
+        }
+
+        public static void ShowValueDropdownMenu<T>(Rect position, IReadOnlyList<T> values, Action<T> onSelected)
+        {
+            ShowValueDropdownMenu(position, values, onSelected, value => new GUIContent(value.ToString()));
+        }
+
+        public static void ShowValueDropdownMenu<T>(Rect position, IReadOnlyList<T> values, Action<T> onSelected, Func<T, GUIContent> optionContentGetter)
+        {
+            ShowValueDropdownMenu(position, values, onSelected, (index, value) => optionContentGetter(value));
+        }
+
+        public static void ShowValueDropdownMenu<T>(Rect position, IReadOnlyList<T> values, Action<T> onSelected, Func<int, T, GUIContent> optionContentGetter)
+        {
+            var options = values.Select((value, index) => optionContentGetter(index, value)).ToArray();
+            EditorUtility.DisplayCustomMenu(position, options, -1, (userData, options, selected) =>
+            {
+                onSelected(values[selected]);
+            }, null);
         }
 
         public static void MessageBox(string message, MessageType messageType)

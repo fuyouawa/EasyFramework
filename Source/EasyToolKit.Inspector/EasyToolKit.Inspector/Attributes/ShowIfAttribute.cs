@@ -4,8 +4,8 @@ namespace EasyToolKit.Inspector
 {
     public class ShowIfAttribute : Attribute
     {
-        public string Condition;
-        public object Value;
+        public string Condition { get; set; }
+        public object Value { get; set; }
 
         public ShowIfAttribute(string condition)
         {
